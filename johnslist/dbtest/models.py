@@ -16,7 +16,7 @@ class ServiceCategory(models.Model):
 	description = models.TextField('Service Category Description')
 
 class Organization(models.Model):
-	def __unicode(self):
+	def __unicode__(self):
 		return self.name
 
 	name = models.CharField('Organization Name',max_length=64)

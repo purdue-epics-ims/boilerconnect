@@ -36,8 +36,14 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'dbtest',
+		'dbtest',
 )
+
+try:
+	import django_extensions
+	INSTALLED_APPS+=('django_extensions',)
+except ImportError:
+	pass
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
