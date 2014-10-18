@@ -1,6 +1,21 @@
 from django.db import models
 
-# Create your models here.
+'''
+Represented here are the minimum viable product entities for the BoilerConnect website.
+The ManyToMany and ForeignKey fields represent relationships between 2 classes.  For example, the 'ForeignKey' field in
+class Organization means that there is 1 admin associated with each Organization, and that it is a required relation for an Organization
+to exist (since it is defined as an attribute in the Organization class).  Conversely, a user does not have any relationships defined in its class,
+so Users can exist without be tied to any Organization.
+
+The 'related_name' argument that appears in the Organization class renames the relationship.  Django names relationships based on what classes are being linked,
+so if we didn't have 'related_name', the 'admin' and 'members' relationship in Organization would have the same name in our SQL database.
+
+
+Future entities to add:
+	- user hierarchy -> admin, member
+	- reviews
+	- media (pictures attached to posts, etc.)
+'''
 class User(models.Model):
 	def __unicode__(self):
 		return self.name
