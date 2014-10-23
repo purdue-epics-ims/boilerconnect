@@ -1,8 +1,7 @@
-from django.shortcuts import render
 from django.http import HttpResponse
 from dbtest.models import *
 from django.template import RequestContext, loader
-
+	
 '''
 Basic views to be written:
 	- index page which can list each kind of entity (Organizations, Users, Jobs, and Service Categories
