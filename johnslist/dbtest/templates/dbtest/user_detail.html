@@ -1,0 +1,11 @@
+Username: {{ user.name }}<br>
+<u>Organizations</u><br>
+{% for organization in user.members.all %}
+	{{ organization.name }}
+{% endfor %}
+	
+<u>Admin of:</u><br>
+{% for organization in user.admin.all %}
+	{{ organization.name }}
+{% endfor %}
+	

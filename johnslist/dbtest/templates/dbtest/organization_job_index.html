@@ -1,0 +1,10 @@
+Organization: {{ organization.name }}<br>
+<u>Jobs</u><br>
+{% for job in organization.requested.all %}
+	<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>
+{% endfor %}
+
+<u>Accepted Jobs</u><br>
+{% for job in organization.accepted.all %}
+	<a href='{% url 'job_detail' job.id '>{{ job.name }}</a><br>
+{% endfor %}

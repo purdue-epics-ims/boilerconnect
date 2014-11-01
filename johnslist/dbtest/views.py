@@ -1,25 +1,43 @@
-from django.http import HttpResponse
+from django.shortcuts import render
 from dbtest.models import *
-from django.template import RequestContext, loader
-	
+from django.http import HttpResponse
+
 '''
-Basic views to be written:
-	- index page which can list each kind of entity (Organizations, Users, Jobs, and Service Categories
-	- details page for each entity - most important right now is Organization page
-	- login page
+Views to be written:
+	user_detail - show user info
+		contact
+		name
+	organization_detail - show organization info
+		name
+	organization_job_index - list organizations jobs
+		list accepted/requested jobs
+		for requested, link to 'accept job'
+	job_detail - show job info
+		creator, name, description
+		link to user profile
+
+	create user - create a User
+	create job - create a Job
+	add_member - add User to Organization 'members' field
+	accept_job - add Organization to to Job 'accepted' field
+	organization_index
+
+	front page
+	user login - login page for users
 '''
 
-def organization_index(request):
-	return HttpResponse(Organization.objects.all())	
+def user_detail(request,user_id):
+	user = User.objects.get(id=user_id)
+	return render(request, 'dbtest/user_detail.html',{'user': user})
 
-def job_index(request):
-	return HttpResponse(Job.objects.all())
+def organization_detail(request,organization_id):
+	organization = Organization.objects.get(id=organization_id)
+	return render(request, 'dbtest/organization_detail.html',{'organization': organization})
 
-def user_index(request):
-	user_list = User.objects.all()
+def organization_job_index(request,organization_id):
+	organization = Organization.objects.get(id=organization_id)
+	return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
 
-	template = loader.get_template('dbtest/index.html')
-	context = RequestContext(request, {
-		'users': user_list,
-	})
-	return HttpResponse(template.render(context))
+def job_detail(request,job_id):
+	job = Job.objects.get(id=job_id)
+	return render(request, 'dbtest/job_detail.html',{'job': job})
