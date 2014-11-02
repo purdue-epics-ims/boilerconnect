@@ -1,0 +1,7 @@
+<a href="#logo">John's List</a><br>
+<form action="{% url 'search' %}" method="get">
+{% csrf_token %}
+search:<input type="text" name="search"><br>
+<input type="submit" value="search">
+</form>
+
