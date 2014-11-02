@@ -52,15 +52,30 @@ def create_user(request):
 	if request.method == 'POST':
 		#try to load the username and pass from the post request
 		try:
-			username = request.POST['user']
+			username = request.POST['username']
 			password = request.POST['password']
+			
+			#	Creating new user in database
+			numUsers = User.objects.filter( name = username ).count()
+			
+			#	Check if user already exists
+			if numUsers == 0:
+				#	Create new user object
+				newUser = User ( name = username, password = password )
+				#	Save object to database
+				newUser.save()
+			else:
+				#	Error message if user already exists
+				if error:
+					return render(request, 'dbtest/create_user.html', {'error' : error })
 			#if there was a KeyError (nonexistant)
 		except KeyError:
 			#then set the 'error' variable to something and show the create_user page
 			return render(request, 'dbtest/create_user.html', {'error':"There are incorrect fields"})
 			#if everything worked out fine
 		else:
-			#show a confirmation message	
+			
+			#	Display user
 			return render(request,'dbtest/create_user.html', {'username':username})
 	
 	#if the request was a GET
