@@ -8,4 +8,5 @@ urlpatterns = patterns('',
 	url(r'^job/(?P<job_id>[0-9]+)/?$', views.job_detail,name='job_detail'),
 	url(r'^organization/(?P<organization_id>[0-9]+)/jobs/?$', views.organization_job_index,name='organization_job_index'),
 	url(r'^create/user/?$', views.create_user,name='create_user'),
+	url(r'^$',views.front_page,name='front_page'),
 	)

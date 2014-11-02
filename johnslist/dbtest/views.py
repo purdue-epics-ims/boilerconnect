@@ -45,7 +45,8 @@ def job_detail(request,job_id):
 	job = Job.objects.get(id=job_id)
 	return render(request, 'dbtest/job_detail.html',{'job': job})
 
-
+def front_page(request):
+	return render(request, 'dbtest/front_page.html')
 
 def create_user(request):
 	#if this request was a POST and not a GET
