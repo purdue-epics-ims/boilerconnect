@@ -48,16 +48,21 @@ def job_detail(request,job_id):
 
 
 def create_user(request):
+	#if this request was a POST and not a GET
 	if request.method == 'POST':
+		#try to load the username and pass from the post request
 		try:
 			username = request.POST['user']
 			password = request.POST['password']
+			#if there was a KeyError (nonexistant)
 		except KeyError:
-			#input error message
+			#then set the 'error' variable to something and show the create_user page
 			return render(request, 'dbtest/create_user.html', {'error':"There are incorrect fields"})
+			#if everything worked out fine
 		else:
-			#confirmation message
+			#show a confirmation message	
 			return render(request,'dbtest/create_user.html', {'username':username})
 	
+	#if the request was a GET
 	else:
 		return render(request, 'dbtest/create_user.html')
