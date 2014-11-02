@@ -67,8 +67,8 @@ def create_user(request):
 				newUser.save()
 			else:
 				#	Error message if user already exists
-				if error:
-					return render(request, 'dbtest/create_user.html', {'error' : error })
+				error = "Username {0} already exists in database".format( username )
+				return render(request, 'dbtest/create_user.html', {'error' : error })
 			#if there was a KeyError (nonexistant)
 		except KeyError:
 			#then set the 'error' variable to something and show the create_user page
@@ -76,8 +76,9 @@ def create_user(request):
 			#if everything worked out fine
 		else:
 			
-			#	Display user
-			return render(request,'dbtest/create_user.html', {'username':username})
+			#	Displays confirmation page
+			title = "User {0} created".format( username )
+			return render(request,'dbtest/confirm.html', {'title': title	})
 	
 	#if the request was a GET
 	else:
