@@ -20,10 +20,13 @@ Views to be written:
 	create job - create a Job
 	add_member - add User to Organization 'members' field
 	accept_job - add Organization to to Job 'accepted' field
-	organization_index
+	organization_search
 
 	front page
 	user login - login page for users
+
+todo
+	use get_object_or_404 for database lookups
 '''
 
 def user_detail(request,user_id):
@@ -41,3 +44,20 @@ def organization_job_index(request,organization_id):
 def job_detail(request,job_id):
 	job = Job.objects.get(id=job_id)
 	return render(request, 'dbtest/job_detail.html',{'job': job})
+
+
+
+def create_user(request):
+	if request.method == 'POST':
+		try:
+			username = request.POST['user']
+			password = request.POST['password']
+		except KeyError:
+			#input error message
+			return render(request, 'dbtest/create_user.html', {'error':"There are incorrect fields"})
+		else:
+			#confirmation message
+			return render(request,'dbtest/create_user.html', {'username':username})
+	
+	else:
+		return render(request, 'dbtest/create_user.html')
