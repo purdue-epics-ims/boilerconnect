@@ -9,4 +9,5 @@ urlpatterns = patterns('',
 	url(r'^job/(?P<job_id>[0-9]+)/?$', views.job_detail,name='job_detail'),
 	url(r'^create/user/?$', views.create_user,name='create_user'),
 	url(r'^$',views.front_page,name='front_page'),
+	url(r'^search$',views.search,name='search'),
 	)

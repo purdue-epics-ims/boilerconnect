@@ -48,6 +48,10 @@ def job_detail(request,job_id):
 def front_page(request):
 	return render(request, 'dbtest/front_page.html')
 
+def search(request):
+	search = request.GET['search']
+	search_result = Organization.objects.filter(name__icontains=search) 
+	return render(request,'dbtest/search.html',{'search_result': search_result})
 def create_user(request):
 	#if this request was a POST and not a GET
 	if request.method == 'POST':
