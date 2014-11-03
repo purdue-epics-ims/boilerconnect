@@ -10,4 +10,5 @@ urlpatterns = patterns('',
 	url(r'^job/(?P<job_id>[0-9]+)/?$', views.job_detail,name='job_detail'),
 	url(r'^user/create?$', views.create_user,name='user_create'),
 	url(r'^$',views.front_page,name='front_page'),
+	url(r'^search$',views.search,name='search'),
 	)
