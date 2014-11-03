@@ -58,7 +58,7 @@ def search(request):
 	search = request.GET['search']
 	search_result = Organization.objects.filter(name__icontains=search) 
 	return render(request,'dbtest/search.html',{'search_result': search_result})
-def create_user(request):
+def user_create(request):
 	#if this request was a POST and not a GET
 	if request.method == 'POST':
 		#try to load the username and pass from the post request

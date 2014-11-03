@@ -8,7 +8,7 @@ urlpatterns = patterns('',
 	url(r'^organization/(?P<organization_id>[0-9]+)/jobs/?$', views.organization_job_index,name='organization_job_index'),
 	url(r'^organization/(?P<organization_id>[0-9]+)/accept/?$', views.organization_accept_job,name='organization_accept_job'),
 	url(r'^job/(?P<job_id>[0-9]+)/?$', views.job_detail,name='job_detail'),
-	url(r'^user/create?$', views.create_user,name='user_create'),
+	url(r'^user/create?$', views.user_create,name='user_create'),
 	url(r'^$',views.front_page,name='front_page'),
 	url(r'^search$',views.search,name='search'),
 	)
