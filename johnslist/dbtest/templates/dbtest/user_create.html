@@ -1,0 +1,14 @@
+<h1>Create an Account</h1>
+<br><br>
+{% if error %}<b>{{ error }}</b>
+{% elif username %}<b>Welcome {{ username }}.  Please check your email for a confirmation message.</b>
+
+{% else %}
+<form action="{% url 'user_create' %}" method="post">
+{% csrf_token %}
+Username:<input type="text" name="username"><br>
+Password:<input type="password" name="password"><br>
+<input type="submit" value="Create User">
+</form>
+
+{% endif %}

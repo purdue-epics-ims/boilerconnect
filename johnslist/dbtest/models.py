@@ -46,7 +46,6 @@ class Job(models.Model):
 
 	name = models.CharField('Job Name',max_length=128)
 	description = models.TextField('Job Description')
-	accepted = models.BooleanField('Job Accepted?')
 	duedate = models.DateTimeField('Date Due')
 	creator = models.ForeignKey(User)  # User -o= Job
 	requested = models.ManyToManyField(Organization,related_name='requested')  # Organization =-= Job

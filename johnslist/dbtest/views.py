@@ -43,6 +43,11 @@ def organization_job_index(request,organization_id):
 
 def organization_accept_job(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
+	if request.method == 'POST':
+		job = Job.objects.get(id=request.POST['job_id'])
+		job.accepted.add(organization)
+		return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job.name))
+
 	jobs = organization.requested.all()
 	return render(request, 'dbtest/organization_accept_job.html',{'organization': organization,'jobs':jobs})
 
@@ -78,11 +83,11 @@ def user_create(request):
 			else:
 				#	Error message if user already exists
 				error = "Username {0} already exists in database".format( username )
-				return render(request, 'dbtest/create_user.html', {'error' : error })
+				return render(request, 'dbtest/user_create.html', {'error' : error })
 			#if there was a KeyError (nonexistant)
 		except KeyError:
 			#then set the 'error' variable to something and show the create_user page
-			return render(request, 'dbtest/create_user.html', {'error':"There are incorrect fields"})
+			return render(request, 'dbtest/user_create.html', {'error':"There are incorrect fields"})
 			#if everything worked out fine
 		else:
 			
@@ -92,4 +97,4 @@ def user_create(request):
 	
 	#if the request was a GET
 	else:
-		return render(request, 'dbtest/create_user.html')
+		return render(request, 'dbtest/user_create.html')
