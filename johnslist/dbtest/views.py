@@ -41,6 +41,12 @@ def organization_job_index(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
 	return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
 
+def organization_accept_job(request,organization_id):
+	organization = Organization.objects.get(id=organization_id)
+	jobs = organization.requested.all()
+	return render(request, 'dbtest/organization_accept_job.html',{'organization': organization,'jobs':jobs})
+
+
 def job_detail(request,job_id):
 	job = Job.objects.get(id=job_id)
 	return render(request, 'dbtest/job_detail.html',{'job': job})
