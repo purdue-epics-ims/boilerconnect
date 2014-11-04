@@ -1,1 +1,8 @@
 Organization: {{ organization.name }}<br>
+
+<u>Our Jobs</u><br>
+{% for job in jobs %}
+<a href="{% url 'job_detail' job.id %}">{{ job.name }}</a><br>
+
+{% endfor %}<br><br>
+<a href={% url 'organization_accept_job' organization.id %}>Accept Jobs</a> 
