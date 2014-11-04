@@ -35,7 +35,8 @@ def user_detail(request,user_id):
 
 def organization_detail(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
-	return render(request, 'dbtest/organization_detail.html',{'organization': organization})
+	jobs = Organization.objects.get(id=organization_id).accepted.all()
+	return render(request, 'dbtest/organization_detail.html',{'organization': organization,'jobs':jobs})
 
 def organization_job_index(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
@@ -43,7 +44,9 @@ def organization_job_index(request,organization_id):
 
 def organization_accept_job(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
+	print 'lkj'
 	if request.method == 'POST':
+		print request.POST['job_id']
 		job = Job.objects.get(id=request.POST['job_id'])
 		job.accepted.add(organization)
 		return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job.name)})
@@ -97,7 +100,7 @@ def user_create(request):
 			
 			#	Displays confirmation page
 			title = "User {0} created".format( username )
-			return render(request,'dbtest/confirm.html', {'title': title	})
+			return render(request,'dbtest/confirm.html', {'title': title,'message':'Thank you for creating an account'})
 	
 	#if the request was a GET
 	else:

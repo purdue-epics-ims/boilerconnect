@@ -1,4 +1,8 @@
 <b><u>{{ organization.name }}</b></u><br>
 {% for job in jobs %}
-{{ job.name }}
+<a href="{% url 'job_detail' job.id %}">{{ job.name }}</a>
+<form method=POST name="jobaccept" action="{% url 'organization_accept_job' organization.id %}">
+<input type="submit" value="Accept Job">
+</form>
+
 {% endfor %}
