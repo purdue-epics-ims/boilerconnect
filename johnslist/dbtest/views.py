@@ -46,7 +46,7 @@ def organization_accept_job(request,organization_id):
 	if request.method == 'POST':
 		job = Job.objects.get(id=request.POST['job_id'])
 		job.accepted.add(organization)
-		return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job.name))
+		return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job.name)})
 
 	jobs = organization.requested.all()
 	return render(request, 'dbtest/organization_accept_job.html',{'organization': organization,'jobs':jobs})
@@ -63,6 +63,10 @@ def search(request):
 	search = request.GET['search']
 	search_result = Organization.objects.filter(name__icontains=search) 
 	return render(request,'dbtest/search.html',{'search_result': search_result})
+def joblist(request,user_id):
+	job_created = User.objects.get(id=user_id).creator
+	return render(request,'dbtest/joblist.html',{'job_created':job_created})
+
 def user_create(request):
 	#if this request was a POST and not a GET
 	if request.method == 'POST':
