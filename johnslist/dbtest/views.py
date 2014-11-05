@@ -73,35 +73,30 @@ def joblist(request,user_id):
 def user_create(request):
 	#if this request was a POST and not a GET
 	if request.method == 'POST':
-		#try to load the username and pass from the post request
-		try:
-			username = request.POST['username']
-			password = request.POST['password']
-			
+		form = UserCreateForm(request.POST)
+		print form.is_valid()
+		if form.is_valid():
+			username = form.cleaned_data['username']
+			password = form.cleaned_data['password']
 			#	Creating new user in database
 			numUsers = User.objects.filter( name = username ).count()
-			
-			#	Check if user already exists
 			if numUsers == 0:
 				#	Create new user object
 				newUser = User ( name = username, password = password )
 				#	Save object to database
 				newUser.save()
+				#	Displays confirmation page
+				title = "User {0} created".format( username )
+				return render(request,'dbtest/confirm.html', {'title': title,'message':'Thank you for creating an account'})
 			else:
 				#	Error message if user already exists
 				error = "Username {0} already exists in database".format( username )
 				return render(request, 'dbtest/user_create.html', {'error' : error })
-			#if there was a KeyError (nonexistant)
-		except KeyError:
-			#then set the 'error' variable to something and show the create_user page
-			return render(request, 'dbtest/user_create.html', {'error':"There are incorrect fields"})
-			#if everything worked out fine
 		else:
-			
-			#	Displays confirmation page
-			title = "User {0} created".format( username )
-			return render(request,'dbtest/confirm.html', {'title': title,'message':'Thank you for creating an account'})
+			return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields"})
 	
 	#if the request was a GET
 	else:
-		return render(request, 'dbtest/user_create.html')
+		form = UserCreateForm()
+		return render(request, 'dbtest/user_create.html', {'form':form})
+		#try to load the username and pass from the post request
