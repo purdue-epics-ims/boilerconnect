@@ -1,7 +1,8 @@
 <h1>Create an Account</h1>
 <br><br>
 {% if error %}<b>{{ error }}</b>
-{% elif username %}<b>Welcome {{ username }}.  Please check your email for a confirmation message.</b>
+{% endif %}
+{% if username %}<b>Welcome {{ username }}.  Please check your email for a confirmation message.</b>
 
 {% else %}
 <form action="{% url 'user_create' %}" method="post">
