@@ -74,27 +74,24 @@ def user_create(request):
 	#if this request was a POST and not a GET
 	if request.method == 'POST':
 		form = UserCreateForm(request.POST)
-		if form.is_valid():
-			username = form.cleaned_data['username']
-			password = form.cleaned_data['password']
-			
-			#check if username already exists
-			if not User.objects.filter( name = username ):
-				#	Create new user object
-				newUser = User ( name = username, password = password )
-				#	Save object to database
-				newUser.save()
-				#	Displays confirmation page
-				title = "User {0} created".format( newUser.username )
+
+		#check form validity
+		if form.is_valid() :
+			user = form.save(commit=False)
+			#check if user exists
+			if User.objects.filter(name = user.name):
+				error = "Username {0} already exists in database".format( user.name )
+				return render(request, 'dbtest/user_create.html', {'error' : error })
+			#create new user
+			else:
+				user.save()
+				title = "User {0} created".format( user.name )
 				message = "Thank you for creating an account."
 				return render(request,'dbtest/confirm.html', {'title': title,'message':message})
-			else:
-				#	Error message if user already exists
-				error = "Username {0} already exists in database".format( username )
-				return render(request, 'dbtest/user_create.html', {'error' : error })
 		else:
 			return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields"})
-	
+		
+			
 	#if the request was a GET
 	else:
 		form = UserCreateForm()
