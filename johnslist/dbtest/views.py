@@ -18,6 +18,7 @@ Views to be written:
 
 	create user - create a User
 	create job - create a Job
+	create Organiation - create an organization
 	add_member - add User to Organization 'members' field
 	accept_job - add Organization to to Job 'accepted' field
 	organization_search
@@ -38,15 +39,17 @@ def organization_detail(request,organization_id):
 	jobs = Organization.objects.get(id=organization_id).accepted.all()
 	return render(request, 'dbtest/organization_detail.html',{'organization': organization,'jobs':jobs})
 
+def job_detail(request,job_id):
+	job = Job.objects.get(id=job_id)
+	return render(request, 'dbtest/job_detail.html',{'job': job})
+
 def organization_job_index(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
 	return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
 
 def organization_accept_job(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
-	print 'lkj'
 	if request.method == 'POST':
-		print request.POST['job_id']
 		job = Job.objects.get(id=request.POST['job_id'])
 		job.accepted.add(organization)
 		return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job.name)})
@@ -55,10 +58,6 @@ def organization_accept_job(request,organization_id):
 	return render(request, 'dbtest/organization_accept_job.html',{'organization': organization,'jobs':jobs})
 
 
-def job_detail(request,job_id):
-	job = Job.objects.get(id=job_id)
-	return render(request, 'dbtest/job_detail.html',{'job': job})
-
 def front_page(request):
 	return render(request, 'dbtest/front_page.html')
 
@@ -66,28 +65,29 @@ def search(request):
 	search = request.GET['search']
 	search_result = Organization.objects.filter(name__icontains=search) 
 	return render(request,'dbtest/search.html',{'search_result': search_result})
-def joblist(request,user_id):
-	job_created = User.objects.get(id=user_id).creator
-	return render(request,'dbtest/joblist.html',{'job_created':job_created})
+
+def user_job_index(request,user_id):
+	jobs = User.objects.get(id=user_id).creator
+	return render(request,'dbtest/user_job_index.html',{'jobs':jobs})
 
 def user_create(request):
 	#if this request was a POST and not a GET
 	if request.method == 'POST':
 		form = UserCreateForm(request.POST)
-		print form.is_valid()
 		if form.is_valid():
 			username = form.cleaned_data['username']
 			password = form.cleaned_data['password']
-			#	Creating new user in database
-			numUsers = User.objects.filter( name = username ).count()
-			if numUsers == 0:
+			
+			#check if username already exists
+			if not User.objects.filter( name = username ):
 				#	Create new user object
 				newUser = User ( name = username, password = password )
 				#	Save object to database
 				newUser.save()
 				#	Displays confirmation page
-				title = "User {0} created".format( username )
-				return render(request,'dbtest/confirm.html', {'title': title,'message':'Thank you for creating an account'})
+				title = "User {0} created".format( newUser.username )
+				message = "Thank you for creating an account."
+				return render(request,'dbtest/confirm.html', {'title': title,'message':message})
 			else:
 				#	Error message if user already exists
 				error = "Username {0} already exists in database".format( username )
@@ -99,4 +99,6 @@ def user_create(request):
 	else:
 		form = UserCreateForm()
 		return render(request, 'dbtest/user_create.html', {'form':form})
-		#try to load the username and pass from the post request
+
+			
+
