@@ -1,0 +1,6 @@
+<u>Job Information</u><br>
+<h1>Job ID : {{job.id}}<br></h1><br>
+Job Name: {{ job.name }}<br>
+Job Description : {{job.description}}<br>
+Job Due Date : {{job.duedate}}<br><br>
+Job Creator : <a href="{% url 'user_detail' job.id %}">{{ job.creator }}</a><br>
