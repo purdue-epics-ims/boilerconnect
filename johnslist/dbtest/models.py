@@ -1,5 +1,5 @@
 from django.db import models
-from django import forms
+from django.forms import ModelForm
 
 '''
 Represented here are the minimum viable product entities for the BoilerConnect website.
@@ -54,6 +54,12 @@ class Job(models.Model):
 
 ### Forms
 
-class UserCreateForm(forms.Form):
-	username = forms.CharField(label='Username', max_length=64)
-	password = forms.CharField(label='Password', max_length=64)
+class UserCreateForm(ModelForm):
+	class Meta:
+		model = User
+		fields = ['name','password']
+
+class OrganizationCreateForm(ModelForm):
+	class Meta:
+		model = Organization
+		fields = ['name','description','categories']
