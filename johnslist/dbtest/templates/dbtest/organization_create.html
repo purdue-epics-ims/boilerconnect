@@ -1,14 +1,14 @@
-<h1>Create an Account</h1>
+<h1>Create an Organization</h1>
 <br><br>
 {% if error %}<b>{{ error }}</b>
 {% endif %}
-{% if username %}<b>Welcome {{ username }}.  Please check your email for a confirmation message.</b>
+{% if name %}<b>Welcome Organization:{{ name }}.  Please check your email for a confirmation message.</b>
 
 {% else %}
-<form action="{% url 'user_create' %}" method="post">
+<form action="{% url 'organization_create' %}" method="post">
 {% csrf_token %}
 {{ form }}
-<input type="submit" value="Create User">
+<input type="submit" value="Create Organization">
 </form>
 
 {% endif %}

@@ -106,21 +106,23 @@ def organization_create(request):
 		#check form validity
 		if form.is_valid() :
 			organization = form.save(commit=False)
-			#check if user exists
-			if Organiztion.objects.filter(name = organization.name):
-				error = "Organization name {0} already exists in database".format( user.name )
-				return render(request, 'dbtest/user_create.html', {'error' : error })
-			#create new user
+			#check if org exists
+			if Organization.objects.filter(name = organization.name):
+				error = "Organization name {0} already exists in database".format( organization.name )
+				return render(request, 'dbtest/organization_create.html', {'error' : error })
+			#create new org 
 			else:
-				user.save()
-				title = "Organization {0} created".format( user.name )
-				message = "Thank you for creating an account."
+				#temporarily set the admin to user1
+				organization.admin = User.objects.get(id=1)
+				organization.save()
+				title = "Organization {0} created".format( organization.name )
+				message = "Thank you for creating an organization."
 				return render(request,'dbtest/confirm.html', {'title': title,'message':message})
 		else:
-			return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields"})
+			return render(request, 'dbtest/organization_create.html', {'form':form,'error':"There are incorrect fields"})
 		
 			
 	#if the request was a GET
 	else:
-		form = UserCreateForm()
-		return render(request, 'dbtest/user_create.html', {'form':form})
+		form = OrganizationCreateForm()
+		return render(request, 'dbtest/organization_create.html', {'form':form})
