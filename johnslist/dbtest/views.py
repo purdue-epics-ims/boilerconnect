@@ -93,5 +93,29 @@ def user_create(request):
 		form = UserCreateForm()
 		return render(request, 'dbtest/user_create.html', {'form':form})
 
-			
+def organization_create(request):
+	#if this request was a POST and not a GET
+	if request.method == 'POST':
+		form = OrganizationCreateForm(request.POST)
 
+		#check form validity
+		if form.is_valid() :
+			organization = form.save(commit=False)
+			#check if user exists
+			if Organiztion.objects.filter(name = organization.name):
+				error = "Organization name {0} already exists in database".format( user.name )
+				return render(request, 'dbtest/user_create.html', {'error' : error })
+			#create new user
+			else:
+				user.save()
+				title = "Organization {0} created".format( user.name )
+				message = "Thank you for creating an account."
+				return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+		else:
+			return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields"})
+		
+			
+	#if the request was a GET
+	else:
+		form = UserCreateForm()
+		return render(request, 'dbtest/user_create.html', {'form':form})
