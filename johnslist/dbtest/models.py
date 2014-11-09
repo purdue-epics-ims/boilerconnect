@@ -1,4 +1,5 @@
 from django.db import models
+from django import forms
 
 '''
 Represented here are the minimum viable product entities for the BoilerConnect website.
@@ -51,3 +52,8 @@ class Job(models.Model):
 	requested = models.ManyToManyField(Organization,related_name='requested')  # Organization =-= Job
 	accepted = models.ManyToManyField(Organization,related_name='accepted')  # Organization =-= Job
 
+### Forms
+
+class UserCreateForm(forms.Form):
+	username = forms.CharField(label='Username', max_length=64)
+	password = forms.CharField(label='Password', max_length=64)
