@@ -1,8 +1,9 @@
-Organization: {{ organization.name }}<br>
+Organization:{{organization.name}}<br>
+Description:{{organization.description}}<br>
+Admin:{{organization.admin}}<br>
+<u>Users</u><br>
+{% for user in organization.members.all %}
+	{{user.name}}
+	<a href='{%url 'user_detail' user.id%}>{{user.name}}</a>
+{% endfor %}<br>
 
-<u>Our Jobs</u><br>
-{% for job in jobs %}
-<a href="{% url 'job_detail' job.id %}">{{ job.name }}</a><br>
-
-{% endfor %}<br><br>
-<a href={% url 'organization_accept_job' organization.id %}>Accept Jobs</a> 
