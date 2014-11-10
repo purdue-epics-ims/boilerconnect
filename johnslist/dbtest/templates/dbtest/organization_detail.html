@@ -1,9 +1,8 @@
 Organization:{{organization.name}}<br>
 Description:{{organization.description}}<br>
-Admin:{{organization.admin}}<br>
+Admin:<a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a><br>
 <u>Users</u><br>
 {% for user in organization.members.all %}
-	{{user.name}}
-	<a href='{%url 'user_detail' user.id%}>{{user.name}}</a>
+	<a href="{%url 'user_detail' user.id%}">{{user.name}}</a><br>
 {% endfor %}<br>
 
