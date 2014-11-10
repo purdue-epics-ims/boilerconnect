@@ -5,4 +5,5 @@ Admin:<a href="{% url 'user_detail' organization.admin.id %}">{{organization.adm
 {% for user in organization.members.all %}
 	<a href="{%url 'user_detail' user.id%}">{{user.name}}</a><br>
 {% endfor %}<br>
+<p><a href='{%url 'organization_job_index' organization.id %}'>Jobs</a></p><br>
 
