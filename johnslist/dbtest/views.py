@@ -98,18 +98,13 @@ def organization_create(request):
 		#check form validity
 		if form.is_valid() :
 			organization = form.save(commit=False)
-			#check if org exists
-			if Organization.objects.filter(name = organization.name):
-				error = "Organization name {0} already exists in database".format( organization.name )
-				return render(request, 'dbtest/organization_create.html', {'error' : error })
+			#set the admin to user1 organization.admin = User.objects.get(id=1)
+			organization.admin = User.objects.get(id=1)
 			#create new org 
-			else:
-				#temporarily set the admin to user1
-				organization.admin = User.objects.get(id=1)
-				organization.save()
-				title = "Organization {0} created".format( organization.name )
-				message = "Thank you for creating an organization."
-				return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+			organization.save()
+			title = "Organization {0} created".format( organization.name )
+			message = "Thank you for creating an organization."
+			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
 		else:
 			return render(request, 'dbtest/organization_create.html', {'form':form,'error':"There are incorrect fields"})
 		

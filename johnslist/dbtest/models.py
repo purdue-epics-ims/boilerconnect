@@ -30,7 +30,7 @@ class Organization(models.Model):
 	def __unicode__(self):
 		return self.name
 
-	name = models.CharField('Organization Name',max_length=64)
+	name = models.CharField('Organization Name',max_length=64,unique=True)
 	description = models.TextField('Organization Description')
 	admin = models.ForeignKey(User,related_name='admin')  # User -o= Organization 
 	members = models.ManyToManyField(User,related_name='members')  # User =-= Organization
