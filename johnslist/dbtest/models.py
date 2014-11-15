@@ -1,5 +1,5 @@
 from django.db import models
-from django.forms import ModelForm
+from django.forms import ModelForm,PasswordInput
 from django.contrib.auth.models import User
 
 '''
@@ -17,6 +17,12 @@ Future entities to add:
 	- user hierarchy -> admin, member
 	- reviews
 	- media (pictures attached to posts, etc.)
+'''
+
+''' User class
+	attributes:
+		username
+		password
 '''
 
 class ServiceCategory(models.Model):
@@ -48,6 +54,14 @@ class Job(models.Model):
 	accepted = models.ManyToManyField(Organization,related_name='accepted')  # Organization =-= Job
 
 ### Forms
+
+class LoginForm(ModelForm):
+	class Meta:
+		model = User
+		widgets = {
+			'password': PasswordInput(),
+			}
+		fields = ['username','password']
 
 class UserCreateForm(ModelForm):
 	class Meta:

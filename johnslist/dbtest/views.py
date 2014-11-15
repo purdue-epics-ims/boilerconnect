@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from .models import *
 from django.http import HttpResponse
+from django.contrib.auth.views import login
 
 '''
 Views to be written:
@@ -28,6 +29,7 @@ Views to be written:
 
 todo
 	use get_object_or_404 for database lookups
+	use django login view to handle logins
 '''
 
 def user_detail(request,user_id):
@@ -107,9 +109,9 @@ def organization_create(request):
 			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
 		else:
 			return render(request, 'dbtest/organization_create.html', {'form':form,'error':"There are incorrect fields"})
-		
-			
 	#if the request was a GET
 	else:
 		form = OrganizationCreateForm()
 		return render(request, 'dbtest/organization_create.html', {'form':form})
+
+def login(login):

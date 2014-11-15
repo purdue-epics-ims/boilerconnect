@@ -1,4 +1,4 @@
-Username: {{ user.name }}<br>
+Username: {{ user.username }}<br>
 <u>Organizations</u><br>
 {% for organization in user.members.all %}
 	<a href="{% url 'organization_detail' organization.id %}">{{ organization.name }}</a><br>
