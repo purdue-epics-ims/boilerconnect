@@ -1,3 +1,5 @@
+{% extends "dbtest/base.html" %}
+{% block content %}
 Username: {{ user.name }}<br>
 <u>Organizations</u><br>
 {% for organization in user.members.all %}
@@ -8,4 +10,4 @@ Username: {{ user.name }}<br>
 {% for organization in user.admin.all %}
 	<a href='{% url 'organization_detail' organization.id %}'>{{ organization.name }}</a>
 {% endfor %}
-	
+{% endblock content %}	
