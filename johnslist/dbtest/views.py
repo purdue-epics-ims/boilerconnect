@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import *
 from django.http import HttpResponse
 from django.contrib.auth.views import login
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 
 '''
@@ -76,7 +77,7 @@ def user_job_index(request,user_id):
 def user_create(request):
 	#if this request was a POST and not a GET
 	if request.method == 'POST':
-		form = UserCreateForm(request.POST)
+		form = UserCreationForm(request.POST)
 
 		#check form validity
 		if form.is_valid() :
@@ -89,7 +90,7 @@ def user_create(request):
 			return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields"})
 	#if the request was a GET
 	else:
-		form = UserCreateForm()
+		form = UserCreationForm()
 		return render(request, 'dbtest/user_create.html', {'form':form})
 
 def organization_create(request):

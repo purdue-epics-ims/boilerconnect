@@ -1,6 +1,7 @@
 from django.db import models
 from django.forms import ModelForm,PasswordInput
 from django.contrib.auth.models import User
+from django.contrib.auth import forms
 
 '''
 Represented here are the minimum viable product entities for the BoilerConnect website.
@@ -54,19 +55,6 @@ class Job(models.Model):
 	accepted = models.ManyToManyField(Organization,related_name='accepted')  # Organization =-= Job
 
 ### Forms
-
-class LoginForm(ModelForm):
-	class Meta:
-		model = User
-		widgets = {
-			'password': PasswordInput(),
-			}
-		fields = ['username','password']
-
-class UserCreateForm(ModelForm):
-	class Meta:
-		model = User
-		fields = ['username','password']
 
 class OrganizationCreateForm(ModelForm):
 	class Meta:
