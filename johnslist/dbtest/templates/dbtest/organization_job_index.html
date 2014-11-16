@@ -1,3 +1,5 @@
+{% extends "dbtest/base.html" %}
+{% block content %}
 Organization: {{ organization.name }}<br>
 <u>Jobs</u><br>
 {% for job in organization.requested.all %}
@@ -8,3 +10,4 @@ Organization: {{ organization.name }}<br>
 {% for job in organization.accepted.all %}
 	<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>
 {% endfor %}
+{% endblock %}

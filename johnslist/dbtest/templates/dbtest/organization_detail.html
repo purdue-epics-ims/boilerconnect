@@ -1,3 +1,5 @@
+{% extends "dbtest/base.html" %}
+{% block content %}
 Organization:{{organization.name}}<br>
 Description:<code style="white-space: pre-wrap;"> {{organization.description}}</code><br>
 Admin:<a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a><br>
@@ -6,4 +8,4 @@ Admin:<a href="{% url 'user_detail' organization.admin.id %}">{{organization.adm
 	<a href="{%url 'user_detail' user.id%}">{{user.name}}</a><br>
 {% endfor %}<br>
 <p><a href='{%url 'organization_job_index' organization.id %}'>Jobs</a></p><br>
-
+{% endblock %}

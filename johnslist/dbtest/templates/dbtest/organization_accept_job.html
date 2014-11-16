@@ -1,3 +1,5 @@
+{% extends "dbtest/base.html" %}
+{% block content %}
 <b><u>{{ organization.name }}</b></u><br>
 {% for job in jobs %}
 <a href="{% url 'job_detail' job.id %}">{{ job.name }}</a>
@@ -8,3 +10,4 @@
 </form>
 
 {% endfor %}
+{% endblock %}

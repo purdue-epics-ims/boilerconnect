@@ -1,3 +1,6 @@
+{% extends "dbtest/base.html" %}
+{% block content %}
 <u>search result</u><br><br>
 {% for organization in search_result %}<a href = "{% url 'organization_detail' organization.id %}">{{organization.name}}</a><br>
 {% endfor %}
+{% endblock %}
