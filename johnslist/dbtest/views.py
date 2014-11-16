@@ -113,5 +113,3 @@ def organization_create(request):
 	else:
 		form = OrganizationCreateForm()
 		return render(request, 'dbtest/organization_create.html', {'form':form})
-
-def login(login):

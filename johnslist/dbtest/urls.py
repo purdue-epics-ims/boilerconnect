@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url
+from django.contrib.auth.views import login
 from dbtest import views
 
 urlpatterns = patterns('',
@@ -12,5 +13,5 @@ urlpatterns = patterns('',
 	url(r'^$',views.front_page,name='front_page'),
 	url(r'^search/?$',views.search,name='search'),
 	url(r'^user/(?P<user_id>[0-9]+)/user_job_index/?$', views.user_job_index,name='user_job_index'),
-	url(r'^login/?$', views.login,name='login'),
+	url(r'^login/?$', login,{'template_name':'dbtest/login.html'},name='login'),
 	)
