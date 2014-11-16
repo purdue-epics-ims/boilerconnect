@@ -1,5 +1,6 @@
 from django.db import models
 from django.forms import ModelForm
+from django.contrib.auth.models import User
 
 '''
 Represented here are the minimum viable product entities for the BoilerConnect website.
@@ -17,12 +18,6 @@ Future entities to add:
 	- reviews
 	- media (pictures attached to posts, etc.)
 '''
-class User(models.Model):
-	def __unicode__(self):
-		return self.name
-
-	name = models.CharField('Username',max_length=64)
-	password = models.CharField('Password',max_length=64)
 
 class ServiceCategory(models.Model):
 	def __unicode__(self):
@@ -35,7 +30,7 @@ class Organization(models.Model):
 	def __unicode__(self):
 		return self.name
 
-	name = models.CharField('Organization Name',max_length=64)
+	name = models.CharField('Organization Name',max_length=64,unique=True)
 	description = models.TextField('Organization Description')
 	admin = models.ForeignKey(User,related_name='admin')  # User -o= Organization 
 	members = models.ManyToManyField(User,related_name='members')  # User =-= Organization
@@ -57,9 +52,14 @@ class Job(models.Model):
 class UserCreateForm(ModelForm):
 	class Meta:
 		model = User
-		fields = ['name','password']
+		fields = ['username','password']
 
 class OrganizationCreateForm(ModelForm):
 	class Meta:
 		model = Organization
 		fields = ['name','description','categories']
+
+class JobCreateForm(ModelForm):
+	class Meta:
+		model = Job
+		fields = ['name','description','duedate','requested']

@@ -3,11 +3,11 @@
 Username: {{ user.name }}<br>
 <u>Organizations</u><br>
 {% for organization in user.members.all %}
-	{{ organization.name }}
+	<a href="{% url 'organization_detail' organization.id %}">{{ organization.name }}</a><br>
 {% endfor %}
 	
 <u>Admin of:</u><br>
 {% for organization in user.admin.all %}
-	<a href='{% url 'organization_detail' organization.id %}'>{{ organization.name }}</a>
+	<a href='{% url 'organization_detail' organization.id %}'>{{ organization.name }}</a><br>
 {% endfor %}
 {% endblock content %}	

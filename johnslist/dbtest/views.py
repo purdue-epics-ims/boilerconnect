@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from dbtest.models import *
+from .models import *
 from django.http import HttpResponse
 
 '''
@@ -78,25 +78,38 @@ def user_create(request):
 
 		#check form validity
 		if form.is_valid() :
-			user = form.save(commit=False)
-			#check if user exists
-			if User.objects.filter(name = user.name):
-				error = "Username {0} already exists in database".format( user.name )
-				return render(request, 'dbtest/user_create.html', {'error' : error })
-			#create new user
-			else:
-				user.save()
-				title = "User {0} created".format( user.name )
-				message = "Thank you for creating an account."
-				return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+			#save user to db and store info to 'user'
+			user = form.save()
+			title = "User {0} created".format( user.username )
+			message = "Thank you for creating an account."
+			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
 		else:
 			return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields"})
-		
-			
 	#if the request was a GET
 	else:
 		form = UserCreateForm()
 		return render(request, 'dbtest/user_create.html', {'form':form})
 
-			
+def organization_create(request):
+	#if this request was a POST and not a GET
+	if request.method == 'POST':
+		form = OrganizationCreateForm(request.POST)
 
+		#check form validity
+		if form.is_valid() :
+			organization = form.save(commit=False)
+			#set the admin to user1 organization.admin = User.objects.get(id=1)
+			organization.admin = User.objects.get(id=1)
+			#create new org 
+			organization.save()
+			title = "Organization {0} created".format( organization.name )
+			message = "Thank you for creating an organization."
+			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+		else:
+			return render(request, 'dbtest/organization_create.html', {'form':form,'error':"There are incorrect fields"})
+		
+			
+	#if the request was a GET
+	else:
+		form = OrganizationCreateForm()
+		return render(request, 'dbtest/organization_create.html', {'form':form})
