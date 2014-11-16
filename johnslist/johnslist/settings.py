@@ -89,5 +89,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Login redirect
+# where to redirect if login is required
+LOGIN_URL = '/login'
+# where redirect after login if there was no last page ('next' variable)
 LOGIN_REDIRECT_URL = '/'

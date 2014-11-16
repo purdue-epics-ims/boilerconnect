@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import *
 from django.http import HttpResponse
 from django.contrib.auth.views import login
+from django.contrib.auth.decorators import login_required
 
 '''
 Views to be written:
@@ -32,6 +33,7 @@ todo
 	use django login view to handle logins
 '''
 
+@login_required
 def user_detail(request,user_id):
 	user = User.objects.get(id=user_id)
 	return render(request, 'dbtest/user_detail.html',{'user': user})
@@ -44,8 +46,6 @@ def organization_detail(request,organization_id):
 def organization_job_index(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
 	return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
-
-
 
 def organization_accept_job(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
