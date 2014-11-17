@@ -1,20 +1,16 @@
 {% extends "dbtest/base.html" %}
+
 {% block content %}
 
-{% if user.is_authenticated %}
-<h2>
-Welcome {{user.username}}!! <br><br>
-</h2>
-{% endif %}
+	Username: {{ user.username }}<br>
+	<u>Organizations</u><br>
+	{% for organization in user.members.all %}
+		<a href="{% url 'organization_detail' organization.id %}">{{ organization.name }}</a><br>
+	{% endfor %}
+		
+	<u>Admin of:</u><br>
+	{% for organization in user.admin.all %}
+		<a href='{% url 'organization_detail' organization.id %}'>{{ organization.name }}</a><br>
+	{% endfor %}
 
-Username: {{ user.username }}<br>
-<u>Organizations</u><br>
-{% for organization in user.members.all %}
-	<a href="{% url 'organization_detail' organization.id %}">{{ organization.name }}</a><br>
-{% endfor %}
-	
-<u>Admin of:</u><br>
-{% for organization in user.admin.all %}
-	<a href='{% url 'organization_detail' organization.id %}'>{{ organization.name }}</a><br>
-{% endfor %}
 {% endblock content %}	

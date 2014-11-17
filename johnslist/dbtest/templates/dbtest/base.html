@@ -1,6 +1,15 @@
 <html>
 <body>
-<div id ="header">{% block header %}Header{% endblock %}</div>
+<div id ="header">{% block header %}
+	{% if user.is_authenticated %}
+	<h2>
+		Welcome {{user.username}}!! <br><br>
+	</h2>
+	{% else %}
+
+{% endif %}
+
+	{% endblock %}</div>
 <div id ="content">{% block content %}Content{% endblock %}</div>
 <div id ="footer">{% block footer %}Footer{% endblock %}</div>
 </body>
