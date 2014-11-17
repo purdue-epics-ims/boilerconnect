@@ -88,3 +88,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# where to redirect if login is required
+LOGIN_URL = '/login'
+# where redirect after login if there was no last page ('next' variable)
+LOGIN_REDIRECT_URL = '/'

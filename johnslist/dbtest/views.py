@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from .models import *
 from django.http import HttpResponse
+from django.contrib.auth.views import login
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.decorators import login_required
 
 '''
 Views to be written:
@@ -28,8 +31,10 @@ Views to be written:
 
 todo
 	use get_object_or_404 for database lookups
+	use django login view to handle logins
 '''
 
+@login_required
 def user_detail(request,user_id):
 	user = User.objects.get(id=user_id)
 	return render(request, 'dbtest/user_detail.html',{'user': user})
@@ -42,8 +47,6 @@ def organization_detail(request,organization_id):
 def organization_job_index(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
 	return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
-
-
 
 def organization_accept_job(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
@@ -74,7 +77,7 @@ def user_job_index(request,user_id):
 def user_create(request):
 	#if this request was a POST and not a GET
 	if request.method == 'POST':
-		form = UserCreateForm(request.POST)
+		form = UserCreationForm(request.POST)
 
 		#check form validity
 		if form.is_valid() :
@@ -87,7 +90,7 @@ def user_create(request):
 			return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields"})
 	#if the request was a GET
 	else:
-		form = UserCreateForm()
+		form = UserCreationForm()
 		return render(request, 'dbtest/user_create.html', {'form':form})
 
 def organization_create(request):
@@ -107,8 +110,6 @@ def organization_create(request):
 			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
 		else:
 			return render(request, 'dbtest/organization_create.html', {'form':form,'error':"There are incorrect fields"})
-		
-			
 	#if the request was a GET
 	else:
 		form = OrganizationCreateForm()
