@@ -4,3 +4,4 @@ from .models import *
 # Register your models here.
 admin.site.register(Job)
 admin.site.register(ServiceCategory)
+admin.site.register(Organization)
