@@ -102,7 +102,7 @@ def organization_create(request):
 		if form.is_valid() :
 			organization = form.save(commit=False)
 			#set the admin to user1 organization.admin = User.objects.get(id=1)
-			organization.admin = User.objects.get(id=1)
+			organization.admin = request.user
 			#create new org 
 			organization.save()
 			title = "Organization {0} created".format( organization.name )
