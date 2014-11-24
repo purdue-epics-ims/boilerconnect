@@ -4,6 +4,7 @@ from django.http import HttpResponse
 from django.contrib.auth.views import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from .decorators import *
 
 '''
 Views to be written:
@@ -48,6 +49,7 @@ def organization_job_index(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
 	return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
 
+@user_in_group
 def organization_accept_job(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
 	if request.method == 'POST':
