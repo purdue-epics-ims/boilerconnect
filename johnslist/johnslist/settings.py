@@ -89,7 +89,13 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# django auth settings
 # where to redirect if login is required
 LOGIN_URL = '/login'
-# where redirect after login if there was no last page ('next' variable)
+# where to redirect after login if there was no last page ('next' variable)
 LOGIN_REDIRECT_URL = '/'
+
+#custom defined settings
+
+# generic redirect url
+REDIRECT_URL = '/'
