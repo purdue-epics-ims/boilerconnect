@@ -90,6 +90,7 @@ def user_create(request):
 		if form.is_valid() :
 			#save user to db and store info to 'user'
 			user = form.save()
+			form.save_m2m()
 			title = "User {0} created".format( user.username )
 			message = "Thank you for creating an account."
 			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
@@ -112,6 +113,7 @@ def organization_create(request):
 			organization.admin = User.objects.get(id=1)
 			#create new org 
 			organization.save()
+			form.save_m2m()
 			title = "Organization {0} created".format( organization.name )
 			message = "Thank you for creating an organization."
 			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
@@ -133,6 +135,7 @@ def job_create(request):
 			job.creator = User.objects.get(id=1)
 			#create new org 
 			job.save()
+			form.save_m2m()
 			title = "Job {0} created".format( job.name )
 			message = "Thank you for creating the job."
 			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
