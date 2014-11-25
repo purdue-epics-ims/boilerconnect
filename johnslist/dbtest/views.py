@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.contrib.auth.views import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
-
+import random
 '''
 Views to be written:
 	user_detail - show user info
@@ -63,7 +63,10 @@ def job_detail(request,job_id):
 	return render(request, 'dbtest/job_detail.html',{'job': job})
 
 def front_page(request):
-	return render(request, 'dbtest/front_page.html')
+	count = Job.objects.count()
+	random_num = random.randint(1,count)
+	showcase = Job.objects.get(id = random_num)
+	return render(request, 'dbtest/front_page.html',{'showcase': showcase})
 
 def search(request):
 	search = request.GET['search']
@@ -73,6 +76,10 @@ def search(request):
 def user_job_index(request,user_id):
 	jobs = User.objects.get(id=user_id).creator
 	return render(request,'dbtest/user_job_index.html',{'jobs':jobs})
+
+def user_membership(request,user_id):
+	membership = User.objects.get(id = user_id).members
+	return render(request,'dbtest/user_membership.html',{'membership': membership})
 
 def user_create(request):
 	#if this request was a POST and not a GET
