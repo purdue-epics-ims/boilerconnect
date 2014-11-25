@@ -114,3 +114,25 @@ def organization_create(request):
 	else:
 		form = OrganizationCreateForm()
 		return render(request, 'dbtest/organization_create.html', {'form':form})
+
+def job_create(request):
+	#if this request was a POST and not a GET
+	if request.method == 'POST':
+		form = JobCreateForm(request.POST)
+
+		#check form validity
+		if form.is_valid() :
+			job = form.save(commit=False)
+			job.creator = User.objects.get(id=1)
+			#create new org 
+			job.save()
+			title = "Job {0} created".format( job.name )
+			message = "Thank you for creating the job."
+			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+		else:
+			return render(request, 'dbtest/job_create.html', {'form':form,'error':"There are incorrect fields"})
+	#if the request was a GET
+	else:
+		form = JobCreateForm()
+		return render(request, 'dbtest/job_create.html', {'form':form})
+

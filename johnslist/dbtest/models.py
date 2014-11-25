@@ -65,4 +65,4 @@ class OrganizationCreateForm(ModelForm):
 class JobCreateForm(ModelForm):
 	class Meta:
 		model = Job
-		fields = ['name','description','duedate','requested']
+		fields = ['name','description','duedate','requested', 'categories']
