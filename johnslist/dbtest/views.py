@@ -5,6 +5,7 @@ from django.contrib.auth.views import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
+from .decorators import *
 '''
 Views to be written:
 	user_detail - show user info
@@ -48,6 +49,7 @@ def organization_job_index(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
 	return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
 
+@user_in_organization
 def organization_accept_job(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
 	if request.method == 'POST':
@@ -63,10 +65,7 @@ def job_detail(request,job_id):
 	return render(request, 'dbtest/job_detail.html',{'job': job})
 
 def front_page(request):
-	count = Job.objects.count()
-	random_num = random.randint(1,count)
-	showcase = Job.objects.get(id = random_num)
-	return render(request, 'dbtest/front_page.html',{'showcase': showcase})
+	return render(request, 'dbtest/front_page.html')
 
 def search(request):
 	search = request.GET['search']
@@ -110,7 +109,7 @@ def organization_create(request):
 		if form.is_valid() :
 			organization = form.save(commit=False)
 			#set the admin to user1 organization.admin = User.objects.get(id=1)
-			organization.admin = User.objects.get(id=1)
+			organization.admin = request.user
 			#create new org 
 			organization.save()
 			form.save_m2m()
