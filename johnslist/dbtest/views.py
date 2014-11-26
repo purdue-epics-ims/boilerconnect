@@ -49,7 +49,7 @@ def organization_job_index(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
 	return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
 
-@user_in_group
+@user_in_organization
 def organization_accept_job(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
 	if request.method == 'POST':
