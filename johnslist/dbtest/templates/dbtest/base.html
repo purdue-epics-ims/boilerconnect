@@ -1,14 +1,17 @@
+{% load staticfiles %}
 <html>
+	<head>
+	<link rel='stylesheet' type='text/css' href='{% static 'style.css' %}'/>
+	</head>
+
 	<body>
 		<div id ="header">
+			<a class="left" href="{% url 'front_page' %}">John's List</a>
 			{% block header %}
 			{% if user.is_authenticated %}
-				<h2>
-					Welcome {{user.username}}!! <br><br>
-				</h2>
-				<a href="{% url 'logout' %}"> LOGOUT </a>
-				{% else %}
-				<a href="{% url 'login' %}"> LOGIN </a>
+				<a class="right" href="{% url 'logout' %}"> LOGOUT </a>
+			{% else %}
+				<a class="right" href="{% url 'login' %}"> LOGIN </a>
 			{% endif %}
 			{% endblock %}
 		</div>
