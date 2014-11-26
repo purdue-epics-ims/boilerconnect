@@ -42,6 +42,7 @@ class Organization(models.Model):
 	admin = models.ForeignKey(User,related_name='admin')  # User -o= Organization 
 	members = models.ManyToManyField(User,related_name='members')  # User =-= Organization
 	categories = models.ManyToManyField(ServiceCategory)  # ServiceCategory =-= Organization
+	icon = models.ImageField(upload_to='organization',null=True)
 
 class Job(models.Model):
 	def __unicode__(self):
@@ -60,7 +61,7 @@ class Job(models.Model):
 class OrganizationCreateForm(ModelForm):
 	class Meta:
 		model = Organization
-		fields = ['name','description','categories']
+		fields = ['name','description','categories','icon']
 
 class JobCreateForm(ModelForm):
 	class Meta:

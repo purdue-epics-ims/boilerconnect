@@ -65,7 +65,10 @@ def job_detail(request,job_id):
 	return render(request, 'dbtest/job_detail.html',{'job': job})
 
 def front_page(request):
-	return render(request, 'dbtest/front_page.html')
+	count = Job.objects.count()
+	random_num = random.randint(1,count)
+	showcase = Job.objects.get(id = random_num)
+	return render(request, 'dbtest/front_page.html',{'showcase': showcase})
 
 def search(request):
 	search = request.GET['search']

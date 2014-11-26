@@ -1,6 +1,7 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
 Organization:{{organization.name}}<br>
+{% if organization.icon %}<img src="{{ organization.icon.url }}"/>{% endif %}
 Description:<code style="white-space: pre-wrap;"> {{organization.description}}</code><br>
 Admin:<a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a><br>
 <u>Users</u><br>
