@@ -59,7 +59,6 @@ def organization_accept_job(request,organization_id):
 	jobs = organization.requested.all()
 	return render(request, 'dbtest/organization_accept_job.html',{'organization': organization,'jobs':jobs})
 
-@user_has_object
 def job_detail(request,job_id):
 	job = Job.objects.get(id=job_id)
 	return render(request, 'dbtest/job_detail.html',{'job': job})
