@@ -6,7 +6,7 @@ Description:<code style="white-space: pre-wrap;"> {{organization.description}}</
 Admin:<a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a><br>
 <u>Users</u><br>
 {% for user in organization.members.all %}
-	<a href="{%url 'user_detail' user.id%}">{{user.name}}</a><br>
+	<a href="{%url 'user_detail' user.id%}">{{user.username}}</a><br>
 {% endfor %}<br>
 <p><a href='{%url 'organization_job_index' organization.id %}'>Jobs</a></p><br>
 {% endblock %}

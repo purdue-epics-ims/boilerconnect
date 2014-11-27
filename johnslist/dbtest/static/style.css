@@ -1,6 +1,9 @@
 body{
 	margin:0;
+	background-color:gray;
 	}
+
+/*----------- Header ------------*/
 
 #header{
 	color:lightblue;
@@ -18,7 +21,11 @@ body{
 	float:right;
 	margin:0;
 	}
+#header a:visited{
+	color:gold;
+	}
 
+/*----------- Footer ------------*/
 
 #footer {
 	color:lightblue;
@@ -29,6 +36,7 @@ body{
 
 
 
+/*----------- Content ------------*/
 
 #content {
 	max-width:600px;
