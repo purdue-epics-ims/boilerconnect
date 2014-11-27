@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 import random
 from .decorators import *
 '''
-Views to be written:
 	user_detail - show user info
 		contact
 		name
@@ -16,26 +15,25 @@ Views to be written:
 	organization_job_index - list organizations jobs
 		list accepted/requested jobs
 		for requested, link to 'accept job'
+	organization_accept_job - members/admin can accept organization jobs
 	job_detail - show job info
 		creator, name, description
 		link to user profile
+	front_page - organization search, logo, organization showcase
+	search - search results for search on front_page
+	user_job_index - list of jobs user has created
+	user_membership - list of organizations user is part of
 
-	create user - create a User
-	create job - create a Job
-	create Organiation - create an organization
-	add_member - add User to Organization 'members' field
-	accept_job - add Organization to to Job 'accepted' field
-	organization_search
-
-	front page
-	user login - login page for users
+	user_create
+	organization_create
+	job_create
 
 todo
+	add_member - add User to Organization 'members' field
 	use get_object_or_404 for database lookups
-	use django login view to handle logins
 '''
 
-@login_required
+@user_has_object
 def user_detail(request,user_id):
 	user = User.objects.get(id=user_id)
 	return render(request, 'dbtest/user_detail.html',{'user': user})
@@ -45,11 +43,12 @@ def organization_detail(request,organization_id):
 	jobs = Organization.objects.get(id=organization_id).accepted.all()
 	return render(request, 'dbtest/organization_detail.html',{'organization': organization,'jobs':jobs})
 
+@user_has_object
 def organization_job_index(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
 	return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
 
-@user_in_organization
+@user_has_object
 def organization_accept_job(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
 	if request.method == 'POST':
@@ -60,6 +59,7 @@ def organization_accept_job(request,organization_id):
 	jobs = organization.requested.all()
 	return render(request, 'dbtest/organization_accept_job.html',{'organization': organization,'jobs':jobs})
 
+@user_has_object
 def job_detail(request,job_id):
 	job = Job.objects.get(id=job_id)
 	return render(request, 'dbtest/job_detail.html',{'job': job})
@@ -75,10 +75,12 @@ def search(request):
 	search_result = Organization.objects.filter(name__icontains=search) 
 	return render(request,'dbtest/search.html',{'search_result': search_result})
 
+@user_has_object
 def user_job_index(request,user_id):
 	jobs = User.objects.get(id=user_id).creator
 	return render(request,'dbtest/user_job_index.html',{'jobs':jobs})
 
+@user_has_object
 def user_membership(request,user_id):
 	membership = User.objects.get(id = user_id).members
 	return render(request,'dbtest/user_membership.html',{'membership': membership})
