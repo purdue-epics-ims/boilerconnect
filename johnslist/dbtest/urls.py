@@ -15,4 +15,6 @@ urlpatterns = patterns('',
 	url(r'^user/(?P<user_id>[0-9]+)/user_job_index/?$', views.user_job_index,name='user_job_index'),
 	url(r'^login/?$', login,{'template_name':'dbtest/login.html'},name='login'),
 	url(r'^logout/?$', logout,{'template_name':'dbtest/logout.html'},name='logout'),
-	)
+	url(r'^user/edit/?$', views.user_edit,name='user_edit'),
+ )
+      
