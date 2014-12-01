@@ -3,7 +3,9 @@
 {% block content %}
 <h1>John's List</h1>
 
-showcase: <a href="{% url 'job_detail' showcase.id %}">{{showcase.name}}</a><br>
+Demo: <a href="{% url 'organization_detail' org1.id %}">{{org1.name}}</a>, <a href="{% url 'organization_detail' org2.id %}">{{org2.name}}</a>
+, <a href="{% url 'organization_detail' org3.id %}">{{org3.name}}</a><br>
+
 
 <form action="{% url 'search' %}" method="get">
 {% csrf_token %}
