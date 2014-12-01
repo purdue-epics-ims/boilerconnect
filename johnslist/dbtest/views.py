@@ -64,10 +64,20 @@ def job_detail(request,job_id):
 	return render(request, 'dbtest/job_detail.html',{'job': job})
 
 def front_page(request):
-	count = Job.objects.count()
-	random_num = random.randint(1,count)
-	showcase = Job.objects.get(id = random_num)
-	return render(request, 'dbtest/front_page.html',{'showcase': showcase})
+	count = Organization.objects.count()
+	random_num1 = random.randint(1,count)
+	org1 = Organization.objects.get(id = random_num1)
+	random_num2 = random.randint(1,count)
+	while random_num2 == random_num1:
+		random_num2 = random.randint(1,count)
+
+	org2 = Organization.objects.get(id = random_num2)
+	random_num3 = random.randint(1,count)
+	while random_num3 == random_num1 or random_num3 == random_num2:
+		random_num3 = random.randint(1,count)
+
+	org3 = Organization.objects.get(id = random_num3)
+	return render(request, 'dbtest/front_page.html',{'org1': org1,'org2': org2,'org3': org3})
 
 def search(request):
 	search = request.GET['search']
