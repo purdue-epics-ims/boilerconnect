@@ -5,9 +5,11 @@
 <br><br>
 {% if error %}<b>{{ error }}</b>
 {% endif %}
-<form action="{% url 'login' %}" method='POST'>
+<form class="login" action="{% url 'login' %}" method='POST'>
 {% csrf_token %}
+<table>
 {{ form }}
+</table>
 <input type="submit" value="Login">
 <input type="hidden" name="next" value="{{ next }}">
 </form>
