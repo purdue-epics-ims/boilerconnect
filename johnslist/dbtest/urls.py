@@ -17,4 +17,6 @@ urlpatterns = patterns('',
 	url(r'^user/(?P<user_id>[0-9]+)/user_membership/?$', views.user_membership,name='user_membership'),
 	url(r'^login/?$', login,{'template_name':'dbtest/login.html'},name='login'),
 	url(r'^logout/?$', logout,{'template_name':'dbtest/logout.html'},name='logout'),
-	)
+	url(r'^user/edit/?$', views.user_edit,name='user_edit'),
+ )
+      

@@ -54,6 +54,7 @@ def organization_accept_job(request,organization_id):
 	if request.method == 'POST':
 		job = Job.objects.get(id=request.POST['job_id'])
 		job.accepted.add(organization)
+		job.requested.remove(organization)
 		return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job.name)})
 
 	jobs = organization.requested.all()
@@ -64,10 +65,20 @@ def job_detail(request,job_id):
 	return render(request, 'dbtest/job_detail.html',{'job': job})
 
 def front_page(request):
-	count = Job.objects.count()
-	random_num = random.randint(1,count)
-	showcase = Job.objects.get(id = random_num)
-	return render(request, 'dbtest/front_page.html',{'showcase': showcase})
+	count = Organization.objects.count()
+	random_num1 = random.randint(1,count)
+	org1 = Organization.objects.get(id = random_num1)
+	random_num2 = random.randint(1,count)
+	while random_num2 == random_num1:
+		random_num2 = random.randint(1,count)
+
+	org2 = Organization.objects.get(id = random_num2)
+	random_num3 = random.randint(1,count)
+	while random_num3 == random_num1 or random_num3 == random_num2:
+		random_num3 = random.randint(1,count)
+
+	org3 = Organization.objects.get(id = random_num3)
+	return render(request, 'dbtest/front_page.html',{'org1': org1,'org2': org2,'org3': org3})
 
 def search(request):
 	search = request.GET['search']
@@ -126,6 +137,30 @@ def organization_create(request):
 	else:
 		form = OrganizationCreateForm()
 		return render(request, 'dbtest/organization_create.html', {'form':form})
+
+def user_edit(request):
+        #if this request was a POST and not a GET
+        args = {}
+	if request.method == 'POST':
+		form = UserCreationForm(request.POST, instance=request.user)
+                form.actual_user = request.user
+
+		#check form validity
+		if form.is_valid() :
+			#save user to db and store info to 'user'
+			user = form.save(commit = False)
+                        #user.username = request.user.username()
+			title = "User {0} modified".format( user.username )
+			message = "Your account has been modified."
+                        user.save()
+			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+		else:
+			return render(request, 'dbtest/user_edit.html', {'form':form,'error':"There are incorrect fields"})
+	#if the request was a GET
+	else:
+		form = UserCreationForm()
+                args['form'] = form
+		return render(request, 'dbtest/user_edit.html', args)
 
 def job_create(request):
 	#if this request was a POST and not a GET
