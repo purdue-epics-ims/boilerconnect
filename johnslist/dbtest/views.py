@@ -54,6 +54,7 @@ def organization_accept_job(request,organization_id):
 	if request.method == 'POST':
 		job = Job.objects.get(id=request.POST['job_id'])
 		job.accepted.add(organization)
+		job.requested.remove(organization)
 		return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job.name)})
 
 	jobs = organization.requested.all()
