@@ -83,13 +83,23 @@ USE_L10N = True
 
 USE_TZ = True
 
+MEDIA_ROOT='../media'
+MEDIA_URL='/media/'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/srv/www/epics/static/'
 
+# django auth settings
 # where to redirect if login is required
 LOGIN_URL = '/login'
-# where redirect after login if there was no last page ('next' variable)
+# where to redirect after login if there was no last page ('next' variable)
 LOGIN_REDIRECT_URL = '/'
+
+#custom defined settings
+
+# generic redirect url
+REDIRECT_URL = '/'

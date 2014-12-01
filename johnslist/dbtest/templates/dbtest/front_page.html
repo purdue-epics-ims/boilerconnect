@@ -1,10 +1,14 @@
 {% extends "dbtest/base.html" %}
 
 {% block content %}
-{% if user.is_authenticated %}
-You're logged in! <br>
-{% endif %}
-<a href="#logo">John's List</a><br>
+<h1>John's List</h1>
+
+Demo:<br>
+<a href="{% url 'organization_detail' org1.id %}">{% if org1.icon %}<img src="{{ org1.icon.url }}" >{% endif %}{{org1.name}}</a><br>
+<a href="{% url 'organization_detail' org2.id %}">{% if org2.icon %}<img src="{{ org2.icon.url }}" >{% endif %}{{org2.name}}</a><br>
+<a href="{% url 'organization_detail' org3.id %}">{% if org3.icon %}<img src="{{ org3.icon.url }}" >{% endif %}{{org3.name}}</a><br>
+
+
 <form action="{% url 'search' %}" method="get">
 {% csrf_token %}
 <input type="text" name="search"><br>

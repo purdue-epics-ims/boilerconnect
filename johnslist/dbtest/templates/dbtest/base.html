@@ -1,20 +1,33 @@
+{% load staticfiles %}
 <html>
-<body>
-<div id ="header">{% block header %}
-	{% if user.is_authenticated %}
-	<h2>
-		Welcome {{user.username}}!! <br><br>
-	</h2>
-	<a href="{% url 'logout' %}"> LOGOUT </a>
-	{% else %}
-	<a href="{% url 'login' %}"> LOGIN </a>
+	<head>
+	<link rel='stylesheet' type='text/css' href='{% static 'style.css' %}'/>
+	</head>
 
-{% endif %}
+	<body>
+		<div id ="header">
+			<a class="left" href="{% url 'front_page' %}">John's List</a>
+			{% block header %}
+			{% if user.is_authenticated %}
+				<a class="right" href="{% url 'logout' %}"> LOGOUT </a>
+			{% else %}
+				<a class="right" href="{% url 'login' %}"> LOGIN </a>
+			{% endif %}
+			{% endblock %}
+		</div>
 
-	{% endblock %}</div>
-<div id ="content">{% block content %}Content{% endblock %}</div>
-<div id ="footer">{% block footer %}Footer{% endblock %}</div>
-</body>
+		<div id ="content">
+			{% block content %}
+			Content
+			{% endblock %}
+		</div>
+
+		<div id ="footer">
+			{% block footer %}
+			Footer
+			{% endblock %}
+		</div>
+	</body>
 </html>
 
 

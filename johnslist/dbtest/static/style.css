@@ -1,0 +1,47 @@
+body{
+	margin:0;
+	background-color:gray;
+	}
+
+/*----------- Header ------------*/
+
+#header{
+	color:lightblue;
+	background-color:black;
+	text-align:right;
+	clear:both;
+	overflow:auto;
+	}
+
+#header .left{
+	float:left;
+	margin:0;
+	}
+#header .right{
+	float:right;
+	margin:0;
+	}
+#header a:visited{
+	color:gold;
+	}
+
+/*----------- Footer ------------*/
+
+#footer {
+	color:lightblue;
+	background-color:black;
+	bottom:0;
+	text-align:right;
+	}
+
+
+
+/*----------- Content ------------*/
+
+#content {
+	max-width:600px;
+	margin:1% auto 1% auto;
+	padding:5%;
+	background-color:lightgray;
+	border-radius:20px;
+	}
