@@ -2,12 +2,14 @@
 {% block content %}
 <b><u>{{ organization.name }}</b></u><br>
 {% for job in jobs %}
-<a href="{% url 'job_detail' job.id %}">{{ job.name }}</a>
-<form method=POST name="jobaccept" action="{% url 'organization_accept_job' organization.id %}">
-{% csrf_token %}
-<input type="hidden" name="job_id" value="{{ job.id }}">
-<input type="submit" value="Accept Job">
-</form>
+
+	<a href="{% url 'job_detail' job.id %}">{{ job.name }}</a>
+	<form method=POST name="jobaccept" action="{% url 'organization_accept_job' organization.id %}">
+	{% csrf_token %}
+	<input type="hidden" name="job_id" value="{{ job.id }}">
+	<input type="submit" value="Accept Job">
+	</form>
+
 
 {% endfor %}
 {% endblock %}
