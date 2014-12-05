@@ -4,9 +4,46 @@
 <h1>John's List</h1>
 
 Demo:<br>
-<a href="{% url 'organization_detail' org1.id %}">{% if org1.icon %}<img src="{{ org1.icon.url }}" >{% endif %}{{org1.name}}</a><br>
-<a href="{% url 'organization_detail' org2.id %}">{% if org2.icon %}<img src="{{ org2.icon.url }}" >{% endif %}{{org2.name}}</a><br>
-<a href="{% url 'organization_detail' org3.id %}">{% if org3.icon %}<img src="{{ org3.icon.url }}" >{% endif %}{{org3.name}}</a><br>
+<div id="myCarousel" class="carousel slide" data-ride="carousel">
+  <!-- Indicators -->
+  <ol class="carousel-indicators">
+	<li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+	<li data-target="#myCarousel" data-slide-to="1"></li>
+	<li data-target="#myCarousel" data-slide-to="2"></li>
+  </ol>
+  <div class="carousel-inner" role="listbox">
+	<div class="item active">
+	  <img src="{{ active_organization.icon.url }}" alt="{{ active_organization.name }} icon">
+	  <div class="container">
+		<div class="carousel-caption">
+		  <h1>{{ active_organization.name }} header example</h1>
+		  <p><a class="btn btn-lg btn-primary" href="{% url 'organization_detail' active_organization.id %}" role="button">Click here to view this organization</a></p>
+		</div>
+	  </div>
+	</div>
+  </div>
+  {% for organization in organizations %}
+  <div class="carousel-inner" role="listbox">
+	<div class="item">
+	  <img src="{{ organization.icon.url }}" alt="{{ organization.name }} icon">
+	  <div class="container">
+		<div class="carousel-caption">
+		  <h1>{{ organization.name }} header example</h1>
+		  <p><a class="btn btn-lg btn-primary" href="{% url 'organization_detail' organization.id %}" role="button">Click here to view this organization</a></p>
+		</div>
+	  </div>
+	</div>
+  </div>
+  {% endfor %}
+  <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+	<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+	<span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+	<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+	<span class="sr-only">Next</span>
+  </a>
+</div>
 
 
 <form action="{% url 'search' %}" method="get">

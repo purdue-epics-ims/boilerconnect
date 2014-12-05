@@ -78,7 +78,8 @@ def front_page(request):
 		random_num3 = random.randint(1,count)
 
 	org3 = Organization.objects.get(id = random_num3)
-	return render(request, 'dbtest/front_page.html',{'org1': org1,'org2': org2,'org3': org3})
+	organizations = [org2, org3]
+	return render(request, 'dbtest/front_page.html',{'active_organization':org1,'organizations':organizations})
 
 def search(request):
 	search = request.GET['search']
