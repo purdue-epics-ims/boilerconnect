@@ -10,11 +10,27 @@
 
 		<div class="panel-body">
 
-			<div class="well well-sm" style="width:100%;">
-				{% if organization.icon %}
+			<div class="well well-sm box" style="width:50%;">
+				<div class ="logo-img">
+					{% if organization.icon %}
 					<img src="{{ organization.icon.url }}"/>
-				{% endif %}
+					{% endif %}
+				</div>
 			</div>
+			<div class ="contact-info box">
+				<table class="table table-hover table-striped ">
+					<tr>
+						<td class="left">President</td><td>arazi@purdue.edu</td>
+					</tr>
+					<tr>
+						<td class="left">Academic Advisor</td><td>marygs@purdue.edu<td>
+					</tr>
+					<tr>
+						<td class="left">Phone</td><td>865-179-6755</td>
+					</tr>
+				</table>
+			</div>
+			
 		</div>
 	</div>
 	<!--	Org description 	-->

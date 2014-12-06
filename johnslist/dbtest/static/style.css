@@ -71,10 +71,19 @@ body{
 }
 
 .profile-container .panel{
-	font-size:14pt;
 	margin-bottom: 0px;
+	border: 1px solid #f3f3f3;
 }
 
 .profile-container .well{
 	padding: 10px;
+}
+.profile-container img{
+	padding: 10px;
+	background-color: white;
+}
+
+.profile-container .box{
+	width: 49%;
+	display: inline-block;
 }
