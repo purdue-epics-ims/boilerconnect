@@ -41,6 +41,8 @@ class Organization(models.Model):
 	description = models.TextField('Organization Description')
 	admin = models.ForeignKey(User,related_name='admin')  # User -o= Organization 
 	members = models.ManyToManyField(User,related_name='members')  # User =-= Organization
+	email = models.CharField('email', max_length = 64, unique = True)
+	phone = models.CharField('phone', max_length = 64, unique = True)
 	categories = models.ManyToManyField(ServiceCategory)  # ServiceCategory =-= Organization
 	icon = models.ImageField(upload_to='organization',null=True)
 
