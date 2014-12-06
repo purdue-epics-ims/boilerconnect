@@ -1,29 +1,36 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
 	
-	<div class = "profile-container">
-		<div class="panel">
+<div class = "profile-container">
+	<div class="panel">
+		<div class="panel-heading">
 			<div class="">{{organization.name}}</div>
+		</div>
 
+		<div class="panel-body">
+
+			<div class="well well-sm" style="width:100%;">
+				<br>
+				{% if organization.icon %}
+					<img src="{{ organization.icon.url }}"/>
+				{% endif %}
+				<h4>Description:</h4><p><code style="white-space: pre-wrap;"> {{organization.description}}</code></p>
+				<br>
+				Admin:
+				<br>
+				<a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a>
+				<br>
+				Users:
+				<br>
+				<ul>
+					{% for user in organization.members.all %}
+						<li><a href="{%url 'user_detail' user.id%}">{{user.username}}</a></li>
+					{% endfor %}
+				</ul><br>
+				<p><a href='{%url 'organization_job_index' organization.id %}'>Jobs</a></p>
+				<br>
+			</div>
 		</div>
 	</div>
-	<br>
-	{% if organization.icon %}
-		<img src="{{ organization.icon.url }}"/>
-	{% endif %}
-	<h4>Description:</h4><p><code style="white-space: pre-wrap;"> {{organization.description}}</code></p>
-	<br>
-	Admin:
-	<br>
-	<a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a>
-	<br>
-	Users:
-	<br>
-	<ul>
-		{% for user in organization.members.all %}
-			<li><a href="{%url 'user_detail' user.id%}">{{user.username}}</a></li>
-		{% endfor %}
-	</ul><br>
-	<p><a href='{%url 'organization_job_index' organization.id %}'>Jobs</a></p>
-	<br>
+</div>
 {% endblock %}

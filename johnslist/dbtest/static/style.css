@@ -56,7 +56,7 @@ body{
 
 /*----------- Org profile -------------*/
 
-.profile-container .panel{
+.profile-container .panel-heading{
 	background-color:#333333;
 	padding: 10px;
 	padding-left: 20px;
