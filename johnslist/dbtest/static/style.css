@@ -80,6 +80,7 @@ body{
 }
 .profile-container img{
 	padding: 10px;
+	width: 100%;
 	background-color: white;
 }
 
