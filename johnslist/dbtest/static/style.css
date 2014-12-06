@@ -4,7 +4,6 @@ html{
 }
 body{
 	margin-bottom: 60px;
-	background-color:gray;
 	}
 
 /*----------- Header ------------*/
@@ -50,18 +49,18 @@ body{
 }
 
 #content {
-	max-width:800px;
-	margin:1% auto 1% auto;
-	background-color:lightgray;
+	max-width:600px;
+	margin:1% auto 70px auto;
+	padding:5%;
 	}
 
 /*----------- Org profile -------------*/
 
-.panel .panel-heading{
-	background-color:darkgray;
+.profile-container .panel{
+	padding: 10px;
+	background-color:#333333;
+	font-size:14pt;
+	color:white;
+	border-radius: 0px;
+
 }
-
-
-
-
-
