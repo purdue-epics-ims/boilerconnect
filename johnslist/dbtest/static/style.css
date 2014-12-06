@@ -50,15 +50,9 @@ body{
 }
 
 #content {
-<<<<<<< HEAD
 	max-width:600px;
 	margin:1% auto 70px auto;
 	padding:5%;
-=======
-	max-width:800px;
-	margin:1% auto 1% auto;
->>>>>>> 4687c38a4e4e22c81a6d88e3830598fe3b7d6019
-	background-color:lightgray;
 	}
 
 /*----------- Org profile -------------*/
