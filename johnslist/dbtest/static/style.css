@@ -3,7 +3,7 @@ html{
 	position:relative;
 }
 body{
-	margin-bottom: 60px;
+	margin-bottom: 60px;	
 	}
 
 /*----------- Header ------------*/
@@ -57,10 +57,15 @@ body{
 /*----------- Org profile -------------*/
 
 .profile-container .panel{
-	padding: 10px;
 	background-color:#333333;
+	padding: 10px;
+	padding-left: 20px;
 	font-size:14pt;
 	color:white;
 	border-radius: 0px;
-
 }
+/*
+.profile-container .panel h1{
+	background-color:#333333;
+	font-size:14pt;
+}*/

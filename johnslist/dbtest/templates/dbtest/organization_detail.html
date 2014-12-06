@@ -3,11 +3,10 @@
 	
 	<div class = "profile-container">
 		<div class="panel">
-			<div class="">Engineers Without Borders</div>
+			<div class="">{{organization.name}}</div>
 
 		</div>
 	</div>
-	<u><h3>Organization: {{organization.name}}</h3></u>
 	<br>
 	{% if organization.icon %}
 		<img src="{{ organization.icon.url }}"/>
