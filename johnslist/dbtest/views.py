@@ -163,6 +163,30 @@ def user_edit(request):
                 args['form'] = form
 		return render(request, 'dbtest/user_edit.html', args)
 
+def organization_edit(request):
+        #if this request was a POST and not a GET
+        args = {}
+	if request.method == 'POST':
+		form = OrganizationCreateForm(request.POST, instance=request.organization)
+                form.actual_organization = request.organization
+
+		#check form validity
+		if form.is_valid() :
+			#save organization to db and store info to 'organization'
+			organization = form.save(commit = False)
+			title = "Organization {0} modified".format( organization.username )
+			message = "Your account has been modified."
+                        organization.save()
+			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+		else:
+			return render(request, 'dbtest/organization_edit.html', {'form':form,'error':"There are incorrect fields"})
+	#if the request was a GET
+	else:
+		form = OrganizationCreateForm()
+                args['form'] = form
+		return render(request, 'dbtest/organization_edit.html', args)
+
+
 def job_create(request):
 	#if this request was a POST and not a GET
 	if request.method == 'POST':

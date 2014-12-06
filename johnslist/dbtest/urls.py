@@ -18,5 +18,6 @@ urlpatterns = patterns('',
 	url(r'^login/?$', login,{'template_name':'dbtest/login.html'},name='login'),
 	url(r'^logout/?$', logout,{'template_name':'dbtest/logout.html'},name='logout'),
 	url(r'^user/edit/?$', views.user_edit,name='user_edit'),
+        url(r'^organization/edit/?$', views.organization_edit,name='organization_edit'),
  )
       
