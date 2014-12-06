@@ -3,8 +3,8 @@ html{
 	position:relative;
 }
 body{
-	margin-bottom: 60px;	
-	}
+	margin-bottom: 60px;
+}
 
 /*----------- Header ------------*/
 
@@ -50,9 +50,8 @@ body{
 
 #content {
 	max-width:800px;
-	margin:1% auto 1% auto;
-	background-color:lightgray;
-	}
+	margin:1% auto 70px auto;
+}
 
 /*----------- Org profile -------------*/
 
@@ -64,8 +63,3 @@ body{
 	color:white;
 	border-radius: 0px;
 }
-/*
-.profile-container .panel h1{
-	background-color:#333333;
-	font-size:14pt;
-}*/
