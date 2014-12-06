@@ -42,6 +42,8 @@ class Organization(models.Model):
 	admin = models.ForeignKey(User,related_name='admin')  # User -o= Organization 
 	members = models.ManyToManyField(User,related_name='members')  # User =-= Organization
 	categories = models.ManyToManyField(ServiceCategory)  # ServiceCategory =-= Organization
+	email = models.CharField('Organization email',max_length=64,unique=True)
+	phone_number = models.CharField('Organization phone number',max_length=64,unique=True)
 	icon = models.ImageField(upload_to='organization',null=True)
 
 class Job(models.Model):
