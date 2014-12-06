@@ -1,5 +1,6 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
+	<div class="panel-heading">Engineers Without Borders</div>
 	<u><h3>Organization: {{organization.name}}</h3></u>
 	<br>
 	{% if organization.icon %}
@@ -13,12 +14,11 @@
 	<br>
 	Users:
 	<br>
-	<ol>
+	<ul>
 		{% for user in organization.members.all %}
-			<a href="{%url 'user_detail' user.id%}">{{user.username}}</a>
-			<br>
+			<li><a href="{%url 'user_detail' user.id%}">{{user.username}}</a></li>
 		{% endfor %}
-	</ol><br>
+	</ul><br>
 	<p><a href='{%url 'organization_job_index' organization.id %}'>Jobs</a></p>
 	<br>
 {% endblock %}
