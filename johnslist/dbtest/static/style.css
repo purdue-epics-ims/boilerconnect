@@ -51,6 +51,7 @@ body{
 #content {
 	max-width:800px;
 	margin:1% auto 70px auto;
+	background-color: #fcfcfc;
 }
 
 /*----------- Org profile -------------*/
