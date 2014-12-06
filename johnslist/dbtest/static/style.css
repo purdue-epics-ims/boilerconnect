@@ -4,7 +4,6 @@ html{
 }
 body{
 	margin-bottom: 60px;
-	background-color:gray;
 	}
 
 /*----------- Header ------------*/
@@ -57,11 +56,11 @@ body{
 
 /*----------- Org profile -------------*/
 
-.panel .panel-heading{
-	background-color:darkgray;
+.profile-container .panel{
+	padding: 10px;
+	background-color:#333333;
+	font-size:14pt;
+	color:white;
+	border-radius: 0px;
+
 }
-
-
-
-
-
