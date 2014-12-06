@@ -64,3 +64,17 @@ body{
 	color:white;
 	border-radius: 0px;
 }
+
+.profile-container .panel-body{
+	font-size:14pt;
+	padding-bottom: 0px;
+}
+
+.profile-container .panel{
+	font-size:14pt;
+	margin-bottom: 0px;
+}
+
+.profile-container .well{
+	padding: 10px;
+}

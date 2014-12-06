@@ -1,7 +1,8 @@
 {% extends "dbtest/base.html" %}
-{% block content %}
+{% block content %}	
 	
 <div class = "profile-container">
+	<!--	Org logo and contact info	-->
 	<div class="panel">
 		<div class="panel-heading">
 			<div class="">{{organization.name}}</div>
@@ -10,12 +11,34 @@
 		<div class="panel-body">
 
 			<div class="well well-sm" style="width:100%;">
-				<br>
 				{% if organization.icon %}
 					<img src="{{ organization.icon.url }}"/>
 				{% endif %}
-				<h4>Description:</h4><p><code style="white-space: pre-wrap;"> {{organization.description}}</code></p>
-				<br>
+			</div>
+		</div>
+	</div>
+	<!--	Org description 	-->
+	<div class="panel">
+		<div class="panel-heading">
+			<div class="">Descirption</div>
+		</div>
+
+		<div class="panel-body">
+
+			<div class="well well-sm" style="width:100%;">
+				<code style="white-space: pre-wrap;"> {{organization.description}}</code>
+			</div>
+		</div>
+	</div>
+	<!--	Org members 	-->
+	<div class="panel">
+		<div class="panel-heading">
+			<div class="">Members</div>
+		</div>
+
+		<div class="panel-body">
+
+			<div class="well well-sm" style="width:100%;">
 				Admin:
 				<br>
 				<a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a>
@@ -26,9 +49,8 @@
 					{% for user in organization.members.all %}
 						<li><a href="{%url 'user_detail' user.id%}">{{user.username}}</a></li>
 					{% endfor %}
-				</ul><br>
+				</ul>
 				<p><a href='{%url 'organization_job_index' organization.id %}'>Jobs</a></p>
-				<br>
 			</div>
 		</div>
 	</div>
