@@ -1,0 +1,76 @@
+html{
+	min-height:100%;
+	position:relative;
+}
+body{
+	margin-bottom: 60px;	
+	}
+
+/*----------- Header ------------*/
+
+
+/*----------- Footer ------------*/
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	/* Set the fixed height of the footer here */
+	height: 60px;
+	background-color: #f5f5f5;
+}
+
+
+
+/*----------- Content ------------*/
+
+/*----------- Gallery ------------*/
+.carousel{
+	/* Hide any overflow on the gallery */
+	height:300px;
+	overflow:hidden;
+}
+
+.carousel .container img{
+	display:block;
+	margin:auto;
+}
+
+.carousel .container{
+	/* make header/button stay at a fixed height within the gallery window */
+	height:300px;
+	width:100%;
+}
+
+/*----------- Login ------------*/
+
+.login td{
+	padding:10px;
+}
+
+#content {
+	max-width:600px;
+	margin:1% auto 70px auto;
+	padding:5%;
+	}
+
+/*----------- Org profile -------------*/
+
+.profile-container .panel{
+	background-color:#333333;
+	padding: 10px;
+	padding-left: 20px;
+	font-size:14pt;
+	color:white;
+	border-radius: 0px;
+<<<<<<< HEAD
+}
+/*
+.profile-container .panel h1{
+	background-color:#333333;
+	font-size:14pt;
+}*/
+=======
+
+}
+>>>>>>> 16d271245933da952487b83d221677089ac59333
