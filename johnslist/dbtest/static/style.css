@@ -23,22 +23,66 @@ body{
 
 
 /*----------- Content ------------*/
+.search-box .box{
+	display: inline-block;
+	width: 49%;
+}
+
+.search-box{
+	/* Hide any overflow on the gallery */
+	padding: 40px;
+}
+
+.search-box h1{
+	/* Hide any overflow on the gallery */
+	font-size: 50px;
+}
+
+.search-box .input-box{
+	padding: 10px;
+	padding-left: 20px;
+}
+
+.search-box .search-btn{
+	padding: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
+	background-color: #cc9900;
+	border: 2px solid #cc9900;
+	color: white;
+}
+
+.search-box .search-btn:hover{
+	background-color: #997300;
+	border: 2px solid #997300;
+}
+
 
 /*----------- Gallery ------------*/
 .carousel{
 	/* Hide any overflow on the gallery */
-	height:300px;
+	height:400px;
 	overflow:hidden;
 }
 
 .carousel .container img{
 	display:block;
+	height: 100%;
+	max-width: 100%;
 	margin:auto;
+}
+
+.carousel .carousel-inner{
+	margin: 10px;
+}
+
+.carousel .carousel-caption{
+	margin: 20px;
 }
 
 .carousel .container{
 	/* make header/button stay at a fixed height within the gallery window */
-	height:300px;
+	height:400px;
 	width:100%;
 }
 

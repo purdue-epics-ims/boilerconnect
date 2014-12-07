@@ -1,46 +1,56 @@
 {% extends "dbtest/base.html" %}
 
 {% block content %}
-<h1>John's List</h1>
 
 <!----------- Search ---------->
 
-<form action="{% url 'search' %}" method="get">
-{% csrf_token %}
-<input type="text" name="search"><br>
-<input type="submit" value="search">
-</form>
+<!-- Search Box -->
+<div class = "jumbotron search-box">
+	<h1>Welcome to BoilerConnect</h1>
+	<br>
+	<p>Looking for help? Search here.</p>
+	<div class = "search-form box">
+		<form action="{% url 'search' %}" method="get">
+		{% csrf_token %}
+		<input class="input-box" type="text" name="search" placeholder="Search for a group">
+		<input class="search-btn" type="submit" value="Search">
+		</form>
+	</div>
+</div>
 
 <!----------- Gallery ---------->
 
-Demo:<br>
 <div id="carousel" class="carousel slide" data-ride="carousel">
   <ol class="carousel-indicators">
 	<li data-target="#carousel" data-slide-to="0" class="active"></li>
 	<li data-target="#carousel" data-slide-to="1"></li>
 	<li data-target="#carousel" data-slide-to="2"></li>
   </ol>
-  <div class="carousel-inner">
-	<div class="item active">
-	  <div class="container">
-	  <div><img src="{{ active_organization.icon.url }}" alt="{{ active_organization.name }} icon"></div>
-		<div class="carousel-caption">
-		  <h1>{{ active_organization.name }}</h1>
-		  <p><a class="btn btn-lg btn-primary" href="{% url 'organization_detail' active_organization.id %}" role="button">Click here to view this organization</a></p>
+  	<div class="carousel-inner">
+		<div class="item active">
+		  	<div class="container">
+		  		<div>
+		  			<img src="{{ active_organization.icon.url }}" alt="{{ active_organization.name }} icon">
+		  		</div>
+				<div class="carousel-caption">
+		  			<h1>{{ active_organization.name }}</h1>
+		  			<p><a class="search-btn btn btn-lg btn-primary" href="{% url 'organization_detail' active_organization.id %}" role="button">Click here to view this organization</a></p>
+				</div>
+		  	</div>
 		</div>
-	  </div>
-	</div>
-  {% for organization in organizations %}
-	<div class="item">
-	  <div class="container">
-	  <div><img src="{{ organization.icon.url }}" alt="{{ organization.name }} icon"></div>
-		<div class="carousel-caption">
-		  <h1>{{ organization.name }}</h1>
-		  <p><a class="btn btn-lg btn-primary" href="{% url 'organization_detail' organization.id %}" role="button">Click here to view this organization</a></p>
+	  	{% for organization in organizations %}
+		<div class="item">
+		  	<div class="container">
+				<div>
+					<img src="{{ organization.icon.url }}" alt="{{ organization.name }} icon">
+				</div>
+				<div class="carousel-caption">
+				  	<h1>{{ organization.name }}</h1>
+				  	<p><a class="btn btn-lg btn-primary" href="{% url 'organization_detail' organization.id %}" role="button">Click here to view this organization</a></p>
+				</div>
+			</div>
 		</div>
-	  </div>
-	</div>
-  {% endfor %}
+	  	{% endfor %}
 	</div>
   <a class="left carousel-control" href="#carousel" role="button" data-slide="prev">
 	<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
@@ -51,12 +61,11 @@ Demo:<br>
 	<span class="sr-only">Next</span>
   </a>
 </div>
-	
-<script>
-$(document).ready(function(){ 
-$('.carousel').carousel();
-});
+	<script>
+	$(document).ready(function(){ 
+	$('.carousel').carousel();
+	});
 
-</script>
+	</script>
 
 {% endblock content %}
