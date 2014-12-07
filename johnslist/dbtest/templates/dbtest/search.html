@@ -1,6 +1,21 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
-<u>search result</u><br><br>
-{% for organization in search_result %}<a href = "{% url 'organization_detail' organization.id %}">{{organization.name}}</a><br>
-{% endfor %}
+	<div class="panel-heading">
+		<div class="">
+			Search Results
+		</div>
+	</div>
+	<div class = "jumbotron" >
+		<p>The search return the following results:</p>
+		<div class ="contact-info box">
+				<table class="table table-hover table-striped ">
+					{% for organization in search_result %}
+						<tr>
+							<td><a href = "{% url 'organization_detail' organization.id %}">{{organization.name}}</a></td>
+						</tr>
+					{% endfor %}
+					</tr>
+				</table>
+			</div>
+	</div>
 {% endblock %}
