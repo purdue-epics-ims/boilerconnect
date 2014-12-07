@@ -31,6 +31,8 @@ from .decorators import *
 todo
 	add_member - add User to Organization 'members' field
 	use get_object_or_404 for database lookups
+	user_edit - this barely works and you have to change your username everytime you want to change something
+	organization_edit - this doesn't work at all
 '''
 
 @user_has_object
