@@ -32,8 +32,6 @@
 					  <ul class="dropdown-menu" role="menu">
 					    <li><a href="{% url 'logout' %}">Logout</a></li>
                                             <li><a href="{% url 'user_edit' %}">Modify User</a></li>
-					    <li><a href="#">Another action</a></li>
-					    <li><a href="#">Something else here</a></li>
 					    <li class="divider"></li>
 					    <li class="dropdown-header">Member of</li>
 						{% for organization in user.members.all %}
