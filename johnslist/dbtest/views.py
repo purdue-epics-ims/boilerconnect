@@ -140,6 +140,8 @@ def organization_create(request):
 	else:
 		form = OrganizationCreateForm()
 		return render(request, 'dbtest/organization_create.html', {'form':form})
+
+@login_required
 def user_edit(request):
         #if this request was a POST and not a GET
         args = {}
@@ -164,6 +166,7 @@ def user_edit(request):
                 args['form'] = form
 		return render(request, 'dbtest/user_edit.html', args)
 
+@login_required
 def organization_edit(request):
         #if this request was a POST and not a GET
         args = {}
