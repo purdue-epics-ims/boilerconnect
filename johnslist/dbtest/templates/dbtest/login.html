@@ -1,16 +1,23 @@
 {% extends "dbtest/base.html" %}
 
 {% block content %}
-<h1> login </h1>
-<br><br>
-{% if error %}<b>{{ error }}</b>
-{% endif %}
-<form class="login" action="{% url 'login' %}" method='POST'>
-{% csrf_token %}
-<table>
-{{ form }}
-</table>
-<input type="submit" value="Login">
-<input type="hidden" name="next" value="{{ next }}">
-</form>
+
+	<div class="panel-heading">
+		<div class="">
+			LOGIN
+		</div>
+	</div>
+	<br>
+	<div class = "jumbotron"
+		{% if error %}<b>{{ error }}</b>
+		{% endif %}
+		<form class="login" action="{% url 'login' %}" method='POST'>
+		{% csrf_token %}
+		<table class = "input-table">
+		{{ form }}
+		</table>
+		<input type="submit" value="Login" class = "custom-btn" >
+		<input type="hidden" name="next" value="{{ next }}">
+		</form>
+	</div>
 {% endblock content %}

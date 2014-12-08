@@ -19,6 +19,11 @@ body{
 	border-radius: 0px;
 }
 
+.input-table input{
+	padding: 5px;
+	padding-left: 20px;
+}
+
 
 /*----------- Header ------------*/
 
@@ -39,6 +44,21 @@ body{
 
 
 /*----------- Content ------------*/
+
+.custom-btn{
+	padding: 5px;
+	padding-left: 20px;
+	padding-right: 20px;
+	background-color: #cc9900;
+	border: 2px solid #cc9900;
+	color: white;
+}
+
+.custom-btn:hover{
+	background-color: #997300;
+	border: 2px solid #997300;
+}
+
 .search-box .box{
 	display: inline-block;
 	width: 49%;
@@ -47,6 +67,7 @@ body{
 .search-box{
 	/* Hide any overflow on the gallery */
 	padding: 40px;
+	
 }
 
 .search-box h1{
