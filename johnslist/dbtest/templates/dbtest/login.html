@@ -16,8 +16,16 @@
 		<table class = "input-table">
 		{{ form }}
 		</table>
-		<input type="submit" value="Login" class = "custom-btn" >
+		<br>
+		<input class = "custom-btn" type="submit" value="Login"  >
 		<input type="hidden" name="next" value="{{ next }}">
 		</form>
+		<br>
+		<br>
+		<div id= "create_user">
+			<p>Not a user? 
+			<a href="{% url 'user_create' %}">Sign up here</a>
+			</p>
+		</div>
 	</div>
 {% endblock content %}

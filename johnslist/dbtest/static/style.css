@@ -24,6 +24,12 @@ body{
 	padding-left: 20px;
 }
 
+.input-table span{
+	padding: 5px;
+	padding-left: 20px;
+	color: gray;
+}
+
 
 /*----------- Header ------------*/
 

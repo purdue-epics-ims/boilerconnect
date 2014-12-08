@@ -6,7 +6,11 @@
 		</div>
 	</div>
 	<div class = "jumbotron" >
-		<p>The search return the following results:</p>
+		{% if organization in search_result %}
+			<p>The search return the following results:</p>
+		{% else %}
+			<p>No organization in the database matched your search terms</p>
+		{%endif%}
 		<div class ="contact-info box">
 				<table class="table table-hover table-striped ">
 					{% for organization in search_result %}
