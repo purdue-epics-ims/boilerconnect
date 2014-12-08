@@ -12,14 +12,14 @@
 			<p>No organization in the database matched your search terms</p>
 		{%endif%}
 		<div class ="contact-info box">
-				<table class="table table-hover table-striped ">
-					{% for organization in search_result %}
-						<tr>
-							<td><a href = "{% url 'organization_detail' organization.id %}">{{organization.name}}</a></td>
-						</tr>
-					{% endfor %}
+			<table class="table table-hover table-striped ">
+				{% for organization in search_result %}
+					<tr>
+						<td><a href = "{% url 'organization_detail' organization.id %}">{{organization.name}}</a></td>
 					</tr>
-				</table>
-			</div>
+				{% endfor %}
+				</tr>
+			</table>
+		</div>
 	</div>
 {% endblock %}

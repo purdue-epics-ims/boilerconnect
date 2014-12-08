@@ -1,9 +1,14 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
-<u>Job Information</u><br>
-<h1>Job ID : {{job.id}}<br></h1><br>
-Job Name: {{ job.name }}<br>
-Job Description : {{job.description}}<br>
-Job Due Date : {{job.duedate}}<br><br>
-Job Creator : <a href="{% url 'user_detail' job.id %}">{{ job.creator }}</a><br>
+	<div class="panel-heading">
+		<div class="">
+			Job Information : {{ job.name }}
+		</div>
+	</div>
+	
+	<div class = "jumbotron" >
+		<p><u>Job Description</u> : {{job.description}}</p>
+		<p><u>Job Due Date</u> : {{job.duedate}}</p>
+		<p><u>Job Creator</u> : <a href="{% url 'user_detail' job.id %}">{{ job.creator }}</p>
+	</div>
 {% endblock content %}
