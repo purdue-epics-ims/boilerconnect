@@ -33,6 +33,7 @@
 					    <li><a href="{% url 'logout' %}">Logout</a></li>
                         <li><a href="{% url 'user_edit' %}">Modify User</a></li>
                         <li><a href="{% url 'organization_create' %}">Create a new organization</a></li>
+                        <li><a href="{% url 'job_create' %}">Create a new job request</a></li>
 					    <li class="divider"></li>
 					    <li class="dropdown-header">Member of</li>
 						{% for organization in user.members.all %}
