@@ -1,25 +1,20 @@
 {% extends "dbtest/base.html" %}
-
 {% block content %}
 	<div class="panel-heading">
-		<div class="">
-			Create a job
-		</div>
+		Create a job
 	</div>
-	<br><br>
-
+	<div class="jumbotron">
 		{% if error %}<b>{{ error }}</b>
 		{% endif %}
 		{% if name %}<b>Job:{{ name }}.  Please check your email for a confirmation message.</b>
 		{% else %}
 		<form action="{% url 'job_create' %}" method="post">
 		{% csrf_token %}
-		<tabel class = "input-table">
-		{{ form }}
+		<table class = "input-table">
+			{{ form }}
 		</table>
 		<input class = "custom-btn" type="submit" value="Create Job">
 		</form>
-
-
-	{% endif %}
+		{% endif %}
+	</div>
 {% endblock %}
