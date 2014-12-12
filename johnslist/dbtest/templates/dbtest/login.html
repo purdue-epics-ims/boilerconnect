@@ -9,8 +9,6 @@
 	</div>
 	<br>
 	<div class = "jumbotron">
-		{% if error %}<b>{{ error }}</b>
-		{% endif %}
 		<form class="login" action="{% url 'login' %}" method='POST'>
 		{% csrf_token %}
 		<table class = "input-table">

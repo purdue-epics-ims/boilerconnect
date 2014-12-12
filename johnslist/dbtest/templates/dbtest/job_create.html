@@ -4,8 +4,6 @@
 		Create a job
 	</div>
 	<div class="jumbotron">
-		{% if error %}<b>{{ error }}</b>
-		{% endif %}
 		{% if name %}<b>Job:{{ name }}.  Please check your email for a confirmation message.</b>
 		{% else %}
 		<form action="{% url 'job_create' %}" method="post">

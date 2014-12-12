@@ -1,12 +1,10 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
 
-<div class="panel-heading">
+<div class="panel heading">
 	Change your username or password.
 </div>
 <div class="jumbotron">
-	{% if error %}<b>{{ error }}</b>
-	{% endif %}
 	{% if username %}
 		<b>Welcome {{ username }}.  Please check your email for a confirmation message.</b>
 	{% else %}

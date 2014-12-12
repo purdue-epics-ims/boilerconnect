@@ -54,7 +54,16 @@
       
 		</div>
 
+
 		<div id ="content">
+			<!-- div for displaying miscellaneous errors -->
+			{% if error %}
+			<div id="error">
+				<div class="alert alert-danger">
+					{{ error }}
+				</div>
+			</div>
+			{% endif %}
 			{% block content %}
 			Content
 			{% endblock %}
