@@ -3,11 +3,8 @@
 {% block content %}
 
 	<div class="panel-heading">
-		<div class="">
 			LOGIN
-		</div>
 	</div>
-	<br>
 	<div class = "jumbotron">
 		<form class="login" action="{% url 'login' %}" method='POST'>
 		{% csrf_token %}
