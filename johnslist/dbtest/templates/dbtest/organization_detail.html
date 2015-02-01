@@ -6,7 +6,11 @@ Description:<code style="white-space: pre-wrap;"> {{organization.description}}</
 Admin:<a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a><br>
 <u>Users</u><br>
 {% for user in organization.members.all %}
-	<a href="{%url 'user_detail' user.id%}">{{user.username}}</a><br>
+	<a href="{% url 'user_detail' user.id %}">{{user.username}}</a><br>
 {% endfor %}<br>
-<p><a href='{%url 'organization_job_index' organization.id %}'>Jobs</a></p><br>
+<p><a href='{% url 'organization_job_index' organization.id %}'>Jobs</a></p><br>
+Categories:
+{% for category in organization.categories.all %}
+	<a href="{% url 'search' category.name %}">{{category.name}}</a><br>
+{% endfor %}<br>
 {% endblock %}
