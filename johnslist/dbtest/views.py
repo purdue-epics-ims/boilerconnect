@@ -1,11 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from .models import *
 from django.http import HttpResponse
 from django.contrib.auth.views import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
-from .decorators import *
+from .decorators import user_has_object
 '''
 	user_detail - show user info
 		contact
@@ -37,7 +37,7 @@ todo
 
 @user_has_object
 def user_detail(request,user_id):
-	user = User.objects.get(id=user_id)
+	user = get_object_or_404(User,id=user_id)
 	return render(request, 'dbtest/user_detail.html',{'user': user})
 
 def organization_detail(request,organization_id):
@@ -150,16 +150,16 @@ def user_edit(request):
         args = {}
 	if request.method == 'POST':
 		form = UserCreationForm(request.POST, instance=request.user)
-                form.actual_user = request.user
+		form.actual_user = request.user
 
 		#check form validity
 		if form.is_valid() :
 			#save user to db and store info to 'user'
 			user = form.save(commit = False)
-                        #user.username = request.user.username()
+			#user.username = request.user.username()
 			title = "User {0} modified".format( user.username )
 			message = "Your account has been modified."
-                        user.save()
+			user.save()
 			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
 		else:
 			return render(request, 'dbtest/user_edit.html', {'form':form,'error':"There are incorrect fields"})
