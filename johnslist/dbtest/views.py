@@ -85,7 +85,10 @@ def front_page(request):
 
 def search(request):
 	search = request.GET['search']
-	search_result = Organization.objects.filter(name__icontains=search) 
+	search_result = Organization.objects.filter(name__icontains=search)	
+	for category in ServiceCategory.objects.filter(name__icontains=search):
+		search_result = search_result | category.organization_set.all()
+	
 	return render(request,'dbtest/search.html',{'search_result': search_result})
 
 @user_has_object
