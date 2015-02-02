@@ -1,74 +1,16 @@
 {% extends "dbtest/base.html" %}
-{% block content %}	
-	
-<div class = "profile-container">
-	<!--	Org logo and contact info	-->
-	<div class="panel">
-		<div class="panel-heading">
-			<div class="">{{organization.name}}</div>
-		</div>
-
-		<div class="panel-body">
-
-			<div class="well well-sm box" style="width:50%;">
-				<div class ="logo-img">
-					{% if organization.icon %}
-					<img src="{{ organization.icon.url }}"/>
-					{% endif %}
-				</div>
-			</div>
-			<div class ="contact-info box">
-				<table class="table table-hover table-striped ">
-					<tr>
-						<td class="left">Organization</td><td>{{ organization.name }}</td>
-					</tr>
-					<tr>
-						<td class="left">Email</td><td>{{ organization.email }}<td>
-					</tr>
-					<tr>
-						<td class="left">Phone</td><td>865-179-6755</td>
-					</tr>
-				</table>
-			</div>
-			
-		</div>
-	</div>
-	<!--	Org description 	-->
-	<div class="panel">
-		<div class="panel-heading">
-			<div class="">Description</div>
-		</div>
-
-		<div class="panel-body">
-
-			<div class="well well-sm" style="width:100%;">
-				<code style="white-space: pre-wrap;"> {{organization.description}}</code>
-			</div>
-		</div>
-	</div>
-	<!--	Org members 	-->
-	<div class="panel">
-		<div class="panel-heading">
-			<div class="">Members</div>
-		</div>
-
-		<div class="panel-body">
-
-			<div class="well well-sm" style="width:100%;">
-				Admin:
-				<br>
-				<a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a>
-				<br>
-				Users:
-				<br>
-				<ul>
-					{% for user in organization.members.all %}
-						<li><a href="{%url 'user_detail' user.id%}">{{user.username}}</a></li>
-					{% endfor %}
-				</ul>
-				<p><a href='{%url 'organization_job_index' organization.id %}'>Jobs</a></p>
-			</div>
-		</div>
-	</div>
-</div>
+{% block content %}
+Organization:{{organization.name}}<br>
+{% if organization.icon %}<img src="{{ organization.icon.url }}"/>{% endif %}
+Description:<code style="white-space: pre-wrap;"> {{organization.description}}</code><br>
+Admin:<a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a><br>
+<u>Users</u><br>
+{% for user in organization.members.all %}
+	<a href="{% url 'user_detail' user.id %}">{{user.username}}</a><br>
+{% endfor %}<br>
+<p><a href='{% url 'organization_job_index' organization.id %}'>Jobs</a></p><br>
+Categories:
+{% for category in organization.categories.all %}
+	<a href="{% url 'search' %}?search={{ category.name }}">{{category.name}}</a><br>
+{% endfor %}<br>
 {% endblock %}
