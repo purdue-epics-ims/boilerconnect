@@ -203,7 +203,8 @@ def job_create(request):
 		if form.is_valid() :
 			job = form.save(commit=False)
 			job.creator = User.objects.get(id=1)
-			#create new org 
+			#create new org
+			job.accepted = 0;
 			job.save()
 			form.save_m2m()
 			title = "Job {0} created".format( job.name )
