@@ -41,6 +41,8 @@ class Organization(models.Model):
 	description = models.TextField('Organization Description')
 	admin = models.ForeignKey(User,related_name='admin')  # User -o= Organization 
 	members = models.ManyToManyField(User,related_name='members')  # User =-= Organization
+	email = models.CharField('email', max_length = 64, unique = True)
+	phone = models.CharField('phone', max_length = 64, unique = True)
 	categories = models.ManyToManyField(ServiceCategory)  # ServiceCategory =-= Organization
 	email = models.CharField('Organization email',max_length=64,null=True)  #should this be unique?
 	phone_number = models.CharField('Organization phone number',max_length=64,null=True) #should this be unique?
