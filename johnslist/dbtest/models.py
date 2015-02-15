@@ -54,18 +54,17 @@ class Job(models.Model):
 	description = models.TextField('Job Description')
 	duedate = models.DateTimeField('Date Due')
 	creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
-	requested = models.ManyToManyField(Organization,related_name='requested')  # Organization =-= Job
-	accepted = models.ManyToManyField(Organization,related_name='accepted') 
+	request_state = models.ManyToManyField(Organization, through = 'JobState')
 	categories = models.ManyToManyField(ServiceCategory)
 
-### Forms
 
-class OrganizationCreateForm(ModelForm):
-	class Meta:
-		model = Organization
-		fields = ['name','description','categories','icon']
 
-class JobCreateForm(ModelForm):
-	class Meta:
-		model = Job
-		fields = ['name','description','duedate','requested', 'categories']
+class JobState(models.Model):
+	def __unicode__(self):
+		return self.name
+	
+	job = models.ForeignKey(Job)
+	responsible_group = models.ForeignKey(Organization)
+	requested = models.BooleanField(default = True)
+	accepted = models.NullBooleanField(default = True,null = True,blank =True)
+

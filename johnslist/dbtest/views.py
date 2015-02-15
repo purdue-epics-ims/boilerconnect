@@ -5,6 +5,7 @@ from django.contrib.auth.views import login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
+from .forms import*
 from .decorators import user_has_object
 '''
 	user_detail - show user info
@@ -54,9 +55,9 @@ def organization_job_index(request,organization_id):
 def organization_accept_job(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
 	if request.method == 'POST':
-		job = Job.objects.get(id=request.POST['job_id'])
-		job.accepted.add(organization)
-		job.requested.remove(organization)
+		job_id = Job.objects.get(id=request.POST['job_id'])
+		jobstate = JobState.objects.get(job = job_id,responsible_group = organization)
+		jobstate.accepted = True
 		return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job.name)})
 
 	jobs = organization.requested.all()
@@ -204,7 +205,6 @@ def job_create(request):
 			job = form.save(commit=False)
 			job.creator = User.objects.get(id=1)
 			#create new org
-			job.accepted = 0;
 			job.save()
 			form.save_m2m()
 			title = "Job {0} created".format( job.name )
