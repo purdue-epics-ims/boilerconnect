@@ -138,6 +138,7 @@ def organization_create(request):
 			message = "Thank you for creating an organization."
 			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
 		else:
+			print form.errors
 			return render(request, 'dbtest/organization_create.html', {'form':form,'error':"There are incorrect fields"})
 	#if the request was a GET
 	else:
@@ -146,8 +147,8 @@ def organization_create(request):
 
 @login_required
 def user_edit(request):
-        #if this request was a POST and not a GET
-        args = {}
+		#if this request was a POST and not a GET
+	args = {}
 	if request.method == 'POST':
 		form = UserCreationForm(request.POST, instance=request.user)
 		form.actual_user = request.user
@@ -166,16 +167,16 @@ def user_edit(request):
 	#if the request was a GET
 	else:
 		form = UserCreationForm()
-                args['form'] = form
+		args['form'] = form
 		return render(request, 'dbtest/user_edit.html', args)
 
 @login_required
 def organization_edit(request):
-        #if this request was a POST and not a GET
-        args = {}
+		#if this request was a POST and not a GET
+	args = {}
 	if request.method == 'POST':
 		form = OrganizationCreateForm(request.POST, instance=request.organization)
-                form.actual_organization = request.organization
+		form.actual_organization = request.organization
 
 		#check form validity
 		if form.is_valid() :
@@ -183,14 +184,14 @@ def organization_edit(request):
 			organization = form.save(commit = False)
 			title = "Organization {0} modified".format( organization.username )
 			message = "Your account has been modified."
-                        organization.save()
+			organization.save()
 			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
 		else:
 			return render(request, 'dbtest/organization_edit.html', {'form':form,'error':"There are incorrect fields"})
 	#if the request was a GET
 	else:
 		form = OrganizationCreateForm()
-                args['form'] = form
+		args['form'] = form
 		return render(request, 'dbtest/organization_edit.html', args)
 
 

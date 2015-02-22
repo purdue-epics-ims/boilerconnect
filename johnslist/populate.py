@@ -39,6 +39,12 @@ def populate():
     for user in users[0:4]:
         plug.members.add(user)
         epics.members.add(user)
+
+    #add ServiceCategory's
+    categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']
+    for category in categories:
+       ServiceCategory.objects.create( name=category,description='' ) 
+
         
 #print what object is being added, return the object
 def status(added_obj):
