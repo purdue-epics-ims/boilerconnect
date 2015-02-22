@@ -55,7 +55,7 @@ class Job(models.Model):
 	duedate = models.DateTimeField('Date Due')
 	creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
 	requested = models.ManyToManyField(Organization,related_name='requested')  # Organization =-= Job
-	accepted = models.ManyToManyField(Organization,related_name='accepted',blank=True)  # Organization =-= Job
+	accepted = models.ManyToManyField(Organization,related_name='accepted') 
 	categories = models.ManyToManyField(ServiceCategory)
 
 ### Forms

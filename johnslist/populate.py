@@ -1,4 +1,3 @@
-#!/bin/python
 import os
 
 def populate():
