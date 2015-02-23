@@ -1,16 +1,28 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
+
+<div class="container">
 Organization:{{organization.name}}<br>
 {% if organization.icon %}<img src="{{ organization.icon.url }}"/>{% endif %}
 Description:<code style="white-space: pre-wrap;"> {{organization.description}}</code><br>
 Admin:<a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a><br>
 <u>Users</u><br>
+<ul>
 {% for user in organization.members.all %}
 	<a href="{% url 'user_detail' user.id %}">{{user.username}}</a><br>
 {% endfor %}<br>
 <p><a href='{% url 'organization_job_index' organization.id %}'>Jobs</a></p><br>
 Categories:
+<br>
 {% for category in organization.categories.all %}
-	<a href="{% url 'search' %}?search={{ category.name }}">{{category.name}}</a><br>
-{% endfor %}<br>
+
+	
+		<a href="{% url 'search' %}?search={{ category.name }}">
+			<button type="button" class="btn btn-lg btn-default">{{category.name}}</button>
+		</a>
+	
+{% endfor %}
+<br>
+
+</div>
 {% endblock content%}
