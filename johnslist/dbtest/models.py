@@ -72,7 +72,12 @@ class Job(models.Model):
 	organization = models.ManyToManyField(Organization, through = 'JobRelation')
 	categories = models.ManyToManyField(ServiceCategory)
 
+### Forms
 
+class OrganizationCreateForm(ModelForm):
+	class Meta:
+		model = Organization
+		fields = ['name','description','categories','icon']
 
 class Jobrelation(models.Model):
 	job = models.ForeignKey(Job)
