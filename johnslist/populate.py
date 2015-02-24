@@ -3,9 +3,9 @@ import os
 def populate():
     #add Users
     for num in range(0,20):
-        User.objects.create(
-            username='user{0}'.format(num),
-            password='asdf')
+        newuser = User.objects.create(username='user{0}'.format(num))
+        newuser.set_password('asdf')
+        newuser.save()
 
     #add Organizations
     plug = Organization.objects.create(
