@@ -72,6 +72,8 @@ class Job(models.Model):
 	organization = models.ManyToManyField(Organization, through = 'JobRelation')
 	categories = models.ManyToManyField(ServiceCategory)
 
+
+
 class Jobrelation(models.Model):
 	job = models.ForeignKey(Job)
 	organization = models.ForeignKey(Organization)
