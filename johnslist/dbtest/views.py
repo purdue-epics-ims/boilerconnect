@@ -43,25 +43,28 @@ def user_detail(request,user_id):
 
 def organization_detail(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
-	jobs = Organization.objects.get(id=organization_id).accepted.all()
+	jobs = Organization.objects.get(id=organization_id).organizations.all()
 	return render(request, 'dbtest/organization_detail.html',{'organization': organization,'jobs':jobs})
 
 @user_has_object
 def organization_job_index(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
+
+	#need to find the accepted job
 	return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
 
 @user_has_object
 def organization_accept_job(request,organization_id):
-	organization = Organization.objects.get(id=organization_id)
+	org = Organization.objects.get(id=organization_id)
 	if request.method == 'POST':
 		job_id = Job.objects.get(id=request.POST['job_id'])
-		jobstate = JobState.objects.get(job = job_id,responsible_group = organization)
-		jobstate.accepted = True
-		return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job.name)})
-
-	jobs = organization.requested.all()
-	return render(request, 'dbtest/organization_accept_job.html',{'organization': organization,'jobs':jobs})
+		jr = JobRelation.objects.get(job=job_id,organization = org)
+		jr.accepted = True
+		jr.save()
+		return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})
+	
+	jobs = org.jobs.all()#there's an error here
+	return render(request, 'dbtest/organization_accept_job.html',{'organization': org,'jobs':jobs})
 
 def job_detail(request,job_id):
 	job = Job.objects.get(id=job_id)
@@ -206,7 +209,7 @@ def job_create(request):
 			job.creator = User.objects.get(id=1)
 			#create new org
 			job.save()
-			form.save_m2m()
+			#form.save_m2m()
 			title = "Job {0} created".format( job.name )
 			message = "Thank you for creating the job."
 			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
