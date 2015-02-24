@@ -1,28 +1,60 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
 
-<div class="container">
-Organization:{{organization.name}}<br>
-{% if organization.icon %}<img src="{{ organization.icon.url }}"/>{% endif %}
-Description:<code style="white-space: pre-wrap;"> {{organization.description}}</code><br>
-Admin:<a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a><br>
-<u>Users</u><br>
-<ul>
-{% for user in organization.members.all %}
-	<a href="{% url 'user_detail' user.id %}">{{user.username}}</a><br>
-{% endfor %}<br>
-<p><a href='{% url 'organization_job_index' organization.id %}'>Jobs</a></p><br>
-Categories:
-<br>
-{% for category in organization.categories.all %}
+<div id="main" class="col-xs-10">
 
-	
-		<a href="{% url 'search' %}?search={{ category.name }}">
-			<button type="button" class="btn btn-lg btn-default">{{category.name}}</button>
-		</a>
-	
-{% endfor %}
-<br>
+  <div class="panel-heading">
+    {{organization.name}}<br>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-6">
+      {% if organization.icon %}<img src="{{ organization.icon.url }}"/>{% endif %}
+    </div>
+    <div class="col-xs-6">
+      <div class="well"> {{organization.description}}</div>
+    </div>
+  </div>
+
+  <hr/>
+
+  <h3><a href='{% url 'organization_job_index' organization.id %}'>Jobs</a></h3>
+
+  <hr/>
+
+  <h4>Categories</h4>
+  {% if not organization.categories.all %}
+  There are no categories assigned for this organization.
+  {% endif %}
+  {% for category in organization.categories.all %}
+    <a href="{% url 'search' %}?search={{ category.name }}">
+      <button type="button" class="btn btn-lg btn-default">{{category.name}}</button>
+    </a>
+  {% endfor %}
 
 </div>
+
+<div id="sidebar" class="col-xs-2">
+
+  <h3>Admin</h3>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a>
+    </li>
+
+  <hr/>
+
+  <h3>Users</h3>
+  <ul class="list-group">
+    {% for user in organization.members.all %}
+      <li class="list-group-item">
+        <a href="{% url 'user_detail' user.id %}">{{user.username}}</a>
+      </li>
+    {% endfor %}
+
+</div>
+
+
+
+
 {% endblock content%}
