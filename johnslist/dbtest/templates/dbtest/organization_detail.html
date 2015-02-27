@@ -18,17 +18,23 @@
 
   <hr/>
 
-  <h3><a href='{% url 'organization_job_index' organization.id %}'>Jobs</a></h3>
+  <div class="panel panel-default">
+      <div class="panel-heading">
+          <a href='{% url 'organization_job_index' organization.id %}'>Recent Jobs</a></>
+      </div>
+      <div class="panel-body">
+      </div>
+  </div>
 
   <hr/>
 
-  <h4>Categories</h4>
+  <span>Categories</span>
   {% if not organization.categories.all %}
   There are no categories assigned for this organization.
   {% endif %}
   {% for category in organization.categories.all %}
     <a href="{% url 'search' %}?search={{ category.name }}">
-      <button type="button" class="btn btn-lg btn-default">{{category.name}}</button>
+      <button type="button" class="btn btn-default">{{category.name}}</button>
     </a>
   {% endfor %}
 
@@ -41,8 +47,7 @@
     <li class="list-group-item">
       <a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a>
     </li>
-
-  <hr/>
+  </ul>
 
   <h3>Users</h3>
   <ul class="list-group">
