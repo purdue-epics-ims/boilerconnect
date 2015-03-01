@@ -2,6 +2,8 @@ import os
 
 def populate():
     #add Users
+    os.remove("db.sqlite3")
+    
     for num in range(0,20):
         newuser = User.objects.create(username='user{0}'.format(num))
         newuser.set_password('asdf')
@@ -74,3 +76,4 @@ if __name__ == '__main__':
         print 'Error: Object already exists.  Did you remember to delete db.sqlite3 first?'
     except django.db.utils.OperationalError:
         print 'No such Table.  Did you remmber to run "python manage.py syncdb"'
+        
