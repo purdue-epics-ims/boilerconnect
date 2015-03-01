@@ -42,7 +42,7 @@ class Organization(models.Model):
 		return job_list_a
 
 	def job_requested(self):
-		job_list_r = Job.objects.filter(jobrelation__organization = org,jobrelation__accepted = False)
+		job_list_r = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False)
 		return job_list_r
 
 	name = models.CharField('Organization Name',max_length=64,unique=True)
@@ -69,7 +69,7 @@ class Job(models.Model):
 	description = models.TextField('Job Description')
 	duedate = models.DateTimeField('Date Due')
 	creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
-	organization = models.ManyToManyField(Organization, through = 'JobRelation')
+	organization = models.ManyToManyField(Organization, through = 'Jobrelation')
 	categories = models.ManyToManyField(ServiceCategory)
 
 

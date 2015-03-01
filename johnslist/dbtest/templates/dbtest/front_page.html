@@ -27,17 +27,6 @@
 	<li data-target="#carousel" data-slide-to="2"></li>
   </ol>
   	<div class="carousel-inner">
-		<div class="item active">
-		  	<div class="container">
-		  		<div>
-		  			<img src="{{ active_organization.icon.url }}" alt="{{ active_organization.name }} icon">
-		  		</div>
-				<div class="carousel-caption">
-		  			<h1>{{ active_organization.name }}</h1>
-		  			<p><a class="search-btn btn btn-lg btn-primary" href="{% url 'organization_detail' active_organization.id %}" role="button">Click here to view this organization</a></p>
-				</div>
-		  	</div>
-		</div>
 	  	{% for organization in organizations %}
 		<div class="item">
 		  	<div class="container">

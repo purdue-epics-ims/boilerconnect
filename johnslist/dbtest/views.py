@@ -6,6 +6,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
 from .decorators import user_has_object
+from .forms import*
 '''
 	user_detail - show user info
 		contact
@@ -42,14 +43,12 @@ def user_detail(request,user_id):
 
 def organization_detail(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
-	jobs = Organization.objects.get(id=organization_id).organizations.all()
+	jobs = organization.job_requested()
 	return render(request, 'dbtest/organization_detail.html',{'organization': organization,'jobs':jobs})
 
 @user_has_object
 def organization_job_index(request,organization_id):
 	organization = Organization.objects.get(id=organization_id)
-
-	#need to find the accepted job
 	return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
 
 @user_has_object
@@ -57,35 +56,27 @@ def organization_accept_job(request,organization_id):
 	org = Organization.objects.get(id=organization_id)
 	if request.method == 'POST':
 		job_id = Job.objects.get(id=request.POST['job_id'])
-		jr = JobRelation.objects.get(job=job_id,organization = org)
+		jr = Jobrelation.objects.get(job=job_id,organization = org)
 		jr.accepted = True
 		jr.save()
 		return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})
 	
-	jobs = org.jobs.all()#there's an error here
-	return render(request, 'dbtest/organization_accept_job.html',{'organization': org,'jobs':jobs})
+	return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
 def job_detail(request,job_id):
 	job = Job.objects.get(id=job_id)
 	return render(request, 'dbtest/job_detail.html',{'job': job})
 
-def front_page(request):
-	count = Organization.objects.count()
-	random_num1 = random.randint(1,count)
-	org1 = Organization.objects.get(id = random_num1)
-	random_num2 = random.randint(1,count)
-	while random_num2 == random_num1:
-		random_num2 = random.randint(1,count)
-
-	org2 = Organization.objects.get(id = random_num2)
-	random_num3 = random.randint(1,count)
-	while random_num3 == random_num1 or random_num3 == random_num2:
-		random_num3 = random.randint(1,count)
-
-	org3 = Organization.objects.get(id = random_num3)
-	organizations = [org2, org3]
-	return render(request, 'dbtest/front_page.html',{'active_organization':org1,'organizations':organizations})
-
+def front_page(request):#need to fix this
+	org_list = Organization.objects.all()
+	count = len(org_list)
+	if(count >3):
+		org = random.sample(org_list,3)
+		return render(request, 'dbtest/front_page.html',{'organizations':org})
+	
+	else:
+		return render(request, 'dbtest/front_page.html',{'organizations':org_list})
+	
 def search(request):
 	search = request.GET['search']
 	search_result = Organization.objects.filter(name__icontains=search)	
@@ -209,7 +200,7 @@ def job_create(request):
 			#create new org
 			job.accepted = 0;
 			job.save()
-			#form.save_m2m()
+			form.save_m2m()#this generate the error as there is an intermediary model
 			title = "Job {0} created".format( job.name )
 			message = "Thank you for creating the job."
 			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
