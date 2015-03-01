@@ -44,10 +44,9 @@ def populate():
     for category in categories:
        ServiceCategory.objects.create( name=category,description='' ) 
 
-    plug.categories.create(name = 'computer science')
-    plug.categories.create(name = 'linux')
-    epics.categories.create(name = 'engineering')
-    amet.categories.create(name = 'engineering')
+    plug.categories.add(ServiceCategory.objects.get(name="computer science"), ServiceCategory.objects.get(name="linux"))
+    epics.categories.add(ServiceCategory.objects.get(name = 'engineering'))
+    amet.categories.add(ServiceCategory.objects.get(name= 'engineering'))
     
     
 #print what object is being added, return the object
