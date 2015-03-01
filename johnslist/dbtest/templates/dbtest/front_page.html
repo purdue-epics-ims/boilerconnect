@@ -11,9 +11,10 @@
 	<p>Looking for help? Search here.</p>
 	<div class = "search-form box">
 		<form action="{% url 'search' %}" method="get">
-		{% csrf_token %}
 		<input class="input-box" type="text" name="search" placeholder="Search for a group">
 		<input class="search-btn" type="submit" value="Search">
+        <input type="hidden" name="search_model" value="organization">
+        <input type="hidden" name="search_by" value="name">
 		</form>
 	</div>
 </div>

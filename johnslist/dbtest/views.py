@@ -83,13 +83,24 @@ def front_page(request):
 	organizations = [org2, org3]
 	return render(request, 'dbtest/front_page.html',{'active_organization':org1,'organizations':organizations})
 
+#searches a given object by a certain parameter (ex. find all organizations in a certain category)
 def search(request):
-	search = request.GET['search']
-	search_result = Organization.objects.filter(name__icontains=search)	
-	for category in ServiceCategory.objects.filter(name__icontains=search):
-		search_result = search_result | category.organization_set.all()
-	
+    search_result=[]
+    print request.GET
+
+    search = request.GET['search'] # the provided search string
+    search_model = request.GET['search_model'] # the kind of object returned by the search
+    search_by = request.GET['search_by'] # where to apply the search string
+
+    if search_model.lower() == 'organization':
+        if search_by.lower() == 'category':
+            category = ServiceCategory.objects.get(name=search)
+            search_result = category.organization_set.all()
+        if search_by.lower() == 'name':
+            search_result = Organization.objects.filter(name__icontains=search)
+            
 	return render(request,'dbtest/search.html',{'search_result': search_result})
+
 
 @user_has_object
 def user_job_index(request,user_id):
