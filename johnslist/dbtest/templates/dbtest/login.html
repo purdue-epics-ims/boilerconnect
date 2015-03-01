@@ -3,9 +3,26 @@
 {% block content %}
 
 	<div class="panel-heading">
-			LOGIN
+			Login
 	</div>
+	
+
 	<div class = "jumbotron">
+	
+	
+	
+	<div class="input-group">
+		<span class="input-group-addon" id="basic-addon1">
+			<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+
+		</span>
+		<input class="" type ="submit" value="Login">
+		
+		<input type="hidden" name="next" value="{{ next }}" class="form-control" placeholder="Username" aria-describedby="basic-addon1">
+		</div>
+
+	
+	
 		<form class="login" action="{% url 'login' %}" method='POST'>
 		{% csrf_token %}
 		<table class = "input-table">
