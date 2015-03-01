@@ -42,14 +42,17 @@
 
 <div id="sidebar" class="col-xs-2">
 
-  <h3>Admin</h3>
+  <h3>
+  	<div class="glyphicon glyphicon-certificate"></div> Admin
+  </h3>
   <ul class="list-group">
     <li class="list-group-item">
       <a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a>
     </li>
   </ul>
 
-  <h3>Users</h3>
+  <h3><div class="glyphicon glyphicon-user"></div> Users
+  </h3>
   <ul class="list-group">
     {% for user in organization.members.all %}
       <li class="list-group-item">

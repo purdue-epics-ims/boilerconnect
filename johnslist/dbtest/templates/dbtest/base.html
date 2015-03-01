@@ -24,10 +24,11 @@
           <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
               <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
-					{% if user.is_authenticated %}
-            </ul>	
+					
+            </ul>
 			<ul class="nav navbar-nav navbar-right">
+			            {% if user.is_authenticated %}
+
 				<li class="dropdown">
 					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ user.username }} <span class="caret"></span></a>
 					  <ul class="dropdown-menu" role="menu">
@@ -46,10 +47,13 @@
 						{% endfor %}
 				  	  </ul>
 				    </li>
-					{% else %}
-					<li><a class="right" href="{% url 'login' %}"> Login </a></li>
-					{% endif %}
-            </ul>
+				
+				{% else %}
+				
+				<li><a class="right" href="{% url 'login' %}"> Login </a></li>
+				{% endif %}
+			</ul>
+            
           </div><!--/.nav-collapse -->
         </div>
       
@@ -58,9 +62,14 @@
 
 		<div id ="content">
 			<!-- div for displaying miscellaneous errors -->
+			
 			{% if error %}
 			<div id="error">
 				<div class="alert alert-danger">
+					
+					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+					<span class="sr-only">Error:</span>
+			
 					{{ error }}
 				</div>
 			</div>
