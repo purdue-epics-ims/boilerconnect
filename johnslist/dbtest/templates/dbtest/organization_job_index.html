@@ -6,6 +6,7 @@
 		</div>
 	</div>
 
+
 		<div class="panel panel-success">
 			<div class="panel-heading">
 				Accepted Jobs<br>
@@ -39,4 +40,26 @@
 			</div>
 			
 		</div>
+	<div class = "jumbotron" >
+		<h2>Organization: {{ organization.name }}<br></h2>
+		<h2><u>Accepted Jobs</u><br></h2>
+		{% if organization.job_accepted %}
+			<p>The following jobs have been accepted by your organization:</p>
+		{% else %}
+			<p>There are currently no jobs accepted by your organization</p>
+		{%endif%}
+		{% for job in organization.job_accepted %}
+			<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>
+		{% endfor %}
+
+		<h2><a href='{% url 'organization_accept_job' organization.id %}'>Requested Jobs</u><br></h2>
+		{% if organization.job_requested %}
+			<p>The following jobs have been requested by your organization:</p>
+		{% else %}
+			<p>There are currently no jobs requested by your organization</p>
+		{%endif%}
+		{% for job in organization.job_requested %}
+			<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>
+		{% endfor %}
+	</div>
 {% endblock %}

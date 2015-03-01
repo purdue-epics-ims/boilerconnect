@@ -36,6 +36,14 @@ class ServiceCategory(models.Model):
 class Organization(models.Model):
 	def __unicode__(self):
 		return self.name
+	
+	def job_accepted(self):
+		job_list_a = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True)	
+		return job_list_a
+
+	def job_requested(self):
+		job_list_r = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False)
+		return job_list_r
 
 	name = models.CharField('Organization Name',max_length=64,unique=True)
 	description = models.TextField('Organization Description')
@@ -49,23 +57,26 @@ class Organization(models.Model):
 class Job(models.Model):
 	def __unicode__(self):
 		return self.name
+	# function returns an array list of organization objects that have accepted = True in JobRelation
+	def organization_accepted(self):
+		accepted = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = True)
+		return accepted
+	def organization_requested(self):
+		requested = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False)
+		return requested
 
 	name = models.CharField('Job Name',max_length=128)
 	description = models.TextField('Job Description')
 	duedate = models.DateTimeField('Date Due')
 	creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
-	requested = models.ManyToManyField(Organization,related_name='requested')  # Organization =-= Job
-	accepted = models.ManyToManyField(Organization,related_name='accepted') 
+	organization = models.ManyToManyField(Organization, through = 'Jobrelation')
 	categories = models.ManyToManyField(ServiceCategory)
 
-### Forms
 
-class OrganizationCreateForm(ModelForm):
-	class Meta:
-		model = Organization
-		fields = ['name','description','categories','icon']
 
-class JobCreateForm(ModelForm):
-	class Meta:
-		model = Job
-		fields = ['name','description','duedate','requested', 'categories']
+class Jobrelation(models.Model):
+	job = models.ForeignKey(Job)
+	organization = models.ForeignKey(Organization)
+	accepted = models.NullBooleanField(default = False)
+
+	
