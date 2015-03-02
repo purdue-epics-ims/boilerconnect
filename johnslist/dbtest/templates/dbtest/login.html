@@ -14,12 +14,11 @@
 	<br>
 	<form class="login" action="{% url 'login' %}" method='POST'>
 
-		{% csrf_token %}
 		<div class="input-group">
 			<span class="input-group-addon" id="addon-e,">
 				<div class="glyphicon glyphicon-user"></div>
 			</span>
-			<input id="id_username" name="username" name="username" value="{{ username }}"type="text" class="form-control" placeholder="Username" autofocus="true" autocomplete="on" aria-describedby="addon1">
+			<input id="id_username" name="username" name="username" value=""type="text" class="form-control" placeholder="Username" autofocus="true" autocomplete="on" aria-describedby="addon1">
 		</div>
 		&nbsp;
 				<input type='hidden' name='csrfmiddlewaretoken' value='ooj4AUcGpfYh7xPa4Ik3zh2NtyoGW1fC' />
@@ -29,26 +28,19 @@
 			<span class="input-group-addon" id="addon-pa">
 				<div class="glyphicon glyphicon-lock"></div>
 			</span>
-			<input type="password" id name="next" value="{{ next }}" class="form-control" placeholder="Username" aria-describedby="addon1">
+			<input type="password" name="password" value="{{password}}" class="form-control" placeholder="Username" aria-describedby="addon1">
 			
 		</div>
-		<button type="submit" value="Login" class="btn btn-primary">Login</button>
+		<br>
+				{% csrf_token %}
+
+			<input type="hidden" name="next" value="{{next}}">
+		<button type="submit" value="Login" class="btn btn-info">Login</button>
 
 	</form>
 	
 		
 		
-<!--		<form class="login" action="{% url 'login' %}" method='POST'>
-		{% csrf_token %}
-		<table class = "input-table">
-		{{ form }}
-		</table>
-		<br>
-		<input class = "custom-btn" type="submit" value="Login"  >
-		<input type="hidden" name="next" value="{{ next }}">
-		</form>
-		
-		-->
 		<br>
 		<br>
 		<div id= "create_user">
