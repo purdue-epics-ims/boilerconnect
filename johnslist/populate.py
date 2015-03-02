@@ -1,8 +1,11 @@
 import os
+from django.core.management import call_command
 
 def populate():
     #add Users
-    os.remove("db.sqlite3")
+    if os.path.exists("db.sqlite3"):
+        os.remove("db.sqlite3")
+    call_command('syncdb', interactive=False)
     
     for num in range(0,20):
         newuser = User.objects.create(username='user{0}'.format(num))
@@ -44,11 +47,11 @@ def populate():
     #add ServiceCategory's
     categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']
     for category in categories:
-       ServiceCategory.objects.create( name=category,description='' ) 
+       Category.objects.create( name=category,description='' ) 
 
-    plug.categories.add(ServiceCategory.objects.get(name="computer science"), ServiceCategory.objects.get(name="linux"))
-    epics.categories.add(ServiceCategory.objects.get(name = 'engineering'))
-    amet.categories.add(ServiceCategory.objects.get(name= 'engineering'))
+    plug.categories.add(Category.objects.get(name="computer science"), Category.objects.get(name="linux"))
+    epics.categories.add(Category.objects.get(name = 'engineering'))
+    amet.categories.add(Category.objects.get(name= 'engineering'))
     
     
 #print what object is being added, return the object
