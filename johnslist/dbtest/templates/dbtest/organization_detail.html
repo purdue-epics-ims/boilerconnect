@@ -33,7 +33,7 @@
   There are no categories assigned for this organization.
   {% endif %}
   {% for category in organization.categories.all %}
-    <a href="{% url 'search' %}?search={{ category.name }}">
+    <a href="{% url 'search' %}?search={{ category.name }}&search_model=organization&search_by=category">
       <button type="button" class="btn btn-default">{{category.name}}</button>
     </a>
   {% endfor %}
