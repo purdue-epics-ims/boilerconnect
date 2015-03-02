@@ -2,6 +2,8 @@ import os
 
 def populate():
     #add Users
+    os.remove("db.sqlite3")
+    
     for num in range(0,20):
         newuser = User.objects.create(username='user{0}'.format(num))
         newuser.set_password('asdf')
@@ -44,7 +46,11 @@ def populate():
     for category in categories:
        ServiceCategory.objects.create( name=category,description='' ) 
 
-        
+    plug.categories.add(ServiceCategory.objects.get(name="computer science"), ServiceCategory.objects.get(name="linux"))
+    epics.categories.add(ServiceCategory.objects.get(name = 'engineering'))
+    amet.categories.add(ServiceCategory.objects.get(name= 'engineering'))
+    
+    
 #print what object is being added, return the object
 def status(added_obj):
     if added_obj[1]:
@@ -70,3 +76,4 @@ if __name__ == '__main__':
         print 'Error: Object already exists.  Did you remember to delete db.sqlite3 first?'
     except django.db.utils.OperationalError:
         print 'No such Table.  Did you remmber to run "python manage.py syncdb"'
+        
