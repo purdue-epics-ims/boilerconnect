@@ -9,15 +9,28 @@
 	</div>
 	<div class = "jumbotron">
 	
+	<!--Search field!-->	
+	<div class="row">
+		<form class="navbar-form navbar-left" action="{% url 'search' %}" method="get">
+			{% csrf_token %}
+			<div class="form-group">
+				<input type="text" name="search" class="form-control" placeholder="Search for groups">
+			</div>
+			<button type="submit" class="btn btn-primary">Go</button>
+		</form>
+	</div>
+		
+		
+		      
 	
-	<!-- New !-->
+	
+	<!-- Results !-->
 	
 	{% if search_result %}
 	
 		<div class="alert alert-success" role="alert">
 			 Your search returned {{search_result|length}} results
 		</div>
-
 		
 		{% for organization in search_result %}
 		<div class="list-group">
@@ -36,7 +49,7 @@
 							  <div class="col-xs-12 col-md-6">
 								  
 							<h4 class="list-group-item-heading">{{organization.name}}</h4>
-				<p class="list-group-item-text">Short description</p>
+				<p>{{organization.description|truncatechars:75}}</p>
 
 								  
 							</div>
