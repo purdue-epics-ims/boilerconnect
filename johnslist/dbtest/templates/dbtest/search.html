@@ -2,15 +2,14 @@
 {% block content %}
 
 
-	<div class="panel-heading">
-		<div class="">
+	<div class="panel panel-default">
+		<div class="panel-heading">
 			Search Results
 		</div>
-	</div>
-	<div class = "jumbotron">
-	
+		<div class ="panel-body">
+
 	<!--Search field!-->	
-	<div class="row">
+		<div class="row">
 		<form class="navbar-form navbar-left" action="{% url 'search' %}" method="get">
 			{% csrf_token %}
 			<div class="form-group">
@@ -18,9 +17,7 @@
 			</div>
 			<button type="submit" class="btn btn-primary">Go</button>
 		</form>
-	</div>
-		
-		
+		</div>
 		      
 	
 	
@@ -37,6 +34,7 @@
 			
 		
 			<a href="{% url 'organization_detail' organization.id %}" class="list-group-item">
+			
 			<div class="row">
 				{% if organization.icon %}
 							
@@ -46,10 +44,10 @@
 							 </div>
 							</div>
 							
-							  <div class="col-xs-12 col-md-6">
+							  <div class="col-xs-12 col-md-9">
 								  
 							<h4 class="list-group-item-heading">{{organization.name}}</h4>
-				<p>{{organization.description|truncatechars:75}}</p>
+				<small>{{organization.description|truncatechars:250}}</small>
 
 								  
 							</div>
@@ -57,7 +55,7 @@
 
 				{% endif %}
 				
-				</div>
+			</div> <!--ROW!-->
 
 				
 			</a>
@@ -75,7 +73,7 @@
 	<!-- Old !-->
 		
 		
-		
+	</div>
 		
 	</div>
 {% endblock %}
