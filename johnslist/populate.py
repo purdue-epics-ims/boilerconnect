@@ -3,7 +3,8 @@ from django.core.management import call_command
 
 def populate():
     #add Users
-    os.remove("db.sqlite3")
+    if os.path.exists("db.sqlite3"):
+        os.remove("db.sqlite3")
     call_command('syncdb', interactive=False)
     
     for num in range(0,20):
