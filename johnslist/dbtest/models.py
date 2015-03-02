@@ -64,6 +64,10 @@ class Job(models.Model):
 	def organization_requested(self):
 		requested = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False)
 		return requested
+	def setUpJobrelation(self):
+		jr = Jobrelation(job = self,organization = self.organization);
+		jr.save();
+		return
 
 	name = models.CharField('Job Name',max_length=128)
 	description = models.TextField('Job Description')
