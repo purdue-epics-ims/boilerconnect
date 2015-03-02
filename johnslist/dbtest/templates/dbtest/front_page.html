@@ -12,7 +12,7 @@
 	<div class = "search-form box">
 		<form action="{% url 'search' %}" method="get">
 		{% csrf_token %}
-		<input class="input-box" type="text" name="search" placeholder="Search for a group">
+		<input class="input-box" type="text" name="search" placeholder="Search for a group" autofocus="true">
 		<input class="search-btn" type="submit" value="Search">
 		</form>
 	</div>
