@@ -67,22 +67,15 @@ def job_detail(request,job_id):
     job = Job.objects.get(id=job_id)
     return render(request, 'dbtest/job_detail.html',{'job': job})
 
+#load the front page with 3 random organizations in the gallery
 def front_page(request):
-    count = Organization.objects.count()
-    random_num1 = random.randint(1,count)
-    org1 = Organization.objects.get(id = random_num1)
-    random_num2 = random.randint(1,count)
-    random_num3 = random.randint(1,count)
-    while random_num2 == random_num1:
-        random_num2 = random.randint(1,count)
-        org2 = Organization.objects.get(id = random_num2)
-        random_num3 = random.randint(1,count)
-    while random_num3 == random_num1 or random_num3 == random_num2:
-        random_num3 = random.randint(1,count)
-        org3 = Organization.objects.get(id = random_num3)
-    organizations = [org2, org3]
-    return render(request, 'dbtest/front_page.html',{'active_organization':org1,'organizations':organizations})
-
+    orgs = Organization.objects.all()
+    print orgs[0].name
+    if(len(orgs) >= 3):
+        orgs = random.sample(orgs,3)
+        return render(request, 'dbtest/front_page.html',{'active_organization':orgs[0],'organizations':orgs[1:]})
+    else:
+        return render(request, 'dbtest/front_page.html')
 
 def search(request):
     search_result=[]
