@@ -41,7 +41,7 @@ class Organization(models.Model):
 	description = models.TextField('Organization Description')
 	admin = models.ForeignKey(User,related_name='admin')  # User -o= Organization 
 	members = models.ManyToManyField(User,related_name='members')  # User =-= Organization
-	categories = models.ManyToManyField(Category)  # ServiceCategory =-= Organization
+	categories = models.ManyToManyField(Category)  # Category =-= Organization
 	email = models.CharField('Organization email',max_length=64,null=True)  #should this be unique?
 	phone_number = models.CharField('Organization phone number',max_length=64,null=True) #should this be unique?
 	icon = models.ImageField(upload_to='organization',null=True)
@@ -58,14 +58,3 @@ class Job(models.Model):
 	accepted = models.ManyToManyField(Organization,related_name='accepted') 
 	categories = models.ManyToManyField(Category)
 
-### Forms
-
-class OrganizationCreateForm(ModelForm):
-	class Meta:
-		model = Organization
-		fields = ['name','description','categories','icon']
-
-class JobCreateForm(ModelForm):
-	class Meta:
-		model = Job
-		fields = ['name','description','duedate','requested', 'categories']

@@ -43,7 +43,7 @@ def user_detail(request,user_id):
 
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
-    jobs = organization.job_requested()
+    jobs = organization.requested
     return render(request, 'dbtest/organization_detail.html',{'organization': organization,'jobs':jobs})
 
 @user_has_object
@@ -87,7 +87,7 @@ def search(request):
 
     if search_model.lower() == 'organization':
         if search_by.lower() == 'category':
-            category = ServiceCategory.objects.get(name=search)
+            category = Category.objects.get(name=search)
             search_result = category.organization_set.all()
         if search_by.lower() == 'name':
             search_result = Organization.objects.filter(name__icontains=search)
