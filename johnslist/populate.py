@@ -1,8 +1,10 @@
 import os
+from django.core.management import call_command
 
 def populate():
     #add Users
     os.remove("db.sqlite3")
+    call_command('syncdb', interactive=False)
     
     for num in range(0,20):
         newuser = User.objects.create(username='user{0}'.format(num))
@@ -46,7 +48,7 @@ def populate():
     for category in categories:
        Category.objects.create( name=category,description='' ) 
 
-    plug.categories.add(Category.objects.get(name="computer science"), ServiceCategory.objects.get(name="linux"))
+    plug.categories.add(Category.objects.get(name="computer science"), Category.objects.get(name="linux"))
     epics.categories.add(Category.objects.get(name = 'engineering'))
     amet.categories.add(Category.objects.get(name= 'engineering'))
     
