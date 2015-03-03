@@ -1,25 +1,79 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
-	<div class="panel-heading">
-		<div class="">
+
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
 			Search Results
 		</div>
-	</div>
-	<div class = "jumbotron" >
-		{% if search_result %}
-			<p>The search return the following results:</p>
-		{% else %}
-			<p>No organization in the database matched your search terms</p>
-		{%endif%}
-		<div class ="contact-info box">
-			<table class="table table-hover table-striped ">
-				{% for organization in search_result %}
-					<tr>
-						<td><a href = "{% url 'organization_detail' organization.id %}">{{organization.name}}</a></td>
-					</tr>
-				{% endfor %}
-				</tr>
-			</table>
+		<div class ="panel-body">
+
+	<!--Search field!-->	
+		<div class="row">
+		<form class="navbar-form navbar-left" action="{% url 'search' %}" method="get">
+			{% csrf_token %}
+			<div class="form-group">
+				<input type="text" autofocus="true" name="search" class="form-control" placeholder="Search for groups">
+			</div>
+			<button type="submit" class="btn btn-primary">Go</button>
+		</form>
 		</div>
+		      
+	
+	
+	<!-- Results !-->
+	
+	{% if search_result %}
+	
+		<div class="alert alert-success" role="alert">
+			<div class="glyphicon glyphicon-search"></div> Your search returned {{search_result|length}} results
+		</div>
+		
+		{% for organization in search_result %}
+		<div class="list-group">
+			
+		
+			<a href="{% url 'organization_detail' organization.id %}" class="list-group-item">
+			
+			<div class="row">
+				{% if organization.icon %}
+							
+							<div class="col-xs-6 col-md-3">
+							 <div class="thumbnail">
+							<img draggable="false" style="height:64px;" src="{{ organization.icon.url }}" style="float:left;">
+							 </div>
+							</div>
+							
+							  <div class="col-xs-12 col-md-9">
+								  
+							<h4 class="list-group-item-heading">{{organization.name}}</h4>
+				<small>{{organization.description|truncatechars:700}}</small>
+
+								  
+							</div>
+
+
+				{% endif %}
+				
+			</div> <!--ROW!-->
+
+				
+			</a>
+		</div>
+		{% endfor %}
+		
+	
+	{% else %}
+		<div class="alert alert-warning">
+			<div class="glyphicon glyphicon-search"></div> Your search returned no results.
+		</div>
+
+	{%endif%}
+	
+	<!-- Old !-->
+		
+		
+	</div>
+		
 	</div>
 {% endblock %}
