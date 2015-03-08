@@ -26,12 +26,12 @@ Future entities to add:
 		password
 '''
 
-class ServiceCategory(models.Model):
+class Category(models.Model):
 	def __unicode__(self):
 		return self.name
 
-	name = models.CharField('Service Category Name',max_length=64)
-	description = models.TextField('Service Category Description')
+	name = models.CharField('Category Name',max_length=64)
+	description = models.TextField('Category Description')
 
 class Organization(models.Model):
 	def __unicode__(self):
@@ -41,9 +41,7 @@ class Organization(models.Model):
 	description = models.TextField('Organization Description')
 	admin = models.ForeignKey(User,related_name='admin')  # User -o= Organization 
 	members = models.ManyToManyField(User,related_name='members')  # User =-= Organization
-	email = models.CharField('email', max_length = 64, unique = True)
-	phone = models.CharField('phone', max_length = 64, unique = True)
-	categories = models.ManyToManyField(ServiceCategory)  # ServiceCategory =-= Organization
+	categories = models.ManyToManyField(Category)  # Category =-= Organization
 	email = models.CharField('Organization email',max_length=64,null=True)  #should this be unique?
 	phone_number = models.CharField('Organization phone number',max_length=64,null=True) #should this be unique?
 	icon = models.ImageField(upload_to='organization',null=True)
@@ -57,17 +55,6 @@ class Job(models.Model):
 	duedate = models.DateTimeField('Date Due')
 	creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
 	requested = models.ManyToManyField(Organization,related_name='requested')  # Organization =-= Job
-	accepted = models.ManyToManyField(Organization,related_name='accepted',blank=True)  # Organization =-= Job
-	categories = models.ManyToManyField(ServiceCategory)
+	accepted = models.ManyToManyField(Organization,related_name='accepted') 
+	categories = models.ManyToManyField(Category)
 
-### Forms
-
-class OrganizationCreateForm(ModelForm):
-	class Meta:
-		model = Organization
-		fields = ['name','description','categories','icon']
-
-class JobCreateForm(ModelForm):
-	class Meta:
-		model = Job
-		fields = ['name','description','duedate','requested', 'categories']

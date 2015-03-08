@@ -1,16 +1,74 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
-Organization:{{organization.name}}<br>
-{% if organization.icon %}<img src="{{ organization.icon.url }}"/>{% endif %}
-Description:<code style="white-space: pre-wrap;"> {{organization.description}}</code><br>
-Admin:<a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a><br>
-<u>Users</u><br>
-{% for user in organization.members.all %}
-	<a href="{% url 'user_detail' user.id %}">{{user.username}}</a><br>
-{% endfor %}<br>
-<p><a href='{% url 'organization_job_index' organization.id %}'>Jobs</a></p><br>
-Categories:
-{% for category in organization.categories.all %}
-	<a href="{% url 'search' %}?search={{ category.name }}">{{category.name}}</a><br>
-{% endfor %}<br>
+
+<div id="main" class="col-xs-10">
+
+  <div class="panel-heading">
+    {{organization.name}}<br>
+  </div>
+
+  <div class="row">
+    <div class="col-xs-6">
+      {% if organization.icon %}<img draggable="false" src="{{ organization.icon.url }}"/>{% endif %}
+    </div>
+    <div class="col-xs-6">
+      <div class="well"> {{organization.description}}</div>
+    </div>
+  </div>
+
+  <hr/>
+
+  <div class="panel panel-default">
+      <div class="panel-heading">
+          <a href='{% url 'organization_job_index' organization.id %}'>Recent Jobs</a></>
+      </div>
+      <div class="panel-body">
+      </div>
+  </div>
+
+  <hr/>
+
+  <span>Categories</span>
+  {% if not organization.categories.all %}
+  There are no categories assigned for this organization.
+  {% endif %}
+  {% for category in organization.categories.all %}
+    <a href="{% url 'search' %}?search={{ category.name }}&search_model=organization&search_by=category">
+      <button type="button" class="btn btn-default">{{category.name}}</button>
+    </a>
+  {% endfor %}
+
+</div>
+
+<div id="sidebar" class="col-xs-2">
+
+  <h4>
+  	<div class="glyphicon glyphicon-certificate"></div> Admin
+  </h4>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a>
+    </li>
+  </ul>
+
+  <h4><div class="glyphicon glyphicon-user"></div> Members
+  </h4>
+  <ul class="list-group">
+  	{% if not organization.categories.all %}
+  	<li class="list-group-item">
+  		Devoid of members.
+  	</li>
+  	{% endif %}
+
+    {% for user in organization.members.all %}
+      <li class="list-group-item">
+        <a href="{% url 'user_detail' user.id %}">{{user.username}}</a>
+      </li>
+    {% endfor %}
+
+</div>
+
+
+
+
 {% endblock content%}

@@ -1,12 +1,16 @@
-#!/bin/python
 import os
+from django.core.management import call_command
 
 def populate():
     #add Users
+    if os.path.exists("db.sqlite3"):
+        os.remove("db.sqlite3")
+    call_command('syncdb', interactive=False)
+    
     for num in range(0,20):
-        User.objects.create(
-            username='user{0}'.format(num),
-            password='asdf')
+        newuser = User.objects.create(username='user{0}'.format(num))
+        newuser.set_password('asdf')
+        newuser.save()
 
     #add Organizations
     plug = Organization.objects.create(
@@ -39,7 +43,17 @@ def populate():
     for user in users[0:4]:
         plug.members.add(user)
         epics.members.add(user)
-        
+
+    #add ServiceCategory's
+    categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']
+    for category in categories:
+       Category.objects.create( name=category,description='' ) 
+
+    plug.categories.add(Category.objects.get(name="computer science"), Category.objects.get(name="linux"))
+    epics.categories.add(Category.objects.get(name = 'engineering'))
+    amet.categories.add(Category.objects.get(name= 'engineering'))
+    
+    
 #print what object is being added, return the object
 def status(added_obj):
     if added_obj[1]:
@@ -65,3 +79,4 @@ if __name__ == '__main__':
         print 'Error: Object already exists.  Did you remember to delete db.sqlite3 first?'
     except django.db.utils.OperationalError:
         print 'No such Table.  Did you remmber to run "python manage.py syncdb"'
+        
