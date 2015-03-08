@@ -36,7 +36,6 @@ todo
     organization_edit - this doesn't work at all
 '''
 
-@user_has_object
 def user_detail(request,user_id):
     user = get_object_or_404(User,id=user_id)
     return render(request, 'dbtest/user_detail.html',{'user': user})
