@@ -38,7 +38,7 @@ todo
 
 def user_detail(request,user_id):
     user = get_object_or_404(User,id=user_id)
-    return render(request, 'dbtest/user_detail.html',{'user': user})
+    return render(request, 'dbtest/user_detail.html',{'user_detail': user})
 
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
