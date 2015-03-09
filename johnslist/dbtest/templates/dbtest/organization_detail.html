@@ -59,11 +59,29 @@
                 </div>
             </div>
             <div class="panel panel-default target">
-                <div class="panel-heading" contenteditable="false">Recent Jobs</div>
+                <div class="panel-heading" contenteditable="false">Recent Requests
+	                
+	                {%if organization.%}
+	                	<span class="badge">
+	                		{{organization.job_requested|length}}
+	                	</span>
+	                {%endif%}
+	                
+	                <span class="pull-right">
+	                	<a href='{% url 'organization_job_index' organization.id %}'>See All Requests</a>
+	                </span>
+                </div>
                 <div class="panel-body">
 				
-				//tbd
+					{%for i in "012"%}
 				
+						{%if organization.job_requested.i%}
+							<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>
+						{%endif%}
+					
+					{%endfor%}
+					
+					<a href='{% url 'organization_job_index' organization.id %}'>See All Requests</a>				
                 </div>
                  
             </div>
