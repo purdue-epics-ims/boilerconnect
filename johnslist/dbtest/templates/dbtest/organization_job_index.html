@@ -1,31 +1,64 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
-	<div class="panel-heading">
-		<div class="">
-			Organization Job Index
-		</div>
-	</div>
+	
+	
+	
+	        <h1>
+	        <span class="text-muted">Job Index</span>
+	            {{organization.name}}
+	         </h1>
+	         
+	         &nbsp;
+				
+		
+		
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						Requested Jobs
+						
+						<span class="badge">{{organiztion.job_accepted|length}}</span>
+						
+					
+					</div>
+					<div class="panel-body">
+					
+					{% if organization.job_requested %}
+						{% for job in organization.job_requested %}
+							<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>
+						{% endfor %}
+					{% else %}
+						<p>You haven't received any job requests yet!</p>
+					{%endif%}
 
-	<div class = "jumbotron" >
-		<h2>Organization: {{ organization.name }}<br></h2>
-		<h2><u>Accepted Jobs</u><br></h2>
-		{% if organization.job_accepted %}
-			<p>The following jobs have been accepted by your organization:</p>
-		{% else %}
-			<p>There are currently no jobs accepted by your organization</p>
-		{%endif%}
-		{% for job in organization.job_accepted %}
-			<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>
-		{% endfor %}
+					
+					
+					<a href="{% url 'organization_accept_job' organization.id %}">
+							See these on Requests page
+					</a>	
+					</div>
+					
+				</div>
+				
+				<div class="panel panel-success">
+					<div class="panel-heading">
+						Accepted Jobs
+					
+					</div>
+					<div class="panel-body">
+						{% if organization.job_accepted %}
+						
+							{% for job in organization.job_accepted %}
+								<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>
+							{% endfor %}
+						
+						{% else %}
+						You haven't accepted any jobs yet!
+						{%endif%}
+						
+					</div>
+					
+				</div>
 
-		<h2><a href='{% url 'organization_accept_job' organization.id %}'>Requested Jobs</u><br></h2>
-		{% if organization.job_requested %}
-			<p>The following jobs have been requested by your organization:</p>
-		{% else %}
-			<p>There are currently no jobs requested by your organization</p>
-		{%endif%}
-		{% for job in organization.job_requested %}
-			<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>
-		{% endfor %}
-	</div>
+
+	
 {% endblock %}
