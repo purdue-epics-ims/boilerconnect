@@ -34,7 +34,7 @@
 		<br>
 				{% csrf_token %}
 
-			<input type="hidden" name="next" value="{{next}}">
+				<input type="hidden" name="next" value="{{request.META.HTTP_REFERER}}">
 		<button type="submit" value="Login" class="btn btn-info">Login</button>
 
 	</form>
