@@ -124,6 +124,7 @@ def user_create(request):
         form = UserCreationForm()
         return render(request, 'dbtest/user_create.html', {'form':form})
 
+@login_required
 def organization_create(request):
     #if this request was a POST and not a GET
     if request.method == 'POST':
@@ -197,7 +198,7 @@ def organization_edit(request):
         args['form'] = form
         return render(request, 'dbtest/organization_edit.html', args)
 
-
+@login_required
 def job_create(request):
     #if this request was a POST and not a GET
     if request.method == 'POST':
