@@ -1,74 +1,76 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
 
-<div id="main" class="col-xs-10">
 
-  <div class="panel-heading">
-    {{organization.name}}<br>
-  </div>
 
-  <div class="row">
-    <div class="col-xs-6">
-      {% if organization.icon %}<img draggable="false" src="{{ organization.icon.url }}"/>{% endif %}
+<div class="row">
+        <div class="col-sm-10">
+            <h1>{{organization.name}}</h1>
+             
+             			 <!Catgories>
+             			 
+            
+             <h3>
+             <span class="text-muted">skilled in</span>
+             &nbsp;
+			 {% for category in organization.categories.all %}
+
+			 	<a href="{% url 'search' %}?search={{ category.name }}&search_model=organization&search_by=category" class="label label-info">{{category.name}}</a> 
+			 {%endfor%}
+             </h3>
+        </div>
+      <div class="col-sm-2"><span class="pull-right"><img title="prof" class="img-circle img-responsive" src="{{ organization.icon.url }}"></span>
+
+        </div>
     </div>
-    <div class="col-xs-6">
-      <div class="well"> {{organization.description}}</div>
+
+    <div class="row">
+        <div class="col-sm-3">
+            <!--left col-->
+            <ul class="list-group">
+                <li class="list-group-item text-muted" contenteditable="false">Profile</li>
+                <li class="list-group-item text-right"><span class="pull-left"><strong class="">Members</strong></span> {{organization.members.all|length}}</li>
+                    <li class="list-group-item text-right"><span class="pull-left"><strong class="">Admin </strong></span> <a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a>
+                        </li>
+              <li class="list-group-item text-right"><span class="pull-left"><strong class="">Joined</strong></span>2015
+               
+                      </li>
+            </ul>
+           
+           
+          
+            <ul class="list-group">
+                <li class="list-group-item text-muted">Members</li>
+                
+                {% for user in organization.members.all %}
+				 <li class="list-group-item">
+					 <a href="{% url 'user_detail' user.id %}">{{user.username}}</a>
+				 </li>
+	  			{% endfor %}
+           
+        </div>
+        <!--/col-3-->
+        <div class="col-sm-9" style="" contenteditable="false">
+            <div class="panel panel-default">
+                <div class="panel-heading">Description</div>
+                <div class="panel-body">
+                {{organization.description}}
+
+                </div>
+            </div>
+            <div class="panel panel-default target">
+                <div class="panel-heading" contenteditable="false">Recent Jobs</div>
+                <div class="panel-body">
+				
+				//tbd
+				
+                </div>
+                 
+            </div>
+                     
+            </div>
+                 
+        </div>
+              
     </div>
-  </div>
-
-  <hr/>
-
-  <div class="panel panel-default">
-      <div class="panel-heading">
-          <a href='{% url 'organization_job_index' organization.id %}'>Recent Jobs</a></>
-      </div>
-      <div class="panel-body">
-      </div>
-  </div>
-
-  <hr/>
-
-  <span>Categories</span>
-  {% if not organization.categories.all %}
-  There are no categories assigned for this organization.
-  {% endif %}
-  {% for category in organization.categories.all %}
-    <a href="{% url 'search' %}?search={{ category.name }}&search_model=organization&search_by=category">
-      <button type="button" class="btn btn-default">{{category.name}}</button>
-    </a>
-  {% endfor %}
-
-</div>
-
-<div id="sidebar" class="col-xs-2">
-
-  <h4>
-  	<div class="glyphicon glyphicon-certificate"></div> Admin
-  </h4>
-  <ul class="list-group">
-    <li class="list-group-item">
-      <a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a>
-    </li>
-  </ul>
-
-  <h4><div class="glyphicon glyphicon-user"></div> Members
-  </h4>
-  <ul class="list-group">
-  	{% if not organization.categories.all %}
-  	<li class="list-group-item">
-  		Devoid of members.
-  	</li>
-  	{% endif %}
-
-    {% for user in organization.members.all %}
-      <li class="list-group-item">
-        <a href="{% url 'user_detail' user.id %}">{{user.username}}</a>
-      </li>
-    {% endfor %}
-
-</div>
-
-
-
-
 {% endblock content%}
