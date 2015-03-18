@@ -14,7 +14,7 @@
              <h3>
              </h3>
         </div>
-      <div class="col-sm-2"><span class="pull-right"><img title="prof" class="img-circle img-responsive" src="{{ organization.icon.url }}"></span>
+      <div class="col-sm-2"><span class="pull-right"><img title="prof" class="img-circle img-responsive" src="{{ organization.icon.url }}" draggable="false"></span>
 
         </div>
     </div>
@@ -23,7 +23,13 @@
 	
 	<div class="panel panel-info">
 		<div class="panel-heading">
+		
+
 		Pending Requests
+		{%if organization.job_requested%}
+			<span class="badge badge-primary">{{organization.job_requested|length}}</span>
+		{%endif%}
+				
 		</div>
 	
 		<div class="panel-body">
@@ -31,7 +37,7 @@
 				{% for job in organization.job_requested %}
 					<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a>
 					
-					//table //bulshit
+					//table //bs
 					
 				{% endfor %}
 				
