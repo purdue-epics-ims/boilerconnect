@@ -4,6 +4,14 @@
 
 {% if user.is_authenticated %}
 
+
+
+<h1>
+But....... You are already logged in
+</h1>
+
+{% else %}
+
 	<div class="panel-heading">
 			Login
 	</div>
@@ -55,12 +63,6 @@
 		
 		
 	</div>
-{% else %}
-
-
-<h1>
-But....... You are already logged in
-</h1>
 
 {%endif%}
 {% endblock content %}

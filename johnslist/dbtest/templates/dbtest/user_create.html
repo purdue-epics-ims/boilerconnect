@@ -49,9 +49,17 @@
 		<br>
 				{% csrf_token %}
 
+			<div>
+				<button type="submit" value="Create User" class="btn btn-primary">Create Account</button>
+			
+				<span class="pull-right">
+					<p>Already a user?
+						<a href="{% url 'login' %}">Login</a>
+					</p>
 				
-		<button type="submit" value="Create User" class="btn btn-primary">Create Account</button>
-
+				</span>
+			
+			</div>
 	</form>
 		
 		{% endif %}
