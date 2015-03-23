@@ -49,7 +49,6 @@ class Organization(models.Model):
 class Job(models.Model):
 	def __unicode__(self):
 		return self.name
-<<<<<<< HEAD
 	# function returns an array list of organization objects that have accepted = True in JobRelation
 	def organization_accepted(self):
 		accepted = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = True)
@@ -62,8 +61,6 @@ class Job(models.Model):
 		jr = Jobrelation(job = self,organization = organization);
 		jr.save();
 		return
-=======
->>>>>>> develop
 
 	name = models.CharField('Job Name',max_length=128)
 	description = models.TextField('Job Description')
