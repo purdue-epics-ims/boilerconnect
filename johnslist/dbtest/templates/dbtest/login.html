@@ -3,23 +3,49 @@
 {% block content %}
 
 	<div class="panel-heading">
-			LOGIN
+			Login
 	</div>
+	
+
 	<div class = "jumbotron">
-		<form class="login" action="{% url 'login' %}" method='POST'>
-		{% csrf_token %}
-		<table class = "input-table">
-		{{ form }}
-		</table>
+	
+	
+	
+	<br>
+	<form class="login" action="{% url 'login' %}" method='POST'>
+
+		<div class="input-group">
+			<span class="input-group-addon" id="addon-e,">
+				<div class="glyphicon glyphicon-user"></div>
+			</span>
+			<input id="id_username" name="username" name="username" value=""type="text" class="form-control" placeholder="Username" autofocus="true" autocomplete="on" aria-describedby="addon1">
+		</div>
+		&nbsp;
+				<input type='hidden' name='csrfmiddlewaretoken' value='ooj4AUcGpfYh7xPa4Ik3zh2NtyoGW1fC' />
+
+
+		<div class="input-group">
+			<span class="input-group-addon" id="addon-pa">
+				<div class="glyphicon glyphicon-lock"></div>
+			</span>
+			<input type="password" name="password" value="{{password}}" class="form-control" placeholder="Password" aria-describedby="addon1">
+			
+		</div>
 		<br>
-		<input class = "custom-btn" type="submit" value="Login"  >
-		<input type="hidden" name="next" value="{{ next }}">
-		</form>
+				{% csrf_token %}
+
+				<input type="hidden" name="next" value="{{request.META.HTTP_REFERER}}">
+		<button type="submit" value="Login" class="btn btn-info">Login</button>
+
+	</form>
+	
+		
+		
 		<br>
 		<br>
 		<div id= "create_user">
 			<p>Not a user? 
-			<a href="{% url 'user_create' %}">Sign up here</a>
+			<a href="{% url 'user_create' %}">Create an Account</a>
 			</p>
 		</div>
 	</div>
