@@ -4,12 +4,16 @@
 
 	<link rel='stylesheet' type='text/css' href='{% static 'bootstrap.min.css' %}'/>
 	
-	<!-- Font awesome -->
+	<!-- Font awesome! -->
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
 	<!-- Custom CSS -->
 	<link rel='stylesheet' type='text/css' href='{% static 'style.css' %}'/>
 
+
+		<title>
+			BoilerConnect - {%block title%}Connecting Jobs with Service Organizations{%endblock%}
+		</title>
 	</head>
 
 	<body>
@@ -20,23 +24,27 @@
         <div class="navbar-header">
           <a href="{% url 'front_page' %}" class="navbar-brand">BoilerConnect</a>
           <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
+		  	<span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+
           </button>
         </div>
         <div class="navbar-collapse collapse" id="navbar-main">
-          <ul class="nav navbar-nav">
+			<ul class="nav navbar-nav">
            
-                         <li><a href="#about">About</a></li>
-
+				<li><a href="#about">About</a></li>
+		
+			
            
            
 
            {% if user.is_authenticated %}
            
            <li class="dropdown">
-					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ user.username }} <span class="caret"></span></a>
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-toggle="dropdown" haspopup="true" onmouseover="hoverhard()">{{ user.username }} <span class="caret"></span></a>
 					  <ul class="dropdown-menu" role="menu" arialabeledby="user">
 					    <li><a href="{% url 'logout' %}">Logout</a></li>
                         <li><a href="{% url 'user_edit' %}">Modify User</a></li>
@@ -54,67 +62,34 @@
 				  	  </ul>
 				</li>
 			{%else%}
-							<li><a class="right" href="{% url 'login' %}"> Login </a></li>
+			
+        </ul>
+        			<ul class="nav navbar-nav navbar-right">	
 
+							<li>
+								<p class="navbar-btn">
+									<a style="margin-right:5px;" href="{% url 'login' %}" class="btn btn-default">Login</a>
+									</p>
+							</li>
+							<li>
+								<p class="navbar-btn">
+									<a href="{% url 'user_create' %}" class="btn btn-primary">Join</a>
+								</p>
+							</li>
+							
+        			</ul>
+							
+							
            {% endif %}
             
 
-				
+		
 
           </ul>
 
         </div>
       </div>
     </div>
-<!--
-		<nav id="navbar" class="navbar  navbar-fixed-top" role="navigation">
-        
-        	<div class="navbar-header">
-				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbarCollapse">
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-
-                    </div>
-
-			<a class="navbar-brand" href="{% url 'front_page' %}">BoilerConnect</a>
-          
-          <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="nav navbar-nav">
-			
-			
-            </ul>
-            
-     
-            
-			<ul class="nav navbar-nav navbar-right">
-			            {% if user.is_authenticated %}
-
-				<li class="dropdown">
-					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">{{ user.username }} <span class="caret"></span></a>
-					  <ul class="dropdown-menu" role="menu">
-					    <li><a href="{% url 'logout' %}">Logout</a></li>
-                        <li><a href="{% url 'user_edit' %}">Modify User</a></li>
-                        <li><a href="{% url 'organization_create' %}">Create a new organization</a></li>
-                        <li><a href="{% url 'job_create' %}">Create a new job request</a></li>
-					    <li class="divider"></li>
-					    <li class="dropdown-header">Member of</li>
-						{% for organization in user.members.all %}
-					    <li><a href="{% url 'organization_detail' organization.id %}">{{ organization.name }}</a></li>
-						{% endfor %}
-					    <li class="dropdown-header">Admin of</li>
-						{% for organization in user.admin.all %}
-					    <li><a href="{% url 'organization_detail' organization.id %}">{{ organization.name }}</a></li>
-						{% endfor %}
-				  	  </ul>
-				    </li>
-				
-				{% else %}
-				
-				<li><a class="right" href="{% url 'login' %}"> Login </a></li>
-				{% endif %}
-			</ul>
-          </div>
-          </nav><!--/.nav-collapse -->
          
         </div>
       
@@ -146,10 +121,24 @@
 		</div>
 
 	</body>
+	
+	<script>
+		function hoverhard {
+			
+			
+				    $(function() {
+        $(".dropdown").hover(
+            function(){ $(this).addClass('open') },
+            function(){ $(this).removeClass('open') }
+        );
+    });
+		}
+	
+	
+	
+	</script>
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 	<script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
 </html>
-
-
