@@ -1,8 +1,11 @@
 import os
+from django.core.management import call_command
 
 def populate():
     #add Users
-    os.remove("db.sqlite3")
+    if os.path.exists("db.sqlite3"):
+        os.remove("db.sqlite3")
+    call_command('syncdb', interactive=False)
     
     for num in range(0,20):
         newuser = User.objects.create(username='user{0}'.format(num))
@@ -41,7 +44,7 @@ def populate():
         plug.members.add(user)
         epics.members.add(user)
 
-    #add ServiceCategory's
+    #add ServiceServiceCategory's
     categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']
     for category in categories:
        ServiceCategory.objects.create( name=category,description='' ) 
