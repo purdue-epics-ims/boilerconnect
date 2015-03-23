@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from .models import *
 from django.http import HttpResponse
-from django.contrib.auth.views import login
+from django.contrib.auth.views import login as auth_login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
@@ -36,9 +36,18 @@ todo
     organization_edit - this doesn't work at all
 '''
 
+def login(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        if user.is_active:
+            auth_login(request, user)
+            redirect('/')
+
 def user_detail(request,user_id):
     user = get_object_or_404(User,id=user_id)
-    return render(request, 'dbtest/user_detail.html',{'user': user})
+    return render(request, 'dbtest/user_detail.html',{'user_detail': user})
 
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
