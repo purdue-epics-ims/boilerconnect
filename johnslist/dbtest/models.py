@@ -64,8 +64,9 @@ class Job(models.Model):
 	def organization_requested(self):
 		requested = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False)
 		return requested
-	def setUpJobrelation(self):
-		jr = Jobrelation(job = self,organization = self.organization);
+	def setUpJobrelation(self,organization):
+
+		jr = Jobrelation(job = self,organization = organization);
 		jr.save();
 		return
 
