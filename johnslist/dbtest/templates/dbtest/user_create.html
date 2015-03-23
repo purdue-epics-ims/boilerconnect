@@ -16,6 +16,18 @@
 			<p>Welcome {{ username }}.  Please check your email for a confirmation message.</p>
 		{% else %}
 		
+	
+	{% if form.errors %}
+        <div class="alert alert-error">
+            <ul>
+                {% for error in form.field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+	
+		
 			<form class="login" action="{% url 'user_create' %}" method='POST'>
 						
 			<div class="input-group">
