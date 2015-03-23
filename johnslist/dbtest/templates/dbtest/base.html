@@ -3,7 +3,7 @@
 	<head>
 
 	<link rel='stylesheet' type='text/css' href='{% static 'bootstrap.min.css' %}'/>
-	
+	<link rel="icon" type="image/png" href='{% static 'favicon.png' %}'/>
 	<!-- Font awesome! -->
 	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
@@ -22,6 +22,12 @@
 	<div class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
+        
+        <a  class="navbar-brand" rel="home" href="#" title="BoilerConnect">
+			  	<img draggable="false" style="max-width:27px;margin-top:-3px;margin-right:-7px;" 
+        		src='{% static 'brand.png' %}'>
+			</a>
+        
           <a href="{% url 'front_page' %}" class="navbar-brand">BoilerConnect</a>
           <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
 		  	<span class="icon-bar"></span>
@@ -31,6 +37,7 @@
             <span class="icon-bar"></span>
 
           </button>
+		  	
         </div>
         <div class="navbar-collapse collapse" id="navbar-main">
 			<ul class="nav navbar-nav">
