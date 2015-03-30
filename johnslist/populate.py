@@ -47,11 +47,11 @@ def populate():
     #add ServiceServiceCategory's
     categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']
     for category in categories:
-       Category.objects.create( name=category,description='' ) 
+       ServiceCategory.objects.create( name=category,description='' ) 
 
-    plug.categories.add(Category.objects.get(name="computer science"), Category.objects.get(name="linux"))
-    epics.categories.add(Category.objects.get(name = 'engineering'))
-    amet.categories.add(Category.objects.get(name= 'engineering'))
+    plug.categories.add(ServiceCategory.objects.get(name="computer science"), ServiceCategory.objects.get(name="linux"))
+    epics.categories.add(ServiceCategory.objects.get(name = 'engineering'))
+    amet.categories.add(ServiceCategory.objects.get(name= 'engineering'))
     
     #add Jobs
     jobs = ['Installing linux','Configuring vim','Make a website', 'Make a car', 'Finish circuit board', 'Finish software']
@@ -67,11 +67,6 @@ def populate():
         else:
             acc = False
         user_num += 1
-    #Job.objects.create(name = 'Installing Linux on a computer', description = 'A user wants job created', duedate = '2015-3-21', creator = User.objects.get(id = 1))
-    #Job.objects.get(id = 1).setUpJobrelation(Organization.objects.get(id = 1), True)
-        
-    #Job.objects.create(name = 'Configuring vim on a computer', description = 'A user wants vim to be configured', duedate = '2015-2-22', creator = User.objects.get(id = 2))
-    #Job.objects.get(id = 2).setUpJobrelation(Organization.objects.get(id = 1), False)
 
 #print what object is being added, return the object
 def status(added_obj):
