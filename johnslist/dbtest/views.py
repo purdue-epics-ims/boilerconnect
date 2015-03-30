@@ -24,6 +24,7 @@ from .forms import*
     search - search results for search on front_page
     user_job_index - list of jobs user has created
     user_membership - list of organizations user is part of
+    about - description of site, tutorial	
 
     user_create
     organization_create
@@ -231,3 +232,5 @@ def job_create(request):
         form = JobCreateForm()
         return render(request, 'dbtest/job_create.html', {'form':form})
 
+def about(request):
+    return render(request, 'dbtest/about.html')
