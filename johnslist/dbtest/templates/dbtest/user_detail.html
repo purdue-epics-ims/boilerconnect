@@ -91,22 +91,6 @@
             
           
         </div>
-
-
-
-
-
-
-
-	Username: {{ user_detail.username }}<br>
-	<u>Organizations</u><br>
-	{% for organization in user_detail.members.all %}
-		<a href="{% url 'organization_detail' organization.id %}">{{ organization.name }}</a><br>
-	{% endfor %}
-		
-	<u>Admin of:</u><br>
-	{% for organization in user_detail.admin.all %}
-		<a href='{% url 'organization_detail' organization.id %}'>{{ organization.name }}</a><br>
-	{% endfor %}
-
+        
+        
 {% endblock content %}	
