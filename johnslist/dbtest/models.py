@@ -26,7 +26,7 @@ Future entities to add:
 		password
 '''
 
-class ServiceCategory(models.Model):
+class Category(models.Model):
 	def __unicode__(self):
 		return self.name
 
@@ -49,7 +49,7 @@ class Organization(models.Model):
 	description = models.TextField('Organization Description')
 	admin = models.ForeignKey(User,related_name='admin')  # User -o= Organization 
 	members = models.ManyToManyField(User,related_name='members')  # User =-= Organization
-	categories = models.ManyToManyField(ServiceCategory)  # ServiceCategory =-= Organization
+	categories = models.ManyToManyField(Category)  # ServiceCategory =-= Organization
 	email = models.CharField('Organization email',max_length=64,null=True)  #should this be unique?
 	phone_number = models.CharField('Organization phone number',max_length=64,null=True) #should this be unique?
 	icon = models.ImageField(upload_to='organization',null=True)
@@ -64,8 +64,8 @@ class Job(models.Model):
 	def organization_requested(self):
 		requested = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False)
 		return requested
-	def setUpJobrelation(self,organization):
-		jr = Jobrelation(job = self,organization = organization);
+	def setUpJobrelation(self,organization,accept):
+		jr = Jobrelation(job = self,organization = organization,accepted = accept);
 		jr.save();
 		return
 
@@ -74,7 +74,7 @@ class Job(models.Model):
 	duedate = models.DateTimeField('Date Due')
 	creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
 	organization = models.ManyToManyField(Organization, through = 'Jobrelation')
-	categories = models.ManyToManyField(ServiceCategory)
+	categories = models.ManyToManyField(Category)
 
 
 
