@@ -53,7 +53,26 @@ def populate():
     epics.categories.add(ServiceCategory.objects.get(name = 'engineering'))
     amet.categories.add(ServiceCategory.objects.get(name= 'engineering'))
     
-    
+    #add Jobs
+    jobs = ['Installing linux','Configuring vim','Make a website', 'Make a car', 'Finish circuit board', 'Finish software']
+    user_num = 1
+    org_num = 1
+    acc = True
+    for job in jobs:
+        Job.objects.create(name=job, description = 'Description of the job', duedate = '2015-3-21', creator = User.objects.get(id = user_num))
+        Job.objects.get(id = user_num).setUpJobrelation(Organization.objects.get(id = org_num), acc)
+        if acc == False:
+            org_num += 1
+            acc = True
+        else:
+            acc = False
+        user_num += 1
+    #Job.objects.create(name = 'Installing Linux on a computer', description = 'A user wants job created', duedate = '2015-3-21', creator = User.objects.get(id = 1))
+    #Job.objects.get(id = 1).setUpJobrelation(Organization.objects.get(id = 1), True)
+        
+    #Job.objects.create(name = 'Configuring vim on a computer', description = 'A user wants vim to be configured', duedate = '2015-2-22', creator = User.objects.get(id = 2))
+    #Job.objects.get(id = 2).setUpJobrelation(Organization.objects.get(id = 1), False)
+
 #print what object is being added, return the object
 def status(added_obj):
     if added_obj[1]:
@@ -62,13 +81,12 @@ def status(added_obj):
         print "<{0}> {1} already exists".format(added_obj[0].__class__.__name__,added_obj[0])
     return added_obj[0]
 
-
 if __name__ == '__main__':
         
     print 'Populating database...'
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'johnslist.settings')
-    from dbtest.models import *
     from django.core.files import File
+    from dbtest.models import *
     from johnslist.settings import PIC_POPULATE_DIR
     from time import sleep
     import django
@@ -79,4 +97,4 @@ if __name__ == '__main__':
         print 'Error: Object already exists.  Did you remember to delete db.sqlite3 first?'
     except django.db.utils.OperationalError:
         print 'No such Table.  Did you remmber to run "python manage.py syncdb"'
-        
+
