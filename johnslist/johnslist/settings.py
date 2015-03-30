@@ -36,14 +36,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'dbtest',
-    'guardian'
+    'guardian',
 )
 
-try:
-	import django_extensions
-	INSTALLED_APPS+=('django_extensions',)
-except ImportError:
-	pass
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -117,5 +112,8 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	"django.core.context_processors.media",
 	"django.core.context_processors.request",
 )
+
+#django guardian config
+
 
 ANONYMOUS_USER_ID = -1
