@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from .models import *
 from django.http import HttpResponse
-from django.contrib.auth.views import login
+from django.contrib.auth.views import login as auth_login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
@@ -36,14 +36,22 @@ todo
     organization_edit - this doesn't work at all
 '''
 
-@user_has_object
+def login(request):
+    username = request.POST['username']
+    password = request.POST['password']
+    user = authenticate(username=username, password=password)
+    if user is not None:
+        if user.is_active:
+            auth_login(request, user)
+            redirect('/')
+
 def user_detail(request,user_id):
     user = get_object_or_404(User,id=user_id)
-    return render(request, 'dbtest/user_detail.html',{'user': user})
+    return render(request, 'dbtest/user_detail.html',{'user_detail': user})
 
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
-    jobs = organization.job_requested()
+    jobs = organization.requested
     return render(request, 'dbtest/organization_detail.html',{'organization': organization,'jobs':jobs})
 
 @user_has_object
@@ -87,7 +95,7 @@ def search(request):
 
     if search_model.lower() == 'organization':
         if search_by.lower() == 'category':
-            category = ServiceCategory.objects.get(name=search)
+            category = Category.objects.get(name=search)
             search_result = category.organization_set.all()
         if search_by.lower() == 'name':
             search_result = Organization.objects.filter(name__icontains=search)
@@ -125,6 +133,7 @@ def user_create(request):
         form = UserCreationForm()
         return render(request, 'dbtest/user_create.html', {'form':form})
 
+@login_required
 def organization_create(request):
     #if this request was a POST and not a GET
     if request.method == 'POST':
@@ -198,7 +207,7 @@ def organization_edit(request):
         args['form'] = form
         return render(request, 'dbtest/organization_edit.html', args)
 
-
+@login_required
 def job_create(request):
     #if this request was a POST and not a GET
     if request.method == 'POST':

@@ -26,30 +26,22 @@ Future entities to add:
 		password
 '''
 
-class ServiceCategory(models.Model):
+class Category(models.Model):
 	def __unicode__(self):
 		return self.name
 
-	name = models.CharField('Service Category Name',max_length=64)
-	description = models.TextField('Service Category Description')
+	name = models.CharField('Category Name',max_length=64)
+	description = models.TextField('Category Description')
 
 class Organization(models.Model):
 	def __unicode__(self):
 		return self.name
-	
-	def job_accepted(self):
-		job_list_a = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True)	
-		return job_list_a
-
-	def job_requested(self):
-		job_list_r = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False)
-		return job_list_r
 
 	name = models.CharField('Organization Name',max_length=64,unique=True)
 	description = models.TextField('Organization Description')
 	admin = models.ForeignKey(User,related_name='admin')  # User -o= Organization 
 	members = models.ManyToManyField(User,related_name='members')  # User =-= Organization
-	categories = models.ManyToManyField(ServiceCategory)  # ServiceCategory =-= Organization
+	categories = models.ManyToManyField(Category)  # Category =-= Organization
 	email = models.CharField('Organization email',max_length=64,null=True)  #should this be unique?
 	phone_number = models.CharField('Organization phone number',max_length=64,null=True) #should this be unique?
 	icon = models.ImageField(upload_to='organization',null=True)
@@ -75,13 +67,5 @@ class Job(models.Model):
 	duedate = models.DateTimeField('Date Due')
 	creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
 	organization = models.ManyToManyField(Organization, through = 'Jobrelation')
-	categories = models.ManyToManyField(ServiceCategory)
+	categories = models.ManyToManyField(Category)
 
-
-
-class Jobrelation(models.Model):
-	job = models.ForeignKey(Job)
-	organization = models.ForeignKey(Organization)
-	accepted = models.NullBooleanField(default = False)
-
-	

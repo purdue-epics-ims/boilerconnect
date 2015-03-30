@@ -47,11 +47,11 @@ def populate():
     #add ServiceServiceCategory's
     categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']
     for category in categories:
-       ServiceCategory.objects.create( name=category,description='' ) 
+       Category.objects.create( name=category,description='' ) 
 
-    plug.categories.add(ServiceCategory.objects.get(name="computer science"), ServiceCategory.objects.get(name="linux"))
-    epics.categories.add(ServiceCategory.objects.get(name = 'engineering'))
-    amet.categories.add(ServiceCategory.objects.get(name= 'engineering'))
+    plug.categories.add(Category.objects.get(name="computer science"), Category.objects.get(name="linux"))
+    epics.categories.add(Category.objects.get(name = 'engineering'))
+    amet.categories.add(Category.objects.get(name= 'engineering'))
     
     #add Jobs
     jobs = ['Installing linux','Configuring vim','Make a website', 'Make a car', 'Finish circuit board', 'Finish software']
