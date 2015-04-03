@@ -5,6 +5,7 @@ from django.contrib.auth.views import login as auth_login
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
+from django.forms.models import inlineformset_factory
 from .decorators import user_has_object
 from .forms import*
 '''
@@ -51,7 +52,7 @@ def user_detail(request,user_id):
 
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
-    jobs = organization.requested
+    jobs = organization.job_requested()
     return render(request, 'dbtest/organization_detail.html',{'organization': organization,'jobs':jobs})
 
 @user_has_object
@@ -209,25 +210,24 @@ def organization_edit(request):
 
 @login_required
 def job_create(request):
-    #if this request was a POST and not a GET
-    if request.method == 'POST':
-        form = JobCreateForm(request.POST)
-
-        #check form validity
-        if form.is_valid() :
-            job = form.save(commit=False)
-            job.creator = User.objects.get(id=1)
-            #create new org
-            job.accepted = 0;
-            job.save()
-            form.save_m2m()#this generate the error as there is an intermediary model
-            title = "Job {0} created".format( job.name )
-            message = "Thank you for creating the job."
-            return render(request,'dbtest/confirm.html', {'title': title,'message':message})
-        else:
-            return render(request, 'dbtest/job_create.html', {'form':form,'error':"There are incorrect fields"})
+	#if this request was a POST and not a GET
+	if request.method == 'POST':
+		form = JobCreateForm(request.POST)
+		#check form validity
+		if form.is_valid():
+			job = form.save(commit=False)
+			job.creator = request.user
+			job.save()
+			for org in request.POST.get('organization'):
+				jr = Jobrelation.objects.create(organization = Organization.objects.get(id = org), job = job)
+			#create new org
+			title = "Job {0} created".format( job.name )
+			message = "Thank you for creating the job."
+			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+		else:
+			return render(request, 'dbtest/job_create.html', {'form':form,'error':"There are incorrect fields"})
     #if the request was a GET
-    else:
-        form = JobCreateForm()
-        return render(request, 'dbtest/job_create.html', {'form':form})
+	else:
+		form = JobCreateForm()
+		return render(request, 'dbtest/job_create.html', {'form':form})
 
