@@ -218,8 +218,11 @@ def job_create(request):
 			job = form.save(commit=False)
 			job.creator = request.user
 			job.save()
-			for org in request.POST.get('organization'):
-				jr = Jobrelation.objects.create(organization = Organization.objects.get(id = org), job = job)
+			for org in request.POST.getlist('organization'):
+				Jobrelation.objects.create(organization = Organization.objects.get(id = org), job = job)
+			for cat in request.POST.getlist('categories'):
+				job.categories.add(Category.objects.get(id=cat))
+				job.save()
 			#create new org
 			title = "Job {0} created".format( job.name )
 			message = "Thank you for creating the job."
