@@ -15,61 +15,46 @@ so if we didn't have 'related_name', the 'admin' and 'members' relationship in O
 
 
 Future entities to add:
-    - user hierarchy -> admin, member
-    - reviews
-    - media (pictures attached to posts, etc.)
+	- user hierarchy -> admin, member
+	- reviews
+	- media (pictures attached to posts, etc.)
 '''
 
 ''' User class
-    attributes:
-        username
-        password
+	attributes:
+		username
+		password
 '''
 
 class Category(models.Model):
-    def __unicode__(self):
-        return self.name
+	def __unicode__(self):
+		return self.name
 
-    name = models.CharField('Category Name',max_length=64)
-    description = models.TextField('Category Description')
-
-    class Meta:
-        permissions = (
-            ( 'view_category','View Category' ),
-            )
+	name = models.CharField('Category Name',max_length=64)
+	description = models.TextField('Category Description')
 
 class Organization(models.Model):
-    def __unicode__(self):
-        return self.name
+	def __unicode__(self):
+		return self.name
 
-    name = models.CharField('Organization Name',max_length=64,unique=True)
-    description = models.TextField('Organization Description')
-    admin = models.ForeignKey(User,related_name='admin')  # User -o= Organization 
-    members = models.ManyToManyField(User,related_name='members')  # User =-= Organization
-    categories = models.ManyToManyField(Category)  # Category =-= Organization
-    email = models.CharField('Organization email',max_length=64,null=True)  #should this be unique?
-    phone_number = models.CharField('Organization phone number',max_length=64,null=True) #should this be unique?
-    icon = models.ImageField(upload_to='organization',null=True)
-
-    class Meta:
-        permissions = (
-            ( 'view_organization','View Organization' ),
-            )
+	name = models.CharField('Organization Name',max_length=64,unique=True)
+	description = models.TextField('Organization Description')
+	admin = models.ForeignKey(User,related_name='admin')  # User -o= Organization 
+	members = models.ManyToManyField(User,related_name='members')  # User =-= Organization
+	categories = models.ManyToManyField(Category)  # Category =-= Organization
+	email = models.CharField('Organization email',max_length=64,null=True)  #should this be unique?
+	phone_number = models.CharField('Organization phone number',max_length=64,null=True) #should this be unique?
+	icon = models.ImageField(upload_to='organization',null=True)
 
 class Job(models.Model):
-    def __unicode__(self):
-        return self.name
+	def __unicode__(self):
+		return self.name
 
-    name = models.CharField('Job Name',max_length=128)
-    description = models.TextField('Job Description')
-    duedate = models.DateTimeField('Date Due')
-    creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
-    requested = models.ManyToManyField(Organization,related_name='requested')  # Organization =-= Job
-    accepted = models.ManyToManyField(Organization,related_name='accepted') 
-    categories = models.ManyToManyField(Category)
-
-    class Meta:
-        permissions = (
-            ( 'view_job','View Job' ),
-            )
+	name = models.CharField('Job Name',max_length=128)
+	description = models.TextField('Job Description')
+	duedate = models.DateTimeField('Date Due')
+	creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
+	requested = models.ManyToManyField(Organization,related_name='requested')  # Organization =-= Job
+	accepted = models.ManyToManyField(Organization,related_name='accepted') 
+	categories = models.ManyToManyField(Category)
 
