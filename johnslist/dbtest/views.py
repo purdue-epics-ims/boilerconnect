@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 import random
 from .decorators import user_has_object
 from .forms import*
+from notifications import notify
 '''
     user_detail - show user info
         contact
@@ -44,10 +45,12 @@ def login(request):
     if user is not None:
         if user.is_active:
             auth_login(request, user)
-            redirect('/')
+            redirect('/');
 
+            
 def user_detail(request,user_id):
     user = get_object_or_404(User,id=user_id)
+    notify.send(request.user, recipient = user, verb = 'is looking at your profile')
     return render(request, 'dbtest/user_detail.html',{'user_detail': user})
 
 def organization_detail(request,organization_id):
@@ -68,8 +71,7 @@ def organization_accept_job(request,organization_id):
         jr = Jobrelation.objects.get(job=job_id,organization = org)
         jr.accepted = True
         jr.save()
-        return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})
-    
+        return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})  
     return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
 def job_detail(request,job_id):
