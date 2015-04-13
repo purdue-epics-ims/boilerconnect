@@ -2,6 +2,16 @@
 
 {% block content %}
 
+{% if user.is_authenticated %}
+
+
+
+<h1>
+But....... You are already logged in
+</h1>
+
+{% else %}
+
 	<div class="panel-heading">
 			Login
 	</div>
@@ -12,6 +22,17 @@
 	
 	
 	<br>
+	
+	{% if form.errors %}
+	<div class="alert alert-error">
+		<button type="button" class="close" data-dismiss="alert">×</button>
+		{% for field in form %} 
+			{% if field.errors %}
+			<li>{{ field.label }}: {{ field.errors|striptags }}</li>
+			{% endif %}
+		{% endfor %}
+	</div>
+{% endif %}
 	<form class="login" action="{% url 'login' %}" method='POST'>
 
 		<div class="input-group">
@@ -35,18 +56,24 @@
 				{% csrf_token %}
 
 				<input type="hidden" name="next" value="{{request.META.HTTP_REFERER}}">
-		<button type="submit" value="Login" class="btn btn-info">Login</button>
+		<div>
+			<button type="submit" value="Login" class="btn btn-info">Login</button>
+			<span class="pull-right">
+			
+			
+			<p>Not a user? 
+			<a href="{% url 'user_create' %}">Create an Account</a>
+			</p>
+		</div>
+			</span>
+			
+		</div>
 
 	</form>
 	
 		
 		
-		<br>
-		<br>
-		<div id= "create_user">
-			<p>Not a user? 
-			<a href="{% url 'user_create' %}">Create an Account</a>
-			</p>
-		</div>
 	</div>
+
+{%endif%}
 {% endblock content %}

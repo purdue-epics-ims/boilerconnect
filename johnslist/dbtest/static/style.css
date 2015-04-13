@@ -1,3 +1,9 @@
+
+.btn-glow {
+box-shadow: 1px 1px 12px #720000;
+}
+
+
 html{
 	min-height:100%;
 	position:relative;
@@ -6,9 +12,36 @@ body{
 	margin-bottom: 60px;
 }
 
+.user-profile {
+  display: inline-block;
+  width:50%;
+  border-radius:50%;
+  text-align:center;
+  padding:100% 100%;
+  line-height:10px;
+  position:relative;  /* Just making it pretty */
+  @shadow: rgba(0, 0, 0, .1);
+  @shadow-length: 4px;
+  -webkit-box-shadow: 0 @shadow-length 0 0 @shadow;
+          box-shadow: 0 @shadow-length 0 0 @shadow;
+  text-shadow: 0 @shadow-length 0 @shadow;
+  background: #008cba;
+  color: white;
+  font-family: Helvetica, Arial Black, sans;
+  font-size: 60px;
+  text-align:center;
+}
+.user-profile:hover{
+background:#e1d8d8;
+
+}
+
 .jumbotron {
 	padding : 40px;
 }
+
+
+
 
 .panel-heading{
 	background-color:#333333;

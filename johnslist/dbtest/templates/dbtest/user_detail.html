@@ -2,15 +2,95 @@
 
 {% block content %}
 
-	Username: {{ user_detail.username }}<br>
-	<u>Organizations</u><br>
-	{% for organization in user_detail.members.all %}
-		<a href="{% url 'organization_detail' organization.id %}">{{ organization.name }}</a><br>
-	{% endfor %}
-		
-	<u>Admin of:</u><br>
-	{% for organization in user_detail.admin.all %}
-		<a href='{% url 'organization_detail' organization.id %}'>{{ organization.name }}</a><br>
-	{% endfor %}
+<div class="row">
+        <div class="col-sm-10">
+            <h1><span class="text-muted">Profile</span> {{user.username}}</h1>
+             
+        </div>
+     
+ </div>
+ 
+ 
+ 
+ &nbsp;
+ 
+    <div class="row">
+        <div class="col-sm-3">
+            <!--left col-->
+            <ul class="list-group">
+                <li class="list-group-item">Groups
+	                <span class="pull-right">{{user_detail.members.all|length}}</span>
+                </li>
+                
+                <li class="list-group-item">Admin
+	                <span class="pull-right">{{user_detail.admin.all|length}}</span>
+                </li>
+                
 
+            </ul>
+           
+           
+          
+            <ul class="list-group">
+            
+            
+           		 <li class="list-group-item">
+                
+			   		 <a href="{%url 'logout'%}">Logout</a>
+                
+                
+                </li>
+                <li class="list-group-item">
+                
+                <a href="{%url 'user_edit'%}">Change password</a>
+                
+                
+                </li>
+                
+                                   
+                
+                </ul>
+        <!--/col-3-->
+        
+   
+        
+	                                
+            </div>
+            
+            
+            <div class="col-sm-9">
+            	<div class="panel panel-default">
+                	<div class="panel-heading">Membership</div>
+					<div class="panel-body">
+
+						{%for org in user_detail.members.all%}
+														<p>	
+
+							
+							<a href="{% url 'organization_detail' org.id %}">{{ org.name }}</a>
+							{%if org in user_detail.admin.all%}
+							
+							<span class="label label-success">
+									Admin
+								</span>
+								
+							
+							{%endif%}
+							</p>
+							
+										
+						
+						
+						{%endfor%}
+						
+                	</div>
+				</div>
+                             
+            </div>
+            
+            
+          
+        </div>
+        
+        
 {% endblock content %}	

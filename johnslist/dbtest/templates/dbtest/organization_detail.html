@@ -13,9 +13,10 @@
              <h3>
              <span class="text-muted">skilled in</span>
              &nbsp;
+
 			 {% for category in organization.categories.all %}
 
-			 	<a href="{% url 'search' %}?search={{ category.name }}&search_model=organization&search_by=category" class="label label-info">{{category.name}}</a> 
+			 	<a href="{% url 'search' %}?search={{ category.name }}&search_model=organization&search_by=category" class="label label-primary">{{category.name}}</a> 
 			 {%endfor%}
              </h3>
         </div>
@@ -23,7 +24,7 @@
 
         </div>
     </div>
-
+&nbsp;
     <div class="row">
         <div class="col-sm-3">
             <!--left col-->
@@ -58,34 +59,7 @@
 
                 </div>
             </div>
-            <div class="panel panel-default target">
-                <div class="panel-heading" contenteditable="false">Recent Requests
-	                
-	                {%if organization.%}
-	                	<span class="badge">
-	                		{{organization.job_requested|length}}
-	                	</span>
-	                {%endif%}
-	                
-	                <span class="pull-right">
-	                	<a href='{% url 'organization_job_index' organization.id %}'>See All Requests</a>
-	                </span>
-                </div>
-                <div class="panel-body">
-				
-					{%for i in "012"%}
-				
-						{%if organization.job_requested.i%}
-							<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>
-						{%endif%}
-					
-					{%endfor%}
-					
-					<a href='{% url 'organization_job_index' organization.id %}'>See All Requests</a>				
-                </div>
-                 
-            </div>
-                     
+                                
             </div>
                  
         </div>
