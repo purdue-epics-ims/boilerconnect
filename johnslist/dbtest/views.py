@@ -54,6 +54,9 @@ def user_detail(request,user_id):
     notify.send(request.user, recipient = user, verb = 'is looking at your profile')
     return render(request, 'dbtest/user_detail.html',{'user_detail': user})
 
+def notifications(request):
+    notifications = request.user.notifications.unread()
+    return render(request, notifications, 'dbtest/notifications.html')
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
     jobs = organization.job_requested()
