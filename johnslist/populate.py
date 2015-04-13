@@ -44,7 +44,7 @@ def populate():
         plug.members.add(user)
         epics.members.add(user)
 
-    #add ServiceCategory's
+    #add ServiceServiceCategory's
     categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']
     for category in categories:
        Category.objects.create( name=category,description='' ) 
@@ -53,7 +53,21 @@ def populate():
     epics.categories.add(Category.objects.get(name = 'engineering'))
     amet.categories.add(Category.objects.get(name= 'engineering'))
     
-    
+    #add Jobs
+    jobs = ['Installing linux','Configuring vim','Make a website', 'Make a car', 'Finish circuit board', 'Finish software']
+    user_num = 1
+    org_num = 1
+    acc = True
+    for job in jobs:
+        Job.objects.create(name=job, description = 'Description of the job', duedate = '2015-3-21', creator = User.objects.get(id = user_num))
+        Job.objects.get(id = user_num).setUpJobrelation(Organization.objects.get(id = org_num), acc)
+        if acc == False:
+            org_num += 1
+            acc = True
+        else:
+            acc = False
+        user_num += 1
+
 #print what object is being added, return the object
 def status(added_obj):
     if added_obj[1]:
@@ -62,13 +76,12 @@ def status(added_obj):
         print "<{0}> {1} already exists".format(added_obj[0].__class__.__name__,added_obj[0])
     return added_obj[0]
 
-
 if __name__ == '__main__':
         
     print 'Populating database...'
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'johnslist.settings')
-    from dbtest.models import *
     from django.core.files import File
+    from dbtest.models import *
     from johnslist.settings import PIC_POPULATE_DIR
     from time import sleep
     import django
@@ -79,4 +92,4 @@ if __name__ == '__main__':
         print 'Error: Object already exists.  Did you remember to delete db.sqlite3 first?'
     except django.db.utils.OperationalError:
         print 'No such Table.  Did you remmber to run "python manage.py syncdb"'
-        
+
