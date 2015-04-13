@@ -27,9 +27,9 @@
 
 		Pending Requests
 		
-			{%if organization.requested%}
-			<span class="badge badge-primary">{{organization.requested.all|length}}</span>
-		{%endif%}
+			{%if organization.organization_requested%}
+			<span class="badge badge-primary">{{organization.organization_requestedd.all|length}}</span>
+			{%endif%}
 		</div>
 		<div class="panel-body row">
 		
@@ -50,7 +50,7 @@
 							
 							<tbody>
 							
-							{%for job in organization.requested.all%}
+							{%for job in organization.job_requested%}
 								<tr>
 									<td>
 									{{job.name}}
@@ -88,8 +88,8 @@
 				</div>
 								
 				</td>
-									<td>
-									{{job.duedate}}
+				<td>
+					{{job.duedate}}
 				
 									</td>
 									
@@ -101,7 +101,9 @@
 							</tbody>
 						
 						</table>
-		
+			
+			
+			
 			{% if organization.requested%}
 				{% for job in organization.requested.all %}
 					<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a>
