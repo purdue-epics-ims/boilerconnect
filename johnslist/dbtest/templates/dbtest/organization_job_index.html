@@ -37,7 +37,7 @@
 				{% for job in organization.job_requested %}
 					<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a>
 					
-					//table //bs
+					<!--//table //bs-->
 					
 				{% endfor %}
 				
@@ -59,9 +59,9 @@
 		
 		<div class="panel-body">
 			{%if organization.job_accepted%}
-				//todo table
+				<!--todo table
 				//todo show more? 
-				//todo expansion?
+				//todo expansion?-->
 				
 				{% for job in organization.job_accepted %}
 					<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>
