@@ -13,26 +13,29 @@ def populate():
         newuser.save()
 
     #add Organizations
+    g=Group.objects.create(name="Purdue Linux Users Group")
     plug = Organization.objects.create(
-        name="Purdue Linux Users Group",
-        admin=User.objects.get(id=1),
+        name=g.name,
+        group=g,
         description=" Linux is a free computer operating system. It runs on a large variety of computer hardware, and can be used for many purposes including desktop machines, small embedded systems and Internet servers. You can find more information about Linux itself on the Linux International website. The Linux Documentation Project is also a good place to find general information about Linux.",
         email="president@purduelug.org",
         phone_number="123-456-7890")
     plug.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
         
 
+    g=Group.objects.create(name="Engineering Projects in Communitiy Service")
     epics = Organization.objects.create(
-        name="Engineering Projects in Communitiy Service",
-        admin=User.objects.get(id=1),
+        name=g.name,
+        group=g,
         description=" Community service agencies face a future in which they must take advantage of technology to improve, coordinate, account for, and deliver the services they provide. They need the help of people with strong technical backgrounds. Undergraduate students face a future in which they will need more than solid expertise in their discipline to succeed. They will be expected to work with people of many different backgrounds to identify and achieve goals. They need educational experiences that can help them broaden their skills. The challenge is to bring these two groups together in a mutually beneficial way. In response to this challenge, Purdue University has created EPICS: Engineering Projects In Community Service",
         email="epics@purdue.edu",
         phone_number="123-456-7890")
     epics.icon.save('epics.png', File(open(PIC_POPULATE_DIR+'epics.png', 'r')))
 
+    g=Group.objects.create(name="Association of Mechanical & Electrical Technologies")
     amet = Organization.objects.create(
-        name="Association of Mechanical & Electrical Technologies",
-        admin=User.objects.get(id=2),
+        name=g.name,
+        group=g,
         description="The Association of Mechanical and Electrical Technologists (AMET) is an organization that brings science, technology, engineering, and mathematics (STEM)-based students together to discuss and work on various extra-curricular projects throughout the school year. The group is meant to help educate students on what it is like to be in an interdisciplinary team and have fun at the same time. Past and current projects include the following: gas grand prix, robosumo competitions, high altitude vehicle launches, a robotic assistant for people with limb paralysis, loudspeaker design / construction, and the National Rube Goldberg competition. Along with projects, AMET hosts various company sponsored lectures and recruitment efforts for our students.",
         email="ahaberly@purdue.edu",
         phone_number="123-456-7890")
@@ -41,8 +44,8 @@ def populate():
     #add Users to Organizations
     users = User.objects.all()
     for user in users[0:4]:
-        plug.members.add(user)
-        epics.members.add(user)
+        plug.group.user_set.add(user)
+        epics.group.user_set.add(user)
 
     #add ServiceCategory's
     categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']
@@ -73,10 +76,4 @@ if __name__ == '__main__':
     from time import sleep
     import django
     django.setup()
-    try:
-        populate()
-    except django.db.utils.IntegrityError:
-        print 'Error: Object already exists.  Did you remember to delete db.sqlite3 first?'
-    except django.db.utils.OperationalError:
-        print 'No such Table.  Did you remmber to run "python manage.py syncdb"'
-        
+    populate()
