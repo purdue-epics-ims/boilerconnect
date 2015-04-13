@@ -5,7 +5,7 @@
 
 	<div class="row">
         <div class="col-sm-10">
-            <h1>             <span class="text-muted">Jobs</span>
+            <h1> <span class="text-muted">Jobs</span>
 {{organization.name}}</h1>
              
              			 <!Catgories>
@@ -33,11 +33,15 @@
 		</div>
 	
 		<div class="panel-body">
-			{% if organization.job_requested%}
-				{% for job in organization.job_requested %}
+			{% if organization.requested%}
+				{% for job in organization.requested.all %}
 					<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a>
 					
+<<<<<<< HEAD
+					<br>
+=======
 					<!--//table //bs-->
+>>>>>>> bb10aa1bcd40c457d83738b48a4bb8af9dc4f208
 					
 				{% endfor %}
 				
@@ -58,12 +62,17 @@
 		</div>
 		
 		<div class="panel-body">
+<<<<<<< HEAD
+			{%if organization.accepted%}
+				//todo table
+=======
 			{%if organization.job_accepted%}
 				<!--todo table
+>>>>>>> bb10aa1bcd40c457d83738b48a4bb8af9dc4f208
 				//todo show more? 
 				//todo expansion?-->
 				
-				{% for job in organization.job_accepted %}
+				{% for job in organization.accepted.all %}
 					<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>
 				{% endfor %}
 				
