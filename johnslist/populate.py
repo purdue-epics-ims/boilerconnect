@@ -47,6 +47,11 @@ def populate():
         plug.group.user_set.add(user)
         epics.group.user_set.add(user)
 
+    #make user0 admin of all orgs
+    user = User.objects.get(username='user0')
+    for organization in Organization.objects.all():
+        assign_perm('is_admin',user,organization)
+
     #add ServiceCategory's
     categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']
     for category in categories:
