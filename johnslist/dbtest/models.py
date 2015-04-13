@@ -30,18 +30,26 @@ class Category(models.Model):
 	def __unicode__(self):
 		return self.name
 
-	name = models.CharField('Category Name',max_length=64)
-	description = models.TextField('Category Description')
+	name = models.CharField('Service Category Name',max_length=64)
+	description = models.TextField('Service Category Description')
 
 class Organization(models.Model):
 	def __unicode__(self):
 		return self.name
+	
+	def job_accepted(self):
+		job_list_a = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True)	
+		return job_list_a
+
+	def job_requested(self):
+		job_list_r = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False)
+		return job_list_r
 
 	name = models.CharField('Organization Name',max_length=64,unique=True)
 	description = models.TextField('Organization Description')
 	admin = models.ForeignKey(User,related_name='admin')  # User -o= Organization 
 	members = models.ManyToManyField(User,related_name='members')  # User =-= Organization
-	categories = models.ManyToManyField(Category)  # Category =-= Organization
+	categories = models.ManyToManyField(Category)  # ServiceCategory =-= Organization
 	email = models.CharField('Organization email',max_length=64,null=True)  #should this be unique?
 	phone_number = models.CharField('Organization phone number',max_length=64,null=True) #should this be unique?
 	icon = models.ImageField(upload_to='organization',null=True)
@@ -49,12 +57,30 @@ class Organization(models.Model):
 class Job(models.Model):
 	def __unicode__(self):
 		return self.name
+	# function returns an array list of organization objects that have accepted = True in JobRelation
+	def organization_accepted(self):
+		accepted = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = True)
+		return accepted
+	def organization_requested(self):
+		requested = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False)
+		return requested
+	def setUpJobrelation(self,organization,accept):
+		jr = Jobrelation(job = self,organization = organization,accepted = accept);
+		jr.save();
+		return
 
 	name = models.CharField('Job Name',max_length=128)
 	description = models.TextField('Job Description')
 	duedate = models.DateTimeField('Date Due')
 	creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
-	requested = models.ManyToManyField(Organization,related_name='requested')  # Organization =-= Job
-	accepted = models.ManyToManyField(Organization,related_name='accepted') 
+	organization = models.ManyToManyField(Organization, through = 'Jobrelation')
 	categories = models.ManyToManyField(Category)
 
+
+
+class Jobrelation(models.Model):
+	job = models.ForeignKey(Job)
+	organization = models.ForeignKey(Organization)
+	accepted = models.NullBooleanField(default = False)
+
+	

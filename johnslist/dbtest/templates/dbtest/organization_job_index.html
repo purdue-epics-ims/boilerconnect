@@ -106,7 +106,11 @@
 				{% for job in organization.requested.all %}
 					<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a>
 					
+<<<<<<< HEAD
 					<br>
+=======
+					<!--//table //bs-->
+>>>>>>> bb10aa1bcd40c457d83738b48a4bb8af9dc4f208
 					
 				{% endfor %}
 				
@@ -127,10 +131,11 @@
 		</div>
 		
 		<div class="panel-body">
+
 			{%if organization.accepted%}
-				//todo table
+				<!--todo table
 				//todo show more? 
-				//todo expansion?
+				//todo expansion?-->
 				
 				{% for job in organization.accepted.all %}
 					<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>
