@@ -23,4 +23,3 @@ urlpatterns = patterns('',
 
     url(r'^notifications/?$', views.notifications, name='notifications'),
  )
-
