@@ -26,7 +26,7 @@ from notifications import notify
     search - search results for search on front_page
     user_job_index - list of jobs user has created
     user_membership - list of organizations user is part of
-    about - description of site, tutorial	
+    about - description of site, tutorial
 
     user_create
     organization_create
@@ -48,7 +48,7 @@ def login(request):
             auth_login(request, user)
             redirect('/');
 
-            
+
 def user_detail(request,user_id):
     user = get_object_or_404(User,id=user_id)
     notify.send(request.user, recipient = user, verb = 'is looking at your profile')
@@ -56,7 +56,8 @@ def user_detail(request,user_id):
 
 def notifications(request):
     notifications = request.user.notifications.unread()
-    return render(request, notifications, 'dbtest/notifications.html')
+    return render(request, 'dbtest/notifications.html', {'notifications':notifications})
+    
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
     jobs = organization.job_requested()
@@ -75,7 +76,7 @@ def organization_accept_job(request,organization_id):
         jr = Jobrelation.objects.get(job=job_id,organization = org)
         jr.accepted = True
         jr.save()
-        return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})  
+        return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})
     return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
 def job_detail(request,job_id):
@@ -106,7 +107,7 @@ def search(request):
             search_result = category.organization_set.all()
         if search_by.lower() == 'name':
             search_result = Organization.objects.filter(name__icontains=search)
-            
+
     return render(request,'dbtest/search.html',{'search_result': search_result})
 
 
@@ -151,7 +152,7 @@ def organization_create(request):
             organization = form.save(commit=False)
             #set the admin to user1 organization.admin = User.objects.get(id=1)
             organization.admin = request.user
-            #create new org 
+            #create new org
             organization.save()
             form.save_m2m()
             title = "Organization {0} created".format( organization.name )
