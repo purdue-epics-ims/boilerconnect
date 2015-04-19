@@ -35,8 +35,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-		'dbtest',
-		'easy_thumbnails',
+    'dbtest',
+    'easy_thumbnails',
 )
 
 try:
@@ -53,6 +53,11 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+)
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend', # default
+    'guardian.backends.ObjectPermissionBackend',
 )
 
 ROOT_URLCONF = 'johnslist.urls'

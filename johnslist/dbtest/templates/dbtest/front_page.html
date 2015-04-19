@@ -28,6 +28,7 @@
 	<li data-target="#carousel" data-slide-to="2"></li>
   </ol>
   	<div class="carousel-inner">
+        {% if active_organization %}
         <div class="item active">
             <div class="container">
                 <div>
@@ -39,6 +40,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
 	  	{% for organization in organizations %}
 		<div class="item">
 		  	<div class="container">

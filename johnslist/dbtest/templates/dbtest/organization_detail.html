@@ -30,8 +30,8 @@
             <!--left col-->
             <ul class="list-group">
                 <li class="list-group-item text-muted" contenteditable="false">Profile</li>
-                <li class="list-group-item text-right"><span class="pull-left"><strong class="">Members</strong></span> {{organization.members.all|length}}</li>
-                    <li class="list-group-item text-right"><span class="pull-left"><strong class="">Admin </strong></span> <a href="{% url 'user_detail' organization.admin.id %}">{{organization.admin}}</a>
+                <li class="list-group-item text-right"><span class="pull-left"><strong class="">Members</strong></span> {{members|length}}</li>
+                    <li class="list-group-item text-right"><span class="pull-left"><strong class="">Admin </strong></span>##FIXME - use 'admins'## 
                         </li>
               <li class="list-group-item text-right"><span class="pull-left"><strong class="">Joined</strong></span>2015
                
@@ -43,7 +43,7 @@
             <ul class="list-group">
                 <li class="list-group-item text-muted">Members</li>
                 
-                {% for user in organization.members.all %}
+                {% for user in members %}
 				 <li class="list-group-item">
 					 <a href="{% url 'user_detail' user.id %}">{{user.username}}</a>
 				 </li>

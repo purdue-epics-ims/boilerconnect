@@ -9,6 +9,7 @@ import random
 from django.forms.models import inlineformset_factory
 from .decorators import user_has_object
 from .forms import*
+from guardian.shortcuts import assign_perm
 '''
     user_detail - show user info
         contact
@@ -57,8 +58,15 @@ def user_detail(request,user_id):
 
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
-    jobs = organization.job_requested()
-    return render(request, 'dbtest/organization_detail.html',{'organization': organization,'jobs':jobs})
+    jobs = organization.requested
+    admins = organization.get_admins()
+
+    return render(request, 'dbtest/organization_detail.html',
+                {'organization': organization,
+                 'jobs':jobs,
+                 'admins':admins,
+                 'members':organization.group.user_set.all(),
+                 })
 
 @user_has_object
 def organization_job_index(request,organization_id):
@@ -149,7 +157,7 @@ def organization_create(request):
         if form.is_valid() :
             organization = form.save(commit=False)
             #set the admin to user1 organization.admin = User.objects.get(id=1)
-            organization.admin = request.user
+            assign_perm('has_admin',request.user, organization)
             #create new org 
             organization.save()
             form.save_m2m()
