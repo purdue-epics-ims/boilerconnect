@@ -104,7 +104,7 @@
 			
 			
 			
-			{% if organization.requested%}
+			{% if organization.job_requested%}
 				{% for job in organization.requested.all %}
 					<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a>
 					
@@ -134,12 +134,12 @@
 		
 		<div class="panel-body">
 
-			{%if organization.accepted%}
+			{%if organization.job_accepted%}
 				<!--todo table
 				//todo show more? 
 				//todo expansion?-->
 				
-				{% for job in organization.accepted.all %}
+				{% for job in organization.job_accepted.all %}
 					<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>
 				{% endfor %}
 				
