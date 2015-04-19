@@ -60,6 +60,7 @@ def user_detail(request,user_id):
 
 def notifications(request):
     notifications = request.user.notifications.unread()
+    qs.mark_all_as_read(request.user)
     return render(request, 'dbtest/notifications.html', {'notification' : notifications})
 
 def organization_detail(request,organization_id):
