@@ -53,7 +53,9 @@ def user_detail(request,user_id):
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
     jobs = organization.requested
-    return render(request, 'dbtest/organization_detail.html',{'organization': organization,'jobs':jobs})
+    admins = organization.get_admins()
+    members = organization.user_set.all()
+    return render(request, 'dbtest/organization_detail.html',{'organization': organization,'jobs':jobs,'admins':admins,'members':members})
 
 @user_has_object
 def organization_job_index(request,organization_id):
