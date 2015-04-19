@@ -1,3 +1,9 @@
+::selection {
+	background: #ffb7b7; /* WebKit/Blink Browsers */
+}
+::-moz-selection {
+	background: #ffb7b7; /* Gecko Browsers */
+}
 
 .btn-glow {
 box-shadow: 1px 1px 12px #720000;
@@ -106,7 +112,7 @@ background:#e1d8d8;
 .search-box{
 	/* Hide any overflow on the gallery */
 	padding: 40px;
-	
+
 }
 
 .search-box h1{
