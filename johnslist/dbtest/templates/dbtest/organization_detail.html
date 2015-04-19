@@ -59,45 +59,7 @@
 
                 </div>
             </div>
-            <div class="panel panel-info target">
-                <div class="panel-heading" contenteditable="false">Recent Requests
-	                
-	                {%if organization.job_requested%}
-	                	<span class="badge">
-	                		{{organization.job_requested|length}}
-	                	</span>
-	                {%endif%}
-	                
-	                                
-                </div>
-                <div class="panel-body">
-				
-				
-					{%if organization.job_requested%}
-						{%for i in "012"%} <!-- only shows 3-->
-					
-							{%if organization.job_requested.i%}
-								<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>
-							{%endif%}
-						
-						{%endfor%}
-						
-						<!--If more than 3, tell them -->
-						
-						
-						
-					{%else%}
-						<p class="text-muted">There are no recent job requests!</p>
-						
-						
-					{%endif%}
-																			
-
-						<a href='{% url 'organization_job_index' organization.id %}'>See all Jobs</a>				
-                </div>
-                 
-            </div>
-                     
+                                
             </div>
                  
         </div>

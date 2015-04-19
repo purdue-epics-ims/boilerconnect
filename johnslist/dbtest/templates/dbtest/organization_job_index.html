@@ -5,7 +5,7 @@
 
 	<div class="row">
         <div class="col-sm-10">
-            <h1>             <span class="text-muted">Jobs</span>
+            <h1> <span class="text-muted">Jobs</span>
 {{organization.name}}</h1>
              
              			 <!Catgories>
@@ -36,9 +36,8 @@
 			{% if organization.job_requested%}
 				{% for job in organization.job_requested %}
 					<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a>
-					
-					//table //bs
-					
+					<br>
+					<!--//table //bs-->
 				{% endfor %}
 				
 				<a href='{% url 'organization_accept_job' organization.id %}'>See all requests</a>
@@ -58,10 +57,11 @@
 		</div>
 		
 		<div class="panel-body">
+
 			{%if organization.job_accepted%}
-				//todo table
+				<!--todo table
 				//todo show more? 
-				//todo expansion?
+				//todo expansion?-->
 				
 				{% for job in organization.job_accepted %}
 					<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a><br>

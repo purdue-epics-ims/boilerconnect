@@ -41,9 +41,9 @@
         <div class="navbar-collapse collapse" id="navbar-main">
 			<ul class="nav navbar-nav">
            
-			<li><a href="{%url 'job_create'%}"><strong><i class="fa fa-briefcase"></i> New Job</strong></a></li>	
+	
 				
-			<li><a href="{%url 'organization_create'%}"><strong><i class="fa fa-users"></i> New Org</strong></a></li>
+			<li><a href="{%url 'about'%}">About</a></li>
            
            
 
@@ -63,11 +63,25 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-toggle="dropdown" haspopup="true" onmouseover="hoverhard()"><i class="fa fa-briefcase"></i>  Jobs<span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu" arialabeledby="user">
-								{% for org in user.members.all %}
+								
+							{%if user.admin.all%}
+								<li class="dropdown-header">New Requests</li>	
+								{% for org in user.admin.all %}
+									<li>
+									 <a href="{%url 'organization_job_index' org.id%}">{{org.name}}
+									 {%if org.requested.all%}
+									 	<span class="badge">{{org.requested.all|length}}</span>
+									 {%endif%}
+									 </a>
+									</li>
 									
+									<li class="divider"></li>
 
 								{% endfor %}
+							{%endif%}
 						
+						<li><a href="{%url 'job_create'%}"><strong><i class="fa fa-wrench"></i> Create Job</strong></a></li>	
+
 						
 						</ul>
 
@@ -82,8 +96,9 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-toggle="dropdown" haspopup="true" onmouseover="hoverhard()"><i class="fa fa-institution"></i> Orgs<span class="caret"></span></a>
 						<ul class="dropdown-menu" role="menu" arialabeledby="user">
+																	
 								<li class="dropdown-header">Member of</li>
-
+								
 								{% for organization in user.members.all %}
 
 							    	<li>
@@ -99,6 +114,7 @@
 							    	 <li class="divider"></li>
 
 								{% endfor %}
+<li><a href="{%url 'organization_create'%}"><strong><i class="fa fa-users"></i> Create Organiztion</strong></a></li>
 						
 						
 						</ul>
