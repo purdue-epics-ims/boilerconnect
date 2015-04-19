@@ -56,7 +56,8 @@ def user_detail(request,user_id):
 
 def notifications(request):
     notifications = request.user.notifications.unread()
-    return render(request, notifications, 'dbtest/notifications.html')
+    return render(request, 'dbtest/notifications.html', {'notification' : notifications})
+
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
     jobs = organization.job_requested()

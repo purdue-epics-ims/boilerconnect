@@ -36,12 +36,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 		'dbtest',
-<<<<<<< HEAD
     'notifications',
-=======
-		'easy_thumbnails',
->>>>>>> cc2c8d4cc7ace46c9d5cb2b56d55cb712ec6026e
-)
+	'easy_thumbnails',
+    )
 
 try:
 	import django_extensions
