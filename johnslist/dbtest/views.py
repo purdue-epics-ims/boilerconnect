@@ -81,7 +81,7 @@ def organization_accept_job(request,organization_id):
         jr = Jobrelation.objects.get(job=job_id,organization = org)
         jr.accepted = True
         jr.save()
-        notify.send(request.organization, recipient = org.objects.members.all(), verb = 'accepted your job')
+        notify.send(request.user, recipient = org.members.get(id=1), verb = 'accepted your job')
         return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})
     return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
