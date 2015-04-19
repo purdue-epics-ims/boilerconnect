@@ -13,22 +13,21 @@ class Category(models.Model):
 	name = models.CharField('Category Name',max_length=64)
 	description = models.TextField('Category Description')
 
-class Organization(models.Model):
+class Organization(Group):
     def __unicode__(self):
         return self.name
 
-    name = models.CharField('Organization Name',max_length=64,unique=True)
     description = models.TextField('Organization Description')
-    group = models.OneToOneField(Group,related_name='group')
     categories = models.ManyToManyField(Category)  # Category =-= Organization
     email = models.CharField('Organization email',max_length=64,null=True)
     phone_number = models.CharField('Organization phone number',max_length=64,null=True)
     icon = models.ImageField(upload_to='organization',null=True)
 
     def get_admins(self):
-        return [user for user in self.group.user_set.all() if user.has_perm('is_admin',self)]
+        return [user for user in self.user_set.all() if user.has_perm('is_admin',self)]
 
     class Meta:
+        proxy = True
         permissions = (
             ( 'view_organization','Can view Organization' ),
             ( 'is_admin', 'Is an Administrator'),
@@ -41,7 +40,7 @@ def add_perms_organization(sender,**kwargs):
         organization=kwargs['instance']
 
         # allow organization to view itself by default
-        assign_perm('view_organization',organization.group,organization)
+        assign_perm('view_organization',organization,organization)
 
 class Job(models.Model):
 	def __unicode__(self):
