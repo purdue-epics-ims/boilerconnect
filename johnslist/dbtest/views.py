@@ -55,13 +55,12 @@ def login(request):
 
 def user_detail(request,user_id):
     user = get_object_or_404(User,id=user_id)
-    notify.send(request.user, recipient = user, verb = 'is looking at your profile')
     return render(request, 'dbtest/user_detail.html',{'user_detail': user})
 
 def notifications(request):
     notifications = request.user.notifications.unread()
 
-#    qs.mark_all_as_read(request.user)
+    #qs.mark_all_as_read(request.user)
     return render(request, 'dbtest/notifications.html', {'notifications' : notifications})
 
 def organization_detail(request,organization_id):
@@ -82,6 +81,7 @@ def organization_accept_job(request,organization_id):
         jr = Jobrelation.objects.get(job=job_id,organization = org)
         jr.accepted = True
         jr.save()
+        notify.send(request.organization, recipient = org.objects.members.all(), verb = 'accepted your job')
         return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})
     return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
