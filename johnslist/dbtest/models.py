@@ -20,6 +20,7 @@ class Organization(Group):
     description = models.TextField('Organization Description')
     categories = models.ManyToManyField(Category)  # Category =-= Organization
     email = models.CharField('Organization email',max_length=64,null=True)
+    group = models.OneToOneField(Group) # Organization - Group
     phone_number = models.CharField('Organization phone number',max_length=64,null=True)
     icon = models.ImageField(upload_to='organization',null=True)
 
@@ -27,7 +28,6 @@ class Organization(Group):
         return [user for user in self.user_set.all() if user.has_perm('is_admin',self)]
 
     class Meta:
-        proxy = True
         permissions = (
             ( 'view_organization','Can view Organization' ),
             ( 'is_admin', 'Is an Administrator'),
