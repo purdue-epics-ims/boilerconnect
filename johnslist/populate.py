@@ -39,8 +39,8 @@ def populate():
     amet.icon.save('amet.png', File(open(PIC_POPULATE_DIR+'amet.png', 'r')))
 
     #add Users to Organizations
-    users = User.objects.all()
-    for user in users[0:4]:
+    users = User.objects.all().exclude(name="AnonymousUser")
+    for user in users[0:6]:
         plug.members.add(user)
         epics.members.add(user)
 
@@ -58,6 +58,7 @@ def populate():
     user_num = 1
     org_num = 1
     acc = True
+
     for job in jobs:
         Job.objects.create(name=job, description = 'Description of the job', duedate = '2015-3-21', creator = User.objects.get(id = user_num))
         Job.objects.get(id = user_num).setUpJobrelation(Organization.objects.get(id = org_num), acc)
@@ -86,10 +87,5 @@ if __name__ == '__main__':
     from time import sleep
     import django
     django.setup()
-    try:
-        populate()
-    except django.db.utils.IntegrityError:
-        print 'Error: Object already exists.  Did you remember to delete db.sqlite3 first?'
-    except django.db.utils.OperationalError:
-        print 'No such Table.  Did you remmber to run "python manage.py syncdb"'
+    populate()
 
