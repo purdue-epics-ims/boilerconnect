@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'dbtest',
     'guardian',
+    'easy_thumbnails',
 )
 
 
