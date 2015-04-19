@@ -14,11 +14,18 @@
  </div>
 
 
-{% notifications_unread as unread_count %}
-...
-{% for noti in notifications.all %}
+############UNREAD
+{% for notification in unread_notifications %}
 
-<p>{{noti}}</p>
+<p>{{notification}}</p>
+
+{%endfor%}
+<br>
+##########READ
+
+{% for notification in read_notifications %}
+
+<p>{{notification}}</p>
 
 {%endfor%}
 

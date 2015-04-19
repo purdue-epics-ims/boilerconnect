@@ -27,7 +27,7 @@ from notifications import notify
     search - search results for search on front_page
     user_job_index - list of jobs user has created
     user_membership - list of organizations user is part of
-    about - description of site, tutorial
+    about - description of site, tutorial	
 
     user_create
     organization_create
@@ -52,16 +52,17 @@ def login(request):
     if request.method == 'GET':
         return render(request,'dbtest/login.html')
 
-
+            
 def user_detail(request,user_id):
     user = get_object_or_404(User,id=user_id)
     return render(request, 'dbtest/user_detail.html',{'user_detail': user})
 
 def notifications(request):
-    notifications = request.user.notifications.unread()
-
-    #qs.mark_all_as_read(request.user)
-    return render(request, 'dbtest/notifications.html', {'notifications' : notifications})
+    unread_notifications = list(request.user.notifications.unread())
+    print type(unread_notifications)
+    read_notifications = request.user.notifications.read()
+    request.user.notifications.mark_all_as_read()
+    return render(request, 'dbtest/notifications.html', {'unread_notifications' : unread_notifications,'read_notifications':read_notifications})
 
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
@@ -81,8 +82,9 @@ def organization_accept_job(request,organization_id):
         jr = Jobrelation.objects.get(job=job_id,organization = org)
         jr.accepted = True
         jr.save()
-        notify.send(request.user, recipient = org.members.get(id=1), verb = 'accepted your job')
-        return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})
+        for user_org in org.members.all():
+            notify.send(request.user, recipient = user_org, verb = 'accepted your job')
+        return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})  
     return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
 def job_detail(request,job_id):
@@ -113,7 +115,7 @@ def search(request):
             search_result = category.organization_set.all()
         if search_by.lower() == 'name':
             search_result = Organization.objects.filter(name__icontains=search)
-
+            
     return render(request,'dbtest/search.html',{'search_result': search_result})
 
 
@@ -158,7 +160,7 @@ def organization_create(request):
             organization = form.save(commit=False)
             #set the admin to user1 organization.admin = User.objects.get(id=1)
             organization.admin = request.user
-            #create new org
+            #create new org 
             organization.save()
             form.save_m2m()
             title = "Organization {0} created".format( organization.name )
