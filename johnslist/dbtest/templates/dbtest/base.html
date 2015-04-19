@@ -63,7 +63,9 @@
 		   		
 		   		
 		   		<li>
-		   			<a href="/inbox/notifications">
+		   			<a href="{%url 'notifications'%}">
+		   			
+		   				<span class="glyphicon glyphicon-inbox"></span>
 		   				<span class="badge">
 		   				{%notifications_unread as unread_count%}
 		   				{% if unread_count%}
@@ -201,7 +203,7 @@
 
 		<div class="footer">
 			{% block footer %}
-			<br><p>All Rights Reserved <a href="http://epics.ecn.purdue.edu/ims/">EPICS IMS 2014</a></p>
+			<br><p>All Rights Reserved <a href="http://epics.ecn.purdue.edu/ims/">EPICS IMS 2015</a></p>
 			{% endblock %}
 		</div>
 

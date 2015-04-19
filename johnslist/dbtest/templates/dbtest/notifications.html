@@ -2,7 +2,15 @@
 
 {% block content %}
 
-{%if user.is_authenticated%}
-{% %}
+{% load notifications_tags %}
 
-{%endif %}
+
+{% notifications_unread as unread_count %}
+...
+{% for noti in notifications.all %}
+
+<p>{{noti}}</p>
+
+{%endfor%}
+
+{%endblock%}
