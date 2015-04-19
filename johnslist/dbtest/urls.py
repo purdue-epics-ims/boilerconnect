@@ -1,5 +1,5 @@
 from django.conf.urls import patterns, url
-from django.contrib.auth.views import logout, login
+from django.contrib.auth.views import logout
 from dbtest import views
 
 urlpatterns = patterns('',
@@ -15,10 +15,10 @@ urlpatterns = patterns('',
 	url(r'^search/?$',views.search,name='search'),
 	url(r'^user/(?P<user_id>[0-9]+)/user_job_index/?$', views.user_job_index,name='user_job_index'),
 	url(r'^user/(?P<user_id>[0-9]+)/user_membership/?$', views.user_membership,name='user_membership'),
-	url(r'^login/?$', login,{'template_name':'dbtest/login.html'},name='login'),
+	url(r'^login/?$', views.login,name='login'),
 	url(r'^logout/?$', logout,{'template_name':'dbtest/logout.html'},name='logout'),
 	url(r'^user/edit/?$', views.user_edit,name='user_edit'),
-        url(r'^organization/edit/?$', views.organization_edit,name='organization_edit'),
+    url(r'^organization/edit/?$', views.organization_edit,name='organization_edit'),
 	url(r'^about/?$', views.about, name='about'),
     url(r'^notifications/?$', views.notifications),
  )

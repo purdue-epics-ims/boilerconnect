@@ -1,7 +1,8 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from .models import *
-from django.http import HttpResponse
+from django.http import HttpResponseRedirect
 from django.contrib.auth.views import login as auth_login
+from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
@@ -40,13 +41,16 @@ todo
 '''
 
 def login(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(username=username, password=password)
-    if user is not None:
-        if user.is_active:
-            auth_login(request, user)
-            redirect('/');
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                auth_login(request, user)
+                return redirect('front_page')
+    if request.method == 'GET':
+        return render(request,'dbtest/login.html')
 
             
 def user_detail(request,user_id):
