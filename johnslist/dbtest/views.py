@@ -45,10 +45,12 @@ def login(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                auth_login(request, user)
-                return redirect('front_page')
+        if user is not None and user.is_active:
+            auth_login(request, user)
+            return redirect('front_page')
+        else:
+            error = "There was a problem with your login.  Please try again." 
+            return render(request,'dbtest/login.html',{'error':error})
     if request.method == 'GET':
         return render(request,'dbtest/login.html')
 
@@ -58,7 +60,7 @@ def user_detail(request,user_id):
 
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
-    jobs = organization.requested
+    jobs = organization.job_requested()
     admins = organization.get_admins()
 
     return render(request, 'dbtest/organization_detail.html',
@@ -165,7 +167,6 @@ def organization_create(request):
             message = "Thank you for creating an organization."
             return render(request,'dbtest/confirm.html', {'title': title,'message':message})
         else:
-            print form.errors
             return render(request, 'dbtest/organization_create.html', {'form':form,'error':"There are incorrect fields"})
     #if the request was a GET
     else:
@@ -193,9 +194,13 @@ def user_edit(request):
             return render(request, 'dbtest/user_edit.html', {'form':form,'error':"There are incorrect fields"})
     #if the request was a GET
     else:
-        form = UserCreationForm()
-        args['form'] = form
-        return render(request, 'dbtest/user_edit.html', args)
+        if request.user.is_authenticated():
+            form = UserCreationForm(instance=request.user)
+        else:
+            form = UserCreationForm()
+        return render(request, 'dbtest/user_edit.html', 
+            {'form':form}
+            )
 
 @login_required
 def organization_edit(request):

@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'dbtest',
     'easy_thumbnails',
+    'guardian',
 )
 
 try:
@@ -117,3 +118,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 	"django.core.context_processors.media",
 	"django.core.context_processors.request",
 )
+
+#django guardian config
+ANONYMOUS_USER_ID = 0
