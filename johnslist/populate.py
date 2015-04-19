@@ -42,7 +42,7 @@ def populate():
     amet.icon.save('amet.png', File(open(PIC_POPULATE_DIR+'amet.png', 'r')))
 
     #add Users to Organizations
-    users = User.objects.all()
+    users = User.objects.all().exclude(username="AnonymousUser")
     for user in users[0:4]:
         plug.group.user_set.add(user)
         epics.group.user_set.add(user)
