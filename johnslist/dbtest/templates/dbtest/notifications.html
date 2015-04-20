@@ -8,25 +8,73 @@
 <div class="row">
         <div class="col-sm-10">
             <h1><span class="text-muted">Notifications</span> {{user_detail.username}}</h1>
-            <lead>You have no new notifications</lead>
-        </div>
-     
- </div>
+       </div>
+</div>
+<div>
+<table class="table table-striped">
+
+  <thead>
+    <tr>
+      <th>Unread</th>
+    </tr>
+
+  </thead>
+
+  <tbody>
+{% if unread_notifications %}
+  {% for notification in unread_notifications %}
+    <tr>
+      <td>
+      {{notification}}
+      </td>
+
+      <td>
+
+      </td>
 
 
-############UNREAD
-{% for notification in unread_notifications %}
+    </tr>
+  {%endfor%}
+{% else %}
+  <tr><td><span class="text-muted">You have no unread notifications</span>
+  </td></tr>
+{% endif %}
+</tbody>
 
-<p>{{notification}}</p>
-
-{%endfor%}
+</table>
 <br>
-##########READ
+<hr>
 
-{% for notification in read_notifications %}
 
-<p>{{notification}}</p>
+<table class="table table-striped">
 
-{%endfor%}
+  <thead>
+    <tr>
+      <th>Read</th>
+    </tr>
 
+  </thead>
+
+  <tbody>
+{% if read_notifications %}
+  {% for notification in read_notifications %}
+    <tr>
+      <td>
+      {{notification}}
+      </td>
+
+      <td>
+
+      </td>
+
+
+    </tr>
+  {%endfor%}
+{% else %}
+  <tr><td><span class="text-muted">You have no read notifications</span>
+  </td></tr>
+{% endif %}
+</tbody>
+</table>
+</div>
 {%endblock%}
