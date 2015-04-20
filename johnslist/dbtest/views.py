@@ -27,7 +27,7 @@ from notifications import notify
     search - search results for search on front_page
     user_job_index - list of jobs user has created
     user_membership - list of organizations user is part of
-    about - description of site, tutorial	
+    about - description of site, tutorial    
 
     user_create
     organization_create
@@ -58,9 +58,10 @@ def user_detail(request,user_id):
     return render(request, 'dbtest/user_detail.html',{'user_detail': user})
 
 def notifications(request):
-    unread_notifications = list(request.user.notifications.unread())
-    print type(unread_notifications)
     read_notifications = request.user.notifications.read()
+    unread_notifications = list(request.user.notifications.unread())
+    print unread_notifications
+    print read_notifications
     request.user.notifications.mark_all_as_read()
     return render(request, 'dbtest/notifications.html', {'unread_notifications' : unread_notifications,'read_notifications':read_notifications})
 
@@ -225,29 +226,34 @@ def organization_edit(request):
 
 @login_required
 def job_create(request):
-	#if this request was a POST and not a GET
-	if request.method == 'POST':
-		form = JobCreateForm(request.POST)
-		#check form validity
-		if form.is_valid():
-			job = form.save(commit=False)
-			job.creator = request.user
-			job.save()
-			for org in request.POST.getlist('organization'):
-				Jobrelation.objects.create(organization = Organization.objects.get(id = org), job = job)
-			for cat in request.POST.getlist('categories'):
-				job.categories.add(Category.objects.get(id=cat))
-				job.save()
-			#create new org
-			title = "Job {0} created".format( job.name )
-			message = "Thank you for creating the job."
-			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
-		else:
-			return render(request, 'dbtest/job_create.html', {'form':form,'error':"There are incorrect fields"})
+    #if this request was a POST and not a GET
+    if request.method == 'POST':
+        form = JobCreateForm(request.POST)
+        #check form validity
+        if form.is_valid():
+            job = form.save(commit=False)
+            job.creator = request.user
+            job.save()
+            print '1'
+            for org in request.POST.getlist('organization'):
+                print '2'
+                organization = Organization.objects.get(id = org)
+                Jobrelation.objects.create(organization=organization, job = job)
+                for user in organization.members.all():
+                    notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
+                    print user
+            for cat in request.POST.getlist('categories'):
+                job.categories.add(Category.objects.get(id=cat))
+                job.save()
+            title = "Job {0} created".format( job.name )
+            message = "Thank you for creating the job."
+            return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+        else:
+            return render(request, 'dbtest/job_create.html', {'form':form,'error':"There are incorrect fields"})
     #if the request was a GET
-	else:
-		form = JobCreateForm()
-		return render(request, 'dbtest/job_create.html', {'form':form})
+    else:
+        form = JobCreateForm()
+        return render(request, 'dbtest/job_create.html', {'form':form})
 
 def about(request):
     return render(request, 'dbtest/about.html')
