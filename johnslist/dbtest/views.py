@@ -9,7 +9,7 @@ import random
 from django.forms.models import inlineformset_factory
 from .decorators import user_has_object
 from .forms import*
-from guardian.shotcuts import assign_perm
+from guardian.shortcuts import assign_perm
 from notifications import notify
 '''
     user_detail - show user info
@@ -93,7 +93,7 @@ def organization_accept_job(request,organization_id):
         jr = Jobrelation.objects.get(job=job_id,organization = org)
         jr.accepted = True
         jr.save()
-        for user_org in org.members.all():
+        for user_org in org.group.user_set.all():
             notify.send(request.user, recipient = user_org, verb = 'accepted your job')
         return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})  
     return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
@@ -137,7 +137,7 @@ def user_job_index(request,user_id):
 
 @user_has_object
 def user_membership(request,user_id):
-    membership = User.objects.get(id = user_id).members
+    membership = User.objects.get(id = user_id).group
     return render(request,'dbtest/user_membership.html',{'membership': membership})
 
 def user_create(request):
@@ -252,7 +252,7 @@ def job_create(request):
                 print '2'
                 organization = Organization.objects.get(id = org)
                 Jobrelation.objects.create(organization=organization, job = job)
-                for user in organization.members.all():
+                for user in organization.group.user_set.all():
                     notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
                     print user
             for cat in request.POST.getlist('categories'):

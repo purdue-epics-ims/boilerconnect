@@ -44,8 +44,9 @@ def populate():
     #add Users to Organizations
     users = User.objects.all().exclude(username="AnonymousUser")
     for user in users[0:6]:
-        plug.members.add(user)
-        epics.members.add(user)
+        plug.group.user_set.add(user)
+        epics.group.user_set.add(user)
+        amet.group.user_set.add(user)
 
     #add ServiceServiceCategory's
     categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']
