@@ -9,7 +9,8 @@ import random
 from django.forms.models import inlineformset_factory
 from .decorators import user_has_object
 from .forms import*
-from guardian.shortcuts import assign_perm
+from guardian.shotcuts import assign_perm
+from notifications import notify
 '''
     user_detail - show user info
         contact
@@ -27,7 +28,7 @@ from guardian.shortcuts import assign_perm
     search - search results for search on front_page
     user_job_index - list of jobs user has created
     user_membership - list of organizations user is part of
-    about - description of site, tutorial	
+    about - description of site, tutorial    
 
     user_create
     organization_create
@@ -54,9 +55,18 @@ def login(request):
     if request.method == 'GET':
         return render(request,'dbtest/login.html')
 
+            
 def user_detail(request,user_id):
     user = get_object_or_404(User,id=user_id)
     return render(request, 'dbtest/user_detail.html',{'user_detail': user})
+
+def notifications(request):
+    read_notifications = request.user.notifications.read()
+    unread_notifications = list(request.user.notifications.unread())
+    print unread_notifications
+    print read_notifications
+    request.user.notifications.mark_all_as_read()
+    return render(request, 'dbtest/notifications.html', {'unread_notifications' : unread_notifications,'read_notifications':read_notifications})
 
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
@@ -83,8 +93,9 @@ def organization_accept_job(request,organization_id):
         jr = Jobrelation.objects.get(job=job_id,organization = org)
         jr.accepted = True
         jr.save()
-        return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})
-    
+        for user_org in org.members.all():
+            notify.send(request.user, recipient = user_org, verb = 'accepted your job')
+        return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})  
     return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
 def job_detail(request,job_id):
@@ -228,29 +239,34 @@ def organization_edit(request):
 
 @login_required
 def job_create(request):
-	#if this request was a POST and not a GET
-	if request.method == 'POST':
-		form = JobCreateForm(request.POST)
-		#check form validity
-		if form.is_valid():
-			job = form.save(commit=False)
-			job.creator = request.user
-			job.save()
-			for org in request.POST.getlist('organization'):
-				Jobrelation.objects.create(organization = Organization.objects.get(id = org), job = job)
-			for cat in request.POST.getlist('categories'):
-				job.categories.add(Category.objects.get(id=cat))
-				job.save()
-			#create new org
-			title = "Job {0} created".format( job.name )
-			message = "Thank you for creating the job."
-			return render(request,'dbtest/confirm.html', {'title': title,'message':message})
-		else:
-			return render(request, 'dbtest/job_create.html', {'form':form,'error':"There are incorrect fields"})
+    #if this request was a POST and not a GET
+    if request.method == 'POST':
+        form = JobCreateForm(request.POST)
+        #check form validity
+        if form.is_valid():
+            job = form.save(commit=False)
+            job.creator = request.user
+            job.save()
+            print '1'
+            for org in request.POST.getlist('organization'):
+                print '2'
+                organization = Organization.objects.get(id = org)
+                Jobrelation.objects.create(organization=organization, job = job)
+                for user in organization.members.all():
+                    notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
+                    print user
+            for cat in request.POST.getlist('categories'):
+                job.categories.add(Category.objects.get(id=cat))
+                job.save()
+            title = "Job {0} created".format( job.name )
+            message = "Thank you for creating the job."
+            return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+        else:
+            return render(request, 'dbtest/job_create.html', {'form':form,'error':"There are incorrect fields"})
     #if the request was a GET
-	else:
-		form = JobCreateForm()
-		return render(request, 'dbtest/job_create.html', {'form':form})
+    else:
+        form = JobCreateForm()
+        return render(request, 'dbtest/job_create.html', {'form':form})
 
 def about(request):
     return render(request, 'dbtest/about.html')
