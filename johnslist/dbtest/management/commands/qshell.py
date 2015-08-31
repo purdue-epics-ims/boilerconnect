@@ -5,7 +5,7 @@ class Command(BaseCommand):
     help = "Imports models and guardian for testing. Also stores a user instance 'u', organization 'o', category 'c', and group 'g' for testing purposes."
     def handle(self, *args, **options):
         from guardian.shortcuts import assign_perm
-        from dbtest.models import User,Organization,Job,Category,Group
+        from dbtest.models import User,Organization,Job,Category,Group,Jobrelation
 	u = User.objects.get(id=2)
 	o = Organization.objects.get(id=1)
 	j = Job.objects.get(id=1)
