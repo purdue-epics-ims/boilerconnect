@@ -105,7 +105,6 @@
 
 			{% if organization.job_requested%}
 				{% for job in organization.requested.all %}
->>>>>>> html
 					<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a>
 					<br>
 					<!--//table //bs-->

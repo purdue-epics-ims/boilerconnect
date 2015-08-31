@@ -32,9 +32,16 @@ class Organization(models.Model):
     def job_requested(self):
         job_list_r = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = False)
         return job_list_r
-
-    def get_admins(self):
-        return [user for user in self.group.user_set.all() if user.has_perm('is_admin',self)]
+    def job_declined(self):
+        job_list_d = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = True)
+        return job_list_d
+	
+    def job_completed(self):
+        job_list_d = Job.objects.filter(jobrelation__organization = self, jobrelation__completed = True)
+        return job_list_d
+    
+	def get_admins(self):
+		return [user for user in self.group.user_set.all() if user.has_perm('is_admin',self)]
 
     class Meta:
         permissions = (
