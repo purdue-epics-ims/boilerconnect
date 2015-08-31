@@ -61,6 +61,9 @@ class Job(models.Model):
     def organization_requested(self):
         requested = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False,jobrelation__declined = False)
         return requested
+    def organization_declined(self):
+        declined = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False,jobrelation__declined = True)
+        return declined
     def setUpJobrelation(self,organization,accept):
         jr = Jobrelation(job = self,organization = organization,accepted = accept);
         jr.save();
@@ -77,5 +80,5 @@ class Jobrelation(models.Model):
     job = models.ForeignKey(Job)
     organization = models.ForeignKey(Organization)
     accepted = models.NullBooleanField(default = False)	
-    declineed = models.NullBooleanField(default = False)
+    declined = models.NullBooleanField(default = False)
     completed = models.NullBooleanField(default = False)
