@@ -39,12 +39,12 @@ class Organization(models.Model):
     def job_completed(self):
         job_list_d = Job.objects.filter(jobrelation__organization = self, jobrelation__completed = True)
         return job_list_d
-    
+	
 	def get_admins(self):
 		return [user for user in self.group.user_set.all() if user.has_perm('is_admin',self)]
 
-    class Meta:
-        permissions = (
+	class Meta:
+		permissions = (
             ( 'view_organization','Can view Organization' ),
             ( 'is_admin', 'Is an Administrator'),
             )

@@ -87,24 +87,24 @@ def organization_job_index(request,organization_id):
 
 @user_has_object
 def organization_accept_job(request,organization_id):
-    org = Organization.objects.get(id=organization_id)
-    if request.method == 'POST':
-        job_id = Job.objects.get(id=request.POST['job_id'])
-        jr = Jobrelation.objects.get(job=job_id,organization = org)
+	org = Organization.objects.get(id=organization_id)
+	if request.method == 'POST':
+		job_id = Job.objects.get(id=request.POST['job_id'])
+		jr = Jobrelation.objects.get(job=job_id,organization = org)
 		if request.POST.get("action","") == "Accept Job":
-        	jr.accepted = True
+			jr.accepted = True
 			jr.declined = False
-        	jr.save()
-        	for user_org in org.group.user_set.all():
-            	notify.send(request.user, recipient = user_org, verb = 'accepted your job')
-        	return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})  
-    	if request.POST.get("action","") == "Decline Job":
-        	jr.accepted = False
+			jr.save()
+			for user_org in org.group.user_set.all():
+				notify.send(request.user, recipient = user_org, verb = 'accepted your job')
+			return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})  
+		if request.POST.get("action","") == "Decline Job":
+			jr.accepted = False
 			jr.declined = True
-        	jr.save()
-        	for user_org in org.group.user_set.all():
-            	notify.send(request.user, recipient = user_org, verb = 'declined your job')
-        	return render(request, 'dbtest/confirm.html',{'title':'Job decline','message':'You have declined the job: {0}'.format(job_id.name)})  
+			jr.save()
+			for user_org in org.group.user_set.all():
+				notify.send(request.user, recipient = user_org, verb = 'declined your job')
+			return render(request, 'dbtest/confirm.html',{'title':'Job decline','message':'You have declined the job: {0}'.format(job_id.name)})  
 	return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
 def job_detail(request,job_id):
