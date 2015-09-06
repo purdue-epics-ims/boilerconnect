@@ -29,7 +29,6 @@ class ObjectCreateTestCase(TestCase):
 
 class InterfaceCreateTestCase(TestCase):
     def setUp(self):
-        self.c = Client()
         self.g = Group.objects.create(name="Testorg")
         self.o = Organization.objects.create(
             name=self.g.name,
@@ -45,13 +44,14 @@ class InterfaceCreateTestCase(TestCase):
 
         self.j = Job.objects.create(name='test job', description = 'Description of the job', duedate = '2015-3-21', creator = self.u)
 
+    #Test job create through interface
     def test_job_create(self):
         #Login
-        r = self.c.post(reverse("login"),{'username':'user0','password':'asdf'},follow=True)
+        r = self.client.post(reverse("login"),{'username':'user0','password':'asdf'},follow=True)
         self.assertEqual(r.status_code, 200)
 
         #Create a job
-        r = self.c.post(reverse('job_create'),{'name':'interfacejob','description':'testjob description','duedate':'2015-09-05','creator':self.u.username,'organization':self.o.name},follow=True)
+        r = self.client.post(reverse('job_create'),{'name':'interfacejob','description':'testjob description','duedate':'2015-09-05','creator':self.u.username,'organization':self.o.name},follow=True)
         self.assertEqual(r.status_code, 200)
         ### check if job exists
 
