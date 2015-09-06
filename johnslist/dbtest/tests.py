@@ -3,6 +3,8 @@ from django.test import TestCase
 from django.core.files import File
 from django.core.urlresolvers import reverse
 from johnslist.settings import PIC_POPULATE_DIR
+#for login test
+from django.contrib.auth.models import AnonymousUser
 
 from django.test import Client
 
@@ -73,6 +75,7 @@ class ViewsTestCase(TestCase):
 
         self.j = Job.objects.create(name='test job', description = 'Description of the job', duedate = '2015-3-21', creator = self.u)
 
+    #Test user login/logout
     def test_login(self):
         #Test for login failure
         r = self.client.post(reverse('login'),{'username':'fake_user','password':'no_password'})
@@ -85,10 +88,8 @@ class ViewsTestCase(TestCase):
         self.assertRedirects(r,reverse('front_page'))
         #check logged in as user0
         r = self.client.get(reverse('front_page'))
-        print '#########',r.context
+        self.assertEqual(r.context['user'],self.u)
 
         #Test logout
         r = self.client.get(reverse('logout'))
-        print r.context
-
-
+        self.assertEqual(type(r.context['user']),AnonymousUser)
