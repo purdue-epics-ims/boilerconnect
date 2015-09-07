@@ -44,7 +44,7 @@ class Organization(models.Model):
 
 @receiver(post_save, sender=Organization)
 def add_perms_organization(sender,**kwargs):
-    #check if this post_save signal was generated from a Model create
+    #check if this post_save signal was generated from a Model create (vs a Model edit)
     if 'created' in kwargs and kwargs['created']:
         organization=kwargs['instance']
 
