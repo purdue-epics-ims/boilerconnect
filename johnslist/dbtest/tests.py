@@ -7,8 +7,39 @@ from django.contrib.auth.models import AnonymousUser
 
 from django.test import Client
 
-''' todo: -group tests by model they test
-          -test default object permissions after creation
+'''
+    todo:  [] - group tests by model they test
+
+    User:
+    Interface:
+        [] - login
+        [] - user_create
+        [] - user_edit
+        [] - user_job_index
+        [] - user_membership
+        [] - permissions on views (user,job, org)
+
+    Job:
+        Backend:
+            [] - default permissions (creator has perms, accepted/requested have perms)
+            [] - setUpJobrelation (check requested/accepted relation exists)
+            [] - organization_accepted (use setUpJobrelation)
+            [] - organization_requested (use setUpJobrelation)
+        Interface:
+            [] - job_create (check job exists, check default perms, check requested orgs)
+            [] - job_detail (check r.context['job'] is the same that was created)
+
+    Organization:
+        Backend:
+            [] - default permissions (admin has perms, members have perms)
+            [] - jobs_requested
+            [] - jobs_accepted
+            [] - get_admins
+        Interface:
+            [] - org_detail
+            [] - org accept/decline jobs
+            [] - organization create
+            [] - organization edit
 '''
 
 #Test object creation and default perms
