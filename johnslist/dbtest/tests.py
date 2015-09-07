@@ -30,21 +30,16 @@ class ObjectCreateTestCase(TestCase):
         self.assertIs(type(group), Organization)
 
 class InterfaceCreateTestCase(TestCase):
+    fixtures = ['unittest.json']
     def setUp(self):
-        self.g = Group.objects.create(name="Testorg")
-        self.o = Organization.objects.create(
-            name=self.g.name,
-            group=self.g,
-            description="test description",
-            email="test_email@test.org",
-            phone_number="123-456-7890")
-        self.o.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
+        self.g = Group.objects.get(name="Purdue Linux Users Group")
+        self.o = self.g.organization
 
-        self.u = User.objects.create(username='user0')
-        self.u.set_password('asdf')
-        self.u.save()
+        self.u = User.objects.get(username='user0')
 
-        self.j = Job.objects.create(name='test job', description = 'Description of the job', duedate = '2015-3-21', creator = self.u)
+        self.j = Job.objects.get(name='Installing linux')
+
+        self.cat = Category.objects.get(name='computer science')
 
     #Test job create through interface
     def test_job_create(self):
