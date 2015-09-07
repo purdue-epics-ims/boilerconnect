@@ -11,13 +11,13 @@ from django.test import Client
     todo:  [] - group tests by model they test
 
     User:
-    Interface:
-        [] - login
-        [] - user_create
-        [] - user_edit
-        [] - user_job_index
-        [] - user_membership
-        [] - permissions on views (user,job, org)
+        Interface:
+            [] - login
+            [] - user_create
+            [] - user_edit
+            [] - user_job_index
+            [] - user_membership
+            [] - permissions on views (user,job, org)
 
     Job:
         Backend:
@@ -60,6 +60,7 @@ class ObjectCreateTestCase(TestCase):
 
     def test_job_create(self):
         #check permissions
+        1+1
 
 #Test views involved in the creation of objects
 class InterfaceCreateTestCase(TestCase):
