@@ -2,49 +2,46 @@ from dbtest.models import *
 from django.test import TestCase
 from django.core.files import File
 from django.core.urlresolvers import reverse
-from johnslist.settings import PIC_POPULATE_DIR
 #for login test
 from django.contrib.auth.models import AnonymousUser
 
 from django.test import Client
 
+''' todo: -group tests by model they test
+          -test default object permissions after creation
+'''
+
+#Test object creation and default perms
 class ObjectCreateTestCase(TestCase):
+    fixtures = ['unittest.json']
     def setUp(self):
-        g = Group.objects.create(name="Testorg")
-        plug = Organization.objects.create(
-            name=g.name,
-            group=g,
-            description="test description",
-            email="test_email@test.org",
-            phone_number="123-456-7890")
-        plug.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
+        self.g = Group.objects.get(name="Purdue Linux Users Group")
+        self.o = self.g.organization
 
-        u = User.objects.create(username='user0')
-        u.set_password('asdf')
-        u.save()
+        self.u = User.objects.get(username='user0')
 
-        j = Job.objects.create(name='test job', description = 'Description of the job', duedate = '2015-3-21', creator = u)
+        self.j = Job.objects.get(name='Installing linux')
 
-    def test_object_create(self):
-        group = Organization.objects.get(name='Testorg')
-        self.assertIs(type(group), Organization)
+        self.cat = Category.objects.get(name='computer science')
 
+    def test_organization_create(self):
+        #check permissions
+
+    def test_job_create(self):
+        #check permissions
+
+#Test views involved in the creation of objects
 class InterfaceCreateTestCase(TestCase):
+    fixtures = ['unittest.json']
     def setUp(self):
-        self.g = Group.objects.create(name="Testorg")
-        self.o = Organization.objects.create(
-            name=self.g.name,
-            group=self.g,
-            description="test description",
-            email="test_email@test.org",
-            phone_number="123-456-7890")
-        self.o.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
+        self.g = Group.objects.get(name="Purdue Linux Users Group")
+        self.o = self.g.organization
 
-        self.u = User.objects.create(username='user0')
-        self.u.set_password('asdf')
-        self.u.save()
+        self.u = User.objects.get(username='user0')
 
-        self.j = Job.objects.create(name='test job', description = 'Description of the job', duedate = '2015-3-21', creator = self.u)
+        self.j = Job.objects.get(name='Installing linux')
+
+        self.cat = Category.objects.get(name='computer science')
 
     #Test job create through interface
     def test_job_create(self):
@@ -53,27 +50,25 @@ class InterfaceCreateTestCase(TestCase):
         self.assertEqual(r.status_code, 200)
 
         #Create a job
-        r = self.client.post(reverse('job_create'),{'name':'interfacejob','description':'testjob description','duedate':'2015-09-05','creator':self.u.username,'organization':self.o.name},follow=True)
+        r = self.client.post(reverse('job_create'),{'name':'interfacejob','description':'testjob description','duedate':'2015-09-05','organization':self.o.pk,'categories':self.cat.pk},follow=True)
         self.assertEqual(r.status_code, 200)
-        ### check if job exists
+        #check if job exists
+        self.assertTrue(Job.objects.filter(name='interfacejob').first())
 
 
+#Test views which don't create objects
 class ViewsTestCase(TestCase):
+    fixtures = ['unittest.json']
     def setUp(self):
+        self.g = Group.objects.get(name="Purdue Linux Users Group")
+        self.o = self.g.organization
+
+        self.u = User.objects.get(username='user0')
+
+        self.j = Job.objects.get(name='Installing linux')
+
+        self.cat = Category.objects.get(name='computer science')
         self.g = Group.objects.create(name="Testorg")
-        self.o = Organization.objects.create(
-            name=self.g.name,
-            group=self.g,
-            description="test description",
-            email="test_email@test.org",
-            phone_number="123-456-7890")
-        self.o.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
-
-        self.u = User.objects.create(username='user0')
-        self.u.set_password('asdf')
-        self.u.save()
-
-        self.j = Job.objects.create(name='test job', description = 'Description of the job', duedate = '2015-3-21', creator = self.u)
 
     #Test user login/logout
     def test_login(self):
