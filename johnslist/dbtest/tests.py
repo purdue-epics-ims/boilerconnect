@@ -42,26 +42,31 @@ from django.test import Client
             [] - organization edit
 '''
 
-#Test object creation and default perms
-class ObjectCreateTestCase(TestCase):
-    fixtures = ['unittest.json']
-    def setUp(self):
-        self.g = Group.objects.get(name="Purdue Linux Users Group")
-        self.o = self.g.organization
+class UserTestCase(TestCase):
+    #test views which deal with users
+    def test_interface(self):
+        pass
 
-        self.u = User.objects.get(username='user0')
+class JobTestCase(TestCase):
+    #test views which deal with jobs
+    def test_interface(self):
+        pass
 
-        self.j = Job.objects.get(name='Installing linux')
+    #test backend functions which deal with jobs
+    def test_backend(self):
+        pass
 
-        self.cat = Category.objects.get(name='computer science')
+class OrganizationTestCase(TestCase):
+    #test views which deal with organizations
+    def test_interface(self):
+        pass
 
-    def test_organization_create(self):
-        #check permissions
+    #test backend functions which deal with organizations
+    def test_backend(self):
+        pass
 
-    def test_job_create(self):
-        #check permissions
-        1+1
 
+#delete these
 #Test views involved in the creation of objects
 class InterfaceCreateTestCase(TestCase):
     fixtures = ['unittest.json']
