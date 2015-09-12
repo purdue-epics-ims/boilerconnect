@@ -8,11 +8,11 @@ from django.contrib.auth.models import AnonymousUser
 from django.test import Client
 
 '''
-    todo:  [] - group tests by model they test
+    todo:  [x] - group tests by model they test
 
     User:
         Interface:
-            [] - login
+            [x] - login
             [] - user_create
             [] - user_edit
             [] - user_job_index
@@ -42,72 +42,18 @@ from django.test import Client
             [] - organization edit
 '''
 
+
+
+def login_as(self,user,password):
+    r = self.client.post(reverse("login"),{'username':user,'password':password},follow=True)
+    self.assertEqual(r.status_code, 200)
+
+
+
 class UserTestCase(TestCase):
-    #test views which deal with users
-    def test_interface(self):
-        pass
 
-class JobTestCase(TestCase):
-    #test views which deal with jobs
-    def test_interface(self):
-        pass
+    ### Interface Tests ###
 
-    #test backend functions which deal with jobs
-    def test_backend(self):
-        pass
-
-class OrganizationTestCase(TestCase):
-    #test views which deal with organizations
-    def test_interface(self):
-        pass
-
-    #test backend functions which deal with organizations
-    def test_backend(self):
-        pass
-
-
-#delete these
-#Test views involved in the creation of objects
-class InterfaceCreateTestCase(TestCase):
-    fixtures = ['unittest.json']
-    def setUp(self):
-        self.g = Group.objects.get(name="Purdue Linux Users Group")
-        self.o = self.g.organization
-
-        self.u = User.objects.get(username='user0')
-
-        self.j = Job.objects.get(name='Installing linux')
-
-        self.cat = Category.objects.get(name='computer science')
-
-    #Test job create through interface
-    def test_job_create(self):
-        #Login
-        r = self.client.post(reverse("login"),{'username':'user0','password':'asdf'},follow=True)
-        self.assertEqual(r.status_code, 200)
-
-        #Create a job
-        r = self.client.post(reverse('job_create'),{'name':'interfacejob','description':'testjob description','duedate':'2015-09-05','organization':self.o.pk,'categories':self.cat.pk},follow=True)
-        self.assertEqual(r.status_code, 200)
-        #check if job exists
-        self.assertTrue(Job.objects.filter(name='interfacejob').first())
-
-
-#Test views which don't create objects
-class ViewsTestCase(TestCase):
-    fixtures = ['unittest.json']
-    def setUp(self):
-        self.g = Group.objects.get(name="Purdue Linux Users Group")
-        self.o = self.g.organization
-
-        self.u = User.objects.get(username='user0')
-
-        self.j = Job.objects.get(name='Installing linux')
-
-        self.cat = Category.objects.get(name='computer science')
-        self.g = Group.objects.create(name="Testorg")
-
-    #Test user login/logout
     def test_login(self):
         #Test for login failure
         r = self.client.post(reverse('login'),{'username':'fake_user','password':'no_password'})
@@ -125,3 +71,95 @@ class ViewsTestCase(TestCase):
         #Test logout
         r = self.client.get(reverse('logout'))
         self.assertEqual(type(r.context['user']),AnonymousUser)
+
+    def test_user_create(self):
+        pass
+    def test_user_edit(self):
+        pass
+    def test_user_job_index(self):
+        pass
+    def test_user_membership(self):
+        pass
+    def test_view_permissions(self):
+        pass
+
+class JobTestCase(TestCase):
+    fixtures = ['unittest.json']
+    def setUp(self):
+        self.g = Group.objects.get(name="Purdue Linux Users Group")
+        self.o = self.g.organization
+        self.u = User.objects.get(username='user0')
+        self.j = Job.objects.get(name='Installing linux')
+        self.cat = Category.objects.get(name='computer science')
+
+    ### Backend Tests ###
+
+    #ensure job is editable by creator and viewable by associated orgs
+    def test_permissions(self):
+        #need to add permissions to Job model first
+        pass
+
+    #check job relation function
+    def test_setUpJobrelation(self):
+        pass
+
+    #check organizations that have accepted this job
+    def test_organization_accepted(self):
+        pass
+
+    #check organizations where this job is requested
+    def test_organization_requested(self):
+        pass
+
+    ### Interface Tests ###
+
+    def test_job_create(self):
+        #Login
+        login_as(self,'user0','asdf')
+
+        #Create a job
+        r = self.client.post(reverse('job_create'),{'name':'interfacejob','description':'testjob description','duedate':'2015-09-05','organization':self.o.pk,'categories':self.cat.pk},follow=True)
+        self.assertEqual(r.status_code, 200)
+
+        #check if job exists
+        self.assertTrue(Job.objects.filter(name='interfacejob').first())
+
+    def test_job_detail(self):
+        pass
+
+
+class OrganizationTestCase(TestCase):
+
+    ### Backend Tests ###
+
+    def test_permissions(self):
+        pass
+    def test_jobs_requested(self):
+        pass
+    def test_get_admins(self):
+        pass
+
+    ### Interface Tests ###
+
+    def test_org_detail(self):
+        pass
+    def test_organization_accept_decline(self):
+        pass
+    def test_organization_create(self):
+        pass
+    def test_organization_edit(self):
+        pass
+
+
+#delete these after moving to above 
+class InterfaceCreateTestCase(TestCase):
+    fixtures = ['unittest.json']
+    def setUp(self):
+        self.g = Group.objects.get(name="Purdue Linux Users Group")
+        self.o = self.g.organization
+
+        self.u = User.objects.get(username='user0')
+
+        self.j = Job.objects.get(name='Installing linux')
+
+        self.cat = Category.objects.get(name='computer science')
