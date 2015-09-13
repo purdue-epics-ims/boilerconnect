@@ -74,7 +74,7 @@ class Job(models.Model):
     categories = models.ManyToManyField(Category)
 
     class Meta:
-        permission = (
+        permissions = (
             ( 'view_job','Can view Job' ),
             ( 'edit_job', 'Can edit Job'),
         )
