@@ -87,12 +87,14 @@ def organization_job_index(request,organization_id):
 def organization_accept_job(request,organization_id):
     org = Organization.objects.get(id=organization_id)
     if request.method == 'POST':
-        job_id = Job.objects.get(id=request.POST['job_id'])
+        job = Job.objects.get(id=request.POST['job_id'])
         jr = Jobrelation.objects.get(job=job_id,organization = org)
         jr.accepted = True
         jr.save()
-        for user_org in org.group.user_set.all():
-            notify.send(request.user, recipient = user_org, verb = 'accepted your job')
+        #set view permission and send notification to all users of group
+        assign_perm('view_job',org.group,job)
+        for user in org.group.user_set.all():
+            notify.send(request.user, recipient = user, verb = 'accepted your job')
         return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})  
     return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
