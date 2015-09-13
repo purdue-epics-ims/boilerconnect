@@ -1,21 +1,21 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
-	<div class="panel-heading">
-		<div class="">
-			Create an organization
-		</div>
-	</div>
-	<div class = "jumbotron">
-		{% if name %}<b>Welcome Organization:{{ name }}.  Please check your email for a confirmation message.</b>
+<div class="panel-heading">
+  <div class="">
+    Create an organization
+  </div>
+</div>
+<div class = "jumbotron">
+  {% if name %}<b>Welcome Organization:{{ name }}.  Please check your email for a confirmation message.</b>
 
-		{% else %}
-		<form action="{% url 'organization_create' %}" method="post">
-		{% csrf_token %}
-		<table class = "input-table">
-			{{ form }}
-		</table>
-		<input class = "custom-btn" type="submit" value="Create Organization">
-		</form>
-		{% endif %}
-	</div>
+  {% else %}
+  <form action="{% url 'organization_create' %}" method="post">
+    {% csrf_token %}
+    <table class = "input-table">
+      {{ form }}
+    </table>
+    <input class = "custom-btn" type="submit" value="Create Organization">
+  </form>
+  {% endif %}
+</div>
 {% endblock %}
