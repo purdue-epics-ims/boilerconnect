@@ -63,8 +63,6 @@ def user_detail(request,user_id):
 def notifications(request):
     read_notifications = request.user.notifications.read()
     unread_notifications = list(request.user.notifications.unread())
-    print unread_notifications
-    print read_notifications
     request.user.notifications.mark_all_as_read()
     return render(request, 'dbtest/notifications.html', {'unread_notifications' : unread_notifications,'read_notifications':read_notifications})
 
@@ -105,7 +103,6 @@ def job_detail(request,job_id):
 #load the front page with 3 random organizations in the gallery
 def front_page(request):
     orgs = Organization.objects.all()
-    print orgs[0].name
     if(len(orgs) >= 3):
         orgs = random.sample(orgs,3)
         return render(request, 'dbtest/front_page.html',{'active_organization':orgs[0],'organizations':orgs[1:]})
@@ -114,7 +111,6 @@ def front_page(request):
 
 def search(request):
     search_result=[]
-    print request.GET
 
     search = request.GET['search'] # the provided search string
     search_model = request.GET['search_model'] # the kind of object returned by the search
@@ -247,14 +243,11 @@ def job_create(request):
             job = form.save(commit=False)
             job.creator = request.user
             job.save()
-            print '1'
             for org in request.POST.getlist('organization'):
-                print '2'
                 organization = Organization.objects.get(id = org)
                 Jobrelation.objects.create(organization=organization, job = job)
                 for user in organization.group.user_set.all():
                     notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
-                    print user
             for cat in request.POST.getlist('categories'):
                 job.categories.add(Category.objects.get(id=cat))
                 job.save()

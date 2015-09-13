@@ -10,7 +10,7 @@ def user_has_object(func):
 		#check if user is member or admin of organization
 		if 'organization_id' in kwargs.keys():
 			organization = Organization.objects.get(id=kwargs['organization_id'])
-			if organization.members.filter(id=request.user.id).exists():
+			if request.user.has_perm('view_organization',organization) and organization.group.user_set.filter(id=request.user.id).exists():
 				success = True
 
 		#or, check if user is creator of job
