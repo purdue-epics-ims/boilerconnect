@@ -49,14 +49,26 @@ from django.test import Client
 def login_as(self,user,password):
     return self.client.post(reverse("login"),{'username':user,'password':password},follow=True)
 
+#generic setup for all testcases
+def set_up(self):
+        #create user
+        self.u = User.objects.create(username='foobar_user')
+        self.u.set_password('asdf')
+        self.u.save()
+        #create group/org
+        self.g=Group.objects.create(name="foobar_group")
+        self.o = Organization.objects.create(name = self.g.name, group = self.g, description="test description",email="test@email.com",phone_number="123-456-7890")
+        self.o.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
+        #create category owned by foobar_user
+        self.cat = Category.objects.create(name='foobar_category',description="test description")
+        self.j = Job.objects.create(name='foobar_job',description="test description",duedate='2015-01-01',creator=self.u)
+
 
 
 class UserTestCase(TestCase):
+    #django calls this initialization function automatically
     def setUp(self):
-        #create user
-        self.u = User.objects.create(username='user0')
-        self.u.set_password('asdf')
-        self.u.save()
+        set_up(self)
 
     ### Interface Tests ###
 
@@ -91,17 +103,9 @@ class UserTestCase(TestCase):
         pass
 
 class JobTestCase(TestCase):
+    #django calls this initialization function automatically
     def setUp(self):
-        #create user
-        self.u = User.objects.create(username='user0')
-        self.u.set_password('asdf')
-        self.u.save()
-        #create group/org
-        self.g=Group.objects.create(name="test_group")
-        self.o = Organization.objects.create(name = self.g.name, group = self.g, description="test description",email="test@email.com",phone_number="123-456-7890")
-        self.o.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
-        #create category
-        self.cat = Category.objects.create(name='test_category',description="test description")
+        set_up(self)
 
     ### Backend Tests ###
 
@@ -126,26 +130,26 @@ class JobTestCase(TestCase):
 
     def test_job_create(self):
         #Login
-        login_as(self,'user0','asdf')
+        login_as(self,self.u.username,'asdf')
         #check logged in as user0
         r = self.client.get(reverse('front_page'))
         self.assertEqual(r.context['user'],self.u)
 
         #Create a job
-        r = self.client.post(reverse('job_create'),{'name':'interfacejob','description':'testjob description','duedate':'2015-09-05','organization':self.o.pk,'categories':self.cat.pk},follow=True)
+        r = self.client.post(reverse('job_create'),{'name':'interfacejob','description':"testjob description",'duedate':'2015-09-05','organization':self.o.pk,'categories':self.cat.pk},follow=True)
         self.assertEqual(r.status_code, 200)
-        with open('/tmp/test','w') as f:
-            f.write(r.content)
 
         #check if job exists
         self.assertTrue(Job.objects.filter(name='interfacejob').first())
 
     def test_job_detail(self):
-
         pass
 
 
 class OrganizationTestCase(TestCase):
+    #django calls this initialization function automatically
+    def setUp(self):
+        set_up(self)
 
     ### Backend Tests ###
 
