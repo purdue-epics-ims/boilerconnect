@@ -73,6 +73,13 @@ class Job(models.Model):
     organization = models.ManyToManyField(Organization, through = 'Jobrelation')
     categories = models.ManyToManyField(Category)
 
+    class Meta:
+        permissions = (
+            ( 'view_job','Can view Job' ),
+            ( 'edit_job','Can edit Job')
+            ( 'is_creator', 'Is a creator of Job'),
+            )
+
 class Jobrelation(models.Model):
     job = models.ForeignKey(Job)
     organization = models.ForeignKey(Organization)
