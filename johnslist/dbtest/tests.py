@@ -27,7 +27,7 @@ from django.test import Client
             [] - organization_accepted (use setUpJobrelation)
             [] - organization_requested (use setUpJobrelation)
         Interface:
-            [] - job_create (check job exists, check default perms, check requested orgs)
+            [x] - job_create (check job exists, check default perms, check requested orgs)
             [] - job_detail (check r.context['job'] is the same that was created)
 
     Organization:
