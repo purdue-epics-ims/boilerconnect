@@ -84,13 +84,8 @@ class UserTestCase(TestCase):
         pass
 
 class JobTestCase(TestCase):
-    fixtures = ['unittest.json']
     def setUp(self):
-        self.g = Group.objects.get(name="Purdue Linux Users Group")
-        self.o = self.g.organization
-        self.u = User.objects.get(username='user0')
-        self.j = Job.objects.get(name='Installing linux')
-        self.cat = Category.objects.get(name='computer science')
+        #create all relevant objects by hand for unambiguity
 
     ### Backend Tests ###
 
