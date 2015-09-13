@@ -2,6 +2,7 @@ from dbtest.models import *
 from django.test import TestCase
 from django.core.files import File
 from django.core.urlresolvers import reverse
+from johnslist.settings import PIC_POPULATE_DIR
 #for login test
 from django.contrib.auth.models import AnonymousUser
 
@@ -44,24 +45,29 @@ from django.test import Client
 
 
 
+#login as user with provided password and return response
 def login_as(self,user,password):
-    r = self.client.post(reverse("login"),{'username':user,'password':password},follow=True)
-    self.assertEqual(r.status_code, 200)
+    return self.client.post(reverse("login"),{'username':user,'password':password},follow=True)
 
 
 
 class UserTestCase(TestCase):
+    def setUp(self):
+        self.u = User.objects.create(username='user0')
+        self.u.set_password('asdf')
+        self.u.save()
 
     ### Interface Tests ###
 
     def test_login(self):
         #Test for login failure
-        r = self.client.post(reverse('login'),{'username':'fake_user','password':'no_password'})
+        r = login_as(self,'invalid_user0','password')
         self.assertEqual(r.status_code, 200)
         self.assertTrue('error' in r.context)
 
         #Test successful login
         r = self.client.post(reverse('login'),{'username':self.u.username,'password':'asdf'})
+        r = login_as(self,self.u.username,'asdf')
         #check redirect
         self.assertRedirects(r,reverse('front_page'))
         #check logged in as user0
@@ -86,6 +92,9 @@ class UserTestCase(TestCase):
 class JobTestCase(TestCase):
     def setUp(self):
         #create all relevant objects by hand for unambiguity
+        self.g=Group.objects.create(name="test_group")
+        self.o = Organization.objects.create(name = self.g.name, group = self.g, description="test description",email="test@email.com",phone_number="123-456-7890")
+        self.o.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
 
     ### Backend Tests ###
 
@@ -120,6 +129,7 @@ class JobTestCase(TestCase):
         self.assertTrue(Job.objects.filter(name='interfacejob').first())
 
     def test_job_detail(self):
+
         pass
 
 
@@ -144,17 +154,3 @@ class OrganizationTestCase(TestCase):
         pass
     def test_organization_edit(self):
         pass
-
-
-#delete these after moving to above 
-class InterfaceCreateTestCase(TestCase):
-    fixtures = ['unittest.json']
-    def setUp(self):
-        self.g = Group.objects.get(name="Purdue Linux Users Group")
-        self.o = self.g.organization
-
-        self.u = User.objects.get(username='user0')
-
-        self.j = Job.objects.get(name='Installing linux')
-
-        self.cat = Category.objects.get(name='computer science')
