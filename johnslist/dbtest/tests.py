@@ -53,6 +53,7 @@ def login_as(self,user,password):
 
 class UserTestCase(TestCase):
     def setUp(self):
+        #create user
         self.u = User.objects.create(username='user0')
         self.u.set_password('asdf')
         self.u.save()
@@ -91,10 +92,16 @@ class UserTestCase(TestCase):
 
 class JobTestCase(TestCase):
     def setUp(self):
-        #create all relevant objects by hand for unambiguity
+        #create user
+        self.u = User.objects.create(username='user0')
+        self.u.set_password('asdf')
+        self.u.save()
+        #create group/org
         self.g=Group.objects.create(name="test_group")
         self.o = Organization.objects.create(name = self.g.name, group = self.g, description="test description",email="test@email.com",phone_number="123-456-7890")
         self.o.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
+        #create category
+        self.cat = Category.objects.create(name='test_category',description="test description")
 
     ### Backend Tests ###
 
@@ -120,10 +127,15 @@ class JobTestCase(TestCase):
     def test_job_create(self):
         #Login
         login_as(self,'user0','asdf')
+        #check logged in as user0
+        r = self.client.get(reverse('front_page'))
+        self.assertEqual(r.context['user'],self.u)
 
         #Create a job
         r = self.client.post(reverse('job_create'),{'name':'interfacejob','description':'testjob description','duedate':'2015-09-05','organization':self.o.pk,'categories':self.cat.pk},follow=True)
         self.assertEqual(r.status_code, 200)
+        with open('/tmp/test','w') as f:
+            f.write(r.content)
 
         #check if job exists
         self.assertTrue(Job.objects.filter(name='interfacejob').first())
