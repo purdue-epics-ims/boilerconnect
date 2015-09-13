@@ -1,211 +1,180 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
 
+<div class="row">
+  <div class="col-sm-10">
+    <h1> <span class="text-muted">Jobs</span>
+      {{organization.name}}</h1>
 
+    <!Catgories>
 
-	<div class="row">
-        <div class="col-sm-10">
-            <h1> <span class="text-muted">Jobs</span>
-{{organization.name}}</h1>
+    <h3>
+    </h3>
+  </div>
+  <div class="col-sm-2"><span class="pull-right"><img title="prof" class="img-circle img-responsive" src="{{ organization.icon.url }}" draggable="false"></span>
+  </div>
+</div>
 
-             			 <!Catgories>
+&nbsp;
 
+<div class="panel panel-info">
+  <div class="panel-heading">
 
-             <h3>
-             </h3>
-        </div>
-      <div class="col-sm-2"><span class="pull-right"><img title="prof" class="img-circle img-responsive" src="{{ organization.icon.url }}" draggable="false"></span>
+    <span class="glyphicon glyphicon-time"></span>
+    Pending Requests
 
-        </div>
-    </div>
+    {%if organization.organization_requested%}
+    <span class="badge badge-primary">{{organization.organization_requestedd.all|length}}</span>
+    {%endif%}
+  </div>
+  <div class="panel-body">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th></th>
+          <th>Due Date</th>
+          <th>Creator</th>
+        </tr>
+      </thead>
 
-	&nbsp;
+      <tbody>
+        {%for job in organization.job_requested%}
+        <tr>
+          <td>
+            {{job.name}}
+          </td>
+          <td>
 
-	<div class="panel panel-info">
-		<div class="panel-heading">
-
-	<span class="glyphicon glyphicon-time"></span>
-		 Pending Requests
-
-			{%if organization.organization_requested%}
-			<span class="badge badge-primary">{{organization.organization_requestedd.all|length}}</span>
-			{%endif%}
-		</div>
-		<div class="panel-body">
-
-
-						<table class="table table-striped">
-							<thead>
-								<tr>
-									<th>Name</th>
-									<th></th>
-									<th>Due Date</th>
-									<th>Creator</th>
-
-								</tr>
-
-							</thead>
-
-							<tbody>
-
-							{%for job in organization.job_requested%}
-								<tr>
-									<td>
-									{{job.name}}
-									</td>
-									<td>
-
-								<!-- Button trigger modal -->
-				<a data-toggle="modal" data-target="#details{{job.id}}">
-				  See Details
-				</button>
-
-				<!-- Modal -->
-				<div class="modal fade" id="details{{job.id}}" tabindex="{{job.id}}" role="dialog" >
-				  <div class="modal-dialog">
-				    <div class="modal-content">
-				      <div class="modal-header">
-				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				        <h4 class="modal-title" id="label{{job.id}}">{{job.name}} Details</h4>
-				      </div>
-				      <div class="modal-body">
-				      <p><span class="text-muted"><strong>{{job.creator}}</strong> provided the following information:</span></p>
-				      <p>{{job.description}}</p>
-				      </div>
-				      <div class="modal-footer">
-				      	<span style="font-size:15px;" class="pull-left label label-warning label-lg">
-				      	DUE {{job.duedate}}
-				      	</span>
-
-				        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-
-				      </div>
-				    </div>
-				  </div>
-				</div>
-
-				</td>
-				<td>
-					{{job.duedate}}
-
-									</td>
-
-									<td>
-									{{job.creator}}
-									</td>
-								</tr>
-							{%endfor%}
-							</tbody>
-
-						</table>
-
-
-
-			{% if organization.job_requested%}
-				{% for job in organization.requested.all %}
->>>>>>> html
-					<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a>
-					<br>
-
-				{% endfor %}
-
-				<a href='{% url 'organization_accept_job' organization.id %}'>See all requests</a>
-			{% else %}
-				<span class="text-muted">No new requests have been received</span>
-
-			{% endif %}
-		</div>
-
-	</div>
-
-
-	<div class="panel panel-success">
-		<div class="panel-heading">
-			<span class="glyphicon glyphicon-ok"></span>
-			 Accepted Jobs
-		</div>
-
-		<div class="panel-body">
-
-			{%if organization.job_accepted%}
-				<!--todo table
-				//todo show more?
-				//todo expansion?-->
-<table class="table table-striped">
-			<thead>
-				<tr>
-					<th>Name</th>
-					<th></th>
-					<th>Due Date</th>
-					<th>Creator</th>
-
-				</tr>
-
-			</thead>
-
-			<tbody>
-
-			{%for job in organization.job_accepted%}
-				<tr>
-					<td>
-					{{job.name}}
-					</td>
-					<td>
-
-				<!-- Button trigger modal -->
-<a data-toggle="modal" data-target="#details{{job.id}}">
-	See Details
-</button>
+            <!-- Button trigger modal -->
+            <a data-toggle="modal" data-target="#details{{job.id}}">
+              See Details
 
 <!-- Modal -->
 <div class="modal fade" id="details{{job.id}}" tabindex="{{job.id}}" role="dialog" >
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-				<h4 class="modal-title" id="label{{job.id}}">{{job.name}} Details</h4>
-			</div>
-			<div class="modal-body">
-			<p><span class="text-muted"><strong>{{job.creator}}</strong> provided the following information:</span></p>
-			<p>{{job.description}}</p>
-			</div>
-			<div class="modal-footer">
-				<span style="font-size:15px;" class="pull-left label label-warning label-lg">
-				DUE {{job.duedate}}
-				</span>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="label{{job.id}}">{{job.name}} Details</h4>
+      </div>
+      <div class="modal-body">
+        <p><span class="text-muted"><strong>{{job.creator}}</strong> provided the following information:</span></p>
+        <p>{{job.description}}</p>
+      </div>
+      <div class="modal-footer">
+        <span style="font-size:15px;" class="pull-left label label-warning label-lg">
+          DUE {{job.duedate}}
+        </span>
 
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-
-			</div>
-		</div>
-	</div>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 </td>
 <td>
-	{{job.duedate}}
+  {{job.duedate}}
+</td>
 
-					</td>
+<td>
+  {{job.creator}}
+</td>
+</tr>
+{%endfor%}
+</tbody>
 
-					<td>
-					{{job.creator}}
-					</td>
-				</tr>
-			{%endfor%}
-			</tbody>
+</table>
 
-		</table>
+{% if organization.job_requested%}
+{% for job in organization.requested.all %}
+<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a>
+<br>
 
+{% endfor %}
 
+<a href='{% url 'organization_accept_job' organization.id %}'>See all requests</a>
+{% else %}
+<span class="text-muted">No new requests have been received</span>
+{% endif %}
+</div>
+</div>
+<div class="panel panel-success">
+  <div class="panel-heading">
+    <span class="glyphicon glyphicon-ok"></span>
+    Accepted Jobs
+  </div>
 
+  <div class="panel-body">
+    {%if organization.job_accepted%}
+    <!--todo table
+        //todo show more?
+        //todo expansion?-->
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th></th>
+          <th>Due Date</th>
+          <th>Creator</th>
+        </tr>
+      </thead>
 
-			{%else%} <!--No acepted Jobs-->
-				<span class="text-muted">You haven't accepted any job requests</span>
-			{%endif %}
+      <tbody>
+        {%for job in organization.job_accepted%}
+        <tr>
+          <td>
+            {{job.name}}
+          </td>
+          <td>
 
-		</div>
-	</div>
+            <!-- Button trigger modal -->
+            <a data-toggle="modal" data-target="#details{{job.id}}">
+              See Details
 
-	{% endblock %}
+<!-- Modal -->
+<div class="modal fade" id="details{{job.id}}" tabindex="{{job.id}}" role="dialog" >
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="label{{job.id}}">{{job.name}} Details</h4>
+      </div>
+      <div class="modal-body">
+        <p><span class="text-muted"><strong>{{job.creator}}</strong> provided the following information:</span></p>
+        <p>{{job.description}}</p>
+      </div>
+      <div class="modal-footer">
+        <span style="font-size:15px;" class="pull-left label label-warning label-lg">
+          DUE {{job.duedate}}
+        </span>
+
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</td>
+<td>
+  {{job.duedate}}
+</td>
+
+<td>
+  {{job.creator}}
+</td>
+</tr>
+{%endfor%}
+</tbody>
+
+</table>
+
+{%else%} <!--No acepted Jobs-->
+<span class="text-muted">You haven't accepted any job requests</span>
+{%endif %}
+
+</div>
+</div>
+
+{% endblock %}
