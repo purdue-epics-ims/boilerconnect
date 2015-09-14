@@ -12,12 +12,15 @@
     <!-- Custom CSS -->
     <link rel='stylesheet' type='text/css' href='{% static 'style.css' %}'/>
 
+
     <title>
       BoilerConnect - {%block title%}Connecting Jobs with Service Organizations{%endblock%}
     </title>
   </head>
 
   <body>
+
+
     <div class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
@@ -46,7 +49,6 @@
           <ul class="nav navbar-nav navbar-right">
             <li>
               <a href="{%url 'notifications'%}">
-
                 <span class="glyphicon glyphicon-inbox"></span>
                 <span class="badge">
                   {%notifications_unread as unread_count%}
@@ -72,11 +74,11 @@
                 </li>
 
                 <li class="divider"></li>
-
                 {% endfor %}
                 {%endif%}
 
                 <li><a href="{%url 'job_create'%}"><strong><i class="fa fa-wrench"></i> Create Job</strong></a></li>
+
               </ul>
             </li>
 
@@ -85,14 +87,19 @@
               <ul class="dropdown-menu" role="menu" arialabeledby="user">
                 <li class="dropdown-header">Member of</li>
                 {% for organization in user.members.all %}
+
                 <li>
+
                   <a href="{% url 'organization_detail' organization.id %}">{{ organization.name }}
+
                     {%if organization in user.admin.all%}
                     <span class="label label-default pull-right">Admin</span>
+
                     {%endif%}
                   </a>
                 </li>
                 <li class="divider"></li>
+
                 {% endfor %}
                 <li><a href="{%url 'organization_create'%}"><strong><i class="fa fa-users"></i> Create Organiztion</strong></a></li>
               </ul>
@@ -103,55 +110,57 @@
           </ul>
           {%else%}
 
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-              <p class="navbar-btn">
-                <a style="margin-right:5px;" href="{% url 'login' %}" class="btn btn-default">Login</a>
-              </p>
-            </li>
-            <li>
-              <p class="navbar-btn">
-                <a href="{% url 'user_create' %}" class="btn btn-primary">Join</a>
-              </p>
-            </li>
-          </ul>
+        </ul>
+<ul class="nav navbar-nav navbar-right">
 
-          {% endif %}
+  <li>
+    <p class="navbar-btn">
+      <a style="margin-right:5px;" href="{% url 'login' %}" class="btn btn-default">Login</a>
+    </p>
+  </li>
+  <li>
+    <p class="navbar-btn">
+      <a href="{% url 'user_create' %}" class="btn btn-primary">Join</a>
+    </p>
+  </li>
 
-        </div>
-      </div>
+</ul>
+{% endif %}
+</div>
+</div>
+</div>
+
+
+
+<br><br><br>
+<div class="container container-fluid">
+  <!-- div for displaying miscellaneous errors -->
+  {% if error %}
+  <div id="error">
+    <div class="alert alert-danger">
+
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+
+      {{ error }}
     </div>
+  </div>
+  {% endif %}
+  {% block content %}
+  Content
+  {% endblock %}
+</div>
 
-    <br><br><br>
-    <div class="container container-fluid">
-      <!-- div for displaying miscellaneous errors -->
-      {% if error %}
-      <div id="error">
-        <div class="alert alert-danger">
-          <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-          <span class="sr-only">Error:</span>
+<div class="footer">
+  {% block footer %}
+  <br><p>All Rights Reserved <a href="http://epics.ecn.purdue.edu/ims/">EPICS IMS 2015</a></p>
+  {% endblock %}
+</div>
 
-          {{ error }}
-        </div>
-      </div>
+</body>
 
-      {% endif %}
 
-      {% block content %}
-      Content
-      {% endblock %}
-
-    </div>
-
-    <div class="footer">
-      {% block footer %}
-      <br><p>All Rights Reserved <a href="http://epics.ecn.purdue.edu/ims/">EPICS IMS 2015</a></p>
-      {% endblock %}
-    </div>
-
-  </body>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  <script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
 </html>
