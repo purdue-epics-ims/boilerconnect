@@ -2,8 +2,6 @@
 
 {% block content %}
 
-
-
 <h1>Modify the following fields :</h1>
 <br><br>
 {% if error %}<b>{{ error }}</b>
@@ -12,9 +10,9 @@
 
 {% else %}
 <form action="{% url 'organization_edit' %}" method="post">
-{% csrf_token %}
-{{ form }}
-<input type="submit" value="Modify Organization">
+  {% csrf_token %}
+  {{ form }}
+  <input type="submit" value="Modify Organization">
 </form>
 
 {% endif %}

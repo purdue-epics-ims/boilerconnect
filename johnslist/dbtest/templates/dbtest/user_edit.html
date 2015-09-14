@@ -2,20 +2,20 @@
 {% block content %}
 
 <div class="panel heading">
-	Change your username or password.
+  Change your username or password.
 </div>
 <div class="jumbotron">
-	{% if username %}
-		<b>Welcome {{ username }}.  Please check your email for a confirmation message.</b>
-	{% else %}
-		<form action="{% url 'user_edit' %}" method="post">
-		<table class="input-table">
-		{% csrf_token %}
-		{{ form }}
-		</table>
-		<input class = "custom-btn" type="submit" value="Modify User">
-		</form>
-	{% endif %}
+  {% if username %}
+  <b>Welcome {{ username }}.  Please check your email for a confirmation message.</b>
+  {% else %}
+  <form action="{% url 'user_edit' %}" method="post">
+    <table class="input-table">
+      {% csrf_token %}
+      {{ form }}
+    </table>
+    <input class = "custom-btn" type="submit" value="Modify User">
+  </form>
+  {% endif %}
 </div>
 
 
