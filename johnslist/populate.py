@@ -52,6 +52,7 @@ def populate():
     u = User.objects.get(pk=1)
     for org in Organization.objects.all():
         assign_perm('is_admin',u,org)
+        assign_perm('edit_organization',u,org)
 
 
     #add ServiceServiceCategory's
