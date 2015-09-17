@@ -1,11 +1,11 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
-	<div class="panel-heading">
-		<div class="">
-			Search Results
-		</div>
-	</div>
-	<div class = "jumbotron" >
+<div class="panel-heading">
+  <div class="">
+    Search Results
+  </div>
+</div>
+<div class = "jumbotron" >
 
 		<h3><u>{{ organization.name }}</u></h3>
 		
@@ -22,7 +22,8 @@
 							<form method=POST name="jobaccept" action="{% url 'organization_accept_job' organization.id %}">
 							{% csrf_token %}
 							<input type="hidden" name="job_id" value="{{ job.id }}">
-							<input class = "custom-btn" type="submit" value="Accept Job">
+							<input class = "custom-btn" type="submit" name = "action" value="Accept Job">
+							<input class = "custom-btn" type="submit" name = "action" value="Decline Job">
 							</form>
 						</td>
 					</tr>
@@ -30,8 +31,7 @@
 				</tr>
 			</table>
 		</div>
-
-	</div>
+</div>
 
 
 {% endblock %}

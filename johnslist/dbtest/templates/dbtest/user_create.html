@@ -1,97 +1,72 @@
 {% extends "dbtest/base.html" %}
 
 {% block content %}
-	<div class="panel-heading">
-		<div class="">
-			Sign Up
-		</div>
-	</div>
-	<div class = "jumbotron">
+<div class="panel-heading">
+  <div class="">
+    Sign Up
+  </div>
+</div>
+<div class = "jumbotron">
 
+  {% if username %}
+  <p>Welcome {{ username }}.  Please check your email for a confirmation message.</p>
+  {% else %}
+  {% if form.errors %}
+  <div class="alert alert-error">
+    <ul>
+      {% for error in form.field_errors %}
+      <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+  
+  <form class="login" action="{% url 'user_create' %}" method='POST'>
+    
+    <div class="input-group">
+      <span class="input-group-addon" id="addon-e,">
+        <div class="glyphicon glyphicon-user"></div>
+      </span>
+      <input id="id_username" name="username" maxlength="30" type="text" class="form-control" placeholder="Choose username" autofocus="true" autocomplete="off" aria-describedby="addon1">
+    </div>
+    &nbsp;
 
-		
+    <div class="input-group">
+      <span class="input-group-addon" id="addon-pa">
+        <div class="glyphicon glyphicon-lock"></div>
+      </span>
+      <input type="password" maxlength="30" id="id_password1" name="password1" value="{{password}}" class="form-control" placeholder="Choose Password" aria-describedby="addon1">
+      
+    </div>
+    
+    &nbsp;
+    
+    <div class="input-group">
+      <span class="input-group-addon" id="addon-pa">
+        <div class="glyphicon glyphicon-lock"></div>
+      </span>
+      <input type="password" id="id_password2" maxlength="30" name="password2" value="{{password}}" class="form-control" placeholder="Confirm it" aria-describedby="addon1">
+      
+    </div>
+    
+    <br>
+    {% csrf_token %}
 
+    <div>
+      <button type="submit" value="Create User" class="btn btn-primary">Create Account</button>
+      
+      <span class="pull-right">
+        <p>Already a user?
+          <a href="{% url 'login' %}">Login</a>
+        </p>
+        
+      </span>
+      
+    </div>
+  </form>
+  
+  {% endif %}
 
-		{% if username %}
-			<p>Welcome {{ username }}.  Please check your email for a confirmation message.</p>
-		{% else %}
-		
-	
-	{% if form.errors %}
-        <div class="alert alert-error">
-            <ul>
-                {% for error in form.field_errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
-	
-		
-			<form class="login" action="{% url 'user_create' %}" method='POST'>
-						
-			<div class="input-group">
-			<span class="input-group-addon" id="addon-e,">
-				<div class="glyphicon glyphicon-user"></div>
-			</span>
-			<input id="id_username" name="username" maxlength="30" type="text" class="form-control" placeholder="Choose username" autofocus="true" autocomplete="off" aria-describedby="addon1">
-			</div>
-		&nbsp;
-				<!--<input type='hidden' name='csrfmiddlewaretoken' value='ooj4AUcGpfYh7xPa4Ik3zh2NtyoGW1fC' />-->
-
-
-		<div class="input-group">
-			<span class="input-group-addon" id="addon-pa">
-				<div class="glyphicon glyphicon-lock"></div>
-			</span>
-			<input type="password" maxlength="30" id="id_password1" name="password1" value="{{password}}" class="form-control" placeholder="Choose Password" aria-describedby="addon1">
-			
-		</div>
-		
-		&nbsp;
-		
-		<div class="input-group">
-			<span class="input-group-addon" id="addon-pa">
-				<div class="glyphicon glyphicon-lock"></div>
-			</span>
-			<input type="password" id="id_password2" maxlength="30" name="password2" value="{{password}}" class="form-control" placeholder="Confirm it" aria-describedby="addon1">
-			
-		</div>
-		
-		<br>
-				{% csrf_token %}
-
-			<div>
-				<button type="submit" value="Create User" class="btn btn-primary">Create Account</button>
-			
-				<span class="pull-right">
-					<p>Already a user?
-						<a href="{% url 'login' %}">Login</a>
-					</p>
-				
-				</span>
-			
-			</div>
-	</form>
-		
-		{% endif %}
-
-		
-		
-		
-		<!--
-		
-		
-			<form action="{% url 'user_create' %}" method="post">
-			{% csrf_token %}
-			<table class = "input-table">
-			{{ form }}
-			</table>
-			<br>
-			<input class = "custom-btn" type="submit" value="Create User">
-			</form>
-		
-		-->
-	</div>
+</div>
 
 {% endblock content %}

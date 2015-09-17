@@ -2,214 +2,165 @@
 
 {%load notifications_tags%}
 <html>
-	<head>
+  <head>
 
-	<link rel='stylesheet' type='text/css' href='{% static 'bootstrap.min.css' %}'/>
-	<link rel="icon" type="image/png" href='{% static 'favicon.png' %}'/>
-	<!-- Font awesome! -->
-	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel='stylesheet' type='text/css' href='{% static 'bootstrap.min.css' %}'/>
+    <link rel="icon" type="image/png" href='{% static 'favicon.png' %}'/>
+    <!-- Font awesome! -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
-	<!-- Custom CSS -->
-	<link rel='stylesheet' type='text/css' href='{% static 'style.css' %}'/>
-
-
-		<title>
-			BoilerConnect - {%block title%}Connecting Jobs with Service Organizations{%endblock%}
-		</title>
-	</head>
-
-	<body>
+    <!-- Custom CSS -->
+    <link rel='stylesheet' type='text/css' href='{% static 'style.css' %}'/>
 
 
-	<div class="navbar navbar-default navbar-fixed-top">
+    <title>
+      BoilerConnect - {%block title%}Connecting Jobs with Service Organizations{%endblock%}
+    </title>
+  </head>
+
+  <body>
+
+
+    <div class="navbar navbar-default navbar-fixed-top">
       <div class="container">
         <div class="navbar-header">
 
-        <a  class="navbar-brand" rel="home" href="#" title="BoilerConnect">
-			  	<img draggable="false" style="max-width:27px;margin-top:-3px;margin-right:-7px;"
-        		src='{% static 'brand.png' %}'>
-			</a>
+          <a  class="navbar-brand" rel="home" href="#" title="BoilerConnect">
+            <img draggable="false" style="max-width:27px;margin-top:-3px;margin-right:-7px;"
+                 src='{% static 'brand.png' %}'>
+          </a>
 
           <a href="{% url 'front_page' %}" class="navbar-brand">BoilerConnect</a>
           <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
-		  	<span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
-
-
+            <span class="icon-bar"></span>
           </button>
 
         </div>
         <div class="navbar-collapse collapse" id="navbar-main">
-			<ul class="nav navbar-nav">
-
-
-
-			<li><a href="{%url 'about'%}">About</a></li>
-
-
-
-           {% if user.is_authenticated %}
-
-
-
-
-
-		        </ul>
-
-
-				<!--Profile-->
-		   		<ul class="nav navbar-nav navbar-right">
-
-
-
-		   		<li>
-		   			<a href="{%url 'notifications'%}">
-
-		   				<span class="glyphicon glyphicon-inbox"></span>
-		   				<span class="badge">
-		   				{%notifications_unread as unread_count%}
-		   				{{unread_count}}
-		   				</span>
-		   			</a>
-		   				   		</li>
-
-					<!--Profile Quick Groups-->
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-toggle="dropdown" haspopup="true" onmouseover="hoverhard()"><i class="fa fa-briefcase"></i>  Jobs<span class="caret"></span></a>
-						<ul class="dropdown-menu" role="menu" arialabeledby="user">
-
-							{%if user.admin.all%}
-								<li class="dropdown-header">New Requests</li>
-								{% for org in user.admin.all %}
-									<li>
-									 <a href="{%url 'organization_job_index' org.id%}">{{org.name}}
-									 {%if org.requested.all%}
-									 	<span class="badge">{{org.requested.all|length}}</span>
-									 {%endif%}
-									 </a>
-									</li>
-
-									<li class="divider"></li>
-
-								{% endfor %}
-							{%endif%}
-
-						<li><a href="{%url 'job_create'%}"><strong><i class="fa fa-wrench"></i> Create Job</strong></a></li>
-
-
-						</ul>
-
-
-
-
-
-
-
-					</li>
-
-					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-toggle="dropdown" haspopup="true" onmouseover="hoverhard()"><i class="fa fa-institution"></i> Orgs<span class="caret"></span></a>
-						<ul class="dropdown-menu" role="menu" arialabeledby="user">
-
-								<li class="dropdown-header">Member of</li>
-
-								{% for organization in user.members.all %}
-
-							    	<li>
-
-							    		<a href="{% url 'organization_detail' organization.id %}">{{ organization.name }}
-
-										{%if organization in user.admin.all%}
-											<span class="label label-default pull-right">Admin</span>
-
-										{%endif%}
-							    		</a>
-							    	</li>
-							    	 <li class="divider"></li>
-
-								{% endfor %}
-<li><a href="{%url 'organization_create'%}"><strong><i class="fa fa-users"></i> Create Organiztion</strong></a></li>
-
-
-						</ul>
-
-
-					</li>
-
-
-		   			<li><a href="{% url 'user_detail' user.id %}"><i class="fa fa-dashboard"></i><strong> {{user.username}}</strong></a></li>
-		   			<!--<li><a href="{%url 'user_edit'%}"><i class="fa fa-gear"></i> Settings</a></li>-->
-		   			<li><a href="{%url 'logout'%}"><i class="fa fa-sign-out"></i> Logout</a></li>
-
-
-
-
-				</ul>
-			{%else%}
-
-        </ul>
-        			<ul class="nav navbar-nav navbar-right">
-
-							<li>
-								<p class="navbar-btn">
-									<a style="margin-right:5px;" href="{% url 'login' %}" class="btn btn-default">Login</a>
-									</p>
-							</li>
-							<li>
-								<p class="navbar-btn">
-									<a href="{% url 'user_create' %}" class="btn btn-primary">Join</a>
-								</p>
-							</li>
-
-        			</ul>
-
-
-           {% endif %}
-
-
-
-
+          <ul class="nav navbar-nav">
+            <li><a href="{%url 'about'%}">About</a></li>
+            {% if user.is_authenticated %}
           </ul>
 
-        </div>
-      </div>
+          <!--Profile-->
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <a href="{%url 'notifications'%}">
+                <span class="glyphicon glyphicon-inbox"></span>
+                <span class="badge">
+                  {%notifications_unread as unread_count%}
+                  {{unread_count}}
+                </span>
+              </a>
+            </li>
+
+            <!--Profile Quick Groups-->
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-toggle="dropdown" haspopup="true" onmouseover="hoverhard()"><i class="fa fa-briefcase"></i>  Jobs<span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu" arialabeledby="user">
+
+                {%if user.admin.all%}
+                <li class="dropdown-header">New Requests</li>
+                {% for org in user.admin.all %}
+                <li>
+                  <a href="{%url 'organization_job_index' org.id%}">{{org.name}}
+                    {%if org.requested.all%}
+                    <span class="badge">{{org.requested.all|length}}</span>
+                    {%endif%}
+                  </a>
+                </li>
+
+                <li class="divider"></li>
+                {% endfor %}
+                {%endif%}
+
+                <li><a href="{%url 'job_create'%}"><strong><i class="fa fa-wrench"></i> Create Job</strong></a></li>
+
+              </ul>
+            </li>
+
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-toggle="dropdown" haspopup="true" onmouseover="hoverhard()"><i class="fa fa-institution"></i> Orgs<span class="caret"></span></a>
+              <ul class="dropdown-menu" role="menu" arialabeledby="user">
+                <li class="dropdown-header">Member of</li>
+                {% for organization in user.members.all %}
+
+                <li>
+
+                  <a href="{% url 'organization_detail' organization.id %}">{{ organization.name }}
+
+                    {%if organization in user.admin.all%}
+                    <span class="label label-default pull-right">Admin</span>
+
+                    {%endif%}
+                  </a>
+                </li>
+                <li class="divider"></li>
+
+                {% endfor %}
+                <li><a href="{%url 'organization_create'%}"><strong><i class="fa fa-users"></i> Create Organiztion</strong></a></li>
+              </ul>
+            </li>
+            <li><a href="{% url 'user_detail' user.id %}"><i class="fa fa-dashboard"></i><strong> {{user.username}}</strong></a></li>
+            <!--<li><a href="{%url 'user_edit'%}"><i class="fa fa-gear"></i> Settings</a></li>-->
+            <li><a href="{%url 'logout'%}"><i class="fa fa-sign-out"></i> Logout</a></li>
+          </ul>
+          {%else%}
+
+        </ul>
+<ul class="nav navbar-nav navbar-right">
+
+  <li>
+    <p class="navbar-btn">
+      <a style="margin-right:5px;" href="{% url 'login' %}" class="btn btn-default">Login</a>
+    </p>
+  </li>
+  <li>
+    <p class="navbar-btn">
+      <a href="{% url 'user_create' %}" class="btn btn-primary">Join</a>
+    </p>
+  </li>
+
+</ul>
+{% endif %}
+</div>
+</div>
+</div>
+
+
+
+<br><br><br>
+<div class="container container-fluid">
+  <!-- div for displaying miscellaneous errors -->
+  {% if error %}
+  <div id="error">
+    <div class="alert alert-danger">
+
+      <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+      <span class="sr-only">Error:</span>
+
+      {{ error }}
     </div>
+  </div>
+  {% endif %}
+  {% block content %}
+  Content
+  {% endblock %}
+</div>
 
-        </div>
+<div class="footer">
+  {% block footer %}
+  <br><p>All Rights Reserved <a href="http://epics.ecn.purdue.edu/ims/">EPICS IMS 2015</a></p>
+  {% endblock %}
+</div>
 
-		</div>
-
-		<br><br><br>
-		<div class="container container-fluid">
-			<!-- div for displaying miscellaneous errors -->
-			{% if error %}
-			<div id="error">
-				<div class="alert alert-danger">
-
-					<span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-					<span class="sr-only">Error:</span>
-
-					{{ error }}
-				</div>
-			</div>
-			{% endif %}
-			{% block content %}
-			Content
-			{% endblock %}
-		</div>
-
-		<div class="footer">
-			{% block footer %}
-			<br><p>All Rights Reserved <a href="http://epics.ecn.purdue.edu/ims/">EPICS IMS 2015</a></p>
-			{% endblock %}
-		</div>
-
-	</body>
+</body>
 
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
 </html>

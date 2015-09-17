@@ -26,20 +26,28 @@ class Organization(models.Model):
     icon = models.ImageField(upload_to='organization',null=True)
     
     def job_accepted(self):
-        job_list_a = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True)    
+        job_list_a = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True,jobrelation__completed = False)    
         return job_list_a
 
     def job_requested(self):
-        job_list_r = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False)
+        job_list_r = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = False)
         return job_list_r
+    def job_declined(self):
+        job_list_d = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = True)
+        return job_list_d
+	
+    def job_completed(self):
+        job_list_d = Job.objects.filter(jobrelation__organization = self, jobrelation__completed = True)
+        return job_list_d
 
     def get_admins(self):
-        return [user for user in self.group.user_set.all() if user.has_perm('is_admin',self)]
+		return [user for user in self.group.user_set.all() if user.has_perm('is_admin',self)]
 
     class Meta:
-        permissions = (
+		permissions = (
             ( 'view_organization','Can view Organization' ),
-            ( 'is_admin', 'Is an Administrator'),
+            ( 'edit_organization','Can edit Organization' ),
+            ( 'is_admin', 'Is an Administrator')
             )
 
 @receiver(post_save, sender=Organization)
@@ -56,11 +64,14 @@ class Job(models.Model):
         return self.name
     # function returns an array list of organization objects that have accepted = True in JobRelation
     def organization_accepted(self):
-        accepted = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = True)
+        accepted = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = True, jobrelation__completed = False)
         return accepted
     def organization_requested(self):
-        requested = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False)
+        requested = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False,jobrelation__declined = False)
         return requested
+    def organization_declined(self):
+        declined = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False,jobrelation__declined = True)
+        return declined
     def setUpJobrelation(self,organization,accept):
         jr = Jobrelation(job = self,organization = organization,accepted = accept);
         jr.save();
@@ -76,10 +87,13 @@ class Job(models.Model):
     class Meta:
         permissions = (
             ( 'view_job','Can view Job' ),
-            ( 'edit_job', 'Can edit Job'),
-        )
+            ( 'edit_job','Can edit Job'),
+            ( 'is_creator', 'Is a creator of Job')
+            )
 
 class Jobrelation(models.Model):
     job = models.ForeignKey(Job)
     organization = models.ForeignKey(Organization)
-    accepted = models.NullBooleanField(default = False)
+    accepted = models.NullBooleanField(default = False)	
+    declined = models.NullBooleanField(default = False)
+    completed = models.NullBooleanField(default = False)

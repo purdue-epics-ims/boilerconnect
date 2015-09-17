@@ -7,7 +7,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
 from django.forms.models import inlineformset_factory
-from .decorators import user_has_object
+from .decorators import user_has_perm
+from guardian.decorators import permission_required_or_403
 from .forms import*
 from guardian.shortcuts import assign_perm
 from notifications import notify
@@ -78,26 +79,35 @@ def organization_detail(request,organization_id):
                  'members':organization.group.user_set.all(),
                  })
 
-@user_has_object
+@user_has_perm('view_organization')
 def organization_job_index(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
     return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
 
-@user_has_object
-def organization_accept_job(request,organization_id):
-    org = Organization.objects.get(id=organization_id)
-    if request.method == 'POST':
-        job = Job.objects.get(id=request.POST['job_id'])
-        jr = Jobrelation.objects.get(job=job_id,organization = org)
-        jr.accepted = True
-        jr.save()
-        #set view permission and send notification to all users of group
-        assign_perm('view_job',org.group,job)
-        for user in org.group.user_set.all():
-            notify.send(request.user, recipient = user, verb = 'accepted your job')
-        return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})  
-    return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
+@user_has_perm('is_admin')
+def organization_accept_job(request,organization_id):
+	org = Organization.objects.get(id=organization_id)
+	if request.method == 'POST':
+		job_id = Job.objects.get(id=request.POST['job_id'])
+		jr = Jobrelation.objects.get(job=job_id,organization = org)
+		if request.POST.get("action","") == "Accept Job":
+			jr.accepted = True
+			jr.declined = False
+			jr.save()
+			for user_org in org.group.user_set.all():
+				notify.send(request.user, recipient = user_org, verb = 'accepted your job')
+			return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})  
+		if request.POST.get("action","") == "Decline Job":
+			jr.accepted = False
+			jr.declined = True
+			jr.save()
+			for user_org in org.group.user_set.all():
+				notify.send(request.user, recipient = user_org, verb = 'declined your job')
+			return render(request, 'dbtest/confirm.html',{'title':'Job decline','message':'You have declined the job: {0}'.format(job_id.name)})  
+	return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
+
+@permission_required_or_403('view_organization')
 def job_detail(request,job_id):
     job = Job.objects.get(id=job_id)
     return render(request, 'dbtest/job_detail.html',{'job': job})
@@ -128,12 +138,12 @@ def search(request):
     return render(request,'dbtest/search.html',{'search_result': search_result})
 
 
-@user_has_object
+@user_has_perm('view_organization')
 def user_job_index(request,user_id):
     jobs = User.objects.get(id=user_id).creator
     return render(request,'dbtest/user_job_index.html',{'jobs':jobs})
 
-@user_has_object
+@user_has_perm('view_organization')
 def user_membership(request,user_id):
     membership = User.objects.get(id = user_id).group
     return render(request,'dbtest/user_membership.html',{'membership': membership})
@@ -168,7 +178,8 @@ def organization_create(request):
         if form.is_valid() :
             organization = form.save(commit=False)
             #set the admin to user1 organization.admin = User.objects.get(id=1)
-            assign_perm('has_admin',request.user, organization)
+            assign_perm('is_admin',request.user, organization)
+            assign_perm('edit_organization',request.user, organization)
             #create new org 
             organization.save()
             form.save_m2m()
@@ -212,6 +223,7 @@ def user_edit(request):
             )
 
 @login_required
+@user_has_perm('edit_organization')
 def organization_edit(request):
         #if this request was a POST and not a GET
     args = {}
