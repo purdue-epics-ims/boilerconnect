@@ -90,6 +90,19 @@ class Job(models.Model):
             ( 'edit_job','Can edit Job'),
             ( 'is_creator', 'Is a creator of Job')
             )
+#add default job permissions
+@receiver(post_save, sender=Job)
+def add_perms_job(sender,**kwargs):
+    #check if this post_save signal was generated from a Model create
+    if 'created' in kwargs and kwargs['created']:
+        job=kwargs['instance']
+
+        #allow creator to view and edit job
+        assign_perm('view_job',job.creator,job)
+        assign_perm('edit_job',job.creator,job)
+        #allow requested orgs to view job
+        for org in job.organization_requested():
+            assign_perm('view_job',org.group,job)
 
 class Jobrelation(models.Model):
     job = models.ForeignKey(Job)
