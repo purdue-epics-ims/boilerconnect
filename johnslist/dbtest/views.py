@@ -7,7 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
 from django.forms.models import inlineformset_factory
-from .decorators import user_can_view
+from .decorators import user_has_perm
 from guardian.decorators import permission_required_or_403
 from .forms import*
 from guardian.shortcuts import assign_perm
@@ -79,12 +79,13 @@ def organization_detail(request,organization_id):
                  'members':organization.group.user_set.all(),
                  })
 
-@permission_required_or_403('view_organization')
+@user_has_perm('view_organization')
 def organization_job_index(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
     return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
 
-@permission_required_or_403('is_admin')
+
+@user_has_perm('is_admin')
 def organization_accept_job(request,organization_id):
 	org = Organization.objects.get(id=organization_id)
 	if request.method == 'POST':
@@ -137,12 +138,12 @@ def search(request):
     return render(request,'dbtest/search.html',{'search_result': search_result})
 
 
-@permission_required_or_403('view_organization')
+@user_has_perm('view_organization')
 def user_job_index(request,user_id):
     jobs = User.objects.get(id=user_id).creator
     return render(request,'dbtest/user_job_index.html',{'jobs':jobs})
 
-@permission_required_or_403('view_organization')
+@user_has_perm('view_organization')
 def user_membership(request,user_id):
     membership = User.objects.get(id = user_id).group
     return render(request,'dbtest/user_membership.html',{'membership': membership})
@@ -178,6 +179,7 @@ def organization_create(request):
             organization = form.save(commit=False)
             #set the admin to user1 organization.admin = User.objects.get(id=1)
             assign_perm('is_admin',request.user, organization)
+            assign_perm('edit_organization',request.user, organization)
             #create new org 
             organization.save()
             form.save_m2m()
@@ -221,6 +223,7 @@ def user_edit(request):
             )
 
 @login_required
+@user_has_perm('edit_organization')
 def organization_edit(request):
         #if this request was a POST and not a GET
     args = {}
