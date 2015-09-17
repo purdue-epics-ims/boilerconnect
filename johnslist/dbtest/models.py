@@ -46,7 +46,8 @@ class Organization(models.Model):
     class Meta:
 		permissions = (
             ( 'view_organization','Can view Organization' ),
-            ( 'is_admin', 'Is an Administrator'),
+            ( 'edit_organization','Can edit Organization' ),
+            ( 'is_admin', 'Is an Administrator')
             )
 
 @receiver(post_save, sender=Organization)
