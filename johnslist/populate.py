@@ -48,6 +48,12 @@ def populate():
         epics.group.user_set.add(user)
         amet.group.user_set.add(user)
 
+    #set is_admin
+    u = User.objects.get(pk=1)
+    for org in Organization.objects.all():
+        assign_perm('is_admin',u,org)
+
+
     #add ServiceServiceCategory's
     categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']
     for category in categories:
@@ -72,14 +78,6 @@ def populate():
         else:
             acc = False
         user_num += 1
-
-#print what object is being added, return the object
-def status(added_obj):
-    if added_obj[1]:
-        print "Adding {0}".format(added_obj[0])
-    else:
-        print "<{0}> {1} already exists".format(added_obj[0].__class__.__name__,added_obj[0])
-    return added_obj[0]
 
 if __name__ == '__main__':
         
