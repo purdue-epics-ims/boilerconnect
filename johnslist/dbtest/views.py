@@ -177,7 +177,7 @@ def organization_create(request):
         if form.is_valid() :
             organization = form.save(commit=False)
             #set the admin to user1 organization.admin = User.objects.get(id=1)
-            assign_perm('has_admin',request.user, organization)
+            assign_perm('is_admin',request.user, organization)
             #create new org 
             organization.save()
             form.save_m2m()
