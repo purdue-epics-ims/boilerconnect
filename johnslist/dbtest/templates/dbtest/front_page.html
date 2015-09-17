@@ -6,67 +6,69 @@
 
 <!-- Search Box -->
 <div class = "jumbotron search-box">
-	<h1>Welcome to BoilerConnect</h1>
-	<br>
-	<p>Looking for help? Search here.</p>
-	<div class = "search-form box">
-		<form action="{% url 'search' %}" method="get">
-		<input class="input-box" type="text" name="search" placeholder="Search for a group">
-		<input class="search-btn" type="submit" value="Search">
-        <input type="hidden" name="search_model" value="organization">
-        <input type="hidden" name="search_by" value="name">
-		</form>
-	</div>
+  <h1>Welcome to BoilerConnect</h1>
+  <br>
+  <p>Looking for help? Search here.</p>
+  <div class = "search-form box">
+    <form action="{% url 'search' %}" method="get">
+      <input class="input-box" type="text" name="search" placeholder="Search for a group">
+      <input class="search-btn" type="submit" value="Search">
+      <input type="hidden" name="search_model" value="organization">
+      <input type="hidden" name="search_by" value="name">
+    </form>
+  </div>
 </div>
 
 <!----------- Gallery ---------->
 
 <div id="carousel" class="carousel slide" data-ride="carousel">
   <ol class="carousel-indicators">
-	<li data-target="#carousel" data-slide-to="0" class="active"></li>
-	<li data-target="#carousel" data-slide-to="1"></li>
-	<li data-target="#carousel" data-slide-to="2"></li>
+    <li data-target="#carousel" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel" data-slide-to="1"></li>
+    <li data-target="#carousel" data-slide-to="2"></li>
   </ol>
-  	<div class="carousel-inner">
-        <div class="item active">
-            <div class="container">
-                <div>
-                    <img src="{{ active_organization.icon.url }}" alt="{{ active_organization.name }} icon">
-                </div>
-                <div class="carousel-caption">
-                    <h1>{{ active_organization.name }}</h1>
-                    <p><a class="search-btn btn btn-lg btn-primary" href="{% url 'organization_detail' active_organization.id %}" role="button">Click here to view this organization</a></p>
-                </div>
-            </div>
+  <div class="carousel-inner">
+    {% if active_organization %}
+    <div class="item active">
+      <div class="container">
+        <div>
+          <img src="{{ active_organization.icon.url }}" alt="{{ active_organization.name }} icon">
         </div>
-	  	{% for organization in organizations %}
-		<div class="item">
-		  	<div class="container">
-				<div>
-					<img src="{{ organization.icon.url }}" alt="{{ organization.name }} icon">
-				</div>
-				<div class="carousel-caption">
-				  	<h1>{{ organization.name }}</h1>
-				  	<p><a class="btn btn-lg btn-primary" href="{% url 'organization_detail' organization.id %}" role="button">Click here to view this organization</a></p>
-				</div>
-			</div>
-		</div>
-	  	{% endfor %}
-	</div>
+        <div class="carousel-caption">
+          <h1>{{ active_organization.name }}</h1>
+          <p><a class="search-btn btn btn-lg btn-primary" href="{% url 'organization_detail' active_organization.id %}" role="button">Click here to view this organization</a></p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% for organization in organizations %}
+    <div class="item">
+      <div class="container">
+        <div>
+          <img src="{{ organization.icon.url }}" alt="{{ organization.name }} icon">
+        </div>
+        <div class="carousel-caption">
+          <h1>{{ organization.name }}</h1>
+          <p><a class="btn btn-lg btn-primary" href="{% url 'organization_detail' organization.id %}" role="button">Click here to view this organization</a></p>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
   <a class="left carousel-control" href="#carousel" role="button" data-slide="prev">
-	<span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-	<span class="sr-only">Previous</span>
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
   </a>
   <a class="right carousel-control" href="#carousel" role="button" data-slide="next">
-	<span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-	<span class="sr-only">Next</span>
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
   </a>
 </div>
-	<script>
-	$(document).ready(function(){ 
-	$('.carousel').carousel();
-	});
+<script>
+  $(document).ready(function(){ 
+  $('.carousel').carousel();
+  });
 
-	</script>
+</script>
 
 {% endblock content %}

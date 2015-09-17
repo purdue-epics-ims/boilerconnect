@@ -1,60 +1,99 @@
 from django.db import models
 from django.forms import ModelForm,PasswordInput
-from django.contrib.auth.models import User
 from django.contrib.auth import forms
-
-'''
-Represented here are the minimum viable product entities for the BoilerConnect website.
-The ManyToMany and ForeignKey fields represent relationships between 2 classes.  For example, the 'ForeignKey' field in
-class Organization means that there is 1 admin associated with each Organization, and that it is a required relation for an Organization
-to exist (since it is defined as an attribute in the Organization class).  Conversely, a user does not have any relationships defined in its class,
-so Users can exist without be tied to any Organization.
-
-The 'related_name' argument that appears in the Organization class renames the relationship.  Django names relationships based on what classes are being linked,
-so if we didn't have 'related_name', the 'admin' and 'members' relationship in Organization would have the same name in our SQL database.
-
-
-Future entities to add:
-	- user hierarchy -> admin, member
-	- reviews
-	- media (pictures attached to posts, etc.)
-'''
-
-''' User class
-	attributes:
-		username
-		password
-'''
+from django.dispatch import receiver
+from django.db.models.signals import post_save
+from django.contrib.auth.models import User,Group
+from guardian.shortcuts import assign_perm
 
 class Category(models.Model):
-	def __unicode__(self):
-		return self.name
+    def __unicode__(self):
+        return self.name
 
-	name = models.CharField('Category Name',max_length=64)
-	description = models.TextField('Category Description')
+    name = models.CharField('Service Category Name',max_length=64)
+    description = models.TextField('Service Category Description')
 
 class Organization(models.Model):
-	def __unicode__(self):
-		return self.name
+    def __unicode__(self):
+        return self.name
 
-	name = models.CharField('Organization Name',max_length=64,unique=True)
-	description = models.TextField('Organization Description')
-	admin = models.ForeignKey(User,related_name='admin')  # User -o= Organization 
-	members = models.ManyToManyField(User,related_name='members')  # User =-= Organization
-	categories = models.ManyToManyField(Category)  # Category =-= Organization
-	email = models.CharField('Organization email',max_length=64,null=True)  #should this be unique?
-	phone_number = models.CharField('Organization phone number',max_length=64,null=True) #should this be unique?
-	icon = models.ImageField(upload_to='organization',null=True)
+    name = models.TextField('Organization Name',null=True)
+    description = models.TextField('Organization Description')
+    categories = models.ManyToManyField(Category)  # Category =-= Organization
+    email = models.CharField('Organization email',max_length=64,null=True)
+    group = models.OneToOneField(Group) # Organization - Group
+    phone_number = models.CharField('Organization phone number',max_length=64,null=True)
+    icon = models.ImageField(upload_to='organization',null=True)
+    
+    def job_accepted(self):
+        job_list_a = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True,jobrelation__completed = False)    
+        return job_list_a
+
+    def job_requested(self):
+        job_list_r = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = False)
+        return job_list_r
+    def job_declined(self):
+        job_list_d = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = True)
+        return job_list_d
+	
+    def job_completed(self):
+        job_list_d = Job.objects.filter(jobrelation__organization = self, jobrelation__completed = True)
+        return job_list_d
+
+    def get_admins(self):
+		return [user for user in self.group.user_set.all() if user.has_perm('is_admin',self)]
+
+    class Meta:
+		permissions = (
+            ( 'view_organization','Can view Organization' ),
+            ( 'edit_organization','Can edit Organization' ),
+            ( 'is_admin', 'Is an Administrator')
+            )
+
+@receiver(post_save, sender=Organization)
+def add_perms_organization(sender,**kwargs):
+    #check if this post_save signal was generated from a Model create
+    if 'created' in kwargs and kwargs['created']:
+        organization=kwargs['instance']
+
+        # allow organization to view itself by default
+        assign_perm('view_organization',organization.group,organization)
 
 class Job(models.Model):
-	def __unicode__(self):
-		return self.name
+    def __unicode__(self):
+        return self.name
+    # function returns an array list of organization objects that have accepted = True in JobRelation
+    def organization_accepted(self):
+        accepted = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = True, jobrelation__completed = False)
+        return accepted
+    def organization_requested(self):
+        requested = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False,jobrelation__declined = False)
+        return requested
+    def organization_declined(self):
+        declined = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False,jobrelation__declined = True)
+        return declined
+    def setUpJobrelation(self,organization,accept):
+        jr = Jobrelation(job = self,organization = organization,accepted = accept);
+        jr.save();
+        return
 
-	name = models.CharField('Job Name',max_length=128)
-	description = models.TextField('Job Description')
-	duedate = models.DateTimeField('Date Due')
-	creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
-	requested = models.ManyToManyField(Organization,related_name='requested')  # Organization =-= Job
-	accepted = models.ManyToManyField(Organization,related_name='accepted') 
-	categories = models.ManyToManyField(Category)
+    name = models.CharField('Job Name',max_length=128)
+    description = models.TextField('Job Description')
+    duedate = models.DateTimeField('Date Due')
+    creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
+    organization = models.ManyToManyField(Organization, through = 'Jobrelation')
+    categories = models.ManyToManyField(Category)
 
+    class Meta:
+        permissions = (
+            ( 'view_job','Can view Job' ),
+            ( 'edit_job','Can edit Job'),
+            ( 'is_creator', 'Is a creator of Job')
+            )
+
+class Jobrelation(models.Model):
+    job = models.ForeignKey(Job)
+    organization = models.ForeignKey(Organization)
+    accepted = models.NullBooleanField(default = False)	
+    declined = models.NullBooleanField(default = False)
+    completed = models.NullBooleanField(default = False)

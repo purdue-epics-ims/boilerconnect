@@ -1,12 +1,17 @@
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render,get_object_or_404,redirect
 from .models import *
-from django.http import HttpResponse
-from django.contrib.auth.views import login
+from django.http import HttpResponseRedirect
+from django.contrib.auth.views import login as auth_login
+from django.contrib.auth import authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
-from .decorators import user_has_object
+from django.forms.models import inlineformset_factory
+from .decorators import user_has_perm
+from guardian.decorators import permission_required_or_403
 from .forms import*
+from guardian.shortcuts import assign_perm
+from notifications import notify
 '''
     user_detail - show user info
         contact
@@ -24,6 +29,7 @@ from .forms import*
     search - search results for search on front_page
     user_job_index - list of jobs user has created
     user_membership - list of organizations user is part of
+    about - description of site, tutorial    
 
     user_create
     organization_create
@@ -36,32 +42,72 @@ todo
     organization_edit - this doesn't work at all
 '''
 
+def login(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(username=username, password=password)
+        if user is not None and user.is_active:
+            auth_login(request, user)
+            return redirect('front_page')
+        else:
+            error = "There was a problem with your login.  Please try again." 
+            return render(request,'dbtest/login.html',{'error':error})
+    if request.method == 'GET':
+        return render(request,'dbtest/login.html')
+
+            
 def user_detail(request,user_id):
     user = get_object_or_404(User,id=user_id)
-    return render(request, 'dbtest/user_detail.html',{'user': user})
+    return render(request, 'dbtest/user_detail.html',{'user_detail': user})
+
+def notifications(request):
+    read_notifications = request.user.notifications.read()
+    unread_notifications = list(request.user.notifications.unread())
+    request.user.notifications.mark_all_as_read()
+    return render(request, 'dbtest/notifications.html', {'unread_notifications' : unread_notifications,'read_notifications':read_notifications})
 
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
-    jobs = organization.requested
-    return render(request, 'dbtest/organization_detail.html',{'organization': organization,'jobs':jobs})
+    jobs = organization.job_requested()
+    admins = organization.get_admins()
 
-@user_has_object
+    return render(request, 'dbtest/organization_detail.html',
+                {'organization': organization,
+                 'jobs':jobs,
+                 'admins':admins,
+                 'members':organization.group.user_set.all(),
+                 })
+
+@user_has_perm('view_organization')
 def organization_job_index(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
     return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
 
-@user_has_object
-def organization_accept_job(request,organization_id):
-    org = Organization.objects.get(id=organization_id)
-    if request.method == 'POST':
-        job_id = Job.objects.get(id=request.POST['job_id'])
-        jr = Jobrelation.objects.get(job=job_id,organization = org)
-        jr.accepted = True
-        jr.save()
-        return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})
-    
-    return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
+@user_has_perm('is_admin')
+def organization_accept_job(request,organization_id):
+	org = Organization.objects.get(id=organization_id)
+	if request.method == 'POST':
+		job_id = Job.objects.get(id=request.POST['job_id'])
+		jr = Jobrelation.objects.get(job=job_id,organization = org)
+		if request.POST.get("action","") == "Accept Job":
+			jr.accepted = True
+			jr.declined = False
+			jr.save()
+			for user_org in org.group.user_set.all():
+				notify.send(request.user, recipient = user_org, verb = 'accepted your job')
+			return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})  
+		if request.POST.get("action","") == "Decline Job":
+			jr.accepted = False
+			jr.declined = True
+			jr.save()
+			for user_org in org.group.user_set.all():
+				notify.send(request.user, recipient = user_org, verb = 'declined your job')
+			return render(request, 'dbtest/confirm.html',{'title':'Job decline','message':'You have declined the job: {0}'.format(job_id.name)})  
+	return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
+
+@permission_required_or_403('view_organization')
 def job_detail(request,job_id):
     job = Job.objects.get(id=job_id)
     return render(request, 'dbtest/job_detail.html',{'job': job})
@@ -69,7 +115,6 @@ def job_detail(request,job_id):
 #load the front page with 3 random organizations in the gallery
 def front_page(request):
     orgs = Organization.objects.all()
-    print orgs[0].name
     if(len(orgs) >= 3):
         orgs = random.sample(orgs,3)
         return render(request, 'dbtest/front_page.html',{'active_organization':orgs[0],'organizations':orgs[1:]})
@@ -78,7 +123,6 @@ def front_page(request):
 
 def search(request):
     search_result=[]
-    print request.GET
 
     search = request.GET['search'] # the provided search string
     search_model = request.GET['search_model'] # the kind of object returned by the search
@@ -94,14 +138,14 @@ def search(request):
     return render(request,'dbtest/search.html',{'search_result': search_result})
 
 
-@user_has_object
+@user_has_perm('view_organization')
 def user_job_index(request,user_id):
     jobs = User.objects.get(id=user_id).creator
     return render(request,'dbtest/user_job_index.html',{'jobs':jobs})
 
-@user_has_object
+@user_has_perm('view_organization')
 def user_membership(request,user_id):
-    membership = User.objects.get(id = user_id).members
+    membership = User.objects.get(id = user_id).group
     return render(request,'dbtest/user_membership.html',{'membership': membership})
 
 def user_create(request):
@@ -124,6 +168,7 @@ def user_create(request):
         form = UserCreationForm()
         return render(request, 'dbtest/user_create.html', {'form':form})
 
+@login_required
 def organization_create(request):
     #if this request was a POST and not a GET
     if request.method == 'POST':
@@ -133,7 +178,8 @@ def organization_create(request):
         if form.is_valid() :
             organization = form.save(commit=False)
             #set the admin to user1 organization.admin = User.objects.get(id=1)
-            organization.admin = request.user
+            assign_perm('is_admin',request.user, organization)
+            assign_perm('edit_organization',request.user, organization)
             #create new org 
             organization.save()
             form.save_m2m()
@@ -141,7 +187,6 @@ def organization_create(request):
             message = "Thank you for creating an organization."
             return render(request,'dbtest/confirm.html', {'title': title,'message':message})
         else:
-            print form.errors
             return render(request, 'dbtest/organization_create.html', {'form':form,'error':"There are incorrect fields"})
     #if the request was a GET
     else:
@@ -169,11 +214,16 @@ def user_edit(request):
             return render(request, 'dbtest/user_edit.html', {'form':form,'error':"There are incorrect fields"})
     #if the request was a GET
     else:
-        form = UserCreationForm()
-        args['form'] = form
-        return render(request, 'dbtest/user_edit.html', args)
+        if request.user.is_authenticated():
+            form = UserCreationForm(instance=request.user)
+        else:
+            form = UserCreationForm()
+        return render(request, 'dbtest/user_edit.html', 
+            {'form':form}
+            )
 
 @login_required
+@user_has_perm('edit_organization')
 def organization_edit(request):
         #if this request was a POST and not a GET
     args = {}
@@ -197,20 +247,24 @@ def organization_edit(request):
         args['form'] = form
         return render(request, 'dbtest/organization_edit.html', args)
 
-
+@login_required
 def job_create(request):
     #if this request was a POST and not a GET
     if request.method == 'POST':
         form = JobCreateForm(request.POST)
-
         #check form validity
-        if form.is_valid() :
+        if form.is_valid():
             job = form.save(commit=False)
-            job.creator = User.objects.get(id=1)
-            #create new org
-            job.accepted = 0;
+            job.creator = request.user
             job.save()
-            form.save_m2m()#this generate the error as there is an intermediary model
+            for org in request.POST.getlist('organization'):
+                organization = Organization.objects.get(id = org)
+                Jobrelation.objects.create(organization=organization, job = job)
+                for user in organization.group.user_set.all():
+                    notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
+            for cat in request.POST.getlist('categories'):
+                job.categories.add(Category.objects.get(id=cat))
+                job.save()
             title = "Job {0} created".format( job.name )
             message = "Thank you for creating the job."
             return render(request,'dbtest/confirm.html', {'title': title,'message':message})
@@ -221,3 +275,5 @@ def job_create(request):
         form = JobCreateForm()
         return render(request, 'dbtest/job_create.html', {'form':form})
 
+def about(request):
+    return render(request, 'dbtest/about.html')
