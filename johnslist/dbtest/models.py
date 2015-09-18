@@ -73,9 +73,8 @@ class Job(models.Model):
         declined = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False,jobrelation__declined = True)
         return declined
     def setUpJobrelation(self,organization,accept):
-        jr = Jobrelation(job = self,organization = organization,accepted = accept);
-        jr.save();
-        return
+        jr = Jobrelation.objects.create(job = self,organization = organization,accepted = accept);
+        return jr
 
     name = models.CharField('Job Name',max_length=128)
     description = models.TextField('Job Description')
