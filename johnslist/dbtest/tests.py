@@ -22,8 +22,8 @@ from django.test import Client
 
     Job:
         Backend:
-            [] - default permissions (creator has perms, accepted/requested have perms)
-            [] - setUpJobrelation (check requested/accepted relation exists)
+            [x] - default permissions (creator has perms, accepted/requested have perms)
+            [x] - setUpJobrelation (check requested/accepted relation exists)
             [] - organization_accepted (use setUpJobrelation)
             [] - organization_requested (use setUpJobrelation)
         Interface:
@@ -106,25 +106,35 @@ class JobTestCase(TestCase):
     #django calls this initialization function automatically
     def setUp(self):
         set_up(self)
+        self.j2 = Job.objects.create(name='test_job',description="test description",duedate='2015-01-01',creator=self.u)
 
     ### Backend Tests ###
 
-    #ensure job is editable by creator and viewable by associated orgs
+    #ensure job is editable by creator 
     def test_permissions(self):
-        #need to add permissions to Job model first
-        pass
+        self.assertTrue(self.u.has_perm('edit_job',self.j))
+        self.assertTrue(self.u.has_perm('view_job',self.j))
 
     #check job relation function
     def test_setUpJobrelation(self):
-        pass
+        jr = self.j.setUpJobrelation(self.o,False)
+        self.assertIsInstance(jr,Jobrelation)
 
     #check organizations that have accepted this job
     def test_organization_accepted(self):
-        pass
+        jr = self.j.setUpJobrelation(self.o,False)
+        self.assertEqual(0,len(self.j.organization_accepted()))
+        jr.accepted = True
+        jr.save()
+        self.assertEqual(1,len(self.j.organization_accepted()))
+        self.assertTrue(self.o in self.j.organization_accepted())
 
     #check organizations where this job is requested
     def test_organization_requested(self):
-        pass
+        self.assertEqual(0,len(self.j.organization_requested()))
+        jr = self.j.setUpJobrelation(self.o,False)
+        self.assertEqual(1,len(self.j.organization_requested()))
+        self.assertTrue(self.o in self.j.organization_requested())
 
     ### Interface Tests ###
 
