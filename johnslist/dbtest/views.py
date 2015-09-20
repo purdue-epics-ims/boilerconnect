@@ -137,12 +137,12 @@ def search(request):
     return render(request,'dbtest/search.html',{'search_result': search_result})
 
 
-@user_has_perm('view_organization')
+@user_has_perm('view_user')
 def user_job_index(request,user_id):
     jobs = User.objects.get(id=user_id).creator
     return render(request,'dbtest/user_job_index.html',{'jobs':jobs})
 
-@user_has_perm('view_organization')
+@user_has_perm('view_user')
 def user_membership(request,user_id):
     membership = User.objects.get(id = user_id).group
     return render(request,'dbtest/user_membership.html',{'membership': membership})
