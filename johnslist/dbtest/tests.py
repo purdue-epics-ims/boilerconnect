@@ -24,8 +24,8 @@ from django.test import Client
         Backend:
             [x] - default permissions (creator has perms, accepted/requested have perms)
             [x] - setUpJobrelation (check requested/accepted relation exists)
-            [] - organization_accepted (use setUpJobrelation)
-            [] - organization_requested (use setUpJobrelation)
+            [x] - organization_accepted (use setUpJobrelation)
+            [x] - organization_requested (use setUpJobrelation)
         Interface:
             [x] - job_create (check job exists, check default perms, check requested orgs)
             [] - job_detail (check r.context['job'] is the same that was created)
@@ -153,7 +153,9 @@ class JobTestCase(TestCase):
         self.assertTrue(Job.objects.filter(name='interfacejob').first())
 
     def test_job_detail(self):
-        pass
+        login_as(self,self.u.username,'asdf')
+        r = self.client.get(reverse('job_detail',kwargs={'job_id':self.j2.id}))
+        self.assertEqual(self.j2,r.context['job'])
 
 
 class OrganizationTestCase(TestCase):
