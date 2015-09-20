@@ -8,7 +8,6 @@ from django.contrib.auth.decorators import login_required
 import random
 from django.forms.models import inlineformset_factory
 from .decorators import user_has_perm
-from guardian.decorators import permission_required_or_403
 from .forms import*
 from guardian.shortcuts import assign_perm
 from notifications import notify
@@ -107,7 +106,7 @@ def organization_accept_job(request,organization_id):
 			return render(request, 'dbtest/confirm.html',{'title':'Job decline','message':'You have declined the job: {0}'.format(job_id.name)})  
 	return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
-@permission_required_or_403('view_organization')
+@user_has_perm('view_job')
 def job_detail(request,job_id):
     job = Job.objects.get(id=job_id)
     return render(request, 'dbtest/job_detail.html',{'job': job})
