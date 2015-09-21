@@ -52,7 +52,7 @@ class Organization(models.Model):
 
 @receiver(post_save, sender=Organization)
 def add_perms_organization(sender,**kwargs):
-    #check if this post_save signal was generated from a Model create
+    #check if this post_save signal was generated from a Model create (vs a Model edit)
     if 'created' in kwargs and kwargs['created']:
         organization=kwargs['instance']
 
@@ -73,9 +73,8 @@ class Job(models.Model):
         declined = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False,jobrelation__declined = True)
         return declined
     def setUpJobrelation(self,organization,accept):
-        jr = Jobrelation(job = self,organization = organization,accepted = accept);
-        jr.save();
-        return
+        jr = Jobrelation.objects.create(job = self,organization = organization,accepted = accept);
+        return jr
 
     name = models.CharField('Job Name',max_length=128)
     description = models.TextField('Job Description')
@@ -90,6 +89,19 @@ class Job(models.Model):
             ( 'edit_job','Can edit Job'),
             ( 'is_creator', 'Is a creator of Job')
             )
+#add default job permissions
+@receiver(post_save, sender=Job)
+def add_perms_job(sender,**kwargs):
+    #check if this post_save signal was generated from a Model create
+    if 'created' in kwargs and kwargs['created']:
+        job=kwargs['instance']
+
+        #allow creator to view and edit job
+        assign_perm('view_job',job.creator,job)
+        assign_perm('edit_job',job.creator,job)
+        #allow requested orgs to view job
+        for org in job.organization_requested():
+            assign_perm('view_job',org.group,job)
 
 class Jobrelation(models.Model):
     job = models.ForeignKey(Job)
