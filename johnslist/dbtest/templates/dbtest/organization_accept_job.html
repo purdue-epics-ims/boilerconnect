@@ -20,10 +20,18 @@
 					<tr>
 						<td><a href="{% url 'job_detail' job.id organization.id %}">{{ job.name }}</a>
 							<form method=POST name="jobaccept" action="{% url 'organization_accept_job' organization.id %}">
-							{% csrf_token %}
-							<input type="hidden" name="job_id" value="{{ job.id }}">
-							<input class = "custom-btn" type="submit" name = "action" value="Accept Job">
-							<input class = "custom-btn" type="submit" name = "action" value="Decline Job">
+                                {% csrf_token %}
+                                <input type="hidden" name="job_id" value="{{ job.id }}">
+                                <input class = "custom-btn" type="submit" name = "action" value="Accept Job">
+                                <input class = "custom-btn" type="submit" name = "action" value="Decline Job">
+							</form>
+							<form method=POST name="comment" action="{% url 'organization_accept_job' organization.id %}">
+                                {% csrf_token %}
+                                <table class = "input-table">
+                                    {{form}}
+                                </table>
+                                <input type="hidden" name="job_id" value="{{ job.id }}">
+                                <input class = "custom-btn" type="submit" name = "comment" value="comment">
 							</form>
 						</td>
 					</tr>
