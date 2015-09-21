@@ -14,7 +14,7 @@ from django.test import Client
     User:
         Interface:
             [x] - login
-            [] - user_create
+            [x] - user_create
             [] - user_edit
             [] - user_job_index
             [] - user_membership
@@ -92,8 +92,21 @@ class UserTestCase(TestCase):
         self.assertEqual(type(r.context['user']),AnonymousUser)
 
     def test_user_create(self):
-        pass
+        #successful user creation
+        response = self.client.post(reverse('user_create'), {'username': 'user', 'password1':'zxcv', 'password2':'zxcv'})
+        self.assertTrue('Thank you for creating an account' in response.content)
+        
+        #unsuccessful user creation
+        response = self.client.post(reverse('user_create'), {'username': 'user1', 'password1':'zxcv', 'password2':'zxcvhg'})
+        self.assertFalse('Thank you for creating an account' in response.content)
+
     def test_user_edit(self):
+        response = self.client.post(reverse('user_edit'))
+        self.assertTrue(response.status_code == 302)
+        login_as(self, self.u.username, 'asdf')
+        response = self.client.post(reverse('user_edit'))
+        self.assertTrue(response.status_code == 200)
+
         pass
     def test_user_job_index(self):
         pass
