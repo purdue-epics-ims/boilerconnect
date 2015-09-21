@@ -87,30 +87,37 @@ def organization_job_index(request,organization_id):
 
 @user_has_perm('is_admin')
 def organization_accept_job(request,organization_id):
-	org = Organization.objects.get(id=organization_id)
-	if request.method == 'POST':
-		job_id = Job.objects.get(id=request.POST['job_id'])
-		jr = Jobrelation.objects.get(job=job_id,organization = org)
-		if request.POST.get("action","") == "Accept Job":
-			jr.accepted = True
-			jr.declined = False
-			jr.save()
-			for user_org in org.group.user_set.all():
-				notify.send(request.user, recipient = user_org, verb = 'accepted your job')
-			return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})  
-		if request.POST.get("action","") == "Decline Job":
-			jr.accepted = False
-			jr.declined = True
-			jr.save()
-			for user_org in org.group.user_set.all():
-				notify.send(request.user, recipient = user_org, verb = 'declined your job')
-			return render(request, 'dbtest/confirm.html',{'title':'Job decline','message':'You have declined the job: {0}'.format(job_id.name)})  
-	return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
+    org = Organization.objects.get(id=organization_id)
+    if request.method == 'POST':
+        job_id = Job.objects.get(id=request.POST['job_id'])
+        jr = Jobrelation.objects.get(job=job_id,organization = org)
+        if request.POST.get("action","") == "Accept Job":
+            if jr.accepted is False or jr.declined is False:
+                jr.accepted = True
+                jr.save()
+            else:
+                return render(request,'dbtest/organization_accept_job.html',{'orgnanization':org,'error':'you have already accepted/declined the job'})
+            for user_org in org.group.user_set.all():
+                notify.send(request.user, recipient = user_org, verb = 'accepted your job')
+            return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})  
+        if request.POST.get("action","") == "Decline Job":
+            if jr.accepted is False or jr.declined is False:
+                jr.declined = True
+                jr.save()
+            else:
+                return render(request,'dbtest/organization_accept_job.html',{'orgnanization':org,'error':'you have already accepted/declined the job'})
+            for user_org in org.group.user_set.all():
+                notify.send(request.user, recipient = user_org, verb = 'declined your job')
+            return render(request, 'dbtest/confirm.html',{'title':'Job decline','message':'You have declined the job: {0}'.format(job_id.name)})  
+    return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
 @permission_required_or_403('view_organization')
-def job_detail(request,job_id):
+def job_detail(request,organization_id,job_id):
     job = Job.objects.get(id=job_id)
-    return render(request, 'dbtest/job_detail.html',{'job': job})
+    organization = Organization.objects.get(id=organization_id)
+    jobrelation = Jobrelation.objects.get(job = job, organization = organization);
+
+    return render(request, 'dbtest/job_detail.html',{'jobrelation':jobrelation})
 
 #load the front page with 3 random organizations in the gallery
 def front_page(request):
