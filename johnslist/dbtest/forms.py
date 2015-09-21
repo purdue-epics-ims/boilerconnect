@@ -13,6 +13,9 @@ class JobCreateForm(ModelForm):
 		model = Job 
 		exclude = ('creator',)	
 	
-			
+class CommentCreateForm(ModelForm):
+    class Meta:
+        model = Comment
+        fields = ['text_comment']
 
 

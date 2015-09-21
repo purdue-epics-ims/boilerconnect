@@ -88,8 +88,14 @@ def organization_job_index(request,organization_id):
 def organization_accept_job(request,organization_id):
     org = Organization.objects.get(id=organization_id)
     if request.method == 'POST':
-        job_id = Job.objects.get(id=request.POST['job_id'])
-        jr = Jobrelation.objects.get(job=job_id,organization = org)
+        form = CommentCreateForm(request.POST)
+        job = Job.objects.get(id=request.POST['job_id'])
+        jr = Jobrelation.objects.get(job=job,organization = org)
+        if form.is_valid():
+            comment = form.save(commit = False)
+            comment.save()
+            form.save()
+            return render(request, 'dbtest/confirm.html',{'title':'Comment Sent','message':'You have sent the comment to {0}'.format(job.creator)})  
         if request.POST.get("action","") == "Accept Job":
             if jr.accepted is False or jr.declined is False:
                 jr.accepted = True

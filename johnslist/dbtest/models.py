@@ -109,3 +109,7 @@ class Jobrelation(models.Model):
     accepted = models.NullBooleanField(default = False)	
     declined = models.NullBooleanField(default = False)
     completed = models.NullBooleanField(default = False)
+
+class Comment(models.Model):
+    text_comment = models.TextField('text_comment',null = True)
+    jobrelation = models.ForeignKey(Jobrelation)
