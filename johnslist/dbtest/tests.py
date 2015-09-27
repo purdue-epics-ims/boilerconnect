@@ -15,8 +15,8 @@ from django.test import Client
         Interface:
             [x] - login
             [x] - user_create
-            [] - user_edit
-            [] - user_job_index
+            [x] - user_edit
+            [x] - user_job_index
             [] - user_membership
             [] - permissions on views (user,job, org)
 
@@ -107,11 +107,15 @@ class UserTestCase(TestCase):
         response = self.client.post(reverse('user_edit'))
         self.assertTrue(response.status_code == 200)
 
-        pass
     def test_user_job_index(self):
-        pass
+        login_as(self, self.u.username, 'asdf')
+        response = self.client.post('/user/1/user_job_index/')
+        self.assertTrue('/job/1' in response.content)
+        self.assertTrue('Jobs you have created' in response.content)
+    
     def test_user_membership(self):
         pass
+
     def test_view_permissions(self):
         pass
 

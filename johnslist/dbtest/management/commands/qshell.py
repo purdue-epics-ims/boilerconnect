@@ -2,7 +2,6 @@ from django.core.management.base import BaseCommand, CommandError
 from django.core.management import execute_from_command_line
 import code
 from django.utils import unittest
-from django.core.urlresolvers import reverse
 from django.test import Client
 
 class Command(BaseCommand):
@@ -10,6 +9,8 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         from guardian.shortcuts import assign_perm
         from dbtest.models import User,Organization,Job,Category,Group,Jobrelation
+        from django.core.urlresolvers import reverse
+
         u = User.objects.get(id=1)
         client = Client()
         o = Organization.objects.get(id=1)
