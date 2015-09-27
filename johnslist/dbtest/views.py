@@ -144,7 +144,7 @@ def user_job_index(request,user_id):
 
 @user_has_perm('view_user')
 def user_membership(request,user_id):
-    membership = User.objects.get(id = user_id).group
+    membership = User.objects.get(id = user_id).groups
     return render(request,'dbtest/user_membership.html',{'membership': membership})
 
 def user_create(request):

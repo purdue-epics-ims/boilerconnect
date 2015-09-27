@@ -28,7 +28,7 @@ from django.test import Client
             [x] - organization_requested (use setUpJobrelation)
         Interface:
             [x] - job_create (check job exists, check default perms, check requested orgs)
-            [] - job_detail (check r.context['job'] is the same that was created)
+            [x] - job_detail (check r.context['job'] is the same that was created)
 
     Organization:
         Backend:
