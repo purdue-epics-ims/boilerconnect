@@ -5,10 +5,11 @@
 <!----------- Search ---------->
 
 <!-- Search Box -->
+
 <div class = "jumbotron search-box">
   <h1>Welcome to BoilerConnect</h1>
   <br>
-  <p>Looking for help? Search here.</p>
+  <p>Getting Purdue to work for you</p>
   <div class = "search-form box">
     <form action="{% url 'search' %}" method="get">
       <input class="input-box" type="text" name="search" placeholder="Search for a group">
@@ -18,6 +19,14 @@
     </form>
   </div>
 </div>
+
+
+<script>
+  document.body.style.background = "url(http://www.rotblattamrany.com/wp-content/uploads/2014/05/cropped-John-Purdue.jpg) no-repeat 70% 15% fixed";
+
+</script>
+
+
 
 <!----------- Gallery ---------->
 
@@ -65,7 +74,7 @@
   </a>
 </div>
 <script>
-  $(document).ready(function(){ 
+  $(document).ready(function(){
   $('.carousel').carousel();
   });
 
