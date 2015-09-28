@@ -1,5 +1,5 @@
 from django.db import models
-from django.forms import ModelForm,PasswordInput
+from django.forms import ModelForm,PasswordInput,Textarea
 from django.contrib.auth.models import User
 from django.contrib.auth import forms
 from .models import*
@@ -17,5 +17,7 @@ class CommentCreateForm(ModelForm):
     class Meta:
         model = Comment
         fields = ['text_comment']
-
+        widgets = {
+            'content': Textarea(attrs={'cols':80,'rows': 20}),
+        }
 
