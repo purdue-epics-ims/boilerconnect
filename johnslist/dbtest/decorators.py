@@ -25,7 +25,7 @@ def user_has_perm(perm):
             #or, check if user has perm for User
             elif 'user_id' in kwargs.keys():
                 user = User.objects.get(id=kwargs['user_id'])
-                if user.has_perm(perm,job):
+                if request.user == user:
                     success = True
 
             if success == True:
