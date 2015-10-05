@@ -17,7 +17,6 @@ from django.test import Client
             [x] - user_create
             [x] - user_edit
             [x] - user_job_index
-            [] - user_membership
             [] - permissions on views (user,job, org)
 
     Job:
@@ -37,9 +36,9 @@ from django.test import Client
             [] - jobs_accepted
             [] - get_admins
         Interface:
-            [] - org_detail
+            [x] - org_detail
             [] - org accept/decline jobs
-            [] - organization create
+            [test should work but website does not work] - organization create
             [] - organization edit
 '''
 
@@ -112,9 +111,6 @@ class UserTestCase(TestCase):
         response = self.client.post('/user/1/user_job_index/')
         self.assertTrue('/job/1' in response.content)
         self.assertTrue('Jobs you have created' in response.content)
-    
-    def test_user_membership(self):
-        pass
 
     def test_view_permissions(self):
         pass
@@ -192,10 +188,31 @@ class OrganizationTestCase(TestCase):
     ### Interface Tests ###
 
     def test_org_detail(self):
-        pass
+        ##opening the organization's page
+        response = self.client.post('/organization/1')
+        self.assertEqual(self.o, response.context['organization'])
+
     def test_organization_accept_decline(self):
+        #when user is not logged in
+        response = self.client.post(reverse('organization_create'))
+        self.assertEqual(response.status_code, 302)
+       
+#       #after login
+        login_as(self, self.u.username, 'asdf')
+
         pass
     def test_organization_create(self):
-        pass
+        #when user is not logged in
+#response = self.client.post(reverse('organization_create'))
+#       self.assertEqual(response.status_code, 302)
+#       
+#       #after login
+#       login_as(self, self.u.username, 'asdf')
+#       category = self.cat.pk
+#       print PIC_POPULATE_DIR
+#       with open('') as icon:
+#           response = self.client.post(reverse('organization_create'), {'name': 'test org', 'description': 'testing org', 'categories': category,'icon': icon})
+#       print response.content
+
     def test_organization_edit(self):
         pass

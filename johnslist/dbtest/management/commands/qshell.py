@@ -18,3 +18,4 @@ class Command(BaseCommand):
         c = Category.objects.get(id=2)
         g = Group.objects.get(id=1)
         code.interact(local=locals())
+
