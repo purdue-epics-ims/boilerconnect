@@ -23,7 +23,7 @@ class Organization(models.Model):
     email = models.CharField('Organization email',max_length=64,null=True)
     group = models.OneToOneField(Group) # Organization - Group
     phone_number = models.CharField('Organization phone number',max_length=64,null=True)
-    icon = models.ImageField(upload_to='organization',null=True)
+    icon = models.ImageField(upload_to='organization',null=True, blank=True)
     
     def job_accepted(self):
         job_list_a = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True,jobrelation__completed = False)    
@@ -72,8 +72,8 @@ class Job(models.Model):
     def organization_declined(self):
         declined = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False,jobrelation__declined = True)
         return declined
-    def setUpJobrelation(self,organization,accept):
-        jr = Jobrelation.objects.create(job = self,organization = organization,accepted = accept);
+    def setUpJobrelation(self,organization):
+        jr = Jobrelation.objects.create(job = self,organization = organization);
         return jr
 
     name = models.CharField('Job Name',max_length=128)
