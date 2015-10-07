@@ -69,6 +69,9 @@ class UserTestCase(TestCase):
     #django calls this initialization function automatically
     def setUp(self):
         set_up(self)
+        self.u2 = User.objects.create(username='foobar_user1')
+        self.u2.set_password('asdf')
+        self.u2.save()
 
     ### Interface Tests ###
 
@@ -113,7 +116,14 @@ class UserTestCase(TestCase):
     def test_user_membership(self):
         pass
     def test_view_permissions(self):
-        pass
+        r = login_as(self,self.u.username,'asdf')
+        #verify user can view their own detail page
+        response = self.client.get(reverse('user_detail',kwargs={'user_id':format(self.u.id)}))
+        self.assertFalse('error' in r.context)
+        self.assertTrue(response.status_code == 200)
+        #verify user cannot access other users detail page
+        response = self.client.get(reverse('user_detail',kwargs={'user_id':format(self.u2.id)}))
+        self.assertTrue('error' in r.context)
 
 class JobTestCase(TestCase):
     #django calls this initialization function automatically
