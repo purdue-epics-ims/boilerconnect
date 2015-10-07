@@ -18,7 +18,7 @@
 			<table class="table table-hover table-striped ">
 				{% for job in organization.job_requested %}
 					<tr>
-						<td><a href="{% url 'job_detail' job.id %}">{{ job.name }}</a>
+						<td><a href="{% url 'job_detail' job.id organization.id %}">{{ job.name }}</a>
 							<form method=POST name="jobaccept" action="{% url 'organization_accept_job' organization.id %}">
 							{% csrf_token %}
 							<input type="hidden" name="job_id" value="{{ job.id }}">
