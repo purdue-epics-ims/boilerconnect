@@ -109,3 +109,24 @@ class Jobrelation(models.Model):
     accepted = models.NullBooleanField(default = False)	
     declined = models.NullBooleanField(default = False)
     completed = models.NullBooleanField(default = False)
+
+    class Meta:
+        permissions = (
+            ( 'view_jobrelation','Can view Jobrelation' ),
+            ( 'edit_jobrelation','Can edit Jobrelation'),
+            )
+
+#add default job permissions
+@receiver(post_save, sender=Jobrelation)
+def add_perms_job(sender,**kwargs):
+    #check if this post_save signal was generated from a Model create
+    if 'created' in kwargs and kwargs['created']:
+        jobrelation=kwargs['instance']
+        job = jobrelation.job
+
+        #allow creator to view and edit job
+        assign_perm('view_jobrelation',job.creator,jobrelation)
+        assign_perm('edit_jobrelation',job.creator,jobrelation)
+        #allow requested orgs to view job
+        for org in job.organization_requested():
+            assign_perm('view_jobrelation',org.group,jobrelation)
