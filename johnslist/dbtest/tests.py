@@ -164,6 +164,7 @@ class JobTestCase(TestCase):
 
     ### Interface Tests ###
 
+    #verify job_create view
     def test_job_create(self):
         #Login
         login_as(self,self.u.username,'asdf')
@@ -178,10 +179,12 @@ class JobTestCase(TestCase):
         #check if job exists
         self.assertTrue(Job.objects.filter(name='interfacejob').first())
 
+    #verify job_detail view
     def test_job_detail(self):
         login_as(self,self.u.username,'asdf')
-        r = self.client.get(reverse('job_detail',kwargs={'job_id':self.j2.id}))
-        self.assertEqual(self.j2,r.context['job'])
+        jr = self.j2.setUpJobrelation(self.o,False)
+        r = self.client.get(reverse('job_detail',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
+        self.assertEqual(jr,r.context['jobrelation'])
 
 
 class OrganizationTestCase(TestCase):
