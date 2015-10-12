@@ -116,13 +116,16 @@ class UserTestCase(TestCase):
     def test_user_membership(self):
         pass
     def test_view_permissions(self):
-        r = login_as(self,self.u.username,'asdf')
+        #verify guests cannot view user pages
+        r = self.client.get(reverse('user_detail',kwargs={'user_id':format(self.u.id)}))
+        self.assertTrue('error' in r.context)
+        login_as(self,self.u.username,'asdf')
         #verify user can view their own detail page
-        response = self.client.get(reverse('user_detail',kwargs={'user_id':format(self.u.id)}))
+        r = self.client.get(reverse('user_detail',kwargs={'user_id':format(self.u.id)}))
         self.assertFalse('error' in r.context)
-        self.assertTrue(response.status_code == 200)
+        self.assertTrue(r.status_code == 200)
         #verify user cannot access other users detail page
-        response = self.client.get(reverse('user_detail',kwargs={'user_id':format(self.u2.id)}))
+        r = self.client.get(reverse('user_detail',kwargs={'user_id':format(self.u2.id)}))
         self.assertTrue('error' in r.context)
 
 class JobTestCase(TestCase):

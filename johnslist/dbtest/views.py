@@ -28,6 +28,8 @@ def login(request):
         return render(request,'dbtest/login.html')
 
 #get detailed user information - email, phone number, Orgs they are part of, etc.
+# users don't have any permissions right now, so just check that request.user == user
+@user_has_perm('foobar')
 def user_detail(request,user_id):
     user = get_object_or_404(User,id=user_id)
     return render(request, 'dbtest/user_detail.html',{'user_detail': user})
