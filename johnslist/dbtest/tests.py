@@ -64,7 +64,6 @@ def set_up(self):
         self.j = Job.objects.create(name='foobar_job',description="test description",duedate='2015-01-01',creator=self.u)
 
 
-
 class UserTestCase(TestCase):
     #django calls this initialization function automatically
     def setUp(self):
@@ -98,7 +97,6 @@ class UserTestCase(TestCase):
         #successful user creation
         response = self.client.post(reverse('user_create'), {'username': 'user', 'password1':'zxcv', 'password2':'zxcv'})
         self.assertTrue('Thank you for creating an account' in response.content)
-        
         #unsuccessful user creation
         response = self.client.post(reverse('user_create'), {'username': 'user1', 'password1':'zxcv', 'password2':'zxcvhg'})
         self.assertFalse('Thank you for creating an account' in response.content)
@@ -109,8 +107,8 @@ class UserTestCase(TestCase):
         login_as(self, self.u.username, 'asdf')
         response = self.client.post(reverse('user_edit'))
         self.assertTrue(response.status_code == 200)
+        #change the users username, then try to log in again
 
-        pass
     def test_user_job_index(self):
         pass
     def test_user_membership(self):
