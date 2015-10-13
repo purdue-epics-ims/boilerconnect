@@ -118,7 +118,7 @@ class Jobrelation(models.Model):
 
 #add default job permissions
 @receiver(post_save, sender=Jobrelation)
-def add_perms_job(sender,**kwargs):
+def add_perms_jobrelation(sender,**kwargs):
     #check if this post_save signal was generated from a Model create
     if 'created' in kwargs and kwargs['created']:
         jobrelation=kwargs['instance']
