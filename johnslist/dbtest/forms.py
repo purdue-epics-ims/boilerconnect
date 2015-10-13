@@ -3,16 +3,23 @@ from django.forms import ModelForm,PasswordInput
 from django.contrib.auth.models import User
 from django.contrib.auth import forms
 from .models import*
-class OrganizationCreateForm(ModelForm): 
-	class Meta: 
-		model = Organization 
-		fields = ['name','description','categories','icon'] 
-							 
-class JobCreateForm(ModelForm): 
-	class Meta: 
-		model = Job 
-		exclude = ('creator',)	
-	
-			
 
+
+class OrganizationCreateForm(ModelForm):
+	def __init__(self, *args, **kwargs):
+			super(OrganizationCreateForm, self).__init__(*args, **kwargs)
+			self.fields['name'].widget.attrs.update({'type': 'text', 'class' : 'form-control', 'placeholder' : 'What\'s the name of the organization?', 'autofocus' : 'true'})
+			self.fields['description'].widget.attrs.update({'type': 'text','class' : 'form-control'})
+			self.fields['categories'].widget.attrs.update({'class' : 'form-control'})
+			self.fields['icon'].widget.attrs.update({'class' : 'form-control'})
+
+
+	class Meta:
+		model = Organization
+		fields = ['name','description','categories','icon']
+
+class JobCreateForm(ModelForm):
+	class Meta:
+		model = Job
+		exclude = ('creator',)
 

@@ -46,7 +46,7 @@ def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
     jobs = organization.job_requested()
     admins = organization.get_admins()
-
+    
     return render(request, 'dbtest/organization_detail.html',
                 {'organization': organization,
                  'jobs':jobs,
@@ -66,8 +66,8 @@ def organization_job_index(request,organization_id):
 def organization_accept_job(request,organization_id):
     org = Organization.objects.get(id=organization_id)
     if request.method == 'POST':
-        job_id = Job.objects.get(id=request.POST['job_id'])
-        jr = Jobrelation.objects.get(job=job_id,organization = org)
+        job = Job.objects.get(id=request.POST['job_id'])
+        jr = Jobrelation.objects.get(job=job,organization = org)
         if request.POST.get("action","") == "Accept Job":
             if jr.accepted is False or jr.declined is False:
                 jr.accepted = True
@@ -76,7 +76,7 @@ def organization_accept_job(request,organization_id):
                 return render(request,'dbtest/organization_accept_job.html',{'orgnanization':org,'error':'you have already accepted/declined the job'})
             for user_org in org.group.user_set.all():
                 notify.send(request.user, recipient = user_org, verb = 'accepted your job')
-            return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job_id.name)})  
+            return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job.name)})  
         if request.POST.get("action","") == "Decline Job":
             if jr.accepted is False or jr.declined is False:
                 jr.declined = True
@@ -85,7 +85,7 @@ def organization_accept_job(request,organization_id):
                 return render(request,'dbtest/organization_accept_job.html',{'orgnanization':org,'error':'you have already accepted/declined the job'})
             for user_org in org.group.user_set.all():
                 notify.send(request.user, recipient = user_org, verb = 'declined your job')
-            return render(request, 'dbtest/confirm.html',{'title':'Job decline','message':'You have declined the job: {0}'.format(job_id.name)})  
+            return render(request, 'dbtest/confirm.html',{'title':'Job decline','message':'You have declined the job: {0}'.format(job.name)})  
     return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
 #get detailed info about a job
