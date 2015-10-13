@@ -58,8 +58,9 @@ def add_perms_organization(sender,**kwargs):
     if 'created' in kwargs and kwargs['created']:
         organization=kwargs['instance']
 
-        # allow organization to view itself by default
+        # allow organization to view and edit itself by default
         assign_perm('view_organization',organization.group,organization)
+        assign_perm('edit_organization',organization.group,organization)
 
 class Job(models.Model):
     def __unicode__(self):
