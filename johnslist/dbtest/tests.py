@@ -213,9 +213,14 @@ class OrganizationTestCase(TestCase):
         response = self.client.post(reverse('organization_create'))
         self.assertEqual(response.status_code, 302)
        
-#       #after login
-#        login_as(self, self.u.username, 'asdf')
-
+        #after login
+        login_as(self, self.u.username, 'asdf')
+        self.o.group.user_set.add(self.u)
+        j1 = Job.objects.create(name='foobar_job1',description="test description",duedate='2015-01-01',creator=self.u)
+        j2 = Job.objects.create(name='foobar_job2',description="test description",duedate='2015-01-01',creator=self.u)
+        j1.setUpJobrelation(self.o)
+        j2.setUpJobrelation(self.o)
+        
     def test_organization_create(self):
         #when user is not logged in
 #response = self.client.post(reverse('organization_create'))
