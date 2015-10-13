@@ -25,21 +25,23 @@ class Organization(models.Model):
     phone_number = models.CharField('Organization phone number',max_length=64,null=True)
     icon = models.ImageField(upload_to='organization',null=True)
     
+    #get list of jobs accepted by Org
     def job_accepted(self):
-        job_list_a = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True,jobrelation__completed = False)    
-        return job_list_a
+        return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True,jobrelation__completed = False)    
 
+    #get list of jobs requested for Org
     def job_requested(self):
-        job_list_r = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = False)
-        return job_list_r
-    def job_declined(self):
-        job_list_d = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = True)
-        return job_list_d
-	
-    def job_completed(self):
-        job_list_d = Job.objects.filter(jobrelation__organization = self, jobrelation__completed = True)
-        return job_list_d
+        return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = False)
 
+    #get list of jobs declined by Org
+    def job_declined(self):
+        return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = True)
+	
+    #get list of jobs completed by Org
+    def job_completed(self):
+        return Job.objects.filter(jobrelation__organization = self, jobrelation__completed = True)
+
+    #get admins of this org
     def get_admins(self):
 		return [user for user in self.group.user_set.all() if user.has_perm('is_admin',self)]
 
