@@ -24,7 +24,8 @@ class Organization(models.Model):
     group = models.OneToOneField(Group) # Organization - Group
     phone_number = models.CharField('Organization phone number',max_length=64,null=True)
     icon = models.ImageField(upload_to='organization',null=True, blank=True)
-    
+    available = models.BooleanField(default=True)
+
     def job_accepted(self):
         job_list_a = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True,jobrelation__completed = False)    
         return job_list_a

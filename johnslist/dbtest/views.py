@@ -44,7 +44,7 @@ def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
     jobs = organization.job_requested()
     admins = organization.get_admins()
-
+    
     return render(request, 'dbtest/organization_detail.html',
                 {'organization': organization,
                  'jobs':jobs,
