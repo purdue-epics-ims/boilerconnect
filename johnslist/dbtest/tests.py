@@ -15,9 +15,8 @@ from django.test import Client
         Interface:
             [x] - login
             [x] - user_create
-            [] - user_edit
-            [] - user_job_index
-            [] - user_membership
+            [x] - user_edit
+            [x] - user_job_index
             [] - permissions on views (user,job, org)
 
     Job:
@@ -37,9 +36,9 @@ from django.test import Client
             [] - jobs_accepted
             [] - get_admins
         Interface:
-            [] - org_detail
+            [x] - org_detail
             [] - org accept/decline jobs
-            [] - organization create
+            [test should work but website does not work] - organization create
             [] - organization edit
 '''
 
@@ -110,9 +109,11 @@ class UserTestCase(TestCase):
         #change the users username, then try to log in again
 
     def test_user_job_index(self):
-        pass
-    def test_user_membership(self):
-        pass
+        login_as(self, self.u.username, 'asdf')
+        response = self.client.post('/user/1/user_job_index/')
+        self.assertTrue('/job/1' in response.content)
+        self.assertTrue('Jobs you have created' in response.content)
+
     def test_view_permissions(self):
         #verify guests cannot view user pages
         r = self.client.get(reverse('user_detail',kwargs={'user_id':format(self.u.id)}))
@@ -202,10 +203,31 @@ class OrganizationTestCase(TestCase):
     ### Interface Tests ###
 
     def test_org_detail(self):
-        pass
+        ##opening the organization's page
+        response = self.client.post('/organization/1')
+        self.assertEqual(self.o, response.context['organization'])
+
     def test_organization_accept_decline(self):
-        pass
+        #when user is not logged in
+        response = self.client.post(reverse('organization_create'))
+        self.assertEqual(response.status_code, 302)
+       
+#       #after login
+#        login_as(self, self.u.username, 'asdf')
+
     def test_organization_create(self):
+        #when user is not logged in
+#response = self.client.post(reverse('organization_create'))
+#       self.assertEqual(response.status_code, 302)
+#       
+#       #after login
+#       login_as(self, self.u.username, 'asdf')
+#       category = self.cat.pk
+#       print PIC_POPULATE_DIR
+#       with open('') as icon:
+#           response = self.client.post(reverse('organization_create'), {'name': 'test org', 'description': 'testing org', 'categories': category,'icon': icon})
+#       print response.content
         pass
+
     def test_organization_edit(self):
         pass
