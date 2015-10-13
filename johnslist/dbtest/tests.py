@@ -145,12 +145,12 @@ class JobTestCase(TestCase):
 
     #check job relation function
     def test_setUpJobrelation(self):
-        jr = self.j.setUpJobrelation(self.o,False)
+        jr = self.j.setUpJobrelation(self.o)
         self.assertIsInstance(jr,Jobrelation)
 
     #check organizations that have accepted this job
     def test_organization_accepted(self):
-        jr = self.j.setUpJobrelation(self.o,False)
+        jr = self.j.setUpJobrelation(self.o)
         self.assertEqual(0,len(self.j.organization_accepted()))
         jr.accepted = True
         jr.save()
@@ -160,7 +160,7 @@ class JobTestCase(TestCase):
     #check organizations where this job is requested
     def test_organization_requested(self):
         self.assertEqual(0,len(self.j.organization_requested()))
-        jr = self.j.setUpJobrelation(self.o,False)
+        jr = self.j.setUpJobrelation(self.o)
         self.assertEqual(1,len(self.j.organization_requested()))
         self.assertTrue(self.o in self.j.organization_requested())
 
@@ -184,7 +184,7 @@ class JobTestCase(TestCase):
     #verify job_detail view
     def test_job_detail(self):
         login_as(self,self.u.username,'asdf')
-        jr = self.j2.setUpJobrelation(self.o,False)
+        jr = self.j2.setUpJobrelation(self.o)
         r = self.client.get(reverse('job_detail',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
         self.assertEqual(jr,r.context['jobrelation'])
 
@@ -212,7 +212,7 @@ class OrganizationTestCase(TestCase):
     #test Organization.jobs_requested
     def test_jobs_requested(self):
         self.assertFalse(self.j in self.o.job_requested())
-        self.j.setUpJobrelation(self.o, False)
+        self.j.setUpJobrelation(self.o)
         self.assertTrue(self.j in self.o.job_requested())
 
     #test Organization.jobs_declined
@@ -239,9 +239,14 @@ class OrganizationTestCase(TestCase):
         response = self.client.post(reverse('organization_create'))
         self.assertEqual(response.status_code, 302)
        
-#       #after login
-#        login_as(self, self.u.username, 'asdf')
-
+        #after login
+        login_as(self, self.u.username, 'asdf')
+        self.o.group.user_set.add(self.u)
+        j1 = Job.objects.create(name='foobar_job1',description="test description",duedate='2015-01-01',creator=self.u)
+        j2 = Job.objects.create(name='foobar_job2',description="test description",duedate='2015-01-01',creator=self.u)
+        j1.setUpJobrelation(self.o)
+        j2.setUpJobrelation(self.o)
+        
     def test_organization_create(self):
         #when user is not logged in
 #response = self.client.post(reverse('organization_create'))
