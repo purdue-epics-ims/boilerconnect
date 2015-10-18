@@ -162,13 +162,16 @@ def organization_create(request):
 
         #check form validity
         if form.is_valid() :
-            organization = form.save(commit=False)
-            #set the admin to user1 organization.admin = User.objects.get(id=1)
-            assign_perm('is_admin',request.user, organization)
-            assign_perm('edit_organization',request.user, organization)
             #create new org 
+            organization = form.save(commit=False)
+            group = Group.objects.create(name = organization.name)
+            organization.group = group
+            group.user_set.add(request.user)
             organization.save()
             form.save_m2m()
+            #set the admin to user1 organization.admin = User.objects.get(id=1)
+            assign_perm('is_admin',request.user, organization)
+
             title = "Organization {0} created".format( organization.name )
             message = "Thank you for creating an organization."
             return render(request,'dbtest/confirm.html', {'title': title,'message':message})
