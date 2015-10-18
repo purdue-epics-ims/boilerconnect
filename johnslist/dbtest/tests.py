@@ -110,7 +110,7 @@ class UserTestCase(TestCase):
         self.assertTrue(response.status_code == 200)
         #change the users username, then try to log in again
 
-    # need to add a Job detail before this is enabled again
+    # need to add a Job detail (not Jobrelation) before this is enabled again
     # def test_user_job_index(self):
     #     login_as(self, self.u.username, 'asdf')
     #     response = self.client.post('/user/1/user_job_index/')
@@ -202,7 +202,7 @@ class OrganizationTestCase(TestCase):
 
     ### Backend Tests ###
 
-    #check default permissions
+    #check default permissions on newly created Organizations
     def test_permissions(self):
         self.assertTrue(self.u.has_perm('view_organization',self.o))
         self.assertTrue(self.u.has_perm('edit_organization',self.o))
@@ -217,7 +217,11 @@ class OrganizationTestCase(TestCase):
 
     #test Organization.jobs_declined
     def test_jobs_declined(self):
-        pass
+        self.assertFalse(self.j in self.o.job_requested())
+        jr = self.j.setUpJobrelation(self.o)
+        jr.declined = True
+        jr.save()
+        self.assertTrue(self.j in self.o.job_declined())
 
     #test Organization.jobs_completed
     def test_jobs_completed(self):
