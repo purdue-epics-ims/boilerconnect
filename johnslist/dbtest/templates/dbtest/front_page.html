@@ -5,19 +5,28 @@
 <!----------- Search ---------->
 
 <!-- Search Box -->
+
 <div class = "jumbotron search-box">
   <h1>Welcome to BoilerConnect</h1>
   <br>
-  <p>Looking for help? Search here.</p>
+  <p>Connecting the talents of community and campus</p>
   <div class = "search-form box">
     <form action="{% url 'search' %}" method="get">
-      <input class="input-box" type="text" name="search" placeholder="Search for a group">
+      <input class="input-box" type="text" name="search" placeholder="Find a group">
       <input class="search-btn" type="submit" value="Search">
       <input type="hidden" name="search_model" value="organization">
       <input type="hidden" name="search_by" value="name">
     </form>
   </div>
 </div>
+
+
+<script>
+  document.body.style.background = "url(http://www.rotblattamrany.com/wp-content/uploads/2014/05/cropped-John-Purdue.jpg) no-repeat 70% 15% fixed";
+
+</script>
+
+
 
 <!----------- Gallery ---------->
 
@@ -65,7 +74,7 @@
   </a>
 </div>
 <script>
-  $(document).ready(function(){ 
+  $(document).ready(function(){
   $('.carousel').carousel();
   });
 

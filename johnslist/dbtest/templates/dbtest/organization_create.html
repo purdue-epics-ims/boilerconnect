@@ -9,13 +9,53 @@
   {% if name %}<b>Welcome Organization:{{ name }}.  Please check your email for a confirmation message.</b>
 
   {% else %}
-  <form action="{% url 'organization_create' %}" method="post">
-    {% csrf_token %}
-    <table class = "input-table">
-      {{ form }}
-    </table>
-    <input class = "custom-btn" type="submit" value="Create Organization">
-  </form>
+  <div class="form-group">
+    <form action="{% url 'organization_create' %}" method="POST">
+      {% csrf_token %}
+      <div class="input-group">
+        <span class="input-group-addon" id="addon1">
+          <i class="fa fa-institution"></i>
+        </span>
+
+        <input type="text" class="form-control" autofocus="true" placeholder="Organization Name" name="name"></input>
+      </div>
+    </br>
+
+      <div class="input-group">
+        <span class="input-group-addon" id="addon1">
+          <i class="fa fa-coffee"></i>
+        </span>
+        <textarea class="form-control" placeholder="What is your organization all about?" name="description"></textarea>
+      </div>
+    </br>
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-check-circle-o"></i>
+        </span>
+           {{form.categories}}
+
+
+      </div>
+    </br>
+
+      <div class="input-group">
+
+        <span class="input-group-addon">
+          <i class="fa fa-camera-retro"></i>
+        </span>
+
+        {{form.icon}}
+      </div>
+
+  </br>
+      <input class="btn btn-primary" type="submit" value="Create Organization">
+
+    </form>
+  </div>
+
+
+
+
   {% endif %}
 </div>
 {% endblock %}

@@ -5,6 +5,31 @@
 	background: #ffb7b7; /* Gecko Browsers */
 }
 
+
+.btn-file {
+	position: relative;
+	overflow: hidden;
+}
+.btn-file input[type=file] {
+	position: absolute;
+	top: 0;
+	right: 0;
+	min-width: 100%;
+	min-height: 100%;
+	font-size: 100px;
+	text-align: right;
+	filter: alpha(opacity=0);
+	opacity: 0;
+	background: red;
+	cursor: inherit;
+	display: block;
+}
+input[readonly] {
+	background-color: white !important;
+	cursor: text !important;
+}
+
+
 .btn-glow {
 box-shadow: 1px 1px 12px #720000;
 }
@@ -112,6 +137,8 @@ background:#e1d8d8;
 .search-box{
 	/* Hide any overflow on the gallery */
 	padding: 40px;
+	background: rgba(255, 255, 255, 0.5);
+
 
 }
 
