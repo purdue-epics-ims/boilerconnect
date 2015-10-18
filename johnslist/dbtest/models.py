@@ -75,7 +75,7 @@ class Job(models.Model):
     def organization_declined(self):
         declined = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False,jobrelation__declined = True)
         return declined
-    def setUpJobrelation(self,organization):
+    def request_organization(self,organization):
         jr = Jobrelation.objects.create(job = self,organization = organization);
         return jr
 

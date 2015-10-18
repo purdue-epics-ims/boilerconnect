@@ -75,7 +75,7 @@ def populate():
 
     for job in jobs:
         Job.objects.create(name=job, description = 'Description of the job', duedate = '2015-3-21', creator = User.objects.get(id = user_num))
-        Job.objects.get(id = user_num).setUpJobrelation(Organization.objects.get(id = org_num))
+        Job.objects.get(id = user_num).request_organization(Organization.objects.get(id = org_num))
         if acc == False:
             org_num += 1
             acc = True
