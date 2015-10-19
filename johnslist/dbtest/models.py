@@ -23,23 +23,25 @@ class Organization(models.Model):
     email = models.CharField('Organization email',max_length=64,null=True)
     group = models.OneToOneField(Group) # Organization - Group
     phone_number = models.CharField('Organization phone number',max_length=64,null=True)
-    icon = models.ImageField(upload_to='organization',null=True)
-    
-    def job_accepted(self):
-        job_list_a = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True,jobrelation__completed = False)    
-        return job_list_a
+    icon = models.ImageField(upload_to='organization',null=True, blank=True)
+    available = models.BooleanField(default=True)
 
-    def job_requested(self):
-        job_list_r = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = False)
-        return job_list_r
-    def job_declined(self):
-        job_list_d = Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = True)
-        return job_list_d
+    def jobs_accepted(self):
+        return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True,jobrelation__completed = False)    
+
+    #get list of jobs requested for Org
+    def jobs_requested(self):
+        return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = False)
+
+    #get list of jobs declined by Org
+    def jobs_declined(self):
+        return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = True)
 	
-    def job_completed(self):
-        job_list_d = Job.objects.filter(jobrelation__organization = self, jobrelation__completed = True)
-        return job_list_d
+    #get list of jobs completed by Org
+    def jobs_completed(self):
+        return Job.objects.filter(jobrelation__organization = self, jobrelation__completed = True)
 
+    #get admins of this org
     def get_admins(self):
 		return [user for user in self.group.user_set.all() if user.has_perm('is_admin',self)]
 
@@ -56,8 +58,9 @@ def add_perms_organization(sender,**kwargs):
     if 'created' in kwargs and kwargs['created']:
         organization=kwargs['instance']
 
-        # allow organization to view itself by default
+        # allow organization to view and edit itself by default
         assign_perm('view_organization',organization.group,organization)
+        assign_perm('edit_organization',organization.group,organization)
 
 class Job(models.Model):
     def __unicode__(self):
@@ -72,8 +75,8 @@ class Job(models.Model):
     def organization_declined(self):
         declined = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False,jobrelation__declined = True)
         return declined
-    def setUpJobrelation(self,organization,accept):
-        jr = Jobrelation.objects.create(job = self,organization = organization,accepted = accept);
+    def request_organization(self,organization):
+        jr = Jobrelation.objects.create(job = self,organization = organization);
         return jr
 
     name = models.CharField('Job Name',max_length=128)
@@ -113,3 +116,24 @@ class Jobrelation(models.Model):
 class Comment(models.Model):
     text_comment = models.TextField('text_comment')
     jobrelation = models.ForeignKey(Jobrelation)
+
+class Meta:
+        permissions = (
+            ( 'view_jobrelation','Can view Jobrelation' ),
+            ( 'edit_jobrelation','Can edit Jobrelation'),
+            )
+
+#add default job permissions
+@receiver(post_save, sender=Jobrelation)
+def add_perms_jobrelation(sender,**kwargs):
+    #check if this post_save signal was generated from a Model create
+    if 'created' in kwargs and kwargs['created']:
+        jobrelation=kwargs['instance']
+        job = jobrelation.job
+
+        #allow creator to view and edit job
+        assign_perm('view_jobrelation',job.creator,jobrelation)
+        assign_perm('edit_jobrelation',job.creator,jobrelation)
+        #allow requested orgs to view job
+        for org in job.organization_requested():
+            assign_perm('view_jobrelation',org.group,jobrelation)
