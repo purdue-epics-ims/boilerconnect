@@ -26,19 +26,19 @@ class Organization(models.Model):
     icon = models.ImageField(upload_to='organization',null=True, blank=True)
     available = models.BooleanField(default=True)
 
-    def job_accepted(self):
+    def jobs_accepted(self):
         return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True,jobrelation__completed = False)    
 
     #get list of jobs requested for Org
-    def job_requested(self):
+    def jobs_requested(self):
         return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = False)
 
     #get list of jobs declined by Org
-    def job_declined(self):
+    def jobs_declined(self):
         return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = True)
 	
     #get list of jobs completed by Org
-    def job_completed(self):
+    def jobs_completed(self):
         return Job.objects.filter(jobrelation__organization = self, jobrelation__completed = True)
 
     #get admins of this org

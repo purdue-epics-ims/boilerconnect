@@ -9,14 +9,14 @@
 
 		<h3><u>{{ organization.name }}</u></h3>
 		
-		{% if organization.job_requested %}
+		{% if organization.jobs_requested %}
 			<p>The following jobs have been requested to your organization:</p>
 		{% else %}
 			<p>There are currently no jobs requested to your organization</p>
 		{%endif%}
 		<div class ="contact-info box">
 			<table class="table table-hover table-striped ">
-				{% for job in organization.job_requested %}
+				{% for job in organization.jobs_requested %}
 					<tr>
 						<td><a href="{% url 'job_detail' job.id organization.id %}">{{ job.name }}</a>
 							<form method=POST name="jobaccept" action="{% url 'organization_accept_job' organization.id %}">

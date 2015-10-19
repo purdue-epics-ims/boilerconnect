@@ -23,8 +23,8 @@
     <span class="glyphicon glyphicon-time"></span>
     Pending Requests
 
-    {%if organization.organization_requested%}
-    <span class="badge badge-primary">{{organization.organization_requestedd.all|length}}</span>
+    {%if organization.organization_requested%}<!--what is this syntax-->
+    <span class="badge badge-primary">{{organization.organization_requested.all|length}}</span>
     {%endif%}
   </div>
   <div class="panel-body">
@@ -39,7 +39,7 @@
       </thead>
 
       <tbody>
-        {%for job in organization.job_requested%}
+        {%for job in organization.jobs_requested%}
         <tr>
           <td>
             {{job.name}}
@@ -82,7 +82,7 @@
 		 Pending Requests
 
 			{%if organization.organization_requested%}
-			<span class="badge badge-primary">{{organization.organization_requestedd.all|length}}</span>
+			<span class="badge badge-primary">{{organization.organization_requested.all|length}}</span>
 			{%endif%}
 		</div>
 		<div class="panel-body">
@@ -102,7 +102,7 @@
 
 							<tbody>
 
-							{%for job in organization.job_requested%}
+							{%for job in organization.jobs_requested%}
 								<tr>
 									<td>
 									{{job.name}}
@@ -156,8 +156,8 @@
 
 
 
-			{% if organization.job_requested%}
-				{% for job in organization.requested.all %}
+			{% if organization.jobs_requested%}
+				{% for job in organization.jobs_requested.all %}
 					<a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a>
 					<br>
 
@@ -181,7 +181,7 @@
 
 		<div class="panel-body">
 
-			{%if organization.job_accepted%}
+			{%if organization.jobs_accepted%}
 				<!--todo table
 				//todo show more?
 				//todo expansion?-->
@@ -202,8 +202,8 @@
 
 </table>
 
-{% if organization.job_requested%}
-{% for job in organization.requested.all %}
+{% if organization.jobs_requested%}
+{% for job in organization.jobs_requested.all %}<!--not sure about this syntax-->
 <a href='{% url 'job_detail' job.id %}'>{{ job.name }}</a>
 <br>
 
@@ -222,7 +222,7 @@
   </div>
 
   <div class="panel-body">
-    {%if organization.job_accepted%}
+    {%if organization.jobs_accepted%}
     <!--todo table
         //todo show more?
         //todo expansion?-->
@@ -237,7 +237,7 @@
       </thead>
 
       <tbody>
-        {%for job in organization.job_accepted%}
+        {%for job in organization.jobs_accepted%}
         <tr>
           <td>
             {{job.name}}
