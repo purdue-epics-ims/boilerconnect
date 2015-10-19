@@ -23,8 +23,8 @@
     <span class="glyphicon glyphicon-time"></span>
     Pending Requests
 
-    {%if organization.organization_requested%}<!--what is this syntax-->
-    <span class="badge badge-primary">{{organization.organization_requested.all|length}}</span>
+    {%if organization.jobs_requested%}<!--what is this syntax-->
+    <span class="badge badge-primary">{{organization.jobs_requested.all|length}}</span>
     {%endif%}
   </div>
   <div class="panel-body">
