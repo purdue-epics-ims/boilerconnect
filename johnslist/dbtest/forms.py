@@ -16,8 +16,4 @@ class JobCreateForm(ModelForm):
 class CommentCreateForm(ModelForm):
     class Meta:
         model = Comment
-        fields = ['text_comment']
-        widgets = {
-            'content': Textarea(attrs={'cols':80,'rows': 20}),
-        }
-
+        exclude = ('jobrelation',)

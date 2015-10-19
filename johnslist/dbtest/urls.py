@@ -20,8 +20,8 @@ urlpatterns = patterns('',
 	url(r'^user/edit/?$', views.user_edit,name='user_edit'),
     url(r'^organization/edit/?$', views.organization_edit,name='organization_edit'),
 	url(r'^about/?$', views.about, name='about'),
-
     url(r'^notifications/?$', views.notifications, name='notifications'),
+    url(r'^organization/(?P<organization_id>[0-9]+)/jobs/(?P<job_id>[0-9]+)/comment/create/?$',views.job_comment_create,name='job_comment_create'),
  )
 
 

@@ -85,17 +85,26 @@ def organization_job_index(request,organization_id):
 
 
 @user_has_perm('is_admin')
+def job_comment_create(request,job_id,organization_id):
+    job = Job.objects.get(id=job_id)
+    org = Organization.objects.get(id=organization_id)
+    jr = Jobrelation.objects.get(job=job,organization=org)
+    if request.method == 'POST':
+        form = CommentCreateForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit = False)
+            comment.jobrelation = jr
+            comment.save()
+            return render(request, 'dbtest/organization_accept_job.html',{'organization':org,'error':'You have sent the comment to {0}'.format(job.creator)})  
+        else:
+            return render(request, 'dbtest/job_comment_create.html', {'form':form,'organization':org,'job':job})
+    return render(request, 'dbtest/job_comment_create.html',{'organization': org, 'job': job})
+@user_has_perm('is_admin')
 def organization_accept_job(request,organization_id):
     org = Organization.objects.get(id=organization_id)
     if request.method == 'POST':
-        form = CommentCreateForm(request.POST)
         job = Job.objects.get(id=request.POST['job_id'])
         jr = Jobrelation.objects.get(job=job,organization = org)
-        if form.is_valid():
-            comment = form.save(commit = False)
-            comment.save()
-            form.save()
-            return render(request, 'dbtest/confirm.html',{'title':'Comment Sent','message':'You have sent the comment to {0}'.format(job.creator)})  
         if request.POST.get("action","") == "Accept Job":
             if jr.accepted is False or jr.declined is False:
                 jr.accepted = True

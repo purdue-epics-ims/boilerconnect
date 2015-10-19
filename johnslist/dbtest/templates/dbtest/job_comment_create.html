@@ -1,0 +1,18 @@
+{% extends "dbtest/base.html" %}
+{% block content %}
+<div class="panel-heading">
+  Leave a Comment
+</div>
+<div class="jumbotron">
+    {% if text_comment %}<b>Your comment has been saved!</b>
+    {% else %}
+        <form method='POST' name="comment" action="{% url 'job_comment_create' organization.id job.id %}">
+            {% csrf_token %}
+            <table class = "input-table">
+                {{ form }}
+            </table>
+            <input class = "custom-btn" type="submit" name = "comment" value="comment">
+        </form>
+    {% endif %}
+</div>
+{% endblock %}

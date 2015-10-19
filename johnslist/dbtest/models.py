@@ -111,5 +111,5 @@ class Jobrelation(models.Model):
     completed = models.NullBooleanField(default = False)
 
 class Comment(models.Model):
-    text_comment = models.TextField('text_comment',null = True)
+    text_comment = models.TextField('text_comment')
     jobrelation = models.ForeignKey(Jobrelation)
