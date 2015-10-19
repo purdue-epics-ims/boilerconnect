@@ -44,7 +44,7 @@ def notifications(request):
 #get detailed organization information - email, phone #, users in Org, admins, etc.
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
-    jobs = organization.job_requested()
+    jobs = organization.jobs_requested()
     admins = organization.get_admins()
     
     return render(request, 'dbtest/organization_detail.html',
