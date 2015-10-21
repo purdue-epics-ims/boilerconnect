@@ -89,6 +89,7 @@ def organization_accept_job(request,organization_id):
     return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
 #get detailed info about a job
+@user_has_perm('view_jobrelation')
 def job_detail(request,job_id,organization_id):
     job = Job.objects.get(id=job_id)
     organization = Organization.objects.get(id=organization_id)
