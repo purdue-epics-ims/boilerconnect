@@ -90,7 +90,6 @@ def organization_accept_job(request,organization_id):
 
 #get detailed info about a job
 def job_detail(request,job_id,organization_id):
-    print organization_id
     job = Job.objects.get(id=job_id)
     organization = Organization.objects.get(id=organization_id)
     jobrelation = Jobrelation.objects.get(job = job, organization = organization);
