@@ -20,7 +20,6 @@ urlpatterns = patterns('',
 	url(r'^user/edit/?$', views.user_edit,name='user_edit'),
     url(r'^organization/edit/?$', views.organization_edit,name='organization_edit'),
 	url(r'^about/?$', views.about, name='about'),
-
     url(r'^notifications/?$', views.notifications, name='notifications'),
  )
 

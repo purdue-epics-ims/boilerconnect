@@ -113,7 +113,11 @@ class Jobrelation(models.Model):
     declined = models.NullBooleanField(default = False)
     completed = models.NullBooleanField(default = False)
 
-    class Meta:
+class Comment(models.Model):
+    text_comment = models.TextField('text_comment')
+    jobrelation = models.ForeignKey(Jobrelation)
+
+class Meta:
         permissions = (
             ( 'view_jobrelation','Can view Jobrelation' ),
             ( 'edit_jobrelation','Can edit Jobrelation'),

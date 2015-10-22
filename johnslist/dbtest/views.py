@@ -94,8 +94,18 @@ def job_detail(request,job_id,organization_id):
     job = Job.objects.get(id=job_id)
     organization = Organization.objects.get(id=organization_id)
     jobrelation = Jobrelation.objects.get(job = job, organization = organization);
+    comment_text = jobrelation.comment_set.all()
+    if request.method == 'POST':
+        form = CommentCreateForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit = False)
+            comment.jobrelation = jobrelation
+            comment.save()
+            return render(request, 'dbtest/confirm.html',{'title':'comment saved!','message':'You have saved the comment to {0}'.format(job.name)})  
+        else:
+            return render(request, 'dbtest/job_detail.html', {'jobrelation':jobrelation,'form':form,'error': 'The comment cannot be empty!','comment_text':comment_text})
 
-    return render(request, 'dbtest/job_detail.html',{'jobrelation':jobrelation})
+    return render(request, 'dbtest/job_detail.html',{'jobrelation':jobrelation,'comment_text':comment_text})
 
 #load the front page with 3 random organizations in the gallery
 def front_page(request):

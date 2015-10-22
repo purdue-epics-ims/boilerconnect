@@ -20,15 +20,14 @@
 					<tr>
 						<td><a href="{% url 'job_detail' job.id organization.id %}">{{ job.name }}</a>
 							<form method=POST name="jobaccept" action="{% url 'organization_accept_job' organization.id %}">
-							{% csrf_token %}
-							<input type="hidden" name="job_id" value="{{ job.id }}">
-							<input class = "custom-btn" type="submit" name = "action" value="Accept Job">
-							<input class = "custom-btn" type="submit" name = "action" value="Decline Job">
+                                {% csrf_token %}
+                                <input type="hidden" name="job_id" value="{{ job.id }}">
+                                <input class = "custom-btn" type="submit" name = "action" value="Accept Job">
+                                <input class = "custom-btn" type="submit" name = "action" value="Decline Job">
 							</form>
 						</td>
-					</tr>
+                    </tr>
 				{% endfor %}
-				</tr>
 			</table>
 		</div>
 </div>
