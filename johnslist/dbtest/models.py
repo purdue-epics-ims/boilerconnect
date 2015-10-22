@@ -113,15 +113,11 @@ class Jobrelation(models.Model):
     declined = models.NullBooleanField(default = False)
     completed = models.NullBooleanField(default = False)
 
-class Comment(models.Model):
-    text_comment = models.TextField('text_comment')
-    jobrelation = models.ForeignKey(Jobrelation)
-
-class Meta:
-        permissions = (
-            ( 'view_jobrelation','Can view Jobrelation' ),
-            ( 'edit_jobrelation','Can edit Jobrelation'),
-            )
+    class Meta:
+            permissions = (
+                ( 'view_jobrelation','Can view Jobrelation' ),
+                ( 'edit_jobrelation','Can edit Jobrelation'),
+                )
 
 #add default job permissions
 @receiver(post_save, sender=Jobrelation)
@@ -137,3 +133,7 @@ def add_perms_jobrelation(sender,**kwargs):
         #allow requested orgs to view job
         for org in job.organization_requested():
             assign_perm('view_jobrelation',org.group,jobrelation)
+
+class Comment(models.Model):
+    text_comment = models.TextField('text_comment')
+    jobrelation = models.ForeignKey(Jobrelation)
