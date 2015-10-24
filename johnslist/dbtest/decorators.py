@@ -45,6 +45,6 @@ def user_has_perm(perm):
             if success == True:
                 return func(request,*args,**kwargs)
             else:
-                return render(request,'dbtest/confirm.html',{'title':'Permission Denied','error':'You do not have access to this resource'})
+                return render(request,'dbtest/confirm.html',{'title':'Permission Denied','message':'You do not have access to this resource'})
         return wrapper
     return decorator

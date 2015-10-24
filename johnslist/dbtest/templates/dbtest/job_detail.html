@@ -7,8 +7,42 @@
 </div>
 
 <div class = "jumbotron" >
-  <p><u>Job Description</u> : {{jobrelation.job.description}}</p>
-  <p><u>Job Due Date</u> : {{jobrelation.job.duedate}}</p>
-  <p><u>Job Creator</u> : <a href="{% url 'user_detail' jobrelation.job.id %}">{{ jobrelation.job.creator }}</p>
+    <p><u>Job Description</u> : {{jobrelation.job.description}}</p>
+    <p><u>Job Due Date</u> : {{jobrelation.job.duedate}}</p>
+    <p><u>Job Creator</u> : <a href="{% url 'user_detail' jobrelation.job.id %}">{{ jobrelation.job.creator }}</a></p>
+    {% if comment_text %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Organization</th>
+                    <th>Comment</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comments in comment_text %}
+                <tr>
+                    <td>
+                        {{comments.jobrelation.organization}}
+                    </td>
+                    <td>
+                        {{comments.text_comment}}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+    {% endif %}
+
+    </table>
+        <div class = "contact-info box">
+        <form method=POST name="comment" action="{% url 'job_detail' jobrelation.organization.id jobrelation.job.id %}">
+            {% csrf_token %}
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="fa fa-bullhorn"></i>
+                </span>
+                <textarea class="form-control"  name="text_comment" placeholder="What do you think about this job?"></textarea>
+                </div>
+                <input class = "custom-btn" type="submit" name = "comment" value="Leave the comment">
+        </form>
 </div>
 {% endblock content %}

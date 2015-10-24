@@ -26,19 +26,19 @@ class Organization(models.Model):
     icon = models.ImageField(upload_to='organization',null=True, blank=True)
     available = models.BooleanField(default=True)
 
-    def job_accepted(self):
-        return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True,jobrelation__completed = False)    
+    def jobs_accepted(self):
+        return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True,jobrelation__completed = False)
 
     #get list of jobs requested for Org
-    def job_requested(self):
+    def jobs_requested(self):
         return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = False)
 
     #get list of jobs declined by Org
-    def job_declined(self):
+    def jobs_declined(self):
         return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = True)
-	
+
     #get list of jobs completed by Org
-    def job_completed(self):
+    def jobs_completed(self):
         return Job.objects.filter(jobrelation__organization = self, jobrelation__completed = True)
 
     #get admins of this org
@@ -75,7 +75,7 @@ class Job(models.Model):
     def organization_declined(self):
         declined = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False,jobrelation__declined = True)
         return declined
-    def setUpJobrelation(self,organization):
+    def request_organization(self,organization):
         jr = Jobrelation.objects.create(job = self,organization = organization);
         return jr
 
@@ -114,10 +114,10 @@ class Jobrelation(models.Model):
     completed = models.NullBooleanField(default = False)
 
     class Meta:
-        permissions = (
-            ( 'view_jobrelation','Can view Jobrelation' ),
-            ( 'edit_jobrelation','Can edit Jobrelation'),
-            )
+            permissions = (
+                ( 'view_jobrelation','Can view Jobrelation' ),
+                ( 'edit_jobrelation','Can edit Jobrelation'),
+                )
 
 #add default job permissions
 @receiver(post_save, sender=Jobrelation)
@@ -133,3 +133,7 @@ def add_perms_jobrelation(sender,**kwargs):
         #allow requested orgs to view job
         for org in job.organization_requested():
             assign_perm('view_jobrelation',org.group,jobrelation)
+
+class Comment(models.Model):
+    text_comment = models.TextField('text_comment')
+    jobrelation = models.ForeignKey(Jobrelation)

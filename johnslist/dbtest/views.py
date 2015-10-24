@@ -44,7 +44,7 @@ def notifications(request):
 #get detailed organization information - email, phone #, users in Org, admins, etc.
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
-    jobs = organization.job_requested()
+    jobs = organization.jobs_requested()
     admins = organization.get_admins()
     
     return render(request, 'dbtest/organization_detail.html',
@@ -91,12 +91,21 @@ def organization_accept_job(request,organization_id):
 #get detailed info about a job
 @user_has_perm('view_jobrelation')
 def job_detail(request,job_id,organization_id):
-    print organization_id
     job = Job.objects.get(id=job_id)
     organization = Organization.objects.get(id=organization_id)
     jobrelation = Jobrelation.objects.get(job = job, organization = organization);
+    comment_text = jobrelation.comment_set.all()
+    if request.method == 'POST':
+        form = CommentCreateForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit = False)
+            comment.jobrelation = jobrelation
+            comment.save()
+            return render(request, 'dbtest/confirm.html',{'title':'comment saved!','message':'You have saved the comment to {0}'.format(job.name)})  
+        else:
+            return render(request, 'dbtest/job_detail.html', {'jobrelation':jobrelation,'form':form,'error': 'The comment cannot be empty!','comment_text':comment_text})
 
-    return render(request, 'dbtest/job_detail.html',{'jobrelation':jobrelation})
+    return render(request, 'dbtest/job_detail.html',{'jobrelation':jobrelation,'comment_text':comment_text})
 
 #load the front page with 3 random organizations in the gallery
 def front_page(request):

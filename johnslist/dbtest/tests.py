@@ -22,9 +22,9 @@ from django.test import Client
     Job:
         Backend:
             [x] - default permissions (creator has perms, accepted/requested have perms)
-            [x] - setUpJobrelation (check requested/accepted relation exists)
-            [x] - organization_accepted (use setUpJobrelation)
-            [x] - organization_requested (use setUpJobrelation)
+            [x] - request_organization (check requested/accepted relation exists)
+            [x] - organization_accepted (use request_organization)
+            [x] - organization_requested (use request_organization)
         Interface:
             [x] - job_create (check job exists, check default perms, check requested orgs)
             [x] - job_detail (check r.context['job'] is the same that was created)
@@ -144,13 +144,13 @@ class JobTestCase(TestCase):
         self.assertTrue(self.u.has_perm('view_job',self.j))
 
     #check job relation function
-    def test_setUpJobrelation(self):
-        jr = self.j.setUpJobrelation(self.o)
+    def test_request_organization(self):
+        jr = self.j.request_organization(self.o)
         self.assertIsInstance(jr,Jobrelation)
 
     #check organizations that have accepted this job
     def test_organization_accepted(self):
-        jr = self.j.setUpJobrelation(self.o)
+        jr = self.j.request_organization(self.o)
         self.assertEqual(0,len(self.j.organization_accepted()))
         jr.accepted = True
         jr.save()
@@ -160,7 +160,7 @@ class JobTestCase(TestCase):
     #check organizations where this job is requested
     def test_organization_requested(self):
         self.assertEqual(0,len(self.j.organization_requested()))
-        jr = self.j.setUpJobrelation(self.o)
+        jr = self.j.request_organization(self.o)
         self.assertEqual(1,len(self.j.organization_requested()))
         self.assertTrue(self.o in self.j.organization_requested())
 
@@ -184,7 +184,7 @@ class JobTestCase(TestCase):
     #verify job_detail view
     def test_job_detail(self):
         login_as(self,self.u.username,'asdf')
-        jr = self.j2.setUpJobrelation(self.o)
+        jr = self.j2.request_organization(self.o)
         r = self.client.get(reverse('job_detail',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
         self.assertEqual(jr,r.context['jobrelation'])
 
@@ -211,25 +211,25 @@ class OrganizationTestCase(TestCase):
 
     #test Organization.jobs_requested
     def test_jobs_requested(self):
-        self.assertFalse(self.j in self.o.job_requested())
-        self.j.setUpJobrelation(self.o)
-        self.assertTrue(self.j in self.o.job_requested())
+        self.assertFalse(self.j in self.o.jobs_requested())
+        self.j.request_organization(self.o)
+        self.assertTrue(self.j in self.o.jobs_requested())
 
     #test Organization.jobs_declined
     def test_jobs_declined(self):
-        self.assertFalse(self.j in self.o.job_requested())
-        jr = self.j.setUpJobrelation(self.o)
+        self.assertFalse(self.j in self.o.jobs_requested())
+        jr = self.j.request_organization(self.o)
         jr.declined = True
         jr.save()
-        self.assertTrue(self.j in self.o.job_declined())
+        self.assertTrue(self.j in self.o.jobs_declined())
 
     #test Organization.jobs_completed
     def test_jobs_completed(self):
-        jr = self.j.setUpJobrelation(self.o)
-        self.assertTrue(self.j in self.o.job_requested())
+        jr = self.j.request_organization(self.o)
+        self.assertTrue(self.j in self.o.jobs_requested())
         jr.completed = True
         jr.save()
-        self.assertTrue(self.j in self.o.job_completed())
+        self.assertTrue(self.j in self.o.jobs_completed())
 
     #test Organization.get_admins
     def test_get_admins(self):
@@ -252,8 +252,8 @@ class OrganizationTestCase(TestCase):
         self.o.group.user_set.add(self.u)
         j1 = Job.objects.create(name='foobar_job1',description="test description",duedate='2015-01-01',creator=self.u)
         j2 = Job.objects.create(name='foobar_job2',description="test description",duedate='2015-01-01',creator=self.u)
-        j1.setUpJobrelation(self.o)
-        j2.setUpJobrelation(self.o)
+        j1.request_organization(self.o)
+        j2.request_organization(self.o)
         
     def test_organization_create(self):
         #when user is not logged in
