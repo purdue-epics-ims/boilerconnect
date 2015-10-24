@@ -257,17 +257,17 @@ class OrganizationTestCase(TestCase):
         
     def test_organization_create(self):
         #when user is not logged in
-#response = self.client.post(reverse('organization_create'))
-#       self.assertEqual(response.status_code, 302)
-#       
+        response = self.client.post(reverse('organization_create'))
+        self.assertEqual(response.status_code, 302)
+       
 #       #after login
-#       login_as(self, self.u.username, 'asdf')
-#       category = self.cat.pk
+        login_as(self, self.u.username, 'asdf')
+        category = self.cat.pk
 #       print PIC_POPULATE_DIR
 #       with open('') as icon:
-#           response = self.client.post(reverse('organization_create'), {'name': 'test org', 'description': 'testing org', 'categories': category,'icon': icon})
-#       print response.content
-        pass
+        response = self.client.post(reverse('organization_create'), {'name': 'test org', 'description': 'testing org', 'categories': category})
+        self.assertTrue("Thank you for creating an organization" in response.content)
+        self.assertEqual("test org", Organization.objects.get(name="test org").name)
 
     def test_organization_edit(self):
         pass
