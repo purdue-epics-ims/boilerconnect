@@ -225,7 +225,11 @@ class OrganizationTestCase(TestCase):
 
     #test Organization.jobs_completed
     def test_jobs_completed(self):
-        pass
+        jr = self.j.setUpJobrelation(self.o)
+        self.assertTrue(self.j in self.o.job_requested())
+        jr.completed = True
+        jr.save()
+        self.assertTrue(self.j in self.o.job_completed())
 
     #test Organization.get_admins
     def test_get_admins(self):
