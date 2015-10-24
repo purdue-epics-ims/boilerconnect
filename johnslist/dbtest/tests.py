@@ -270,4 +270,7 @@ class OrganizationTestCase(TestCase):
         self.assertEqual("test org", Organization.objects.get(name="test org").name)
 
     def test_organization_edit(self):
-        pass
+        response = self.client.post(reverse('organization_edit'))
+        self.assertEqual(response.status_code, 302)
+
+
