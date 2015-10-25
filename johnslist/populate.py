@@ -76,12 +76,13 @@ def populate():
     for job in jobs:
         Job.objects.create(name=job, description = 'Description of the job', duedate = '2015-3-21', creator = User.objects.get(id = user_num))
         Job.objects.get(id = user_num).request_organization(Organization.objects.get(id = org_num))
+        jr = JobRequest.objects.get(job=Job.objects.get(id=user_num),organization = Organization.objects.get(id=org_num))
         add_perms_job(job)
+        add_perms_jobrequest(jr)
         if acc == False:
             org_num += 1
             acc = True
         else:
-            jr = JobRequest.objects.get(job=Job.objects.get(id=user_num),organization = Organization.objects.get(id=org_num))
             jr.accepted = True
             jr.save()
             acc = False
