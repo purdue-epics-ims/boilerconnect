@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = "Imports models and guardian for testing. Also stores a user instance 'u', organization 'o', category 'c', and group 'g' for testing purposes."
     def handle(self, *args, **options):
         from guardian.shortcuts import assign_perm
-        from dbtest.models import User,Organization,Job,Category,Group,Jobrelation
+        from dbtest.models import User,Organization,Job,Category,Group,JobRequest
         from django.core.urlresolvers import reverse
 
         u = User.objects.get(id=1)

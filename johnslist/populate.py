@@ -80,7 +80,7 @@ def populate():
             org_num += 1
             acc = True
         else:
-            jr = Jobrelation.objects.get(job=Job.objects.get(id=user_num),organization = Organization.objects.get(id=org_num))
+            jr = JobRequest.objects.get(job=Job.objects.get(id=user_num),organization = Organization.objects.get(id=org_num))
             jr.accepted = True
             jr.save()
             acc = False

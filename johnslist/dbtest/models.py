@@ -27,19 +27,19 @@ class Organization(models.Model):
     available = models.BooleanField(default=True)
 
     def jobs_accepted(self):
-        return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = True,jobrelation__completed = False)
+        return Job.objects.filter(jobrequest__organization = self,jobrequest__accepted = True,jobrequest__completed = False)
 
     #get list of jobs requested for Org
     def jobs_requested(self):
-        return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = False)
+        return Job.objects.filter(jobrequest__organization = self,jobrequest__accepted = False,jobrequest__declined = False)
 
     #get list of jobs declined by Org
     def jobs_declined(self):
-        return Job.objects.filter(jobrelation__organization = self,jobrelation__accepted = False,jobrelation__declined = True)
+        return Job.objects.filter(jobrequest__organization = self,jobrequest__accepted = False,jobrequest__declined = True)
 
     #get list of jobs completed by Org
     def jobs_completed(self):
-        return Job.objects.filter(jobrelation__organization = self, jobrelation__completed = True)
+        return Job.objects.filter(jobrequest__organization = self, jobrequest__completed = True)
 
     #get admins of this org
     def get_admins(self):
@@ -65,25 +65,25 @@ def add_perms_organization(sender,**kwargs):
 class Job(models.Model):
     def __unicode__(self):
         return self.name
-    # function returns an array list of organization objects that have accepted = True in JobRelation
+    # function returns an array list of organization objects that have accepted = True in Jobrequest
     def organization_accepted(self):
-        accepted = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = True, jobrelation__completed = False)
+        accepted = Organization.objects.filter(jobrequest__job = self,jobrequest__accepted = True, jobrequest__completed = False)
         return accepted
     def organization_requested(self):
-        requested = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False,jobrelation__declined = False)
+        requested = Organization.objects.filter(jobrequest__job = self,jobrequest__accepted = False,jobrequest__declined = False)
         return requested
     def organization_declined(self):
-        declined = Organization.objects.filter(jobrelation__job = self,jobrelation__accepted = False,jobrelation__declined = True)
+        declined = Organization.objects.filter(jobrequest__job = self,jobrequest__accepted = False,jobrequest__declined = True)
         return declined
     def request_organization(self,organization):
-        jr = Jobrelation.objects.create(job = self,organization = organization);
+        jr = JobRequest.objects.create(job = self,organization = organization);
         return jr
 
     name = models.CharField('Job Name',max_length=128)
     description = models.TextField('Job Description')
     duedate = models.DateTimeField('Date Due')
     creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
-    organization = models.ManyToManyField(Organization, through = 'Jobrelation')
+    organization = models.ManyToManyField(Organization, through = 'JobRequest')
     categories = models.ManyToManyField(Category)
 
     class Meta:
@@ -106,7 +106,7 @@ def add_perms_job(sender,**kwargs):
         for org in job.organization_requested():
             assign_perm('view_job',org.group,job)
 
-class Jobrelation(models.Model):
+class JobRequest(models.Model):
     job = models.ForeignKey(Job)
     organization = models.ForeignKey(Organization)
     accepted = models.NullBooleanField(default = False)	
@@ -115,25 +115,25 @@ class Jobrelation(models.Model):
 
     class Meta:
             permissions = (
-                ( 'view_jobrelation','Can view Jobrelation' ),
-                ( 'edit_jobrelation','Can edit Jobrelation'),
+                ( 'view_jobrequest','Can view JobRequest' ),
+                ( 'edit_jobrequest','Can edit JobRequest'),
                 )
 
 #add default job permissions
-@receiver(post_save, sender=Jobrelation)
-def add_perms_jobrelation(sender,**kwargs):
+@receiver(post_save, sender=JobRequest)
+def add_perms_jobrequest(sender,**kwargs):
     #check if this post_save signal was generated from a Model create
     if 'created' in kwargs and kwargs['created']:
-        jobrelation=kwargs['instance']
-        job = jobrelation.job
+        jobrequest=kwargs['instance']
+        job = jobrequest.job
 
         #allow creator to view and edit job
-        assign_perm('view_jobrelation',job.creator,jobrelation)
-        assign_perm('edit_jobrelation',job.creator,jobrelation)
+        assign_perm('view_jobrequest',job.creator,jobrequest)
+        assign_perm('edit_jobrequest',job.creator,jobrequest)
         #allow requested orgs to view job
         for org in job.organization_requested():
-            assign_perm('view_jobrelation',org.group,jobrelation)
+            assign_perm('view_jobrequest',org.group,jobrequest)
 
 class Comment(models.Model):
     text_comment = models.TextField('text_comment')
-    jobrelation = models.ForeignKey(Jobrelation)
+    jobrequest = models.ForeignKey(JobRequest)

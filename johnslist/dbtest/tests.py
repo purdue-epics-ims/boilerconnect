@@ -110,7 +110,7 @@ class UserTestCase(TestCase):
         self.assertTrue(response.status_code == 200)
         #change the users username, then try to log in again
 
-    # need to add a Job detail (not Jobrelation) before this is enabled again
+    # need to add a Job detail (not JobRequest) before this is enabled again
     # def test_user_job_index(self):
     #     login_as(self, self.u.username, 'asdf')
     #     response = self.client.post('/user/1/user_job_index/')
@@ -143,10 +143,10 @@ class JobTestCase(TestCase):
         self.assertTrue(self.u.has_perm('edit_job',self.j))
         self.assertTrue(self.u.has_perm('view_job',self.j))
 
-    #check job relation function
+    #check job request function
     def test_request_organization(self):
         jr = self.j.request_organization(self.o)
-        self.assertIsInstance(jr,Jobrelation)
+        self.assertIsInstance(jr,JobRequest)
 
     #check organizations that have accepted this job
     def test_organization_accepted(self):
@@ -186,7 +186,7 @@ class JobTestCase(TestCase):
         login_as(self,self.u.username,'asdf')
         jr = self.j2.request_organization(self.o)
         r = self.client.get(reverse('job_detail',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
-        self.assertEqual(jr,r.context['jobrelation'])
+        self.assertEqual(jr,r.context['jobrequest'])
 
 
 class OrganizationTestCase(TestCase):
