@@ -33,10 +33,10 @@ from django.test import Client
         Backend:
             [x] - default permissions (admin has perms, members have perms)
             [x] - jobs_accepted
-            [] - jobs_requested
-            [] - jobs_declined
-            [] - jobs_completed
-            [] - get_admins
+            [x] - jobs_requested
+            [x] - jobs_declined
+            [x] - jobs_completed
+            [x] - get_admins
         Interface:
             [x] - org_detail
             [] - org accept/decline jobs

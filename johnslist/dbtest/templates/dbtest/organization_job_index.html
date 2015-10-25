@@ -158,7 +158,7 @@
 
 			{% if organization.jobs_requested%}
 				{% for job in organization.jobs_requested.all %}
-					<a href='{% url 'job_detail' job.id organization.id %}'>{{ job.name }}</a>
+					<a href='{% url 'job_detail' organization.id job.id %}'>{{ job.name }}</a>
 					<br>
 
 				{% endfor %}
@@ -205,7 +205,7 @@
 
 {% if organization.jobs_requested%}
 {% for job in organization.jobs_requested.all %}<!--not sure about this syntax-->
-<a href='{% url 'job_detail' job.id organization.id %}'>{{ job.name }}</a>
+<a href='{% url 'job_detail' organization.id job.id %}'>{{ job.name }}</a>
 <br>
 
 {% endfor %}
