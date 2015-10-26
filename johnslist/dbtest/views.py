@@ -173,7 +173,6 @@ def organization_create(request):
         if form.is_valid() :
             #create new org 
             organization = form.save(commit=False)
-            organization.icon = request.FILES['icon']
             group = Group.objects.create(name = organization.name)
             organization.group = group
             group.user_set.add(request.user)
@@ -238,12 +237,12 @@ def organization_edit(request, organization_id):
         if form.is_valid() :
             #save organization to db and store info to 'organization'
             organization = form.save(commit = False)
-            title = "Organization {0} modified".format( organization.username )
-            message = "Your account has been modified."
+            title = "Organization {0} modified".format( organization.name )
+            message = "Organization {0} has been modified.".format(organization.name)
             organization.save()
             return render(request,'dbtest/confirm.html', {'title': title,'message':message})
         else:
-            return render(request, 'dbtest/organization_edit.html', {'form':form,'error':"There are incorrect fields"})
+            return render(request, 'dbtest/organization_edit.html', {'form':form,'error':"There are incorrect fields", 'organization_id': organization_id})
     #if the request was a GET
     else:
         organization = Organization.objects.get(id=organization_id)
