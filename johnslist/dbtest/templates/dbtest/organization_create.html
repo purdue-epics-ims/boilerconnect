@@ -10,7 +10,7 @@
 
   {% else %}
   <div class="form-group">
-    <form action="{% url 'organization_create' %}" method="POST">
+    <form action="{% url 'organization_create' %}" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
       <div class="input-group">
         <span class="input-group-addon" id="addon1">

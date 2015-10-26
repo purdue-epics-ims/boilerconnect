@@ -233,7 +233,10 @@ class OrganizationTestCase(TestCase):
 
     #test Organization.get_admins
     def test_get_admins(self):
-        pass
+        self.o.group.user_set.add(self.u)
+        assign_perm('is_admin',self.u,self.o)
+        self.assertTrue(self.u in self.o.get_admins())
+        
 
     ### Interface Tests ###
 

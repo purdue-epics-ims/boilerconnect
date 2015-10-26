@@ -173,6 +173,7 @@ def organization_create(request):
         if form.is_valid() :
             #create new org 
             organization = form.save(commit=False)
+            organization.icon = request.FILES['icon']
             group = Group.objects.create(name = organization.name)
             organization.group = group
             group.user_set.add(request.user)
