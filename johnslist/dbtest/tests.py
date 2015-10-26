@@ -243,17 +243,14 @@ class OrganizationTestCase(TestCase):
         self.assertEqual(self.o, response.context['organization'])
 
     def test_organization_accept_decline(self):
-        #when user is not logged in
-        response = self.client.post(reverse('organization_create'))
-        self.assertEqual(response.status_code, 302)
-       
-        #after login
+        self.o.group.user_set.add(self.u) 
         login_as(self, self.u.username, 'asdf')
-        self.o.group.user_set.add(self.u)
         j1 = Job.objects.create(name='foobar_job1',description="test description",duedate='2015-01-01',creator=self.u)
         j2 = Job.objects.create(name='foobar_job2',description="test description",duedate='2015-01-01',creator=self.u)
         j1.request_organization(self.o)
         j2.request_organization(self.o)
+        response = self.client.post('/organization/1/accept')
+        print response.content
         
     def test_organization_create(self):
         #when user is not logged in

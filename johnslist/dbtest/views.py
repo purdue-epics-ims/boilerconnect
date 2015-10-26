@@ -222,12 +222,16 @@ def user_edit(request):
 
 @login_required
 @user_has_perm('edit_organization')
-def organization_edit(request):
+def organization_edit(request, organization_id):
+    print organization_id
+    organization = Organization.objects.get(id=organization_id)
+    print organization
         #if this request was a POST and not a GET
     args = {}
     if request.method == 'POST':
-        form = OrganizationCreateForm(request.POST, instance=request.organization)
-        form.actual_organization = request.organization
+        organization = Organization.objects.get(id=organization_id)
+        form = OrganizationCreateForm(request.POST, instance=organization)
+        form.actual_organization = organization
 
         #check form validity
         if form.is_valid() :
@@ -241,7 +245,8 @@ def organization_edit(request):
             return render(request, 'dbtest/organization_edit.html', {'form':form,'error':"There are incorrect fields"})
     #if the request was a GET
     else:
-        form = OrganizationCreateForm()
+        organization = Organization.objects.get(id=organization_id)
+        form = OrganizationCreateForm(request.POST, instance=organization)
         args['form'] = form
         return render(request, 'dbtest/organization_edit.html', args)
 
