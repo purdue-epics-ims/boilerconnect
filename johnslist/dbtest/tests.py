@@ -21,10 +21,10 @@ from django.test import Client
 
     Job:
         Backend:
-            [x] - default permissions (creator has perms, accepted/requested have perms)
+            [x] - default permissions (creator has perms, accepted/pending have perms)
             [x] - request_organization (check requested/accepted relation exists)
             [x] - organization_accepted (use request_organization)
-            [x] - organization_requested (use request_organization)
+            [x] - organization_pending (use request_organization)
         Interface:
             [x] - job_create (check job exists, check default perms, check requested orgs)
             [x] - job_detail (check r.context['job'] is the same that was created)
@@ -33,10 +33,10 @@ from django.test import Client
         Backend:
             [x] - default permissions (admin has perms, members have perms)
             [x] - jobs_accepted
-            [] - jobs_requested
-            [] - jobs_declined
-            [] - jobs_completed
-            [] - get_admins
+            [x] - jobs_pending
+            [x] - jobs_declined
+            [x] - jobs_completed
+            [x] - get_admins
         Interface:
             [x] - org_detail
             [] - org accept/decline jobs
@@ -110,7 +110,7 @@ class UserTestCase(TestCase):
         self.assertTrue(response.status_code == 200)
         #change the users username, then try to log in again
 
-    # need to add a Job detail (not Jobrelation) before this is enabled again
+    # need to add a Job detail (not JobRequest) before this is enabled again
     # def test_user_job_index(self):
     #     login_as(self, self.u.username, 'asdf')
     #     response = self.client.post('/user/1/user_job_index/')
@@ -143,10 +143,10 @@ class JobTestCase(TestCase):
         self.assertTrue(self.u.has_perm('edit_job',self.j))
         self.assertTrue(self.u.has_perm('view_job',self.j))
 
-    #check job relation function
+    #check job request function
     def test_request_organization(self):
         jr = self.j.request_organization(self.o)
-        self.assertIsInstance(jr,Jobrelation)
+        self.assertIsInstance(jr,JobRequest)
 
     #check organizations that have accepted this job
     def test_organization_accepted(self):
@@ -157,12 +157,12 @@ class JobTestCase(TestCase):
         self.assertEqual(1,len(self.j.organization_accepted()))
         self.assertTrue(self.o in self.j.organization_accepted())
 
-    #check organizations where this job is requested
-    def test_organization_requested(self):
-        self.assertEqual(0,len(self.j.organization_requested()))
+    #check organizations where this job is pending
+    def test_organization_pending(self):
+        self.assertEqual(0,len(self.j.organization_pending()))
         jr = self.j.request_organization(self.o)
-        self.assertEqual(1,len(self.j.organization_requested()))
-        self.assertTrue(self.o in self.j.organization_requested())
+        self.assertEqual(1,len(self.j.organization_pending()))
+        self.assertTrue(self.o in self.j.organization_pending())
 
     ### Interface Tests ###
 
@@ -186,7 +186,7 @@ class JobTestCase(TestCase):
         login_as(self,self.u.username,'asdf')
         jr = self.j2.request_organization(self.o)
         r = self.client.get(reverse('job_detail',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
-        self.assertEqual(jr,r.context['jobrelation'])
+        self.assertEqual(jr,r.context['jobrequest'])
 
 
 class OrganizationTestCase(TestCase):
@@ -209,15 +209,15 @@ class OrganizationTestCase(TestCase):
         self.assertFalse(self.u2.has_perm('view_organization',self.o))
         self.assertFalse(self.u2.has_perm('edit_organization',self.o))
 
-    #test Organization.jobs_requested
-    def test_jobs_requested(self):
-        self.assertFalse(self.j in self.o.jobs_requested())
+    #test Organization.jobs_pending
+    def test_jobs_pending(self):
+        self.assertFalse(self.j in self.o.jobs_pending())
         self.j.request_organization(self.o)
-        self.assertTrue(self.j in self.o.jobs_requested())
+        self.assertTrue(self.j in self.o.jobs_pending())
 
     #test Organization.jobs_declined
     def test_jobs_declined(self):
-        self.assertFalse(self.j in self.o.jobs_requested())
+        self.assertFalse(self.j in self.o.jobs_pending())
         jr = self.j.request_organization(self.o)
         jr.declined = True
         jr.save()
@@ -226,7 +226,7 @@ class OrganizationTestCase(TestCase):
     #test Organization.jobs_completed
     def test_jobs_completed(self):
         jr = self.j.request_organization(self.o)
-        self.assertTrue(self.j in self.o.jobs_requested())
+        self.assertTrue(self.j in self.o.jobs_pending())
         jr.completed = True
         jr.save()
         self.assertTrue(self.j in self.o.jobs_completed())

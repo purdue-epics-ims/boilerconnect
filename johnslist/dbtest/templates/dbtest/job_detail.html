@@ -2,14 +2,14 @@
 {% block content %}
 <div class="panel-heading">
   <div class="">
-    Job Information : {{ jobrelation.job.name }}
+    Job Information : {{ jobrequest.job.name }}
   </div>
 </div>
 
 <div class = "jumbotron" >
-    <p><u>Job Description</u> : {{jobrelation.job.description}}</p>
-    <p><u>Job Due Date</u> : {{jobrelation.job.duedate}}</p>
-    <p><u>Job Creator</u> : <a href="{% url 'user_detail' jobrelation.job.id %}">{{ jobrelation.job.creator }}</a></p>
+    <p><u>Job Description</u> : {{jobrequest.job.description}}</p>
+    <p><u>Job Due Date</u> : {{jobrequest.job.duedate}}</p>
+    <p><u>Job Creator</u> : <a href="{% url 'user_detail' jobrequest.job.id %}">{{ jobrequest.job.creator }}</a></p>
     {% if comment_text %}
         <table class="table table-striped">
             <thead>
@@ -22,7 +22,7 @@
                 {% for comments in comment_text %}
                 <tr>
                     <td>
-                        {{comments.jobrelation.organization}}
+                        {{comments.jobrequest.organization}}
                     </td>
                     <td>
                         {{comments.text_comment}}
@@ -34,7 +34,7 @@
 
     </table>
         <div class = "contact-info box">
-        <form method=POST name="comment" action="{% url 'job_detail' jobrelation.organization.id jobrelation.job.id %}">
+        <form method=POST name="comment" action="{% url 'job_detail' jobrequest.organization.id jobrequest.job.id %}">
             {% csrf_token %}
             <div class="input-group">
                 <span class="input-group-addon">

@@ -25,5 +25,5 @@ class JobCreateForm(ModelForm):
 class CommentCreateForm(ModelForm):
     class Meta:
         model = Comment
-        exclude = ('jobrelation',)
+        exclude = ('jobrequest',)
 
