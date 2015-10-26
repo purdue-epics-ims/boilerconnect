@@ -247,8 +247,7 @@ def organization_edit(request, organization_id):
     else:
         organization = Organization.objects.get(id=organization_id)
         form = OrganizationCreateForm(request.POST, instance=organization)
-        args['form'] = form
-        return render(request, 'dbtest/organization_edit.html', args)
+        return render(request, 'dbtest/organization_edit.html', {'form':form,'organization_id' : organization_id})
 
 @login_required
 def job_create(request):
