@@ -29,8 +29,8 @@ class Organization(models.Model):
     def jobs_accepted(self):
         return Job.objects.filter(jobrequest__organization = self,jobrequest__accepted = True,jobrequest__completed = False)
 
-    #get list of jobs requested for Org
-    def jobs_requested(self):
+    #get list of jobs pending for Org
+    def jobs_pending(self):
         return Job.objects.filter(jobrequest__organization = self,jobrequest__accepted = False,jobrequest__declined = False)
 
     #get list of jobs declined by Org
@@ -69,9 +69,9 @@ class Job(models.Model):
     def organization_accepted(self):
         accepted = Organization.objects.filter(jobrequest__job = self,jobrequest__accepted = True, jobrequest__completed = False)
         return accepted
-    def organization_requested(self):
-        requested = Organization.objects.filter(jobrequest__job = self,jobrequest__accepted = False,jobrequest__declined = False)
-        return requested
+    def organization_pending(self):
+        pending = Organization.objects.filter(jobrequest__job = self,jobrequest__accepted = False,jobrequest__declined = False)
+        return pending
     def organization_declined(self):
         declined = Organization.objects.filter(jobrequest__job = self,jobrequest__accepted = False,jobrequest__declined = True)
         return declined
@@ -103,7 +103,7 @@ def add_perms_job(sender,**kwargs):
         assign_perm('view_job',job.creator,job)
         assign_perm('edit_job',job.creator,job)
         #allow requested orgs to view job
-        for org in job.organization_requested():
+        for org in job.organization.all():
             assign_perm('view_job',org.group,job)
 
 class JobRequest(models.Model):
@@ -131,7 +131,7 @@ def add_perms_jobrequest(sender,**kwargs):
         assign_perm('view_jobrequest',job.creator,jobrequest)
         assign_perm('edit_jobrequest',job.creator,jobrequest)
         #allow requested orgs to view job
-        for org in job.organization_requested():
+        for org in job.organization_pending():
             assign_perm('view_jobrequest',org.group,jobrequest)
 
 class Comment(models.Model):

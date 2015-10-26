@@ -44,7 +44,7 @@ def notifications(request):
 #get detailed organization information - email, phone #, users in Org, admins, etc.
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
-    jobs = organization.jobs_requested()
+    jobs = organization.jobs_pending()
     admins = organization.get_admins()
     
     return render(request, 'dbtest/organization_detail.html',
@@ -54,7 +54,7 @@ def organization_detail(request,organization_id):
                  'members':organization.group.user_set.all(),
                  })
 
-#get a list of an Org's requested/accepted jobs
+#get a list of an Org's jobs
 @user_has_perm('view_organization')
 def organization_job_index(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
