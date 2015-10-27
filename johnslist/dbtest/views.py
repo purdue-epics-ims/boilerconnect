@@ -176,6 +176,7 @@ def organization_create(request):
             group = Group.objects.create(name = organization.name)
             organization.group = group
             group.user_set.add(request.user)
+            organization.icon = request.FILES['icon']
             organization.save()
             form.save_m2m()
             #set the admin to user1 organization.admin = User.objects.get(id=1)
