@@ -21,10 +21,10 @@ from django.test import Client
 
     Job:
         Backend:
-            [x] - default permissions (creator has perms, accepted/requested have perms)
+            [x] - default permissions (creator has perms, accepted/pending have perms)
             [x] - request_organization (check requested/accepted relation exists)
             [x] - organization_accepted (use request_organization)
-            [x] - organization_requested (use request_organization)
+            [x] - organization_pending (use request_organization)
         Interface:
             [x] - job_create (check job exists, check default perms, check requested orgs)
             [x] - job_detail (check r.context['job'] is the same that was created)
@@ -33,14 +33,14 @@ from django.test import Client
         Backend:
             [x] - default permissions (admin has perms, members have perms)
             [x] - jobs_accepted
-            [] - jobs_requested
-            [] - jobs_declined
-            [] - jobs_completed
-            [] - get_admins
+            [x] - jobs_pending
+            [x] - jobs_declined
+            [x] - jobs_completed
+            [x] - get_admins
         Interface:
             [x] - org_detail
             [] - org accept/decline jobs
-            [test should work but website does not work] - organization create
+            [x] - organization create
             [] - organization edit
 '''
 
@@ -110,7 +110,7 @@ class UserTestCase(TestCase):
         self.assertTrue(response.status_code == 200)
         #change the users username, then try to log in again
 
-    # need to add a Job detail (not Jobrelation) before this is enabled again
+    # need to add a Job detail (not JobRequest) before this is enabled again
     # def test_user_job_index(self):
     #     login_as(self, self.u.username, 'asdf')
     #     response = self.client.post('/user/1/user_job_index/')
@@ -143,10 +143,10 @@ class JobTestCase(TestCase):
         self.assertTrue(self.u.has_perm('edit_job',self.j))
         self.assertTrue(self.u.has_perm('view_job',self.j))
 
-    #check job relation function
+    #check job request function
     def test_request_organization(self):
         jr = self.j.request_organization(self.o)
-        self.assertIsInstance(jr,Jobrelation)
+        self.assertIsInstance(jr,JobRequest)
 
     #check organizations that have accepted this job
     def test_organization_accepted(self):
@@ -157,12 +157,12 @@ class JobTestCase(TestCase):
         self.assertEqual(1,len(self.j.organization_accepted()))
         self.assertTrue(self.o in self.j.organization_accepted())
 
-    #check organizations where this job is requested
-    def test_organization_requested(self):
-        self.assertEqual(0,len(self.j.organization_requested()))
+    #check organizations where this job is pending
+    def test_organization_pending(self):
+        self.assertEqual(0,len(self.j.organization_pending()))
         jr = self.j.request_organization(self.o)
-        self.assertEqual(1,len(self.j.organization_requested()))
-        self.assertTrue(self.o in self.j.organization_requested())
+        self.assertEqual(1,len(self.j.organization_pending()))
+        self.assertTrue(self.o in self.j.organization_pending())
 
     ### Interface Tests ###
 
@@ -186,7 +186,7 @@ class JobTestCase(TestCase):
         login_as(self,self.u.username,'asdf')
         jr = self.j2.request_organization(self.o)
         r = self.client.get(reverse('job_detail',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
-        self.assertEqual(jr,r.context['jobrelation'])
+        self.assertEqual(jr,r.context['jobrequest'])
 
 
 class OrganizationTestCase(TestCase):
@@ -209,27 +209,34 @@ class OrganizationTestCase(TestCase):
         self.assertFalse(self.u2.has_perm('view_organization',self.o))
         self.assertFalse(self.u2.has_perm('edit_organization',self.o))
 
-    #test Organization.jobs_requested
-    def test_jobs_requested(self):
-        self.assertFalse(self.j in self.o.job_requested())
+    #test Organization.jobs_pending
+    def test_jobs_pending(self):
+        self.assertFalse(self.j in self.o.jobs_pending())
         self.j.request_organization(self.o)
-        self.assertTrue(self.j in self.o.job_requested())
+        self.assertTrue(self.j in self.o.jobs_pending())
 
     #test Organization.jobs_declined
     def test_jobs_declined(self):
-        self.assertFalse(self.j in self.o.job_requested())
+        self.assertFalse(self.j in self.o.jobs_pending())
         jr = self.j.request_organization(self.o)
         jr.declined = True
         jr.save()
-        self.assertTrue(self.j in self.o.job_declined())
+        self.assertTrue(self.j in self.o.jobs_declined())
 
     #test Organization.jobs_completed
     def test_jobs_completed(self):
-        pass
+        jr = self.j.request_organization(self.o)
+        self.assertTrue(self.j in self.o.jobs_pending())
+        jr.completed = True
+        jr.save()
+        self.assertTrue(self.j in self.o.jobs_completed())
 
     #test Organization.get_admins
     def test_get_admins(self):
-        pass
+        self.o.group.user_set.add(self.u)
+        assign_perm('is_admin',self.u,self.o)
+        self.assertTrue(self.u in self.o.get_admins())
+        
 
     ### Interface Tests ###
 
@@ -237,33 +244,36 @@ class OrganizationTestCase(TestCase):
         ##opening the organization's page
         response = self.client.post('/organization/1')
         self.assertEqual(self.o, response.context['organization'])
+        self.assertTrue(response.status_code == 200)
 
     def test_organization_accept_decline(self):
+        self.o.group.user_set.add(self.u) 
+        login_as(self, self.u.username, 'asdf')
+        j1 = Job.objects.create(name='foobar_job1',description="test description",duedate='2015-01-01',creator=self.u)
+        j2 = Job.objects.create(name='foobar_job2',description="test description",duedate='2015-01-01',creator=self.u)
+        j1.request_organization(self.o)
+        j2.request_organization(self.o)
+        response = self.client.post('/organization/1/accept')
+        
+    def test_organization_create(self):
+        from johnslist.settings import PIC_POPULATE_DIR
         #when user is not logged in
         response = self.client.post(reverse('organization_create'))
         self.assertEqual(response.status_code, 302)
        
         #after login
         login_as(self, self.u.username, 'asdf')
-        self.o.group.user_set.add(self.u)
-        j1 = Job.objects.create(name='foobar_job1',description="test description",duedate='2015-01-01',creator=self.u)
-        j2 = Job.objects.create(name='foobar_job2',description="test description",duedate='2015-01-01',creator=self.u)
-        j1.request_organization(self.o)
-        j2.request_organization(self.o)
-        
-    def test_organization_create(self):
-        #when user is not logged in
-#response = self.client.post(reverse('organization_create'))
-#       self.assertEqual(response.status_code, 302)
-#       
-#       #after login
-#       login_as(self, self.u.username, 'asdf')
-#       category = self.cat.pk
-#       print PIC_POPULATE_DIR
-#       with open('') as icon:
-#           response = self.client.post(reverse('organization_create'), {'name': 'test org', 'description': 'testing org', 'categories': category,'icon': icon})
-#       print response.content
-        pass
+        category = self.cat.pk
+        with open(PIC_POPULATE_DIR+'plug.png') as icon:
+            response = self.client.post(reverse('organization_create'), {'name': 'test org', 'description': 'testing org', 'categories': category, 'icon':icon})
+        self.assertTrue("Thank you for creating an organization" in response.content)
+        self.assertTrue(Organization.objects.get(name = 'test org'))
+        org = Organization.objects.get(name = 'test org')
+        response = self.client.get('/organization/{0}'.format(org.id))
+        self.assertTrue(response.status_code == 200)
 
-    def test_organization_edit(self):
-        pass
+    # def test_organization_edit(self):
+    #     response = self.client.post(reverse('organization_edit'))
+    #     self.assertEqual(response.status_code, 302)
+
+

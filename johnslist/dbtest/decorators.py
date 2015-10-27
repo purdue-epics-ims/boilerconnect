@@ -27,11 +27,13 @@ def user_has_perm(perm):
                 if user.has_perm(perm,job):
                     success = True
 
+            #or, check if user has perm for JobRequest
+
             # elif 'job_id' in kwargs.keys():
-            if perm in [p.codename for p in get_perms_for_model(Jobrelation)]:
+            if perm in [p.codename for p in get_perms_for_model(JobRequest)]:
                 job = Job.objects.get(id=kwargs['job_id'])
-                jobrelation = Jobrelation.objects.get(job_id = kwargs['job_id'],organization_id = kwargs['organization_id'])
-                if user.has_perm(perm,jobrelation):
+                jobrequest = JobRequest.objects.get(job_id = kwargs['job_id'],organization_id = kwargs['organization_id'])
+                if user.has_perm(perm,jobrequest):
                     success = True
 
             #or, check if user has perm for User
@@ -45,6 +47,7 @@ def user_has_perm(perm):
             if success == True:
                 return func(request,*args,**kwargs)
             else:
-                return render(request,'dbtest/confirm.html',{'title':'Permission Denied','error':'You do not have access to this resource'})
+                # return render(request,'dbtest/confirm.html',{'title':'Permission Denied','message':'You do not have access to this resource'})
+                return render(request,'dbtest/confirm.html',{'error':'You do not have access to this resource'})
         return wrapper
     return decorator

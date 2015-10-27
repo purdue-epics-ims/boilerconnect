@@ -9,7 +9,7 @@
 {% if username %}<b>Welcome {{ username }}.  Please check your email for a confirmation message.</b>
 
 {% else %}
-<form action="{% url 'organization_edit' %}" method="post">
+<form action="{% url 'organization_edit' organization_id %}" method="post">
   {% csrf_token %}
   {{ form }}
   <input type="submit" value="Modify Organization">

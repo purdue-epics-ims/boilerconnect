@@ -44,7 +44,7 @@ def notifications(request):
 #get detailed organization information - email, phone #, users in Org, admins, etc.
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
-    jobs = organization.job_requested()
+    jobs = organization.jobs_pending()
     admins = organization.get_admins()
     
     return render(request, 'dbtest/organization_detail.html',
@@ -54,7 +54,7 @@ def organization_detail(request,organization_id):
                  'members':organization.group.user_set.all(),
                  })
 
-#get a list of an Org's requested/accepted jobs
+#get a list of an Org's jobs
 @user_has_perm('view_organization')
 def organization_job_index(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
@@ -67,7 +67,7 @@ def organization_accept_job(request,organization_id):
     org = Organization.objects.get(id=organization_id)
     if request.method == 'POST':
         job = Job.objects.get(id=request.POST['job_id'])
-        jr = Jobrelation.objects.get(job=job,organization = org)
+        jr = JobRequest.objects.get(job=job,organization = org)
         if request.POST.get("action","") == "Accept Job":
             if jr.accepted is False or jr.declined is False:
                 jr.accepted = True
@@ -89,14 +89,23 @@ def organization_accept_job(request,organization_id):
     return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
 #get detailed info about a job
-@user_has_perm('view_jobrelation')
+@user_has_perm('view_jobrequest')
 def job_detail(request,job_id,organization_id):
-    print organization_id
     job = Job.objects.get(id=job_id)
     organization = Organization.objects.get(id=organization_id)
-    jobrelation = Jobrelation.objects.get(job = job, organization = organization);
+    jobrequest = JobRequest.objects.get(job = job, organization = organization);
+    comment_text = jobrequest.comment_set.all()
+    if request.method == 'POST':
+        form = CommentCreateForm(request.POST)
+        if form.is_valid():
+            comment = form.save(commit = False)
+            comment.jobrequest = jobrequest
+            comment.save()
+            return render(request, 'dbtest/confirm.html',{'title':'comment saved!','message':'You have saved the comment to {0}'.format(job.name)})  
+        else:
+            return render(request, 'dbtest/job_detail.html', {'jobrequest':jobrequest,'form':form,'error': 'The comment cannot be empty!','comment_text':comment_text})
 
-    return render(request, 'dbtest/job_detail.html',{'jobrelation':jobrelation})
+    return render(request, 'dbtest/job_detail.html',{'jobrequest':jobrequest,'comment_text':comment_text})
 
 #load the front page with 3 random organizations in the gallery
 def front_page(request):
@@ -167,6 +176,7 @@ def organization_create(request):
             group = Group.objects.create(name = organization.name)
             organization.group = group
             group.user_set.add(request.user)
+            organization.icon = request.FILES['icon']
             organization.save()
             form.save_m2m()
             #set the admin to user1 organization.admin = User.objects.get(id=1)
@@ -213,28 +223,32 @@ def user_edit(request):
 
 @login_required
 @user_has_perm('edit_organization')
-def organization_edit(request):
+def organization_edit(request, organization_id):
+    print organization_id
+    organization = Organization.objects.get(id=organization_id)
+    print organization
         #if this request was a POST and not a GET
     args = {}
     if request.method == 'POST':
-        form = OrganizationCreateForm(request.POST, instance=request.organization)
-        form.actual_organization = request.organization
+        organization = Organization.objects.get(id=organization_id)
+        form = OrganizationCreateForm(request.POST, instance=organization)
+        form.actual_organization = organization
 
         #check form validity
         if form.is_valid() :
             #save organization to db and store info to 'organization'
             organization = form.save(commit = False)
-            title = "Organization {0} modified".format( organization.username )
-            message = "Your account has been modified."
+            title = "Organization {0} modified".format( organization.name )
+            message = "Organization {0} has been modified.".format(organization.name)
             organization.save()
             return render(request,'dbtest/confirm.html', {'title': title,'message':message})
         else:
-            return render(request, 'dbtest/organization_edit.html', {'form':form,'error':"There are incorrect fields"})
+            return render(request, 'dbtest/organization_edit.html', {'form':form,'error':"There are incorrect fields", 'organization_id': organization_id})
     #if the request was a GET
     else:
-        form = OrganizationCreateForm()
-        args['form'] = form
-        return render(request, 'dbtest/organization_edit.html', args)
+        organization = Organization.objects.get(id=organization_id)
+        form = OrganizationCreateForm(request.POST, instance=organization)
+        return render(request, 'dbtest/organization_edit.html', {'form':form,'organization_id' : organization_id})
 
 @login_required
 def job_create(request):
@@ -249,7 +263,7 @@ def job_create(request):
             #get the list of orgs to request from the form
             for org in request.POST.getlist('organization'):
                 organization = Organization.objects.get(id = org)
-                Jobrelation.objects.create(organization=organization, job = job)
+                JobRequest.objects.create(organization=organization, job = job)
                 for user in organization.group.user_set.all():
                     notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
             #get the list of categories from the form
