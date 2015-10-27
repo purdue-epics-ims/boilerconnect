@@ -64,20 +64,16 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-toggle="dropdown" haspopup="true" onmouseover="hoverhard()"><i class="fa fa-briefcase"></i>  Jobs<span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu" arialabeledby="user">
 
-                {%if user.admin.all%}
                 <li class="dropdown-header">New Requests</li>
-                {% for org in user.admin.all %}
+                {% for job in user.creator.all %}
                 <li>
-                  <a href="{%url 'organization_job_index' org.id%}">{{org.name}}
-                    {%if org.requested.all%}
-                    <span class="badge">{{org.requested.all|length}}</span>
-                    {%endif%}
+                  <a href="LINK TO JOB {{ job.id }} DASHBOARD">{{ job.name }}
+                    <!-- <span class="badge">{{ job.name }}</span> -->
                   </a>
                 </li>
 
                 <li class="divider"></li>
                 {% endfor %}
-                {%endif%}
 
                 <li><a href="{%url 'job_create'%}"><strong><i class="fa fa-wrench"></i> Create Job</strong></a></li>
 
