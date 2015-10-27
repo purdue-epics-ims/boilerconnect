@@ -93,7 +93,6 @@
                 <li>
 
                   {% get_obj_perms request.user for group.organization as "user_organization_perms" %}
-                  {{ user_organization_perms }}
                   {%if 'is_admin' in user_organization_perms %}
                     <span class="label label-default pull-right">Admin</span>
                   {%endif%}
