@@ -267,6 +267,7 @@ class OrganizationTestCase(TestCase):
             response = self.client.post(reverse('organization_create'), {'name': 'test org', 'description': 'testing org', 'categories': category, 'icon':icon})
         self.assertTrue("Thank you for creating an organization" in response.content)
         self.assertEqual("test org", Organization.objects.get(name="test org").name)
+        self.assertTrue(Organization.objects.get(name = 'test org'))
 
     # def test_organization_edit(self):
     #     response = self.client.post(reverse('organization_edit'))
