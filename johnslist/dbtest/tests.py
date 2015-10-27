@@ -40,7 +40,7 @@ from django.test import Client
         Interface:
             [x] - org_detail
             [] - org accept/decline jobs
-            [test should work but website does not work] - organization create
+            [x] - organization create
             [] - organization edit
 '''
 
@@ -244,6 +244,7 @@ class OrganizationTestCase(TestCase):
         ##opening the organization's page
         response = self.client.post('/organization/1')
         self.assertEqual(self.o, response.context['organization'])
+        self.assertTrue(response.status_code == 200)
 
     def test_organization_accept_decline(self):
         self.o.group.user_set.add(self.u) 
@@ -266,8 +267,10 @@ class OrganizationTestCase(TestCase):
         with open(PIC_POPULATE_DIR+'plug.png') as icon:
             response = self.client.post(reverse('organization_create'), {'name': 'test org', 'description': 'testing org', 'categories': category, 'icon':icon})
         self.assertTrue("Thank you for creating an organization" in response.content)
-        self.assertEqual("test org", Organization.objects.get(name="test org").name)
         self.assertTrue(Organization.objects.get(name = 'test org'))
+        org = Organization.objects.get(name = 'test org')
+        response = self.client.get('/organization/{0}'.format(org.id))
+        self.assertTrue(response.status_code == 200)
 
     # def test_organization_edit(self):
     #     response = self.client.post(reverse('organization_edit'))
