@@ -253,8 +253,11 @@ class OrganizationTestCase(TestCase):
         j1.request_organization(self.o)
         j2.request_organization(self.o)
         response = self.client.post('/organization/1/accept')
-        print response.content
-        
+        self.assertTrue("You do not have access" in response.content)
+        assign_perm('is_admin', self.u, self.o)
+        response = self.client.post('/organization/1/accept')
+        print response.content 
+
     def test_organization_create(self):
         #when user is not logged in
         response = self.client.post(reverse('organization_create'))
@@ -263,14 +266,14 @@ class OrganizationTestCase(TestCase):
 #       #after login
         login_as(self, self.u.username, 'asdf')
         category = self.cat.pk
-#       print PIC_POPULATE_DIR
-#       with open('') as icon:
-        response = self.client.post(reverse('organization_create'), {'name': 'test org', 'description': 'testing org', 'categories': category})
+        with open(PIC_POPULATE_DIR+'epics.png', 'r') as icon:
+            response = self.client.post(reverse('organization_create'), {'name': 'test org', 'description': 'testing org', 'categories': category, 'icon': icon})
         self.assertTrue("Thank you for creating an organization" in response.content)
         self.assertEqual("test org", Organization.objects.get(name="test org").name)
 
     def test_organization_edit(self):
-        response = self.client.post(reverse('organization_edit'))
-        self.assertEqual(response.status_code, 302)
+        pass
+#response = self.client.post(reverse('organization/1/edit')
+#self.assertEqual(response.status_code, 302)
 
 
