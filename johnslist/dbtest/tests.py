@@ -254,9 +254,9 @@ class OrganizationTestCase(TestCase):
         j2.request_organization(self.o)
         response = self.client.post('/organization/1/accept')
         self.assertTrue("You do not have access" in response.content)
-        assign_perm('is_admin', self.u, self.o)
-        response = self.client.post('/organization/1/accept')
-        print response.content 
+#assign_perm('is_admin', self.u, self.o)
+#response = self.client.post('/organization/1/accept')
+#print response.content 
 
     def test_organization_create(self):
         #when user is not logged in
