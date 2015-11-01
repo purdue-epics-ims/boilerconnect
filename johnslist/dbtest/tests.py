@@ -211,25 +211,24 @@ class OrganizationTestCase(TestCase):
 
     #test Organization.jobs_pending
     def test_jobs_pending(self):
-        self.assertFalse(self.j in self.o.jobs_pending())
         self.j.request_organization(self.o)
-        self.assertTrue(self.j in self.o.jobs_pending())
+        jr = self.j.request_organization(self.o)
+        self.assertTrue(jr in self.o.jobrequests_pending())
 
     #test Organization.jobs_declined
     def test_jobs_declined(self):
-        self.assertFalse(self.j in self.o.jobs_pending())
         jr = self.j.request_organization(self.o)
         jr.declined = True
         jr.save()
-        self.assertTrue(self.j in self.o.jobs_declined())
+        self.assertTrue(jr in self.o.jobrequests_declined())
 
     #test Organization.jobs_completed
     def test_jobs_completed(self):
         jr = self.j.request_organization(self.o)
-        self.assertTrue(self.j in self.o.jobs_pending())
+        self.assertTrue(jr in self.o.jobrequests_pending())
         jr.completed = True
         jr.save()
-        self.assertTrue(self.j in self.o.jobs_completed())
+        self.assertTrue(jr in self.o.jobrequests_completed())
 
     #test Organization.get_admins
     def test_get_admins(self):
