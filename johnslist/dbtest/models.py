@@ -27,7 +27,7 @@ class Organization(models.Model):
     description = models.TextField('Organization Description')
     categories = models.ManyToManyField(Category)  # Category =-= Organization
     email = models.CharField('Organization email',max_length=64,null=True)
-    group = models.OneToOneField(Group) # Organization - Group
+    group = models.OneToOneField(Group, null=True) # Organization - Group
     phone_number = models.CharField('Organization phone number',max_length=64,null=True)
     icon = models.ImageField(upload_to='organization',null=True, blank=True)
     available = models.BooleanField(default=True)
@@ -63,7 +63,12 @@ class Organization(models.Model):
 def add_perms_organization(sender,**kwargs):
     #check if this post_save signal was generated from a Model create (vs a Model edit)
     if 'created' in kwargs and kwargs['created']:
+        #get the organization that was created
         organization=kwargs['instance']
+
+        #create a group with the same name
+        organization.group = Group.objects.create(name = organization.name)
+        organization.save()
 
         # allow organization to view and edit itself by default
         assign_perm('view_organization',organization.group,organization)

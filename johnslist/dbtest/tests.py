@@ -57,8 +57,7 @@ def set_up(self):
         self.u.set_password('asdf')
         self.u.save()
         #create group/org
-        self.g=Group.objects.create(name="foobar_group")
-        self.o = Organization.objects.create(name = self.g.name, group = self.g, description="test description",email="test@email.com",phone_number="123-456-7890")
+        self.o = Organization.objects.create(name = "foobar_group", description="test description",email="test@email.com",phone_number="123-456-7890")
         self.o.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
         #create category owned by foobar_user
         self.cat = Category.objects.create(name='foobar_category',description="test description")
