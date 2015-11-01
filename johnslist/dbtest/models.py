@@ -6,6 +6,12 @@ from django.db.models.signals import post_save
 from django.contrib.auth.models import User,Group
 from guardian.shortcuts import assign_perm
 
+class UserProfile(models.Model):
+    def __unicode__(self):
+        return self.name
+
+    name = models.TextField('Username',null=True)
+
 class Category(models.Model):
     def __unicode__(self):
         return self.name
@@ -26,6 +32,13 @@ class Organization(models.Model):
     icon = models.ImageField(upload_to='organization',null=True, blank=True)
     available = models.BooleanField(default=True)
 
+    class Meta:
+		permissions = (
+            ( 'view_organization','Can view Organization' ),
+            ( 'edit_organization','Can edit Organization' ),
+            ( 'is_admin', 'Is an Administrator')
+            )
+
     def jobs_accepted(self):
         return Job.objects.filter(jobrequest__organization = self,jobrequest__accepted = True,jobrequest__completed = False)
 
@@ -45,12 +58,6 @@ class Organization(models.Model):
     def get_admins(self):
 		return [user for user in self.group.user_set.all() if user.has_perm('is_admin',self)]
 
-    class Meta:
-		permissions = (
-            ( 'view_organization','Can view Organization' ),
-            ( 'edit_organization','Can edit Organization' ),
-            ( 'is_admin', 'Is an Administrator')
-            )
 
 @receiver(post_save, sender=Organization)
 def add_perms_organization(sender,**kwargs):
@@ -65,6 +72,20 @@ def add_perms_organization(sender,**kwargs):
 class Job(models.Model):
     def __unicode__(self):
         return self.name
+    name = models.CharField('Job Name',max_length=128)
+    description = models.TextField('Job Description')
+    duedate = models.DateTimeField('Date Due')
+    creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
+    organization = models.ManyToManyField(Organization, through = 'JobRequest')
+    categories = models.ManyToManyField(Category)
+
+    class Meta:
+        permissions = (
+            ( 'view_job','Can view Job' ),
+            ( 'edit_job','Can edit Job'),
+            ( 'is_creator', 'Is a creator of Job')
+            )
+
     # function returns an array list of organization objects that have accepted = True in Jobrequest
     def organization_accepted(self):
         accepted = Organization.objects.filter(jobrequest__job = self,jobrequest__accepted = True, jobrequest__completed = False)
@@ -79,19 +100,6 @@ class Job(models.Model):
         jr = JobRequest.objects.create(job = self,organization = organization);
         return jr
 
-    name = models.CharField('Job Name',max_length=128)
-    description = models.TextField('Job Description')
-    duedate = models.DateTimeField('Date Due')
-    creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
-    organization = models.ManyToManyField(Organization, through = 'JobRequest')
-    categories = models.ManyToManyField(Category)
-
-    class Meta:
-        permissions = (
-            ( 'view_job','Can view Job' ),
-            ( 'edit_job','Can edit Job'),
-            ( 'is_creator', 'Is a creator of Job')
-            )
 #add default job permissions
 @receiver(post_save, sender=Job)
 def add_perms_job(sender,**kwargs):
