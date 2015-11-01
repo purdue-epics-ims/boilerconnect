@@ -173,14 +173,13 @@ def organization_create(request):
         if form.is_valid() :
             #create new org 
             organization = form.save(commit=False)
+            group = Group.objects.create(name = organization.name)
+            organization.group = group
+            group.user_set.add(request.user)
             organization.icon = request.FILES['icon']
             organization.save()
-
-            #add organization creator to group
-            group = Group.objects.get(name = organization.name)
-            group.user_set.add(request.user)
-
-            #give organization creator admin perms
+            form.save_m2m()
+            #set the admin to user1 organization.admin = User.objects.get(id=1)
             assign_perm('is_admin',request.user, organization)
 
             title = "Organization {0} created".format( organization.name )
