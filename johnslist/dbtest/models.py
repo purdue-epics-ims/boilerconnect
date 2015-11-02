@@ -10,7 +10,10 @@ class UserProfile(models.Model):
     def __unicode__(self):
         return self.name
 
-    name = models.TextField('Username',null=True)
+    name = models.TextField('Username')
+    user = models.OneToOneField(User) # UserProfile - User
+    # purdueuser or communitypartner
+    type = models.TextField('User Type')
 
 class Category(models.Model):
     def __unicode__(self):

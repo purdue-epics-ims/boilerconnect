@@ -199,6 +199,7 @@ class OrganizationTestCase(TestCase):
         self.u2 = User.objects.create(username='nonmember_user')
         self.u2.set_password('asdf')
         self.u2.save()
+        UserProfile.objects.create(name = self.u2.username, user = self.u2, type = 'purdueuser')
 
     ### Backend Tests ###
 

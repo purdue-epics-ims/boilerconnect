@@ -7,10 +7,12 @@ def populate():
         os.remove("db.sqlite3")
     call_command('syncdb', interactive=False)
     
+    #create default users
     for num in range(0,20):
         newuser = User.objects.create(username='user{0}'.format(num))
         newuser.set_password('asdf')
         newuser.save()
+        UserProfile.objects.create(name = newuser.username, user = newuser, type = 'purdueuser')
 
     #add Organizations
     g=Group.objects.create(name="Purdue Linux Users Group")

@@ -153,6 +153,7 @@ def user_create(request):
             #save user to db and store info to 'user'
             user = form.save()
             form.save_m2m()
+            UserProfile.objects.create(name = user.username, user = user, type = 'purdueuser')
             title = "User {0} created".format( user.username )
             message = "Thank you for creating an account."
             return render(request,'dbtest/confirm.html', {'title': title,'message':message})
