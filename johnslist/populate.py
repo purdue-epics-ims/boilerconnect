@@ -51,13 +51,6 @@ def populate():
         epics.group.user_set.add(user)
         amet.group.user_set.add(user)
 
-    #set is_admin
-    u = User.objects.get(pk=1)
-    for org in Organization.objects.all():
-        assign_perm('is_admin',u,org)
-        assign_perm('edit_organization',u,org)
-
-
     #add ServiceServiceCategory's
     categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']
     for category in categories:
