@@ -110,13 +110,6 @@ class UserTestCase(TestCase):
         self.assertTrue(response.status_code == 200)
         #change the users username, then try to log in again
 
-    # need to add a Job detail (not JobRequest) before this is enabled again
-    # def test_user_job_index(self):
-    #     login_as(self, self.u.username, 'asdf')
-    #     response = self.client.post('/user/1/user_job_index/')
-    #     self.assertTrue('/job/1' in response.content)
-    #     self.assertTrue('Jobs you have created' in response.content)
-
     def test_view_permissions(self):
         #verify guests cannot view user pages
         r = self.client.get(reverse('user_detail',kwargs={'user_id':format(self.u.id)}))
@@ -253,10 +246,10 @@ class OrganizationTestCase(TestCase):
         j1.request_organization(self.o)
         j2.request_organization(self.o)
         assign_perm('is_admin', self.u, self.o)
-        response = self.client.post('/organization/1/accept', {'job_id':j1.pk, 'action':"Accept Job"})
+        response = self.client.post(reverse('organization_accept_job', kwargs = {'organization_id': self.o.pk}), {'job_id':j1.pk, 'action':"Accept Job"})
         self.assertTrue("You have accepted the job" in response.content)
         self.assertTrue(response.status_code == 200)
-        response = self.client.post('/organization/1/accept', {'job_id':j2.pk, 'action':"Decline Job"})
+        response = self.client.post(reverse('organization_accept_job', kwargs = {'organization_id': self.o.pk}), {'job_id':j2.pk, 'action':"Decline Job"})
         self.assertTrue("You have declined the job" in response.content)
         self.assertTrue(response.status_code == 200)
 
@@ -277,8 +270,10 @@ class OrganizationTestCase(TestCase):
         response = self.client.get('/organization/{0}'.format(org.id))
         self.assertTrue(response.status_code == 200)
 
-    # def test_organization_edit(self):
-    #     response = self.client.post(reverse('organization_edit'))
-    #     self.assertEqual(response.status_code, 302)
+    def test_organization_edit(self):
+        self.o.group.user_set.add(self.u) 
+        login_as(self, self.u.username, 'asdf')
+        response = self.client.post(reverse('organization_edit', kwargs = {'organization_id': self.o.pk}))
+        self.assertEqual(response.status_code, 200)
 
 
