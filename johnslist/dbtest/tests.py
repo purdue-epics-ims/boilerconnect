@@ -252,8 +252,14 @@ class OrganizationTestCase(TestCase):
         j2 = Job.objects.create(name='foobar_job2',description="test description",duedate='2015-01-01',creator=self.u)
         j1.request_organization(self.o)
         j2.request_organization(self.o)
-        response = self.client.post('/organization/1/accept')
-        
+        assign_perm('is_admin', self.u, self.o)
+        response = self.client.post('/organization/1/accept', {'job_id':j1.pk, 'action':"Accept Job"})
+        self.assertTrue("You have accepted the job" in response.content)
+        self.assertTrue(response.status_code == 200)
+        response = self.client.post('/organization/1/accept', {'job_id':j2.pk, 'action':"Decline Job"})
+        self.assertTrue("You have declined the job" in response.content)
+        self.assertTrue(response.status_code == 200)
+
     def test_organization_create(self):
         from johnslist.settings import PIC_POPULATE_DIR
         #when user is not logged in
