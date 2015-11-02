@@ -245,7 +245,7 @@ class OrganizationTestCase(TestCase):
         j2 = Job.objects.create(name='foobar_job2',description="test description",duedate='2015-01-01',creator=self.u)
         j1.request_organization(self.o)
         j2.request_organization(self.o)
-        assign_perm('is_admin', self.u, self.o)
+        assign_perm('edit_organization', self.u, self.o)
         response = self.client.post(reverse('organization_accept_job', kwargs = {'organization_id': self.o.pk}), {'job_id':j1.pk, 'action':"Accept Job"})
         self.assertTrue("You have accepted the job" in response.content)
         self.assertTrue(response.status_code == 200)
