@@ -232,13 +232,13 @@ class OrganizationTestCase(TestCase):
 
     ### Interface Tests ###
 
+    #test organization_detail.html
     def test_org_detail(self):
-        ##opening the organization's page
-        response = self.client.post('/organization/1')
-        self.assertEqual(self.o, response.context['organization'])
+        response = self.client.post(reverse('organization_detail', kwargs = {'organization_id': self.o.id}))
         self.assertTrue(response.status_code == 200)
+        self.assertEqual(self.o, response.context['organization'])
 
-    #adding user to the org, and accepting and declining job from that org
+    #test organization_accept.html
     def test_organization_accept_decline(self):
         self.o.group.user_set.add(self.u) 
         login_as(self, self.u.username, 'asdf')
@@ -247,13 +247,17 @@ class OrganizationTestCase(TestCase):
         j1.request_organization(self.o)
         j2.request_organization(self.o)
         assign_perm('edit_organization', self.u, self.o)
-        response = self.client.post(reverse('organization_accept_job', kwargs = {'organization_id': self.o.pk}), {'job_id':j1.pk, 'action':"Accept Job"})
+
+        #test accept job
+        response = self.client.post(reverse('organization_accept_job', kwargs = {'organization_id': self.o.id}), {'job_id':j1.id, 'action':"Accept Job"})
         self.assertTrue("You have accepted the job" in response.content)
         self.assertTrue(response.status_code == 200)
-        response = self.client.post(reverse('organization_accept_job', kwargs = {'organization_id': self.o.pk}), {'job_id':j2.pk, 'action':"Decline Job"})
+        #test decline job
+        response = self.client.post(reverse('organization_accept_job', kwargs = {'organization_id': self.o.id}), {'job_id':j2.id, 'action':"Decline Job"})
         self.assertTrue("You have declined the job" in response.content)
         self.assertTrue(response.status_code == 200)
 
+    #test org creation
     def test_organization_create(self):
         from johnslist.settings import PIC_POPULATE_DIR
         #when user is not logged in
@@ -263,6 +267,7 @@ class OrganizationTestCase(TestCase):
         #after login
         login_as(self, self.u.username, 'asdf')
         category = self.cat.pk
+        #creating the org
         with open(PIC_POPULATE_DIR+'plug.png') as icon:
             response = self.client.post(reverse('organization_create'), {'name': 'test org', 'description': 'testing org', 'categories': category, 'icon':icon})
         self.assertTrue("Thank you for creating an organization" in response.content)
@@ -271,6 +276,7 @@ class OrganizationTestCase(TestCase):
         response = self.client.get('/organization/{0}'.format(org.id))
         self.assertTrue(response.status_code == 200)
 
+    #changing the organization attributes
     def test_organization_edit(self):
         self.o.group.user_set.add(self.u) 
         login_as(self, self.u.username, 'asdf')
