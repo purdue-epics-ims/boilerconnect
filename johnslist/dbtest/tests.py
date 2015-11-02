@@ -238,6 +238,7 @@ class OrganizationTestCase(TestCase):
         self.assertEqual(self.o, response.context['organization'])
         self.assertTrue(response.status_code == 200)
 
+    #adding user to the org, and accepting and declining job from that org
     def test_organization_accept_decline(self):
         self.o.group.user_set.add(self.u) 
         login_as(self, self.u.username, 'asdf')
