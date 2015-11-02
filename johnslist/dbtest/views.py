@@ -62,7 +62,7 @@ def organization_job_index(request,organization_id):
 
 
 #accept or decline a requested Job
-@user_has_perm('is_admin')
+@user_has_perm('edit_organization')
 def organization_accept_job(request,organization_id):
     org = Organization.objects.get(id=organization_id)
     if request.method == 'POST':
@@ -179,8 +179,6 @@ def organization_create(request):
             organization.icon = request.FILES['icon']
             organization.save()
             form.save_m2m()
-            #set the admin to user1 organization.admin = User.objects.get(id=1)
-            assign_perm('is_admin',request.user, organization)
 
             title = "Organization {0} created".format( organization.name )
             message = "Thank you for creating an organization."
