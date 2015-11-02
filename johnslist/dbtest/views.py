@@ -101,7 +101,7 @@ def job_detail(request,job_id,organization_id):
             comment = form.save(commit = False)
             comment.jobrequest = jobrequest
             comment.save()
-            return render(request, 'dbtest/job_detail.html',{'jobrequest':jobrequest,'confirm':'You have saved a comment to {0}'.format(job.name),'comment_text':comment_text})  
+            return render(request, 'dbtest/confirm.html',{'title':'comment saved!','message':'You have saved the comment to {0}'.format(job.name)})  
         else:
             return render(request, 'dbtest/job_detail.html', {'jobrequest':jobrequest,'form':form,'error': 'The comment cannot be empty!','comment_text':comment_text})
 
@@ -222,9 +222,7 @@ def user_edit(request):
 @login_required
 @user_has_perm('edit_organization')
 def organization_edit(request, organization_id):
-    print organization_id
     organization = Organization.objects.get(id=organization_id)
-    print organization
         #if this request was a POST and not a GET
     args = {}
     if request.method == 'POST':
