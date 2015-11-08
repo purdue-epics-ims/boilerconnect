@@ -12,7 +12,7 @@ def populate():
         newuser = User.objects.create(username='user{0}'.format(num))
         newuser.set_password('asdf')
         newuser.save()
-        UserProfile.objects.create(name = newuser.username, user = newuser, type = 'purdueuser')
+        UserProfile.objects.create(name = newuser.username, user = newuser, purdueuser = True)
 
     #add Organizations
     g=Group.objects.create(name="Purdue Linux Users Group")
