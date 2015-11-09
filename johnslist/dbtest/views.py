@@ -36,7 +36,7 @@ def user_detail(request,user_id):
 
 #a list of a user's notifications
 def notifications(request):
-    read_notifications = request.user.notifications.read()
+    read_notifications = list(request.user.notifications.read())
     unread_notifications = list(request.user.notifications.unread())
     request.user.notifications.mark_all_as_read()
     return render(request, 'dbtest/notifications.html', {'unread_notifications' : unread_notifications,'read_notifications':read_notifications})
