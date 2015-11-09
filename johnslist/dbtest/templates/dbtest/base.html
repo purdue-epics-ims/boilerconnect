@@ -150,7 +150,15 @@
         </div>
     </div>
     {% endif %}
-
+    {% if confirm %}
+    <div id='confirm'>
+        <div class="alert alert-dismissible alert-success">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">confirm:</span>
+        {{ confirm }}
+        </div>
+    </div>
+    {% endif %}
     {% block content %}
     {% endblock %}
 

@@ -111,13 +111,6 @@ class UserTestCase(TestCase):
         self.assertTrue(response.status_code == 200)
         #change the users username, then try to log in again
 
-    # need to add a Job detail (not JobRequest) before this is enabled again
-    # def test_user_job_index(self):
-    #     login_as(self, self.u.username, 'asdf')
-    #     response = self.client.post('/user/1/user_job_index/')
-    #     self.assertTrue('/job/1' in response.content)
-    #     self.assertTrue('Jobs you have created' in response.content)
-
     def test_view_permissions(self):
         #verify guests cannot view user pages
         r = self.client.get(reverse('user_detail',kwargs={'user_id':format(self.u.id)}))
@@ -214,25 +207,24 @@ class OrganizationTestCase(TestCase):
 
     #test Organization.jobs_pending
     def test_jobs_pending(self):
-        self.assertFalse(self.j in self.o.jobs_pending())
         self.j.request_organization(self.o)
-        self.assertTrue(self.j in self.o.jobs_pending())
+        jr = self.j.request_organization(self.o)
+        self.assertTrue(jr in self.o.jobrequests_pending())
 
     #test Organization.jobs_declined
     def test_jobs_declined(self):
-        self.assertFalse(self.j in self.o.jobs_pending())
         jr = self.j.request_organization(self.o)
         jr.declined = True
         jr.save()
-        self.assertTrue(self.j in self.o.jobs_declined())
+        self.assertTrue(jr in self.o.jobrequests_declined())
 
     #test Organization.jobs_completed
     def test_jobs_completed(self):
         jr = self.j.request_organization(self.o)
-        self.assertTrue(self.j in self.o.jobs_pending())
+        self.assertTrue(jr in self.o.jobrequests_pending())
         jr.completed = True
         jr.save()
-        self.assertTrue(self.j in self.o.jobs_completed())
+        self.assertTrue(jr in self.o.jobrequests_completed())
 
     #test Organization.get_admins
     def test_get_admins(self):
@@ -243,22 +235,32 @@ class OrganizationTestCase(TestCase):
 
     ### Interface Tests ###
 
+    #test organization_detail.html
     def test_org_detail(self):
-        ##opening the organization's page
-        response = self.client.post('/organization/1')
+        response = self.client.post(reverse('organization_detail', kwargs = {'organization_id': self.o.id}))
+        self.assertTrue(response.status_code == 200)
         self.assertEqual(self.o, response.context['organization'])
+
+    #test organization_accept.html
+    def test_organization_accept_decline(self):
+        self.o.group.user_set.add(self.u) 
+        login_as(self, self.u.username, 'asdf')
+        j1 = Job.objects.create(name='foobar_job1',description="test description",duedate='2015-01-01',creator=self.u)
+        j2 = Job.objects.create(name='foobar_job2',description="test description",duedate='2015-01-01',creator=self.u)
+        j1.request_organization(self.o)
+        j2.request_organization(self.o)
+        assign_perm('edit_organization', self.u, self.o)
+
+        #test accept job
+        response = self.client.post(reverse('organization_accept_job', kwargs = {'organization_id': self.o.id}), {'job_id':j1.id, 'action':"Accept Job"})
+        self.assertTrue("You have accepted the job" in response.content)
+        self.assertTrue(response.status_code == 200)
+        #test decline job
+        response = self.client.post(reverse('organization_accept_job', kwargs = {'organization_id': self.o.id}), {'job_id':j2.id, 'action':"Decline Job"})
+        self.assertTrue("You have declined the job" in response.content)
         self.assertTrue(response.status_code == 200)
 
-    def test_organization_accept_decline(self):
-        pass
-# self.o.group.user_set.add(self.u) 
-#       login_as(self, self.u.username, 'asdf')
-#       j1 = Job.objects.create(name='foobar_job1',description="test description",duedate='2015-01-01',creator=self.u)
-#       j2 = Job.objects.create(name='foobar_job2',description="test description",duedate='2015-01-01',creator=self.u)
-#       j1.request_organization(self.o)
-#       j2.request_organization(self.o)
-#       response = self.client.post('/organization/1/accept')
-        
+    #test org creation
     def test_organization_create(self):
         from johnslist.settings import PIC_POPULATE_DIR
         #when user is not logged in
@@ -268,6 +270,7 @@ class OrganizationTestCase(TestCase):
         #after login
         login_as(self, self.u.username, 'asdf')
         category = self.cat.pk
+        #creating the org
         with open(PIC_POPULATE_DIR+'plug.png') as icon:
             response = self.client.post(reverse('organization_create'), {'name': 'test org', 'description': 'testing org', 'categories': category, 'icon':icon})
         self.assertTrue("Thank you for creating an organization" in response.content)
@@ -276,8 +279,11 @@ class OrganizationTestCase(TestCase):
         response = self.client.get('/organization/{0}'.format(org.id))
         self.assertTrue(response.status_code == 200)
 
-    # def test_organization_edit(self):
-    #     response = self.client.post(reverse('organization_edit'))
-    #     self.assertEqual(response.status_code, 302)
+    #changing the organization attributes
+    def test_organization_edit(self):
+        self.o.group.user_set.add(self.u) 
+        login_as(self, self.u.username, 'asdf')
+        response = self.client.post(reverse('organization_edit', kwargs = {'organization_id': self.o.pk}))
+        self.assertEqual(response.status_code, 200)
 
 

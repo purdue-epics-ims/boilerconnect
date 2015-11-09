@@ -44,7 +44,7 @@ def notifications(request):
 #get detailed organization information - email, phone #, users in Org, admins, etc.
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
-    jobs = organization.jobs_pending()
+    jobs = organization.jobrequests_pending()
     admins = organization.get_admins()
     
     return render(request, 'dbtest/organization_detail.html',
@@ -65,8 +65,7 @@ def organization_job_index(request,organization_id):
 
 
 #accept or decline a requested Job
-#see with Evan if this needs to be commented out
-#@user_has_perm('is_admin')
+@user_has_perm('edit_organization')
 def organization_accept_job(request,organization_id):
    if(request.user.userprofile.purdueuser):
        org = Organization.objects.get(id=organization_id)
@@ -191,8 +190,6 @@ def organization_create(request):
                organization.icon = request.FILES['icon']
                organization.save()
                form.save_m2m()
-               #set the admin to user1 organization.admin = User.objects.get(id=1)
-               assign_perm('is_admin',request.user, organization)
 
                title = "Organization {0} created".format( organization.name )
                message = "Thank you for creating an organization."
