@@ -76,7 +76,7 @@ def organization_accept_job(request,organization_id):
                 return render(request,'dbtest/organization_accept_job.html',{'orgnanization':org,'error':'you have already accepted/declined the job'})
             for user_org in org.group.user_set.all():
                 notify.send(request.user, recipient = user_org, verb = 'accepted your job')
-            return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job.name)})  
+            return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','confirm':'You have accepted the job: {0}'.format(job.name)})  
         if request.POST.get("action","") == "Decline Job":
             if jr.accepted is False or jr.declined is False:
                 jr.declined = True
@@ -85,7 +85,7 @@ def organization_accept_job(request,organization_id):
                 return render(request,'dbtest/organization_accept_job.html',{'orgnanization':org,'error':'you have already accepted/declined the job'})
             for user_org in org.group.user_set.all():
                 notify.send(request.user, recipient = user_org, verb = 'declined your job')
-            return render(request, 'dbtest/confirm.html',{'title':'Job decline','message':'You have declined the job: {0}'.format(job.name)})  
+            return render(request, 'dbtest/confirm.html',{'title':'Job decline','confirm':'You have declined the job: {0}'.format(job.name)})  
     return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
 
 #get detailed info about a job
@@ -101,7 +101,7 @@ def job_detail(request,job_id,organization_id):
             comment = form.save(commit = False)
             comment.jobrequest = jobrequest
             comment.save()
-            return render(request, 'dbtest/confirm.html',{'title':'comment saved!','message':'You have saved the comment to {0}'.format(job.name)})  
+            return render(request, 'dbtest/confirm.html',{'title':'comment saved!','confirm':'You have saved the comment to {0}'.format(job.name)})  
         else:
             return render(request, 'dbtest/job_detail.html', {'jobrequest':jobrequest,'form':form,'error': 'The comment cannot be empty!','comment_text':comment_text})
 
@@ -154,8 +154,8 @@ def user_create(request):
             user = form.save()
             form.save_m2m()
             title = "User {0} created".format( user.username )
-            message = "Thank you for creating an account."
-            return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+            confirm = "Thank you for creating an account."
+            return render(request,'dbtest/confirm.html', {'title': title,'confirm':confirm})
         else:
             return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields"})
     #if the request was a GET
@@ -181,8 +181,8 @@ def organization_create(request):
             form.save_m2m()
 
             title = "Organization {0} created".format( organization.name )
-            message = "Thank you for creating an organization."
-            return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+            confirm = "Thank you for creating an organization."
+            return render(request,'dbtest/confirm.html', {'title': title,'confirm':confirm})
         else:
             return render(request, 'dbtest/organization_create.html', {'form':form,'error':"There are incorrect fields"})
     #if the request was a GET
@@ -204,9 +204,9 @@ def user_edit(request):
             user = form.save(commit = False)
             #user.username = request.user.username()
             title = "User {0} modified".format( user.username )
-            message = "Your account has been modified."
+            confirm = "Your account has been modified."
             user.save()
-            return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+            return render(request,'dbtest/confirm.html', {'title': title,'confirm':confirm})
         else:
             return render(request, 'dbtest/user_edit.html', {'form':form,'error':"There are incorrect fields"})
     #if the request was a GET
@@ -235,9 +235,9 @@ def organization_edit(request, organization_id):
             #save organization to db and store info to 'organization'
             organization = form.save(commit = False)
             title = "Organization {0} modified".format( organization.name )
-            message = "Organization {0} has been modified.".format(organization.name)
+            confirm = "Organization {0} has been modified.".format(organization.name)
             organization.save()
-            return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+            return render(request,'dbtest/confirm.html', {'title': title,'confirm':confirm})
         else:
             return render(request, 'dbtest/organization_edit.html', {'form':form,'error':"There are incorrect fields", 'organization_id': organization_id})
     #if the request was a GET
@@ -267,8 +267,8 @@ def job_create(request):
                 job.categories.add(Category.objects.get(id=cat))
                 job.save()
             title = "Job {0} created".format( job.name )
-            message = "Thank you for creating the job."
-            return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+            confirm = "Thank you for creating the job."
+            return render(request,'dbtest/confirm.html', {'title': title,'confirm':confirm})
         else:
             return render(request, 'dbtest/job_create.html', {'form':form,'error':"There are incorrect fields"})
     #if the request was a GET
