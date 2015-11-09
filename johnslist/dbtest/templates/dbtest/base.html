@@ -56,7 +56,7 @@
                     </li>
 
                     <!--Profile Quick Groups-->
-                    {% if user.userprofile.purdueuser %}
+                    {% if not user.userprofile.purdueuser %}
                     <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-toggle="dropdown" haspopup="true" onmouseover="hoverhard()"><i class="fa fa-briefcase"></i>  Jobs<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu" arialabeledby="user">
@@ -78,7 +78,7 @@
                     </li>
                     {% endif %}
 
-                    {% if not user.userprofile.purdueuser %}
+                    {% if user.userprofile.purdueuser %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-toggle="dropdown" haspopup="true" onmouseover="hoverhard()">
                             <i class="fa fa-institution"></i>
