@@ -10,14 +10,37 @@
 &nbsp;
 
 <div class="row">
-		<div class="panel panel-default">
+	<div class="col-sm-5">
+		<!--left col-->
+		<div class="panel panel-primary">
 			<div class="panel-heading">
-				Settings
+				Notifications
+				<div class="badge">
+					5
+				</div>
 			</div>
+			{% block notifications %}
 
-			{% block settings %}
-
-			{% endblock settings %}
+			{% endblock notifications %}
 	</div>
+
+
+
+	<div class="col-sm-7">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				Purdue Organizations
+				<span class="badge">3</span>
+			</div>
+			<div class="panel-body">
+					{% block enumerated %}
+
+					{% endblock enumerated %}
+
+
+			</div>
+		</div>
+	</div>
+</div>
 
 {% endblock content %}

@@ -1,9 +1,14 @@
-{% extends "dbtest/base.html" %}
+{% extends "dbtest/settings.html" %}
 
-{% block content %}
+{% block jumbotron %}
+  <center>
+  <img src="{{organization.icon.url}}" width="140" height="140" class="img-circle">
+  <h3>{{organization.name}} <small> Settings </small>
+    </h3>
+    </center>
+{% endblock jumbotron %}
 
-<h1>Modify the following fields :</h1>
-<br><br>
+{% block settings %}
 {% if error %}<b>{{ error }}</b>
 {% endif %}
 {% if username %}<b>Welcome {{ username }}.  Please check your email for a confirmation message.</b>
@@ -55,4 +60,4 @@
 
 {% endif %}
 
-{% endblock content %}
+{% endblock settings %}

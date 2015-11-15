@@ -3,24 +3,49 @@
 {% block jumbotron  %}
   <center>
   <img src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" name="aboutme" width="140" height="140" class="img-circle">
-  <h3>user0 <small> Settings </small>
+  <h3>{{user.username}} <small> Settings </small>
     </h3>
     </center>
 
 {% endblock jumbotron %}
 
-{% block description %}
+{% block settings %}
   {% if username %}
   <b>Welcome {{ username }}.  Please check your email for a confirmation message.</b>
   {% else %}
   <form action="{% url 'user_edit' %}" method="post">
-    <table class="input-table">
-      {% csrf_token %}
-      {{ form }}
-    </table>ssa    <input class = "custom-btn" type="submit" value="Modify User">
+
+    {% csrf_token %}
+    <div class="input-group">
+      <span class="input-group-addon" id="addon-e,">
+        <div class="glyphicon glyphicon-user"></div>
+      </span>
+      <input id="id_username" name="username" maxlength="30" type="text" class="form-control" placeholder="Edit username" autofocus="true" autocomplete="off" aria-describedby="addon1" value="{{user.username}}">
+    </div>
+    &nbsp;
+
+    <div class="input-group">
+      <span class="input-group-addon" id="addon-pa">
+        <div class="glyphicon glyphicon-lock"></div>
+      </span>
+      <input type="password" maxlength="30" id="id_password1" name="password1"  class="form-control" placeholder="Change Password" aria-describedby="addon1">
+
+    </div>
+
+    &nbsp;
+
+    <div class="input-group">
+      <span class="input-group-addon" id="addon-pa">
+        <div class="glyphicon glyphicon-lock"></div>
+      </span>
+      <input type="password" id="id_password2" maxlength="30" name="password2"  class="form-control" placeholder="Confirm change password" aria-describedby="addon1">
+
+    </div>
+    <br>
+    <input class="btn btn-primary" type="submit" value="Modify User">
   </form>
   {% endif %}
 </div>
 
 
-{% endblock description %}
+{% endblock settings %}
