@@ -239,12 +239,12 @@ def organization_edit(request, organization_id):
             organization.save()
             return render(request,'dbtest/confirm.html', {'title': title,'message':message})
         else:
-            return render(request, 'dbtest/organization_edit.html', {'form':form,'error':"There are incorrect fields", 'organization_id': organization_id})
+            return render(request, 'dbtest/organization_edit.html', {'form':form,'error':"There are incorrect fields", 'organization': organization})
     #if the request was a GET
     else:
         organization = Organization.objects.get(id=organization_id)
         form = OrganizationCreateForm(request.POST, instance=organization)
-        return render(request, 'dbtest/organization_edit.html', {'form':form,'organization_id' : organization_id})
+        return render(request, 'dbtest/organization_edit.html', {'form':form,'organization' : organization})
 
 @login_required
 def job_create(request):
