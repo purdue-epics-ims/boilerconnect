@@ -2,53 +2,115 @@
 
 {% block content %}
 
-<div class="row">
-  <div class="col-sm-10">
-    <h1><span class="text-muted">Profile</span> {{user_detail.username}}</h1>
-    
+
+
+
+
+  <div class="jumbotron">
+
+    <center>
+      <img src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" name="aboutme" width="140" height="140" class="img-circle">
+      <h3>user0 <small> Dashboard </small>
+        </h3>
+        </center>
+
+       <span class="pull-right"><button class="btn btn-info">User settings</button></span>
+
+
+
+
   </div>
-  
-</div>
 &nbsp;
 
 <div class="row">
-  <div class="col-sm-3">
+  <div class="col-sm-5">
     <!--left col-->
-    <ul class="list-group">
-      <li class="list-group-item">Organizations
-        <span class="pull-right">{{user_detail.groups.count}}</span>
-      </li>
-    </ul>
-    <ul class="list-group">
-      <li class="list-group-item">
-        
-        <a href="{%url 'logout'%}">Logout</a>
-      </li>
-      <li class="list-group-item">
-        
-        <a href="{%url 'user_edit'%}">Change password</a>
-        
-      </li>
-    </ul>
-  </div>
-  <div class="col-sm-9">
-    <div class="panel panel-default">
-      <div class="panel-heading">Membership</div>
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        Notifications
+        <div class="badge">
+          5
+        </div>
+      </div>
+
+
+      <div class="list-group">
+        <a href="#" class="list-group-item active">
+         <i class="fa fa-circle"></i>
+         User0 job from user0
+         <span class="pull-right"><small>Oct 21,2015 9:31PM</small></span>
+        </a>
+        <a href="#" class="list-group-item active">
+         <i class="fa fa-circle"></i>
+         User0 job from user0
+         <span class="pull-right"><small>Oct 21,2015 0930</small></span>
+        </a>
+        <a href="#" class="list-group-item active">
+         <i class="fa fa-circle"></i>
+         User0 job from user0
+         <span class="pull-right"><small>Oct 21,2015 0930</small></span>
+        </a>
+        <a href="#" class="list-group-item">
+         <i class="fa fa-circle-thin"></i>
+         User0 job from user0
+         <span class="pull-right"><small>Oct 21,2015 0930</small></span>
+        </a>
+        <a href="#" class="list-group-item">
+         <i class="fa fa-circle-thin"></i>
+         User0 job from user0
+         <span class="pull-right"><small>Oct 21,2015 0930</small></span>
+        </a>
+
+      </div>
+
+
       <div class="panel-body">
-        {%for org in user_detail.members.all%}
-        <p>	
-          <a href="{% url 'organization_detail' org.id %}">{{ org.name }}</a>
-          {%if org in user_detail.admin.all%}
-          
-          <span class="label label-success">
-            Admin
-          </span>
-          {%endif%}
-        </p>
-        {%endfor%}
+
+
+        <center><a href="#"> Show More </a></center>
+  </div>
+</div>
+</div>
+
+
+
+
+
+
+  <div class="col-sm-7">
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        Purdue Organizations
+        <span class="badge">3</span>
+      </div>
+      <div class="panel-body">
+        <div>
+
+          <a href="#">
+          <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img></a>
+          <span class="badge badge-notify">5</span>
+
+          <a href="#">Organization 1</a> <span class="badge warning"><i class="fa fa-hourglass-2"></i> Working</span>
+          </div>
+
+
+          <hr>
+        <div>
+          <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
+          <span class="badge badge-notify">5</span>
+          <a href="#">Organization 2</a>
+
+            <span class="badge success"><i class="fa fa-check"></i> Available</span>
+          </div>
+
+          <hr>
+
+
+
+
       </div>
     </div>
   </div>
 </div>
 
-{% endblock content %}	
+{% endblock content %}
