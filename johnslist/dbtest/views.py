@@ -61,7 +61,7 @@ def organization_job_index(request,organization_id):
        organization = Organization.objects.get(id=organization_id)
        return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
     else:
-       return HttpResponseRedirect('/')
+       return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
 
 
 #accept or decline a requested Job
@@ -92,7 +92,7 @@ def organization_accept_job(request,organization_id):
                return render(request, 'dbtest/confirm.html',{'title':'Job decline','message':'You have declined the job: {0}'.format(job.name)})  
        return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
    else:
-       return HttpResponseRedirect('/')
+       return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
 
 #get detailed info about a job
 @user_has_perm('view_jobrequest')
@@ -150,7 +150,7 @@ def user_membership(request,user_id):
        membership = User.objects.get(id = user_id).groups
        return render(request,'dbtest/user_membership.html',{'membership': membership})
    else:
-       return HttpResponseRedirect('/')
+       return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
 
 def user_create(request):
     #if this request was a POST and not a GET
@@ -201,7 +201,7 @@ def organization_create(request):
            form = OrganizationCreateForm()
            return render(request, 'dbtest/organization_create.html', {'form':form})
    else:
-       return render(request, 'dbtest/confirm.html',{'error': "You do not have access to this page"});  
+       return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
 
 @login_required
 def user_edit(request):
@@ -236,9 +236,7 @@ def user_edit(request):
 @user_has_perm('edit_organization')
 def organization_edit(request, organization_id):
    if(request.user.userprofile.purdueuser):
-       print organization_id
        organization = Organization.objects.get(id=organization_id)
-       print organization
            #if this request was a POST and not a GET
        args = {}
        if request.method == 'POST':
@@ -262,12 +260,12 @@ def organization_edit(request, organization_id):
            form = OrganizationCreateForm(request.POST, instance=organization)
            return render(request, 'dbtest/organization_edit.html', {'form':form,'organization_id' : organization_id})
    else:
-       return HttpResponseRedirect('/')
+       return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
 
 @login_required
 def job_create(request):
    if(request.user.userprofile.purdueuser):
-       return HttpResponseRedirect('/')
+       return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
    else:
        #if this request was a POST and not a GET
        if request.method == 'POST':
