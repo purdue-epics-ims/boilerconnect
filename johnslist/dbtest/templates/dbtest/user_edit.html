@@ -1,10 +1,15 @@
-{% extends "dbtest/base.html" %}
-{% block content %}
+{% extends "dbtest/settings.html" %}
 
-<div class="panel heading">
-  Change your username or password.
-</div>
-<div class="jumbotron">
+{% block jumbotron  %}
+  <center>
+  <img src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" name="aboutme" width="140" height="140" class="img-circle">
+  <h3>user0 <small> Settings </small>
+    </h3>
+    </center>
+
+{% endblock jumbotron %}
+
+{% block description %}
   {% if username %}
   <b>Welcome {{ username }}.  Please check your email for a confirmation message.</b>
   {% else %}
@@ -12,11 +17,10 @@
     <table class="input-table">
       {% csrf_token %}
       {{ form }}
-    </table>
-    <input class = "custom-btn" type="submit" value="Modify User">
+    </table>ssa    <input class = "custom-btn" type="submit" value="Modify User">
   </form>
   {% endif %}
 </div>
 
 
-{% endblock content %}
+{% endblock description %}

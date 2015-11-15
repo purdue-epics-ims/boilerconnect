@@ -1,0 +1,23 @@
+{% extends "dbtest/base.html" %}
+
+
+{% block content %}
+<div class="jumbotron">
+{% block jumbotron %}
+
+{% endblock jumbotron %}
+	</div>
+&nbsp;
+
+<div class="row">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				Settings
+			</div>
+
+			{% block settings %}
+
+			{% endblock settings %}
+	</div>
+
+{% endblock content %}
