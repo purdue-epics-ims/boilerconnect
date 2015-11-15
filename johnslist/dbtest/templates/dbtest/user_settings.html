@@ -84,7 +84,7 @@
 								<li><a href="{%url 'organization_create'%}"><strong><i class="fa fa-users"></i> Create Organiztion</strong></a></li>
 							</ul>
 						</li>
-						<li><a href="{% url 'user_detail' user.id %}"><i class="fa fa-dashboard"></i><strong> {{user.username}}</strong></a></li>
+						<li><a href="{% url 'user_dash' user.id %}"><i class="fa fa-dashboard"></i><strong> {{user.username}}</strong></a></li>
 						<!--<li><a href="{%url 'user_edit'%}"><i class="fa fa-gear"></i> Settings</a></li>-->
 						<li><a href="{%url 'logout'%}"><i class="fa fa-sign-out"></i> Logout</a></li>
 					</ul>
