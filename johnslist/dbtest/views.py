@@ -160,9 +160,16 @@ def user_create(request):
         #check form validity
         if form.is_valid() :
             #save user to db and store info to 'user'
+            if request.POST.get('user_type') == "purdue":
+                purdue = True
+            elif request.POST.get('user_type') == "community":
+                purdue = False
+            else:
+                return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields"})
             user = form.save()
+            UserProfile.objects.create(name = user.username, user = user, purdueuser = purdue)
             form.save_m2m()
-            UserProfile.objects.create(name = user.username, user = user, purdueuser = True )
+           
             title = "User {0} created".format( user.username )
             message = "Thank you for creating an account."
             return render(request,'dbtest/confirm.html', {'title': title,'message':message})
