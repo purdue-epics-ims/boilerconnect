@@ -201,7 +201,7 @@ def organization_create(request):
            form = OrganizationCreateForm()
            return render(request, 'dbtest/organization_create.html', {'form':form})
    else:
-       return HttpResponseRedirect('/')
+       return render(request, 'dbtest/confirm.html',{'error': "You do not have access to this page"});  
 
 @login_required
 def user_edit(request):
