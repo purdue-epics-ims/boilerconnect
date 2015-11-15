@@ -97,7 +97,7 @@ class UserTestCase(TestCase):
 
     def test_user_create(self):
         #successful user creation
-        response = self.client.post(reverse('user_create'), {'username': 'user', 'password1':'zxcv', 'password2':'zxcv'})
+        response = self.client.post(reverse('user_create'), {'username': 'user', 'password1':'zxcv', 'password2':'zxcv', 'user_type': 'purdue'})
         self.assertTrue('Thank you for creating an account' in response.content)
         #unsuccessful user creation
         response = self.client.post(reverse('user_create'), {'username': 'user1', 'password1':'zxcv', 'password2':'zxcvhg'})
