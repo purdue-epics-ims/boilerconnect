@@ -32,7 +32,7 @@ def login(request):
 @user_has_perm('foobar')
 def user_dash(request,user_id):
     user = get_object_or_404(User,id=user_id)
-    if user.purdueuser:
+    if user.userprofile.purdueuser:
         return render(request, 'dbtest/purdueuser_dash.html',{'user_dash': user})
     else:
         return render(request, 'dbtest/communitypartner_dash.html',{'user_dash': user})
