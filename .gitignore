@@ -1,6 +1,7 @@
 *.pyc
 *.swp
 *~
+*orig
 db.sqlite3
 media/*
 venv/*
