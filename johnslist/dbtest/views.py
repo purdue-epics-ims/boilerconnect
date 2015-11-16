@@ -30,9 +30,12 @@ def login(request):
 #get detailed user information - email, phone number, Orgs they are part of, etc.
 # users don't have any permissions right now, so just check that request.user == user
 @user_has_perm('foobar')
-def user_detail(request,user_id):
+def user_dash(request,user_id):
     user = get_object_or_404(User,id=user_id)
-    return render(request, 'dbtest/user_detail.html',{'user_detail': user})
+    if user.purdueuser:
+        return render(request, 'dbtest/purdueuser_dash.html',{'user_dash': user})
+    else:
+        return render(request, 'dbtest/communitypartner_dash.html',{'user_dash': user})
 
 #a list of a user's notifications
 def notifications(request):
@@ -206,7 +209,7 @@ def user_edit(request):
             title = "User {0} modified".format( user.username )
             confirm = "Your account has been modified."
             user.save()
-            return render(request,'dbtest/user_detail.html', {'title': title,'confirm':confirm})
+            return render(request,'dbtest/user_dash.html', {'title': title,'confirm':confirm})
         else:
             return render(request, 'dbtest/user_edit.html', {'form':form,'error':"There are incorrect fields"})
     #if the request was a GET

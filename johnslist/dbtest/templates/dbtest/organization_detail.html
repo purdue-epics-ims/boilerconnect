@@ -49,7 +49,7 @@
       
       {% for user in members %}
       <li class="list-group-item">
-        <a href="{% url 'user_detail' user.id %}">{{user.username}}</a>
+        <a href="{% url 'user_dash' user.id %}">{{user.username}}</a>
       </li>
       {% endfor %}
       
