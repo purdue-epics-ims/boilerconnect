@@ -62,7 +62,7 @@
                         <ul class="dropdown-menu" role="menu" arialabeledby="user">
 
                             <li class="dropdown-header">New Requests</li>
-                            {% for job in user.creator.all %}
+                            {% for job in user.jobs.all %}
                             <li>
                                 <a href="LINK TO JOB {{ job.id }} DASHBOARD">{{ job.name }}
                                 <!-- <span class="badge">{{ job.name }}</span> -->

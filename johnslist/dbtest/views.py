@@ -144,7 +144,7 @@ def search(request):
 #this view is not working
 @user_has_perm('view_user')
 def user_job_index(request,user_id):
-    jobs = User.objects.get(id=user_id).creator
+    jobs = User.objects.get(id=user_id).jobs
     return render(request,'dbtest/user_job_index.html',{'jobs':jobs})
 
 @user_has_perm('view_user')

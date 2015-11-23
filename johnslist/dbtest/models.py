@@ -79,7 +79,7 @@ class Job(models.Model):
     name = models.CharField('Job Name',max_length=128)
     description = models.TextField('Job Description')
     duedate = models.DateTimeField('Date Due')
-    creator = models.ForeignKey(User,related_name = 'creator')  # User -o= Job
+    creator = models.ForeignKey(User,related_name = 'jobs')  # User -o= Job
     organization = models.ManyToManyField(Organization, through = 'JobRequest')
     categories = models.ManyToManyField(Category)
 
@@ -119,7 +119,7 @@ def add_perms_job(sender,**kwargs):
             assign_perm('view_job',org.group,job)
 
 class JobRequest(models.Model):
-    job = models.ForeignKey(Job)
+    job = models.ForeignKey(Job,related_name = 'jobrequests') # Job -= JobRequest
     organization = models.ForeignKey(Organization)
     accepted = models.NullBooleanField(default = False)	
     declined = models.NullBooleanField(default = False)
