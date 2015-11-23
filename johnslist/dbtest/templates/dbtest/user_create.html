@@ -48,6 +48,17 @@
       <input type="password" id="id_password2" maxlength="30" name="password2" value="{{password}}" class="form-control" placeholder="Confirm it" aria-describedby="addon1">
       
     </div>
+
+    &nbsp;
+
+    <div class="input-group">
+      <span class="input-group-addon" id="addon-pa">
+        <div class="glyphicon glyphicon-user"></div>
+      </span>
+      <input type="radio" name="user_type" value="purdue">I am a Purdue User<br>
+      <input type="radio" name="user_type" value="community">I am a Community User
+      
+    </div>
     
     <br>
     {% csrf_token %}
