@@ -1,24 +1,14 @@
 {% extends "dbtest/base.html" %}
 
 {% block content %}
+<div class="jumbotron">
+  <center>
+    <img src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" name="aboutme" width="140" height="140" class="img-circle">
+    <h3>{{ request.user }}<small> Dashboard </small></h3>
+  </center>
 
-
-
-
-
-  <div class="jumbotron">
-
-    <center>
-      <img src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" name="aboutme" width="140" height="140" class="img-circle">
-      <h3>user0 <small> Dashboard </small>
-        </h3>
-        </center>
-
-       <span class="pull-right"><button class="btn btn-info">User settings</button></span>
-
-
-  </div>
-&nbsp;
+  <span class="pull-right"><button class="btn btn-info">User settings</button></span>
+</div>
 
 <div class="row">
   <div class="col-sm-5">
@@ -27,88 +17,52 @@
       <div class="panel-heading">
         Notifications
         <div class="badge">
-          5
+          {{ user.notifications.unread | length }}
         </div>
       </div>
 
-
       <div class="list-group">
+      {% for noti in user.notifications.unread %}
         <a href="#" class="list-group-item active">
          <i class="fa fa-circle"></i>
-         User0 job from user0
+         {{ noti.verb }}}
          <span class="pull-right"><small>Oct 21,2015 9:31PM</small></span>
         </a>
-        <a href="#" class="list-group-item active">
-         <i class="fa fa-circle"></i>
-         User0 job from user0
-         <span class="pull-right"><small>Oct 21,2015 0930</small></span>
-        </a>
-        <a href="#" class="list-group-item active">
-         <i class="fa fa-circle"></i>
-         User0 job from user0
-         <span class="pull-right"><small>Oct 21,2015 0930</small></span>
-        </a>
+      {% endfor %}
+      {% for noti in user.notifications.read %}
         <a href="#" class="list-group-item">
-         <i class="fa fa-circle-thin"></i>
-         User0 job from user0
-         <span class="pull-right"><small>Oct 21,2015 0930</small></span>
+         <i class="fa fa-circle"></i>
+         {{ noti.verb }}}
+         <span class="pull-right"><small>Oct 21,2015 9:31PM</small></span>
         </a>
-        <a href="#" class="list-group-item">
-         <i class="fa fa-circle-thin"></i>
-         User0 job from user0
-         <span class="pull-right"><small>Oct 21,2015 0930</small></span>
-        </a>
-
+      {% endfor %}
       </div>
 
-
       <div class="panel-body">
-
-
         <center><a href="#"> Show More </a></center>
-  </div>
-</div>
-</div>
-
-
-
-
-
-
-  <div class="col-sm-7">
-    <div class="panel panel-primary">
-      <div class="panel-heading">
-        Purdue Organizations
-        <span class="badge">3</span>
-      </div>
-      <div class="panel-body">
-        <div>
-
-          <a href="#">
-          <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img></a>
-          <span class="badge badge-notify">5</span>
-
-          <a href="#">Organization 1</a>
-          </div>
-
-
-          <hr>
-        <div>
-          <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
-          <span class="badge badge-notify">5</span>
-          <a href="#">Organization 2</a>
-
-            <span class="badge success"><i class="fa fa-check"></i> Available</span>
-          </div>
-
-          <hr>
-
-
-
-
       </div>
     </div>
   </div>
+
+  <div class="col-sm-7">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+        Your Jobs
+      </div>
+      <div class="panel-body">
+
+        <ul class="list-group">
+          {% for job in jobs %}
+            <a class="list-group-item" href="LINK_TO_JOB_DASH">
+                <span class="badge">14</span>
+            <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
+            {{ job.name }}
+            </a>
+          {% endfor %}
+        </div>
+
+      </div>
+    </div>
 </div>
 
 {% endblock content %}
