@@ -29,9 +29,9 @@ def login(request):
 
 #get detailed user information - email, phone number, Orgs they are part of, etc.
 # users don't have any permissions right now, so just check that request.user == user
-@user_has_perm('foobar')
-def user_dash(request,user_id):
-    user = get_object_or_404(User,id=user_id)
+@login_required
+def user_dash(request):
+    user = request.user
     if user.userprofile.purdueuser:
         return render(request, 'dbtest/purdueuser_dash.html',{'user_dash': user})
     else:
