@@ -1,72 +1,63 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
 
-<div class="row">
-  <div class="col-sm-10">
-    <h1>{{organization.name}}</h1>
 
 
-    {%if organization.available %}
-    <p>Organization is available</p>
-    {%else%}
-    <p>Organization is not available</p>
-    {%endif%}
+<div class="jumbotron">
+    <center>
 
-    <!Catgories>
-    <h3>
-      <span class="text-muted">skilled in</span>
-      &nbsp;
+      <img src="{{organization.icon.url}}" name="aboutme" width="140" height="140" class="img-circle">
+      <h3>
+        {%if organization.available %}
+        <span class="badge success"><i class="fa fa-check"></i> Available</span>
+        {%else%}
+        <span class="badge danger"><i class="fa fa-remove"></i> Not Available</span>
+        {%endif%}
+        <br>
+        {{organization.name}}
+      </h3>
 
       {% for category in organization.categories.all %}
-
-      <a href="{% url 'search' %}?search={{ category.name }}&search_model=organization&search_by=category" class="label label-primary">{{category.name}}</a> 
+      <a href="{% url 'search' %}?search={{ category.name }}&search_model=organization&search_by=category" class="label label-primary">{{category.name}}</a>
       {%endfor%}
-    </h3>
-  </div>
-  <div class="col-sm-2"><span class="pull-right"><img title="prof" class="img-circle img-responsive" src="{{ organization.icon.url }}"></span>
 
-  </div>
+    </center>
 </div>
-&nbsp;
 <div class="row">
   <div class="col-sm-3">
-    <!--left col-->
+
     <ul class="list-group">
       <li class="list-group-item text-muted" contenteditable="false">Profile</li>
       <li class="list-group-item text-right"><span class="pull-left"><strong class="">Members</strong></span> {{members|length}}</li>
       <li class="list-group-item text-right"><span class="pull-left"><strong class="">Admin </strong></span> 
       {%for admin in organization.get_admins%} 
-      {{admin}}
+      {{ admin }}
       {%endfor%}
       </li>
-      <li class="list-group-item text-right"><span class="pull-left"><strong class="">Joined</strong></span>2015
-        
+      <li class="list-group-item text-right">
+        <span class="pull-left"><strong class="">Joined</strong></span>2015
       </li>
     </ul>
-    
+
     <ul class="list-group">
       <li class="list-group-item text-muted">Members</li>
-      
       {% for user in members %}
       <li class="list-group-item">
         <a href="{% url 'user_dash' user.id %}">{{user.username}}</a>
       </li>
       {% endfor %}
-      
+    </ul>
+
   </div>
-  <!--/col-3-->
+
   <div class="col-sm-9" style="" contenteditable="false">
     <div class="panel panel-default">
       <div class="panel-heading">Description</div>
       <div class="panel-body">
         {{organization.description}}
-
       </div>
     </div>
-    
   </div>
-  
 </div>
 
-</div>
 {% endblock content%}

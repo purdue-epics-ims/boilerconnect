@@ -1,20 +1,63 @@
-{% extends "dbtest/base.html" %}
+{% extends "dbtest/settings.html" %}
 
-{% block content %}
+{% block jumbotron %}
+  <center>
+  <img src="{{organization.icon.url}}" width="140" height="140" class="img-circle">
+  <h3>{{organization.name}} <small> Settings </small>
+    </h3>
+    </center>
+{% endblock jumbotron %}
 
-<h1>Modify the following fields :</h1>
-<br><br>
+{% block settings %}
 {% if error %}<b>{{ error }}</b>
 {% endif %}
 {% if username %}<b>Welcome {{ username }}.  Please check your email for a confirmation message.</b>
 
 {% else %}
-<form action="{% url 'organization_edit' organization_id %}" method="post">
+<form action="{% url 'organization_edit' organization.id %}" method="post">
+
   {% csrf_token %}
-  {{ form }}
-  <input type="submit" value="Modify Organization">
+  <div class="input-group">
+      <span class="input-group-addon" id="addon1">
+        <i class="fa fa-institution"></i>
+      </span>
+
+      <input type="text" class="form-control" autofocus="true" placeholder="Edit Name" name="name" value="{{organization.name}}"></input>
+    </div>
+  </br>
+
+    <div class="input-group">
+      <span class="input-group-addon" id="addon1">
+        <i class="fa fa-coffee"></i>
+      </span>
+      <textarea class="form-control" placeholder="Edit Description" name="description">
+  {{organization.description}}
+</textarea>
+    </div>
+  </br>
+    <div class="input-group">
+      <span class="input-group-addon">
+        <i class="fa fa-check-circle-o"></i>
+      </span>
+         {{form.categories}}
+
+
+    </div>
+    <br>
+
+  <div class="input-group">
+    <span class="input-group-addon">
+      <i class="fa fa-camera-retro"></i>
+    </span>
+
+    {{form.icon}}
+    <img src="{{organization.icon.url}}" height="50px"></img>
+
+  </div>
+  <br>
+  <input class="btn btn-primary" type="submit" value="Modify Organization">
 </form>
 
 {% endif %}
 
-{% endblock content %}
+{% endblock settings %}

@@ -33,9 +33,15 @@ def login(request):
 def user_dash(request):
     user = request.user
     if user.userprofile.purdueuser:
-        return render(request, 'dbtest/purdueuser_dash.html',{'user_dash': user})
+        orgs = [group.organization for group in user.groups.all()]
+        print orgs
+        return render(request, 'dbtest/purdueuser_dash.html',{'user_dash': user,'organizations':orgs})
     else:
-        return render(request, 'dbtest/communitypartner_dash.html',{'user_dash': user})
+        jobs = user.jobs.all()
+        return render(request, 'dbtest/communitypartner_dash.html',
+                     {'user_dash': user,
+                       'jobs':jobs
+                     })
 
 #a list of a user's notifications
 def notifications(request):
@@ -144,7 +150,7 @@ def search(request):
 #this view is not working
 @user_has_perm('view_user')
 def user_job_index(request,user_id):
-    jobs = User.objects.get(id=user_id).creator
+    jobs = User.objects.get(id=user_id).jobs
     return render(request,'dbtest/user_job_index.html',{'jobs':jobs})
 
 @user_has_perm('view_user')
@@ -265,7 +271,7 @@ def organization_edit(request, organization_id):
                organization.save()
                return render(request,'dbtest/confirm.html', {'title': title,'message':message})
            else:
-               return render(request, 'dbtest/organization_edit.html', {'form':form,'error':"There are incorrect fields", 'organization_id': organization_id})
+               return render(request, 'dbtest/organization_edit.html', {'form':form,'error':"There are incorrect fields", 'organization': organization})
        #if the request was a GET
        else:
            organization = Organization.objects.get(id=organization_id)
