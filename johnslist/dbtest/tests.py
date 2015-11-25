@@ -181,6 +181,13 @@ class JobTestCase(TestCase):
         #check if job exists
 #self.assertTrue(Job.objects.filter(name='interfacejob').first())
 
+    #verify job_dash view
+    def test_job_dash(self):
+        login_as(self,self.u.username,'asdf')
+        r = self.client.get(reverse('job_dash',kwargs={'job_id':self.j.id}))
+        self.assertTrue(r.status_code == 200)
+        self.assertTrue(self.j == r.context['job'])
+
     #verify jobrequest_dash view
     def test_jobrequest_dash(self):
         login_as(self,self.u.username,'asdf')
