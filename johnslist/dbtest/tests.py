@@ -23,8 +23,10 @@ from django.test import Client
         Backend:
             [x] - default permissions (creator has perms, accepted/pending have perms)
             [x] - request_organization (check requested/accepted relation exists)
-            [x] - organizations_accepted (use request_organization)
-            [x] - organizations_pending (use request_organization)
+            [x] - jobrequests_accepted (use request_organization)
+            [x] - jobrequests_pending (use request_organization)
+            [x] - jobrequests_declined (use request_organization)
+            [x] - jobrequests_completed (use request_organization)
         Interface:
             [x] - job_create (check job exists, check default perms, check requested orgs)
             [x] - job_detail (check r.context['job'] is the same that was created)
@@ -142,20 +144,36 @@ class JobTestCase(TestCase):
         self.assertIsInstance(jr,JobRequest)
 
     #check organizations that have accepted this job
-    def test_organizations_accepted(self):
+    def test_jobrequests_accepted(self):
         jr = self.j.request_organization(self.o)
-        self.assertEqual(0,len(self.j.organizations_accepted()))
+        self.assertEqual(0,len(self.j.jobrequests_accepted()))
         jr.accepted = True
         jr.save()
-        self.assertEqual(1,len(self.j.organizations_accepted()))
-        self.assertTrue(self.o in self.j.organizations_accepted())
+        self.assertEqual(1,len(self.j.jobrequests_accepted()))
+        self.assertTrue(jr in self.j.jobrequests_accepted())
 
     #check organizations where this job is pending
-    def test_organizations_pending(self):
-        self.assertEqual(0,len(self.j.organizations_pending()))
+    def test_jobrequests_pending(self):
+        self.assertEqual(0,len(self.j.jobrequests_pending()))
         jr = self.j.request_organization(self.o)
-        self.assertEqual(1,len(self.j.organizations_pending()))
-        self.assertTrue(self.o in self.j.organizations_pending())
+        self.assertEqual(1,len(self.j.jobrequests_pending()))
+        self.assertTrue(jr in self.j.jobrequests_pending())
+
+    #check organizations where this job is pending
+    def test_jobrequests_declined(self):
+        jr = self.j.request_organization(self.o)
+        self.assertFalse(jr in self.j.jobrequests_declined())
+        jr.declined = True
+        jr.save()
+        self.assertTrue(jr in self.j.jobrequests_declined())
+
+    #check organizations where this job is pending
+    def test_jobrequests_completed(self):
+        jr = self.j.request_organization(self.o)
+        self.assertFalse(jr in self.j.jobrequests_completed())
+        jr.completed = True
+        jr.save()
+        self.assertTrue(jr in self.j.jobrequests_completed())
 
     ### Interface Tests ###
 

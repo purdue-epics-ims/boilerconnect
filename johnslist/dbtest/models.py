@@ -91,15 +91,18 @@ class Job(models.Model):
             )
 
     # function returns an array list of organization objects that have accepted = True in Jobrequest
-    def organizations_accepted(self):
-        accepted = Organization.objects.filter(jobrequest__job = self,jobrequest__accepted = True, jobrequest__completed = False)
+    def jobrequests_accepted(self):
+        accepted = JobRequest.objects.filter(job = self, accepted = True)
         return accepted
-    def organizations_pending(self):
-        pending = Organization.objects.filter(jobrequest__job = self,jobrequest__accepted = False,jobrequest__declined = False)
+    def jobrequests_pending(self):
+        pending = JobRequest.objects.filter(job = self, accepted = False, declined = False, completed = False)
         return pending
-    def organizations_declined(self):
-        declined = Organization.objects.filter(jobrequest__job = self,jobrequest__accepted = False,jobrequest__declined = True)
+    def jobrequests_declined(self):
+        declined = JobRequest.objects.filter(job = self, declined = True)
         return declined
+    def jobrequests_completed(self):
+        completed = JobRequest.objects.filter(job = self, completed = True)
+        return completed
     def request_organization(self,organization):
         jr = JobRequest.objects.create(job = self,organization = organization);
         return jr
@@ -131,7 +134,7 @@ class JobRequest(models.Model):
                 ( 'edit_jobrequest','Can edit JobRequest'),
                 )
 
-#add default job permissions
+#add default jobrequest permissions
 @receiver(post_save, sender=JobRequest)
 def add_perms_jobrequest(sender,**kwargs):
     #check if this post_save signal was generated from a Model create
@@ -139,12 +142,11 @@ def add_perms_jobrequest(sender,**kwargs):
         jobrequest=kwargs['instance']
         job = jobrequest.job
 
-        #allow creator to view and edit job
+        #allow creator to view and edit jobrequest
         assign_perm('view_jobrequest',job.creator,jobrequest)
         assign_perm('edit_jobrequest',job.creator,jobrequest)
-        #allow requested orgs to view job
-        for org in job.organizations_pending():
-            assign_perm('view_jobrequest',org.group,jobrequest)
+        #allow requested org to view jobrequest
+        assign_perm('view_jobrequest',jobrequest.organization.group,jobrequest)
 
 class Comment(models.Model):
     text_comment = models.TextField('text_comment')
