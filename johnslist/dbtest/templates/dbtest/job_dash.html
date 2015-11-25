@@ -59,7 +59,7 @@
       <div class="panel-body">
         <ul class="list-group">
           {% for jobrequest in job.jobrequests_accepted %}
-          <a class="list-group-item" href="LINK_TO_JOB_DASH">
+          <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
               <span class="badge">14</span>
           <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
           {{ jobrequest.organization }}
@@ -74,7 +74,7 @@
       <div class="panel-body">
         <ul class="list-group">
           {% for jobrequest in job.jobrequests_declined %}
-            <a class="list-group-item" href="LINK_TO_JOB_DASH">
+            <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
                 <span class="badge">14</span>
             <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
             {{ jobrequest.organization }}
@@ -89,7 +89,7 @@
       <div class="panel-body">
         <ul class="list-group">
           {% for jobrequest in job.jobrequests_pending %}
-          <a class="list-group-item" href="LINK_TO_JOB_DASH">
+          <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
               <span class="badge">14</span>
           <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
           {{ jobrequest.organization }}

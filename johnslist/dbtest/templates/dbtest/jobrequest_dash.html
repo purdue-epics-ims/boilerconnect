@@ -34,7 +34,7 @@
 
     </table>
         <div class = "contact-info box">
-        <form method=POST name="comment" action="{% url 'job_detail' jobrequest.organization.id jobrequest.job.id %}">
+        <form method=POST name="comment" action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
             {% csrf_token %}
             <div class="input-group">
                 <span class="input-group-addon">

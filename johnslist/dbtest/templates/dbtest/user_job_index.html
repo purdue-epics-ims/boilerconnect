@@ -2,6 +2,6 @@
 {% block content %}
 <u>Jobs you have created</u><br>
 {% for job in jobs.all %}
-<a href = '{%url 'job_detail' job.id%}'>{{job}}</a>
+<a href = "{%url 'job_dash' job.id%}">{{job}}</a>
 {% endfor %}
 {% endblock content %}

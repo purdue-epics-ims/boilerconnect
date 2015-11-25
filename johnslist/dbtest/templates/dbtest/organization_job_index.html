@@ -158,12 +158,12 @@
 
 			{% if organization.jobs_requested%}
 				{% for job in organization.jobs_requested.all %}
-					<a href='{% url 'job_detail' organization.id job.id %}'>{{ job.name }}</a>
+          <a href="{% url 'jobrequest_dash' organization.id job.id %}">{{ job.name }}</a>
 					<br>
 
 				{% endfor %}
 
-				<a href='{% url 'organization_accept_job' organization.id %}'>See all requests</a>
+        <a href="{% url 'organization_accept_job' organization.id %}">See all requests</a>
 			{% else %}
 				<span class="text-muted">No new requests have been received</span>
 
@@ -203,14 +203,14 @@
 
 </table>
 
-{% if organization.jobs_requested%}
+{% if organization.jobs_requested %}
 {% for job in organization.jobs_requested.all %}<!--not sure about this syntax-->
-<a href='{% url 'job_detail' organization.id job.id %}'>{{ job.name }}</a>
+<a href="{% url 'jobrequest_dash' organization.id job.id %}">{{ job.name }}</a>
 <br>
 
 {% endfor %}
 
-<a href='{% url 'organization_accept_job' organization.id %}'>See all requests</a>
+<a href="{% url 'organization_accept_job' organization.id %}">See all requests</a>
 {% else %}
 <span class="text-muted">No new requests have been received</span>
 {% endif %}

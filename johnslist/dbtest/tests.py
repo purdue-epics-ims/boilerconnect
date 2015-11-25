@@ -28,7 +28,7 @@ from django.test import Client
             [x] - jobrequests_declined (use request_organization)
         Interface:
             [x] - job_create (check job exists, check default perms, check requested orgs)
-            [x] - job_detail (check r.context['job'] is the same that was created)
+            [x] - jobrequest_dash (check r.context['job'] is the same that was created)
 
     Organization:
         Backend:
@@ -181,11 +181,11 @@ class JobTestCase(TestCase):
         #check if job exists
 #self.assertTrue(Job.objects.filter(name='interfacejob').first())
 
-    #verify job_detail view
-    def test_job_detail(self):
+    #verify jobrequest_dash view
+    def test_jobrequest_dash(self):
         login_as(self,self.u.username,'asdf')
         jr = self.j2.request_organization(self.o)
-        r = self.client.get(reverse('job_detail',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
+        r = self.client.get(reverse('jobrequest_dash',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
         self.assertEqual(jr,r.context['jobrequest'])
 
 

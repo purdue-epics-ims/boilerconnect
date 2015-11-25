@@ -111,9 +111,9 @@ def organization_accept_job(request,organization_id):
    else:
        return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
 
-#get detailed info about a job
+#get detailed info about a jobrequest
 @user_has_perm('view_jobrequest')
-def job_detail(request,job_id,organization_id):
+def jobrequest_dash(request,job_id,organization_id):
     job = Job.objects.get(id=job_id)
     organization = Organization.objects.get(id=organization_id)
     jobrequest = JobRequest.objects.get(job = job, organization = organization);
@@ -124,11 +124,11 @@ def job_detail(request,job_id,organization_id):
             comment = form.save(commit = False)
             comment.jobrequest = jobrequest
             comment.save()
-            return render(request, 'dbtest/job_detail.html',{'comment_text':comment_text,'jobrequest':jobrequest,'title':'comment saved!','confirm':'You have saved the comment to {0}'.format(job.name)})  
+            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'title':'comment saved!','confirm':'You have saved the comment to {0}'.format(job.name)})
         else:
-            return render(request, 'dbtest/job_detail.html', {'jobrequest':jobrequest,'form':form,'error': 'The comment cannot be empty!','comment_text':comment_text})
+            return render(request, 'dbtest/jobrequest_dash.html', {'jobrequest':jobrequest,'form':form,'error': 'The comment cannot be empty!','comment_text':comment_text})
 
-    return render(request, 'dbtest/job_detail.html',{'jobrequest':jobrequest,'comment_text':comment_text})
+    return render(request, 'dbtest/jobrequest_dash.html',{'jobrequest':jobrequest,'comment_text':comment_text})
 
 #load the front page with 3 random organizations in the gallery
 def front_page(request):
