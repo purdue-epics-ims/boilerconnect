@@ -217,28 +217,28 @@ class OrganizationTestCase(TestCase):
         self.assertFalse(self.u2.has_perm('view_organization',self.o))
         self.assertFalse(self.u2.has_perm('edit_organization',self.o))
 
-    #test Organization.jobs_pending
-    def test_jobs_pending(self):
+    #test jobrequests_pending member function
+    def test_jobrequests_pending(self):
         self.j.request_organization(self.o)
         jr = self.j.request_organization(self.o)
         self.assertTrue(jr in self.o.jobrequests_pending())
 
-    #test Organization.jobs_declined
-    def test_jobs_declined(self):
+    #test jobrequests_declined member function
+    def test_jobrequests_declined(self):
         jr = self.j.request_organization(self.o)
         jr.declined = True
         jr.save()
         self.assertTrue(jr in self.o.jobrequests_declined())
 
-    #test Organization.jobs_completed
-    def test_jobs_completed(self):
+    #test jobrequests_completed member function
+    def test_jobrequests_completed(self):
         jr = self.j.request_organization(self.o)
         self.assertTrue(jr in self.o.jobrequests_pending())
         jr.completed = True
         jr.save()
         self.assertTrue(jr in self.o.jobrequests_completed())
 
-    #test Organization.get_admins
+    #test get_admins member function
     def test_get_admins(self):
         self.o.group.user_set.add(self.u)
         assign_perm('is_admin',self.u,self.o)
@@ -252,6 +252,13 @@ class OrganizationTestCase(TestCase):
         response = self.client.post(reverse('organization_detail', kwargs = {'organization_id': self.o.id}))
         self.assertTrue(response.status_code == 200)
         self.assertEqual(self.o, response.context['organization'])
+
+    #test organization_dash.html
+    def test_organization_dash(self):
+        login_as(self, self.u.username, 'asdf')
+        r = self.client.get(reverse('organization_dash',kwargs={'organization_id':self.o.id}))
+        self.assertTrue(r.status_code == 200)
+        self.assertTrue(self.o == r.context['organization'])
 
     #test organization_accept.html
     def test_organization_accept_decline(self):
