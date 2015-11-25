@@ -1,0 +1,105 @@
+{% extends "dbtest/base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+  <center>
+    <img src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" name="aboutme" width="140" height="140" class="img-circle">
+    <h3>{{ job.name }}<small> Dashboard </small></h3>
+  </center>
+
+  <span class="pull-right"><button class="btn btn-info">Job settings</button></span>
+</div>
+
+<div class="row">
+  <div class="col-sm-5">
+    <!--left col-->
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        Notifications
+        <div class="badge">
+            a number goes here
+        </div>
+      </div>
+
+      <div class="list-group">
+          <!--       {% for noti in user.notifications.unread %} -->
+        <a href="#" class="list-group-item active">
+         <i class="fa fa-circle"></i>
+         <!--          {{ noti.verb }}} -->
+         notification text
+         <span class="pull-right"><small>Oct 21,2015 9:31PM</small></span>
+        </a>
+        <!--       {% endfor %} -->
+        <!--       {% for noti in user.notifications.read %} -->
+        <a href="#" class="list-group-item">
+         <i class="fa fa-circle"></i>
+         <!--          {{ noti.verb }}} -->
+         notification text
+         <span class="pull-right"><small>Oct 21,2015 9:31PM</small></span>
+        </a>
+        <!--       {% endfor %} -->
+      </div>
+
+      <div class="panel-body">
+        <center><a href="#"> Show More </a></center>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-7">
+    <div class="panel panel-primary">
+
+      <div class="panel-heading">
+            Job Requests
+      </div>
+
+      <div class="panel-heading">
+           Accepted Requests
+      </div>
+      <div class="panel-body">
+        <ul class="list-group">
+          {% for jobrequest in job.jobrequests_accepted %}
+          <a class="list-group-item" href="LINK_TO_JOB_DASH">
+              <span class="badge">14</span>
+          <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
+          {{ jobrequest.organization }}
+          </a>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="panel-heading">
+           Declined Requests
+      </div>
+      <div class="panel-body">
+        <ul class="list-group">
+          {% for jobrequest in job.jobrequests_declined %}
+            <a class="list-group-item" href="LINK_TO_JOB_DASH">
+                <span class="badge">14</span>
+            <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
+            {{ jobrequest.organization }}
+            </a>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="panel-heading">
+           Pending Requests
+      </div>
+      <div class="panel-body">
+        <ul class="list-group">
+          {% for jobrequest in job.jobrequests_pending %}
+          <a class="list-group-item" href="LINK_TO_JOB_DASH">
+              <span class="badge">14</span>
+          <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
+          {{ jobrequest.organization }}
+          </a>
+          {% endfor %}
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
