@@ -112,17 +112,14 @@ class UserTestCase(TestCase):
         #change the users username, then try to log in again
 
     def test_view_permissions(self):
-        #verify guests cannot view user pages
-        r = self.client.get(reverse('user_dash',kwargs={'user_id':format(self.u.id)}))
-        self.assertTrue('error' in r.context)
+        #verify user is redirected
+        r = self.client.get(reverse('user_dash'))
+        self.assertRedirects(r,'/login?next='+reverse('user_dash'))
         login_as(self,self.u.username,'asdf')
         #verify user can view their own detail page
-        r = self.client.get(reverse('user_dash',kwargs={'user_id':format(self.u.id)}))
+        r = self.client.get(reverse('user_dash',))
         self.assertFalse('error' in r.context)
         self.assertTrue(r.status_code == 200)
-        #verify user cannot access other users detail page
-        r = self.client.get(reverse('user_dash',kwargs={'user_id':format(self.u2.id)}))
-        self.assertTrue('error' in r.context)
 
 class JobTestCase(TestCase):
     #django calls this initialization function automatically

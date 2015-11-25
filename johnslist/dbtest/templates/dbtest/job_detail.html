@@ -9,7 +9,7 @@
 <div class = "jumbotron" >
     <p><u>Job Description</u> : {{jobrequest.job.description}}</p>
     <p><u>Job Due Date</u> : {{jobrequest.job.duedate}}</p>
-    <p><u>Job Creator</u> : <a href="{% url 'user_dash' jobrequest.job.id %}">{{ jobrequest.job.creator }}</a></p>
+    <p><u>Job Creator</u> : <a href="{% url 'user_dash' %}">{{ jobrequest.job.creator }}</a></p>
     {% if comment_text %}
         <table class="table table-striped">
             <thead>

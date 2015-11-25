@@ -7,16 +7,17 @@
   <center>
     <img src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" name="aboutme" width="140" height="140" class="img-circle">
     <h3>{{ request.user }}<small> Dashboard </small>
-      </h3>
-      </center>
+    </h3>
+  </center>
+  <span class="pull-right"><button class="btn btn-info">User settings</button></span>
 
-      <span class="pull-right"><button class="btn btn-info">User settings</button></span>
 </div>
 
 <div class="row">
   <div class="col-sm-5">
     <!--left col-->
     <div class="panel panel-primary">
+
       <div class="panel-heading">
         Notifications
         <div class="badge">
@@ -25,20 +26,20 @@
       </div>
 
       <div class="list-group">
-      {% for noti in user.notifications.unread %}
+        {% for noti in user.notifications.unread %}
         <a href="#" class="list-group-item">
          <i class="fa fa-circle"></i>
          {{ noti.verb }}}
          <span class="pull-right"><small>Oct 21,2015 9:31PM</small></span>
         </a>
-      {% endfor %}
-      {% for noti in user.notifications.read %}
+        {% endfor %}
+        {% for noti in user.notifications.read %}
         <a href="#" class="list-group-item">
          <i class="fa fa-circle"></i>
          {{ noti.verb }}}
          <span class="pull-right"><small>Oct 21,2015 9:31PM</small></span>
         </a>
-      {% endfor %}
+        {% endfor %}
       </div>
 
       <div class="panel-body">
@@ -49,22 +50,23 @@
 
   <div class="col-sm-7">
     <div class="panel panel-primary">
-        <div class="panel-heading">
+
+      <div class="panel-heading">
         Your Organizations
       </div>
       <div class="panel-body">
-
         <ul class="list-group">
-          {% for org in organizations %}
-            <a class="list-group-item" href="LINK_TO_ORG_DASH">
-                <span class="badge">14</span>
-            <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
-            {{ org.name }}
-            </a>
-          {% endfor %}
-        </div>
-
+        {% for org in organizations %}
+        <a class="list-group-item" href="LINK_TO_ORG_DASH">
+          <span class="badge">14</span>
+          <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
+          {{ org.name }}
+        </a>
+        {% endfor %}
+        </ul>
       </div>
+      </div>
+
     </div>
   </div>
 </div>
