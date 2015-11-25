@@ -71,6 +71,16 @@ def organization_detail(request,organization_id):
                  'members':organization.group.user_set.all(),
                  })
 
+#display jobs and members of an organization
+@user_has_perm('view_organization')
+def organization_dash(request,organization_id):
+    org = Organization.objects.get(id=organization_id)
+    members = org.group.user_set.all()
+    return render(request, 'dbtest/organization_dash.html',
+                  {'organization':org,
+                   'members':members
+                  })
+
 #get a list of an Org's jobs
 @user_has_perm('view_organization')
 def organization_job_index(request,organization_id):
