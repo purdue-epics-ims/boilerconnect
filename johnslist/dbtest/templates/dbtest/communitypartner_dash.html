@@ -52,7 +52,7 @@
       <div class="panel-body">
         <ul class="list-group">
           {% for job in jobs %}
-          <a class="list-group-item" href="LINK_TO_JOB_DASH">
+          <a class="list-group-item" href="{% url 'job_dash' job.id %}">
             <span class="badge">14</span>
             <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
             {{ job.name }}
