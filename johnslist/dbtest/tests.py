@@ -23,8 +23,8 @@ from django.test import Client
         Backend:
             [x] - default permissions (creator has perms, accepted/pending have perms)
             [x] - request_organization (check requested/accepted relation exists)
-            [x] - organization_accepted (use request_organization)
-            [x] - organization_pending (use request_organization)
+            [x] - organizations_accepted (use request_organization)
+            [x] - organizations_pending (use request_organization)
         Interface:
             [x] - job_create (check job exists, check default perms, check requested orgs)
             [x] - job_detail (check r.context['job'] is the same that was created)
@@ -142,20 +142,20 @@ class JobTestCase(TestCase):
         self.assertIsInstance(jr,JobRequest)
 
     #check organizations that have accepted this job
-    def test_organization_accepted(self):
+    def test_organizations_accepted(self):
         jr = self.j.request_organization(self.o)
-        self.assertEqual(0,len(self.j.organization_accepted()))
+        self.assertEqual(0,len(self.j.organizations_accepted()))
         jr.accepted = True
         jr.save()
-        self.assertEqual(1,len(self.j.organization_accepted()))
-        self.assertTrue(self.o in self.j.organization_accepted())
+        self.assertEqual(1,len(self.j.organizations_accepted()))
+        self.assertTrue(self.o in self.j.organizations_accepted())
 
     #check organizations where this job is pending
-    def test_organization_pending(self):
-        self.assertEqual(0,len(self.j.organization_pending()))
+    def test_organizations_pending(self):
+        self.assertEqual(0,len(self.j.organizations_pending()))
         jr = self.j.request_organization(self.o)
-        self.assertEqual(1,len(self.j.organization_pending()))
-        self.assertTrue(self.o in self.j.organization_pending())
+        self.assertEqual(1,len(self.j.organizations_pending()))
+        self.assertTrue(self.o in self.j.organizations_pending())
 
     ### Interface Tests ###
 

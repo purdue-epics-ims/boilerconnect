@@ -91,13 +91,13 @@ class Job(models.Model):
             )
 
     # function returns an array list of organization objects that have accepted = True in Jobrequest
-    def organization_accepted(self):
+    def organizations_accepted(self):
         accepted = Organization.objects.filter(jobrequest__job = self,jobrequest__accepted = True, jobrequest__completed = False)
         return accepted
-    def organization_pending(self):
+    def organizations_pending(self):
         pending = Organization.objects.filter(jobrequest__job = self,jobrequest__accepted = False,jobrequest__declined = False)
         return pending
-    def organization_declined(self):
+    def organizations_declined(self):
         declined = Organization.objects.filter(jobrequest__job = self,jobrequest__accepted = False,jobrequest__declined = True)
         return declined
     def request_organization(self,organization):
@@ -143,7 +143,7 @@ def add_perms_jobrequest(sender,**kwargs):
         assign_perm('view_jobrequest',job.creator,jobrequest)
         assign_perm('edit_jobrequest',job.creator,jobrequest)
         #allow requested orgs to view job
-        for org in job.organization_pending():
+        for org in job.organizations_pending():
             assign_perm('view_jobrequest',org.group,jobrequest)
 
 class Comment(models.Model):

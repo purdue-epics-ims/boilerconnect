@@ -43,6 +43,14 @@ def user_dash(request,user_id):
                        'jobs':jobs
                      })
 
+#display job information, show jobrequests and their current state
+@user_has_perm('view_job')
+def job_dash(request,job_id):
+    job = Job.objects.get(id=job_id)
+    return render(request, 'dbtest/job_dash.html',
+                  {'job':job
+                  })
+
 #a list of a user's notifications
 def notifications(request):
     read_notifications = list(request.user.notifications.read())
