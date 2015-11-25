@@ -100,9 +100,6 @@ class Job(models.Model):
     def jobrequests_declined(self):
         declined = JobRequest.objects.filter(job = self, declined = True)
         return declined
-    def jobrequests_completed(self):
-        completed = JobRequest.objects.filter(job = self, completed = True)
-        return completed
     def request_organization(self,organization):
         jr = JobRequest.objects.create(job = self,organization = organization);
         return jr
