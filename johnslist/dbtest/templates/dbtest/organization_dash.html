@@ -53,6 +53,21 @@
       </div>
 
       <div class="panel-heading">
+           Pending Requests
+      </div>
+      <div class="panel-body">
+        <ul class="list-group">
+          {% for jobrequest in organization.jobrequests_pending %}
+          <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
+              <span class="badge">14</span>
+              <!--           <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img> -->
+          {{ jobrequest.job.creator }}
+          </a>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <div class="panel-heading">
            Accepted Requests
       </div>
       <div class="panel-body">
@@ -60,7 +75,7 @@
           {% for jobrequest in organization.jobrequests_accepted %}
           <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
               <span class="badge">14</span>
-          <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
+              <!--           <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img> -->
           {{ jobrequest.job.creator }}
           </a>
           {% endfor %}
@@ -75,28 +90,12 @@
           {% for jobrequest in organization.jobrequests_declined %}
             <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
                 <span class="badge">14</span>
-            <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
+                <!--             <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img> -->
             {{ jobrequest.job.creator }}
             </a>
           {% endfor %}
         </ul>
       </div>
-
-      <div class="panel-heading">
-           Pending Requests
-      </div>
-      <div class="panel-body">
-        <ul class="list-group">
-          {% for jobrequest in organization.jobrequests_pending %}
-          <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
-              <span class="badge">14</span>
-          <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
-          {{ jobrequest.job.creator }}
-          </a>
-          {% endfor %}
-        </ul>
-      </div>
-
     </div>
   </div>
 </div>
