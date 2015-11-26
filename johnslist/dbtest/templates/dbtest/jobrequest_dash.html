@@ -9,31 +9,31 @@
 <div class = "jumbotron" >
     <p><u>Job Description</u> : {{jobrequest.job.description}}</p>
     <p><u>Job Due Date</u> : {{jobrequest.job.duedate}}</p>
-    <p><u>Job Creator</u> : <a href="{% url 'user_dash' %}">{{ jobrequest.job.creator }}</a></p>
+    <p><u>Job Creator</u> : {{ jobrequest.job.creator }}</p>
     {% if comment_text %}
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Organization</th>
-                    <th>Comment</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for comments in comment_text %}
-                <tr>
-                    <td>
-                        {{comments.jobrequest.organization}}
-                    </td>
-                    <td>
-                        {{comments.text_comment}}
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-    {% endif %}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Organization</th>
+                <th>Comment</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for comments in comment_text %}
+            <tr>
+                <td>
+                    {{comments.jobrequest.organization}}
+                </td>
+                <td>
+                    {{comments.text_comment}}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        {% endif %}
 
     </table>
-        <div class = "contact-info box">
+    <div class = "contact-info box">
         <form method=POST name="comment" action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
             {% csrf_token %}
             <div class="input-group">
@@ -41,8 +41,9 @@
                     <i class="fa fa-bullhorn"></i>
                 </span>
                 <textarea class="form-control"  name="text_comment" placeholder="What do you think about this job?"></textarea>
-                </div>
-                <input class = "custom-btn" type="submit" name = "comment" value="Leave the comment">
+            </div>
+            <input class = "custom-btn" type="submit" name = "comment" value="Leave the comment">
         </form>
+    </div>
 </div>
 {% endblock content %}
