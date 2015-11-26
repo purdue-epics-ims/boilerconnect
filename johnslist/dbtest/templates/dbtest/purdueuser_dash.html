@@ -5,7 +5,6 @@
 <div class="jumbotron">
 
   <center>
-    <img src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" name="aboutme" width="140" height="140" class="img-circle">
     <h3>{{ request.user }}<small> Dashboard </small>
     </h3>
   </center>
@@ -57,17 +56,16 @@
       <div class="panel-body">
         <ul class="list-group">
         {% for org in organizations %}
-        <a class="list-group-item" href="LINK_TO_ORG_DASH">
+        <a class="list-group-item" href="{% url 'organization_dash' org.id %}">
           <span class="badge">14</span>
-          <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
+          <img src="{{ org.icon.url }}" height="70px"></img>
           {{ org.name }}
         </a>
         {% endfor %}
         </ul>
       </div>
-      </div>
-
     </div>
+
   </div>
 </div>
 
