@@ -29,23 +29,9 @@
     <ul class="list-group">
       <li class="list-group-item text-muted" contenteditable="false">Profile</li>
       <li class="list-group-item text-right"><span class="pull-left"><strong class="">Members</strong></span> {{members|length}}</li>
-      <li class="list-group-item text-right"><span class="pull-left"><strong class="">Admin </strong></span> 
-      {%for admin in organization.get_admins%} 
-      {{ admin }}
-      {%endfor%}
-      </li>
       <li class="list-group-item text-right">
         <span class="pull-left"><strong class="">Joined</strong></span>2015
       </li>
-    </ul>
-
-    <ul class="list-group">
-      <li class="list-group-item text-muted">Members</li>
-      {% for user in members %}
-      <li class="list-group-item">
-        <a href="{% url 'user_dash' %}">{{user.username}}</a>
-      </li>
-      {% endfor %}
     </ul>
 
   </div>
