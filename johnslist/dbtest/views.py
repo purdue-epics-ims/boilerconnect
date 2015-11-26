@@ -48,7 +48,8 @@ def user_dash(request):
 def job_dash(request,job_id):
     job = Job.objects.get(id=job_id)
     return render(request, 'dbtest/job_dash.html',
-                  {'job':job
+                  {'job':job,
+                   'jobrequests':job.jobrequests.order_by('organization')
                   })
 
 #a list of a user's notifications

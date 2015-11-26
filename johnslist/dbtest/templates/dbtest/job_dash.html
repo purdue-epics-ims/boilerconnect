@@ -52,50 +52,25 @@
             Job Requests
       </div>
 
-      <div class="panel-heading">
-           Accepted Requests
-      </div>
       <div class="panel-body">
         <ul class="list-group">
-          {% for jobrequest in job.jobrequests_accepted %}
-          <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
-              <span class="badge">14</span>
-          <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
-          {{ jobrequest.organization }}
-          </a>
-          {% endfor %}
-        </ul>
-      </div>
-
-      <div class="panel-heading">
-           Declined Requests
-      </div>
-      <div class="panel-body">
-        <ul class="list-group">
-          {% for jobrequest in job.jobrequests_declined %}
+          {% for jobrequest in jobrequests %}
             <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
                 <span class="badge">14</span>
-            <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
+                {% if jobrequest.accepted %}
+                <span class="btn btn-success">Accepted</span>
+                {% elif jobrequest.declined %}
+                <span class="btn btn-danger">Declined</span>
+                {% else %}
+                <span class="btn btn-warning">Pending</span>
+                {% endif %}
+            <img src="{{ jobrequest.organization.icon.url }}" height="70px"></img>
             {{ jobrequest.organization }}
             </a>
           {% endfor %}
         </ul>
       </div>
 
-      <div class="panel-heading">
-           Pending Requests
-      </div>
-      <div class="panel-body">
-        <ul class="list-group">
-          {% for jobrequest in job.jobrequests_pending %}
-          <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
-              <span class="badge">14</span>
-          <img class="img-circle" src="http://www.famousbirthdays.com/faces/purdue-john-image.jpg" height="70px"></img>
-          {{ jobrequest.organization }}
-          </a>
-          {% endfor %}
-        </ul>
-      </div>
 
     </div>
   </div>
