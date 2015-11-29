@@ -213,13 +213,17 @@ def user_create(request):
 def organization_create(request):
     #if purdueuser
     if(request.user.userprofile.purdueuser):
-        #if this request was a POST and not a GET
-        if request.method == 'POST':
+        #if the request was a GET
+        if request.method == 'GET':
+            form = OrganizationCreateForm()
+            return render(request, 'dbtest/organization_create.html', {'form':form})
+        #if this request was a POST
+        elif request.method == 'POST':
             form = OrganizationCreateForm(request.POST)
 
             #check form validity
             if form.is_valid() :
-                #create new org 
+                #create new Group + Organization
                 organization = form.save(commit=False)
                 group = Group.objects.create(name = organization.name)
                 organization.group = group
@@ -228,15 +232,11 @@ def organization_create(request):
                 organization.save()
                 form.save_m2m()
 
-                title = "Organization {0} created".format( organization.name )
-                message = "Thank you for creating an organization."
-                return render(request,'dbtest/confirm.html', {'title': title,'message':message})
+                message = "Organization {0} created".format( organization.name )
+                return render(request,'dbtest/confirm.html', {'confirm':message})
             else:
-                return render(request, 'dbtest/organization_create.html', {'form':form,'error':"There are incorrect fields"})
-        #if the request was a GET
-        else:
-            form = OrganizationCreateForm()
-            return render(request, 'dbtest/organization_create.html', {'form':form})
+                print form.errors
+                return render(request, 'dbtest/organization_create.html', {'form':form,'error':form.errors})
         #if communitypartner
     else:
         return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
@@ -244,7 +244,6 @@ def organization_create(request):
 @login_required
 def user_edit(request):
         #if this request was a POST and not a GET
-    args = {}
     if request.method == 'POST':
         form = UserCreationForm(request.POST, instance=request.user)
         form.actual_user = request.user
@@ -272,33 +271,34 @@ def user_edit(request):
 
 @login_required
 @user_has_perm('edit_organization')
-def organization_edit(request, organization_id):
-   if(request.user.userprofile.purdueuser):
-       organization = Organization.objects.get(id=organization_id)
-           #if this request was a POST and not a GET
-       args = {}
-       if request.method == 'POST':
-           organization = Organization.objects.get(id=organization_id)
-           form = OrganizationCreateForm(request.POST, instance=organization)
-           form.actual_organization = organization
+def organization_settings(request, organization_id):
+    if(request.user.userprofile.purdueuser):
+        organization = Organization.objects.get(id=organization_id)
+        #if the request was a GET
+        if request.method == 'GET':
+            organization = Organization.objects.get(id=organization_id)
+            modelform = OrganizationCreateForm(request.POST, instance=organization)
+            return render(request, 'dbtest/organization_settings.html', {'modelform':modelform,'organization' : organization})
+        elif request.method == 'POST':
+            organization = Organization.objects.get(id=organization_id)
+            modelform = OrganizationCreateForm(request.POST, instance=organization)
+            modelform.actual_organization = organization
 
-           #check form validity
-           if form.is_valid() :
-               #save organization to db and store info to 'organization'
-               organization = form.save(commit = False)
-               title = "Organization {0} modified".format( organization.name )
-               message = "Organization {0} has been modified.".format(organization.name)
-               organization.save()
-               return render(request,'dbtest/confirm.html', {'title': title,'message':message})
-           else:
-               return render(request, 'dbtest/organization_edit.html', {'form':form,'error':"There are incorrect fields", 'organization': organization})
-       #if the request was a GET
-       else:
-           organization = Organization.objects.get(id=organization_id)
-           form = OrganizationCreateForm(request.POST, instance=organization)
-           return render(request, 'dbtest/organization_edit.html', {'form':form,'organization' : organization})
-   else:
-       return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
+           #check modelform validity
+            if modelform.is_valid() :
+                #get modelform info
+                organization = modelform.save(commit = False)
+                #get aux info
+                organization.available = bool(int(request.POST['available']))
+                message = "Organization {0} has been modified.".format(organization.name)
+                organization.save()
+                return render(request,'dbtest/organization_settings.html', {'confirm':message,
+                                                                       'modelform':modelform,
+                                                                       'organization':organization})
+            else:
+                return render(request, 'dbtest/organization_settings.html', {'modelform':modelform,'error':modelform.errors, 'organization': organization})
+    else:
+        return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});
 
 @login_required
 def job_create(request):

@@ -15,7 +15,7 @@ urlpatterns = patterns('',
     url(r'^organization/(?P<organization_id>[0-9]+)/jobs/?$', views.organization_job_index,name='organization_job_index'),
     url(r'^organization/(?P<organization_id>[0-9]+)/accept/?$', views.organization_accept_job,name='organization_accept_job'),
     url(r'^organization/create/?$', views.organization_create,name='organization_create'),
-    url(r'^organization/(?P<organization_id>[0-9]+)/edit/?$', views.organization_edit,name='organization_edit'),
+    url(r'^organization/(?P<organization_id>[0-9]+)/edit/?$', views.organization_settings,name='organization_settings'),
     #job urls
     url(r'^job/(?P<job_id>[0-9]+)/?$', views.job_dash,name='job_dash'),
     url(r'^job/create/?$', views.job_create,name='job_create'),
