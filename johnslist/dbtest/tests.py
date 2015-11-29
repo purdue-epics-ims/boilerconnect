@@ -297,10 +297,10 @@ class OrganizationTestCase(TestCase):
         self.assertTrue(response.status_code == 200)
 
     #changing the organization attributes
-    def test_organization_edit(self):
+    def test_organization_settings(self):
         self.o.group.user_set.add(self.u2) 
         login_as(self, self.u2.username, 'asdf')
-        response = self.client.post(reverse('organization_edit', kwargs = {'organization_id': self.o.pk}))
+        response = self.client.post(reverse('organization_settings', kwargs = {'organization_id': self.o.pk}))
         self.assertEqual(response.status_code, 200)
 
 

@@ -6,7 +6,7 @@
     <h3>{{ organization.name }}<small> Dashboard </small></h3>
   </center>
 
-  <span class="pull-right"><button class="btn btn-info">Organization settings</button></span>
+  <a href="{% url 'organization_settings' organization.id %}" class="pull-right"><button class="btn btn-info">Organization settings</button></a>
 </div>
 
 <div class="row">
