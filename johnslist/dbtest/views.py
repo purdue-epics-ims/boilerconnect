@@ -294,7 +294,7 @@ def organization_edit(request, organization_id):
        else:
            organization = Organization.objects.get(id=organization_id)
            form = OrganizationCreateForm(request.POST, instance=organization)
-           return render(request, 'dbtest/organization_edit.html', {'form':form,'organization_id' : organization_id})
+           return render(request, 'dbtest/organization_edit.html', {'form':form,'organization' : organization})
    else:
        return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
 
