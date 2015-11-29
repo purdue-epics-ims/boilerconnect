@@ -6,56 +6,48 @@
   </div>
 </div>
 <div class = "jumbotron">
-  {% if name %}<b>Welcome Organization:{{ name }}.  Please check your email for a confirmation message.</b>
-
-  {% else %}
-  <div class="form-group">
     <form action="{% url 'organization_create' %}" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
-      <div class="input-group">
-        <span class="input-group-addon" id="addon1">
-          <i class="fa fa-institution"></i>
-        </span>
 
-        <input type="text" class="form-control" autofocus="true" placeholder="Organization Name" name="name"></input>
-      </div>
-    </br>
+      <div class="form-group">
+        <div class="input-group">
+          <span class="input-group-addon" id="addon1">
+            <i class="fa fa-institution"></i>
+          </span>
 
-      <div class="input-group">
-        <span class="input-group-addon" id="addon1">
-          <i class="fa fa-coffee"></i>
-        </span>
-        <textarea class="form-control" placeholder="What is your organization all about?" name="description"></textarea>
-      </div>
-    </br>
-      <div class="input-group">
-        <span class="input-group-addon">
-          <i class="fa fa-check-circle-o"></i>
-        </span>
-           {{form.categories}}
-
-
-      </div>
-    </br>
-
-      <div class="input-group">
-
-        <span class="input-group-addon">
-          <i class="fa fa-camera-retro"></i>
-        </span>
-
-        {{form.icon}}
+          <input type="text" class="form-control" autofocus="true" placeholder="Organization Name" name="name"></input>
+        </div>
       </div>
 
-  </br>
+      <div class="form-group">
+        <div class="input-group">
+          <span class="input-group-addon" id="addon1">
+            <i class="fa fa-coffee"></i>
+          </span>
+          <textarea class="form-control" placeholder="What is your organization all about?" name="description"></textarea>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-group">
+          <span class="input-group-addon">
+            <i class="fa fa-check-circle-o"></i>
+          </span>
+          {{form.categories}}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="input-group">
+          <span class="input-group-addon">
+            <i class="fa fa-camera-retro"></i>
+          </span>
+          {{ form.icon }}
+        </div>
+      </div>
+
       <input class="btn btn-primary" type="submit" value="Create Organization">
 
     </form>
-  </div>
-
-
-
-
-  {% endif %}
 </div>
 {% endblock %}
