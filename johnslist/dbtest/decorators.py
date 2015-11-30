@@ -50,3 +50,20 @@ def user_has_perm(perm):
                 return render(request,'dbtest/confirm.html',{'error':'You do not have access to this resource'})
         return wrapper
     return decorator
+
+def user_is_type(user_type):
+    def decorator(func):
+        def wrapper(request,*args,**kwargs):
+            is_purdueuser = request.user.userprofile.purdueuser
+            if user_type == 'purdueuser':
+                if is_purdueuser:
+                    return func(request,*args,**kwargs)
+                else:
+                    return render(request,'dbtest/confirm.html',{'error':'You do not have access to this resource'})
+            else:
+                if not is_purdueuser:
+                    return func(request,*args,**kwargs)
+                else:
+                    return render(request,'dbtest/confirm.html',{'error':'You do not have access to this resource'})
+        return wrapper
+    return decorator
