@@ -51,6 +51,7 @@ def user_has_perm(perm):
         return wrapper
     return decorator
 
+#verify user is of type 'communitypartner' or 'purdueuser'
 def user_is_type(user_type):
     def decorator(func):
         def wrapper(request,*args,**kwargs):
@@ -60,10 +61,12 @@ def user_is_type(user_type):
                     return func(request,*args,**kwargs)
                 else:
                     return render(request,'dbtest/confirm.html',{'error':'You do not have access to this resource'})
-            else:
+            elif user_type == 'communitypartner':
                 if not is_purdueuser:
                     return func(request,*args,**kwargs)
                 else:
                     return render(request,'dbtest/confirm.html',{'error':'You do not have access to this resource'})
+            else:
+                raise Exception('User type not recognized')
         return wrapper
     return decorator
