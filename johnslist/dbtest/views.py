@@ -7,7 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
 from django.forms.models import inlineformset_factory
-from .decorators import user_has_perm
+from .decorators import user_has_perm, user_is_type
 from .forms import*
 from guardian.shortcuts import assign_perm
 from notifications import notify
@@ -44,6 +44,7 @@ def user_dash(request):
                      })
 
 #display job information, show jobrequests and their current state
+@user_is_type('communitypartner')
 @user_has_perm('view_job')
 def job_dash(request,job_id):
     job = Job.objects.get(id=job_id)
@@ -72,6 +73,7 @@ def organization_detail(request,organization_id):
                  })
 
 #display jobs and members of an organization
+@user_is_type('purdueuser')
 @user_has_perm('view_organization')
 def organization_dash(request,organization_id):
     org = Organization.objects.get(id=organization_id)
@@ -82,16 +84,6 @@ def organization_dash(request,organization_id):
                    'members':members,
                    'jobrequests':jobrequests
                   })
-
-#get a list of an Org's jobs
-@user_has_perm('view_organization')
-def organization_job_index(request,organization_id):
-    if(request.user.userprofile.purdueuser):
-       organization = Organization.objects.get(id=organization_id)
-       return render(request, 'dbtest/organization_job_index.html',{'organization': organization})
-    else:
-       return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
-
 
 #accept or decline a requested Job
 @user_has_perm('edit_organization')
@@ -166,12 +158,6 @@ def search(request):
             search_result = Organization.objects.filter(name__icontains=search)
             
     return render(request,'dbtest/search.html',{'search_result': search_result})
-
-#this view is not working
-@user_has_perm('view_user')
-def user_job_index(request,user_id):
-    jobs = User.objects.get(id=user_id).jobs
-    return render(request,'dbtest/user_job_index.html',{'jobs':jobs})
 
 @user_has_perm('view_user')
 def user_membership(request,user_id):
