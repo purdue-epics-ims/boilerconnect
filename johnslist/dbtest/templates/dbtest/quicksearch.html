@@ -9,10 +9,9 @@
             <th>Organization</th>
             <th>Tags</th>
         </tr>
-<ul>
     {% for org in orgs %}
-    <tr class="org-item" ">
-        <td>{{org.name}}</td>
+    <tr class="org_item" ">
+        <td class="org_name">{{org.name}}</td>
         <td>
           {% for cat in org.categories.all %}
             <span class="category label label-default">{{ cat }}</span>
@@ -27,33 +26,34 @@
       console.log('keypress')
       var search_text = $('#search').val().toLowerCase();
 
-      //for (org-item in $('.org-item')){
-      $('.org-item').each(function(i,org-item){
+      $('.org_item').each(function(i,org_item){
           var show = 0;
           //check for match in each category, highlight match
-          //for (cat-item in $(org-item).('.category')) {
-          $(org-item).('.category').each(function(i,cat-item){
-              if ($(cat-item).text().search(search_text) >=0) {
+          console.log($(org_item).find('.organization'))
+          $(org_item).find('.category').each(function(i,cat_item){
+              if (search_text && $(cat_item).text().search(search_text) >=0) {
                   show = 1;
-                  $(cat-item).switchClass('label-default','label-warning')
+                  $(cat_item).removeClass('label-default')
+                  $(cat_item).addClass('label-warning')
               }
               else {
-                  $(cat-item).switchClass('label-warning','label-default')
+                  $(cat_item).removeClass('label-warning')
+                  $(cat_item).addClass('label-default')
               }
           })
 
           //check for match in name
-          var name_str = $(org-item).text().toLowerCase();
+          var name_str = $(org_item).children('.org_name').text().toLowerCase();
           if (name_str.search(search_text) >= 0){
               show = 1
           }
 
           //hide or show
           if (show) {
-              $(org-item).show()
+              $(org_item).show()
           }
           else {
-              $(org-item).hide()
+              $(org_item).hide()
           }
       })
   }
