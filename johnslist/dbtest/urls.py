@@ -25,6 +25,7 @@ urlpatterns = patterns('',
 	url(r'^logout/?$', logout,{'template_name':'dbtest/logout.html'},name='logout'),
     url(r'^about/?$', views.about, name='about'),
     url(r'^notifications/?$', views.notifications, name='notifications'),
+    url(r'^quicksearch/?$', views.quicksearch,name='quicksearch'),
  )
 
 

@@ -12,6 +12,11 @@ from .forms import*
 from guardian.shortcuts import assign_perm
 from notifications import notify
 
+def quicksearch(request):
+    orgs = Organization.objects.all()
+    return render(request,'dbtest/quicksearch.html',
+                {'orgs':orgs})
+
 #login with provided user/pass
 def login(request):
     if request.method == 'POST':
