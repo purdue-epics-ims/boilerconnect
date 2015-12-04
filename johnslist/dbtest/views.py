@@ -34,7 +34,6 @@ def user_dash(request):
     user = request.user
     if user.userprofile.purdueuser:
         orgs = [group.organization for group in user.groups.all()]
-        print orgs
         return render(request, 'dbtest/purdueuser_dash.html',{'user_dash': user,'organizations':orgs})
     else:
         jobs = user.jobs.all()
