@@ -51,20 +51,29 @@ from django.test import Client
 def login_as(self,user,password):
     return self.client.post(reverse("login"),{'username':user,'password':password},follow=True)
 
+def logout(self):
+    return self.client.get(reverse('logout'))
+
 #generic setup for all testcases
 def set_up(self):
-        #create user
-        self.u = User.objects.create(username='foobar_user')
-        self.u.set_password('asdf')
-        self.u.save()
-        UserProfile.objects.create(name = self.u.username, user = self.u, purdueuser = True)
+        #create users
+        self.u_pu = User.objects.create(username='foobar_purdueuser')
+        self.u_pu.set_password('asdf')
+        self.u_pu.save()
+        UserProfile.objects.create(name = self.u_pu.username, user = self.u_pu, purdueuser = True)
+
+        self.u_cp = User.objects.create(username='foobar_communitypartner')
+        self.u_cp.set_password('asdf')
+        self.u_cp.save()
+        UserProfile.objects.create(name = self.u_cp.username, user = self.u_cp, purdueuser = False)
         #create group/org
         self.g=Group.objects.create(name="foobar_group")
+        self.g.user_set.add(self.u_pu)
         self.o = Organization.objects.create(name = self.g.name, group = self.g, description="test description",email="test@email.com",phone_number="123-456-7890")
         self.o.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
-        #create category owned by foobar_user
+        #create category owned by foobar_purdueuser
         self.cat = Category.objects.create(name='foobar_category',description="test description")
-        self.j = Job.objects.create(name='foobar_job',description="test description",duedate='2015-01-01',creator=self.u)
+        self.j = Job.objects.create(name='foobar_job',description="test description",duedate='2015-01-01',creator=self.u_cp)
 
 class UserTestCase(TestCase):
     #django calls this initialization function automatically
@@ -83,17 +92,16 @@ class UserTestCase(TestCase):
         self.assertTrue('error' in r.context)
 
         #Test successful login
-        r = self.client.post(reverse('login'),{'username':self.u.username,'password':'asdf'})
-        r = login_as(self,self.u.username,'asdf')
+        r = login_as(self,self.u_pu.username,'asdf')
         #check redirect
         self.assertRedirects(r,reverse('front_page'))
         #check logged in as user0
         r = self.client.get(reverse('front_page'))
-        self.assertEqual(r.context['user'],self.u)
+        self.assertEqual(r.context['user'],self.u_pu)
 
         #Test logout
-        r = self.client.get(reverse('logout'))
-        self.assertEqual(type(r.context['user']),AnonymousUser)
+        r = logout(self)
+        self.assertNotEqual(r.context['user'],self.u_pu)
 
     def test_user_create(self):
         #successful user creation
@@ -106,7 +114,7 @@ class UserTestCase(TestCase):
     def test_user_edit(self):
         response = self.client.post(reverse('user_edit'))
         self.assertTrue(response.status_code == 302)
-        login_as(self, self.u.username, 'asdf')
+        login_as(self, self.u_pu.username, 'asdf')
         response = self.client.post(reverse('user_edit'))
         self.assertTrue(response.status_code == 200)
         #change the users username, then try to log in again
@@ -115,7 +123,7 @@ class UserTestCase(TestCase):
         #verify user is redirected
         r = self.client.get(reverse('user_dash'))
         self.assertRedirects(r,'/login?next='+reverse('user_dash'))
-        login_as(self,self.u.username,'asdf')
+        login_as(self,self.u_pu.username,'asdf')
         #verify user can view their own detail page
         r = self.client.get(reverse('user_dash',))
         self.assertFalse('error' in r.context)
@@ -125,14 +133,14 @@ class JobTestCase(TestCase):
     #django calls this initialization function automatically
     def setUp(self):
         set_up(self)
-        self.j2 = Job.objects.create(name='test_job',description="test description",duedate='2015-01-01',creator=self.u)
+        self.j2 = Job.objects.create(name='test_job',description="test description",duedate='2015-01-01',creator=self.u_cp)
 
     ### Backend Tests ###
 
     #ensure job is editable by creator 
     def test_permissions(self):
-        self.assertTrue(self.u.has_perm('edit_job',self.j))
-        self.assertTrue(self.u.has_perm('view_job',self.j))
+        self.assertTrue(self.u_cp.has_perm('edit_job',self.j))
+        self.assertTrue(self.u_cp.has_perm('view_job',self.j))
 
     #check creating a jobrequest
     def test_request_organization(self):
@@ -168,11 +176,10 @@ class JobTestCase(TestCase):
     #verify job_create view
     def test_job_create(self):
         #Login
-        self.u.userprofile.purdueuser = False
-        login_as(self,self.u.username,'asdf')
+        login_as(self,self.u_cp.username,'asdf')
         #check logged in as user0
         r = self.client.get(reverse('front_page'))
-        self.assertEqual(r.context['user'],self.u)
+        self.assertEqual(r.context['user'],self.u_cp)
 
         #Create a job
         r = self.client.post(reverse('job_create'),{'name':'interfacejob','description':"testjob description",'duedate':'2015-09-05','organization':self.o.pk,'categories':self.cat.pk},follow=True)
@@ -183,25 +190,34 @@ class JobTestCase(TestCase):
 
     #verify job_dash view
     def test_job_dash(self):
-        login_as(self,self.u.username,'asdf')
+        login_as(self,self.u_cp.username,'asdf')
         r = self.client.get(reverse('job_dash',kwargs={'job_id':self.j.id}))
+        self.assertFalse('error' in r.context)
         self.assertTrue(r.status_code == 200)
         self.assertTrue(self.j == r.context['job'])
 
     #verify jobrequest_dash view
     def test_jobrequest_dash(self):
-        login_as(self,self.u.username,'asdf')
         jr = self.j2.request_organization(self.o)
-        r = self.client.get(reverse('jobrequest_dash',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
-        self.assertEqual(jr,r.context['jobrequest'])
 
+        login_as(self,self.u_pu.username,'asdf')
+        r = self.client.get(reverse('jobrequest_dash',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
+        self.assertTrue(self.u_pu.has_perm('view_jobrequest',jr))
+        self.assertFalse('error' in r.context)
+        self.assertEqual(jr,r.context['jobrequest'])
+        logout(self)
+
+        login_as(self,self.u_cp.username,'asdf')
+        r = self.client.get(reverse('jobrequest_dash',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
+        self.assertFalse('error' in r.context)
+        self.assertEqual(jr,r.context['jobrequest'])
 
 class OrganizationTestCase(TestCase):
     #django calls this initialization function automatically
     def setUp(self):
         set_up(self)
-        #add foobar_user to org
-        self.o.group.user_set.add(self.u)
+        #add foobar_purdueuser to org
+        self.o.group.user_set.add(self.u_pu)
         #nonmember_user is not a member
         self.u2 = User.objects.create(username='nonmember_user')
         self.u2.set_password('asdf')
@@ -212,8 +228,8 @@ class OrganizationTestCase(TestCase):
 
     #check default permissions on newly created Organizations
     def test_permissions(self):
-        self.assertTrue(self.u.has_perm('view_organization',self.o))
-        self.assertTrue(self.u.has_perm('edit_organization',self.o))
+        self.assertTrue(self.u_pu.has_perm('view_organization',self.o))
+        self.assertTrue(self.u_pu.has_perm('edit_organization',self.o))
         self.assertFalse(self.u2.has_perm('view_organization',self.o))
         self.assertFalse(self.u2.has_perm('edit_organization',self.o))
 
@@ -240,9 +256,9 @@ class OrganizationTestCase(TestCase):
 
     #test get_admins member function
     def test_get_admins(self):
-        self.o.group.user_set.add(self.u)
-        assign_perm('is_admin',self.u,self.o)
-        self.assertTrue(self.u in self.o.get_admins())
+        self.o.group.user_set.add(self.u_pu)
+        assign_perm('is_admin',self.u_pu,self.o)
+        self.assertTrue(self.u_pu in self.o.get_admins())
         
 
     ### Interface Tests ###
@@ -255,7 +271,7 @@ class OrganizationTestCase(TestCase):
 
     #test organization_dash.html
     def test_organization_dash(self):
-        login_as(self, self.u.username, 'asdf')
+        login_as(self, self.u_pu.username, 'asdf')
         r = self.client.get(reverse('organization_dash',kwargs={'organization_id':self.o.id}))
         self.assertTrue(r.status_code == 200)
         self.assertTrue(self.o == r.context['organization'])
