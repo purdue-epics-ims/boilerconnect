@@ -1,13 +1,66 @@
 {% extends "dbtest/base.html" %}
 
+
 {% block content %}
+<input id="search" class="form-control" placeholder="Search" type="text" >
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Organization</th>
+            <th>Tags</th>
+        </tr>
 <ul>
     {% for org in orgs %}
-    <li categories="{% for cat in org.categories.all %}{{ cat }},{% endfor %}">
-        {{org.name}}
-    </li>
+    <tr class="org-item" ">
+        <td>{{org.name}}</td>
+        <td>
+          {% for cat in org.categories.all %}
+            <span class="category label label-default">{{ cat }}</span>
+          {% endfor %}
+        </td>
+    </tr>
     {% endfor %}
-</ul>
+</table>
 
+<script>
+  function filter(){
+      console.log('keypress')
+      var search_text = $('#search').val().toLowerCase();
+
+      //for (org-item in $('.org-item')){
+      $('.org-item').each(function(i,org-item){
+          var show = 0;
+          //check for match in each category, highlight match
+          //for (cat-item in $(org-item).('.category')) {
+          $(org-item).('.category').each(function(i,cat-item){
+              if ($(cat-item).text().search(search_text) >=0) {
+                  show = 1;
+                  $(cat-item).switchClass('label-default','label-warning')
+              }
+              else {
+                  $(cat-item).switchClass('label-warning','label-default')
+              }
+          })
+
+          //check for match in name
+          var name_str = $(org-item).text().toLowerCase();
+          if (name_str.search(search_text) >= 0){
+              show = 1
+          }
+
+          //hide or show
+          if (show) {
+              $(org-item).show()
+          }
+          else {
+              $(org-item).hide()
+          }
+      })
+  }
+
+  $('#search').keyup(function() {
+      filter()
+  });
+</script>
 
 {% endblock content %}
