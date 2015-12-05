@@ -22,6 +22,10 @@
 </table>
 
 <script>
+  $('.org_item').click(function(){
+      $(this).toggleClass('info')
+  })
+
   function filter(){
       console.log('keypress')
       var search_text = $('#search').val().toLowerCase();
