@@ -1,4 +1,5 @@
 {% extends "dbtest/base.html" %}
+{% load staticfiles %}
 
 {% block content %}
 
@@ -22,7 +23,7 @@
 
 
 <script>
-  document.body.style.background = "url(http://www.rotblattamrany.com/wp-content/uploads/2014/05/cropped-John-Purdue.jpg) no-repeat 70% 15% fixed";
+  document.body.style.background = "url({% static 'purdue_background.jpg' %}) no-repeat 70% 15% fixed";
 
 </script>
 
