@@ -25,7 +25,7 @@ def login(request):
         user = authenticate(username=username, password=password)
         if user is not None and user.is_active:
             auth_login(request, user)
-            return redirect('front_page')
+            return redirect('user_dash')
         else:
             error = "There was a problem with your login.  Please try again." 
             return render(request,'dbtest/login.html',{'error':error})
