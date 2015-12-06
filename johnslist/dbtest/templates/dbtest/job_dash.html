@@ -47,7 +47,7 @@
             Job Requests
       </div>
       <div class="panel-body">
-        <ul class="list-group">
+        <ul class="list-group dash-list">
           {% for jobrequest in jobrequests %}
             <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
                 <span class="badge">14</span>
