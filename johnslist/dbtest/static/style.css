@@ -272,3 +272,27 @@ background:#e1d8d8;
 	width: 49%;
 	display: inline-block;
 }
+
+/*------------ Guided Job Creation -------------*/
+.org_list{
+    overflow-y:auto;
+    height:200px;
+}
+
+#org_results{
+    height:200px;
+}
+
+
+.org_list .org_item{
+    cursor:pointer;
+}
+
+.org_list .category{
+    cursor:pointer;
+}
+
+.org_list .org_check{
+    height:40px;
+    width:40px;
+}
