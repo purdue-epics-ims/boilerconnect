@@ -22,22 +22,16 @@
       </div>
 
       <div class="list-group">
-          <!--       {% for noti in user.notifications.unread %} -->
-        <a href="#" class="list-group-item active">
-         <i class="fa fa-circle"></i>
-         <!--          {{ noti.verb }}} -->
-         notification text
-         <span class="pull-right"><small>Oct 21,2015 9:31PM</small></span>
-        </a>
-        <!--       {% endfor %} -->
-        <!--       {% for noti in user.notifications.read %} -->
         <a href="#" class="list-group-item">
          <i class="fa fa-circle"></i>
-         <!--          {{ noti.verb }}} -->
          notification text
          <span class="pull-right"><small>Oct 21,2015 9:31PM</small></span>
         </a>
-        <!--       {% endfor %} -->
+        <a href="#" class="list-group-item read">
+         <i class="fa fa-circle"></i>
+         notification text
+         <span class="pull-right"><small>Oct 21,2015 9:31PM</small></span>
+        </a>
       </div>
 
       <div class="panel-body">
@@ -53,16 +47,16 @@
             Job Requests
       </div>
       <div class="panel-body">
-        <ul class="list-group">
+        <ul class="dash-list list-group">
           {% for jobrequest in jobrequests %}
           <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
             <span class="badge">14</span>
             {% if jobrequest.accepted %}
-            <span class="btn btn-success">Accepted</span>
+            <span class="label label-lg label-success">Accepted</span>
             {% elif jobrequest.declined %}
-            <span class="btn btn-danger">Declined</span>
+            <span class="label label-lg label-danger">Declined</span>
             {% else %}
-            <span class="btn btn-warning">Pending</span>
+            <span class="label label-lg label-warning">Pending</span>
             {% endif %}
             {{ jobrequest.job.name }}
           </a>
