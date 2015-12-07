@@ -39,12 +39,16 @@
 
             </div>
             <div class="navbar-collapse collapse" id="navbar-main">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav navbar-left">
     <li><a href="{%url 'about'%}">About</a></li>
+
     </ul>
+
+    <form class="navbar-form navbar-left">
     {% if not user.userprofile.purdueuser %}
-    <a href = 'job_creation' class="btn btn-danger">Create a job</a>
+    <a href = '/job_creation' class="btn btn-danger"> <i class="fa fa-certificate"></i> Create a Job</a>
     {% endif %}
+</form>
 
             {% if user.is_authenticated %}
 
