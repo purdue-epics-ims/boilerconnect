@@ -77,8 +77,14 @@ class Job(models.Model):
     def __unicode__(self):
         return self.name
     name = models.CharField('Job Name',max_length=128)
-    description = models.TextField('Job Description')
+    #short description
+    description = models.TextField('Job Description', max_length=256)
+    deliverable = models.TextField('Deliverable', max_length=256)
     duedate = models.DateTimeField('Date Due')
+    stakeholders = models.TextField('Stakeholders')
+    tech_specs = models.TextField('Technical Specifications', blank = True)
+    budget = models.TextField('Budget')
+    attachments = models.FileField(upload_to='job', blank = True) 
     creator = models.ForeignKey(User,related_name = 'jobs')  # User -o= Job
     organization = models.ManyToManyField(Organization, through = 'JobRequest')
     categories = models.ManyToManyField(Category)
