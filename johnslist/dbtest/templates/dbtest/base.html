@@ -7,7 +7,7 @@
 
     <link rel="icon" type="image/png" href='{% static 'favicon.png' %}'/>
     <!-- Font awesome! -->
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
 
     <!-- Custom CSS -->
     <link rel='stylesheet' type='text/css' href='{% static 'style.css' %}'/>
@@ -56,14 +56,15 @@
                     </li>
 
                     <!--Profile Quick Groups-->
+                    {% if not user.userprofile.purdueuser %}
                     <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-toggle="dropdown" haspopup="true" onmouseover="hoverhard()"><i class="fa fa-briefcase"></i>  Jobs<span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu" arialabeledby="user">
 
                             <li class="dropdown-header">New Requests</li>
-                            {% for job in user.creator.all %}
+                            {% for job in user.jobs.all %}
                             <li>
-                                <a href="LINK TO JOB {{ job.id }} DASHBOARD">{{ job.name }}
+                                <a href="{% url 'job_dash' job.id %}">{{ job.name }}
                                 <!-- <span class="badge">{{ job.name }}</span> -->
                                 </a>
                             </li>
@@ -75,7 +76,9 @@
 
                         </ul>
                     </li>
+                    {% endif %}
 
+                    {% if user.userprofile.purdueuser %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-toggle="dropdown" haspopup="true" onmouseover="hoverhard()">
                             <i class="fa fa-institution"></i>
@@ -94,7 +97,7 @@
                                 <span class="label label-default pull-right">Admin</span>
                                 {%endif%}
 
-                                <a href="{% url 'organization_detail' group.organization.id %}">{{ group.organization.name }} </a>
+                                <a href="{% url 'organization_dash' group.organization.id %}">{{ group.organization.name }} </a>
                             </li>
                             <li class="divider"></li>
 
@@ -103,8 +106,9 @@
                             <li><a href="{%url 'organization_create'%}"><strong><i class="fa fa-users"></i> Create Organiztion</strong></a></li>
                         </ul>
                     </li>
+                    {% endif %}
 
-                    <li><a href="{% url 'user_detail' user.id %}"><i class="fa fa-dashboard"></i><strong> {{user.username}}</strong></a></li>
+                    <li><a href="{% url 'user_dash' %}"><i class="fa fa-dashboard"></i><strong> {{user.username}}</strong></a></li>
                     <!--<li><a href="{%url 'user_edit'%}"><i class="fa fa-gear"></i> Settings</a></li>-->
                     <li><a href="{%url 'logout'%}"><i class="fa fa-sign-out"></i> Logout</a></li>
                 </ul>
@@ -146,7 +150,15 @@
         </div>
     </div>
     {% endif %}
-
+    {% if confirm %}
+    <div id='confirm'>
+        <div class="alert alert-dismissible alert-success">
+        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+        <span class="sr-only">confirm:</span>
+        {{ confirm }}
+        </div>
+    </div>
+    {% endif %}
     {% block content %}
     {% endblock %}
 

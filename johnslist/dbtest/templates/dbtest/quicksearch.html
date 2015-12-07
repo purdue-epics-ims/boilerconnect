@@ -1,0 +1,13 @@
+{% extends "dbtest/base.html" %}
+
+{% block content %}
+<ul>
+    {% for org in orgs %}
+    <li categories="{% for cat in org.categories.all %}{{ cat }},{% endfor %}">
+        {{org.name}}
+    </li>
+    {% endfor %}
+</ul>
+
+
+{% endblock content %}

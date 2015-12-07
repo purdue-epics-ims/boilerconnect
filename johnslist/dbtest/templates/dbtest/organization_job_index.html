@@ -59,7 +59,7 @@
         <h4 class="modal-title" id="label{{job.id}}">{{job.name}} Details</h4>
       </div>
       <div class="modal-body">
-        <p><span class="text-muted"><strong>{{job.creator}}</strong> provided the following information:</span></p>
+        <p><span class="text-muted"><strong>{{job.jobrequests}}</strong> provided the following information:</span></p>
         <p>{{job.description}}</p>
       </div>
       <div class="modal-footer">
@@ -123,7 +123,7 @@
 				        <h4 class="modal-title" id="label{{job.id}}">{{job.name}} Details</h4>
 				      </div>
 				      <div class="modal-body">
-				      <p><span class="text-muted"><strong>{{job.creator}}</strong> provided the following information:</span></p>
+				      <p><span class="text-muted"><strong>{{job.jobrequests}}</strong> provided the following information:</span></p>
 				      <p>{{job.description}}</p>
 				      </div>
 				      <div class="modal-footer">
@@ -146,7 +146,7 @@
 									</td>
 
 									<td>
-									{{job.creator}}
+									{{job.jobrequests}}
 									</td>
 								</tr>
 							{%endfor%}
@@ -158,12 +158,12 @@
 
 			{% if organization.jobs_requested%}
 				{% for job in organization.jobs_requested.all %}
-					<a href='{% url 'job_detail' organization.id job.id %}'>{{ job.name }}</a>
+          <a href="{% url 'jobrequest_dash' organization.id job.id %}">{{ job.name }}</a>
 					<br>
 
 				{% endfor %}
 
-				<a href='{% url 'organization_accept_job' organization.id %}'>See all requests</a>
+        <a href="{% url 'organization_accept_job' organization.id %}">See all requests</a>
 			{% else %}
 				<span class="text-muted">No new requests have been received</span>
 
@@ -194,7 +194,7 @@
 					<th>Creator</th>
 
 <td>
-  {{job.creator}}
+  {{job.jobrequests}}
 </td>
 </tr>
         {%endif%}
@@ -203,14 +203,14 @@
 
 </table>
 
-{% if organization.jobs_requested%}
+{% if organization.jobs_requested %}
 {% for job in organization.jobs_requested.all %}<!--not sure about this syntax-->
-<a href='{% url 'job_detail' organization.id job.id %}'>{{ job.name }}</a>
+<a href="{% url 'jobrequest_dash' organization.id job.id %}">{{ job.name }}</a>
 <br>
 
 {% endfor %}
 
-<a href='{% url 'organization_accept_job' organization.id %}'>See all requests</a>
+<a href="{% url 'organization_accept_job' organization.id %}">See all requests</a>
 {% else %}
 <span class="text-muted">No new requests have been received</span>
 {% endif %}
@@ -258,7 +258,7 @@
         <h4 class="modal-title" id="label{{job.id}}">{{job.name}} Details</h4>
       </div>
       <div class="modal-body">
-        <p><span class="text-muted"><strong>{{job.creator}}</strong> provided the following information:</span></p>
+        <p><span class="text-muted"><strong>{{job.jobrequests}}</strong> provided the following information:</span></p>
         <p>{{job.description}}</p>
       </div>
       <div class="modal-footer">
@@ -278,7 +278,7 @@
 </td>
 
 <td>
-  {{job.creator}}
+  {{job.jobrequests}}
 </td>
 </tr>
 {%endfor%}

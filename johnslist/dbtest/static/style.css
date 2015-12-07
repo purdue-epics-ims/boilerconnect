@@ -4,7 +4,50 @@
 ::-moz-selection {
 	background: #ffb7b7; /* Gecko Browsers */
 }
+.nav
+{
+	margin=0;
+}
+.jumbotron{
+	padding:50px 0 50px 0;
+}
+/* CSS used here will be applied after bootstrap.css */
+.badge-notify{
+	 background:#f04124;
+	 position:relative;
+	 top: -25px;
+	 left: -25px;
 
+	}
+.success{
+
+	background-color:#43ac6a ;
+
+}
+
+.warning{
+
+	background-color: #e99002;
+
+}
+
+.danger{
+  background-color: #f04124;
+}
+
+/* ---------------Dashboards---------------------- */
+
+/* make bootswatch labels bigger */
+.dash-list .label{
+    font-size:18px;
+}
+/* add more padding to lists on dashboards */
+.dash-list .list-group-item{
+    padding:15px;
+}
+.notifications .read{
+    background-color:#E5E5E5;
+}
 
 .btn-file {
 	position: relative;

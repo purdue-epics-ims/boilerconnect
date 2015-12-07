@@ -1,0 +1,71 @@
+{% extends "dbtest/base.html" %}
+
+{% block content %}
+<div class="jumbotron">
+  <center>
+    <h3>{{ organization.name }}<small> Dashboard </small></h3>
+  </center>
+
+  <a href="{% url 'organization_settings' organization.id %}" class="pull-right"><button class="btn btn-info">Organization Settings</button></a>
+  <a href="{% url 'organization_detail' organization.id %}" class="pull-right"><button class="btn btn-info">View Public Profile</button></a>
+</div>
+
+<div class="row">
+  <div class="col-sm-5">
+    <!--left col-->
+    <div class="panel panel-primary">
+      <div class="panel-heading">
+        Notifications
+        <div class="badge">
+            a number goes here
+        </div>
+      </div>
+
+      <div class="list-group notifications">
+        <a href="#" class="list-group-item">
+         <i class="fa fa-circle"></i>
+         notification text
+         <span class="pull-right"><small>Oct 21,2015 9:31PM</small></span>
+        </a>
+        <a href="#" class="list-group-item read">
+         <i class="fa fa-circle"></i>
+         notification text
+         <span class="pull-right"><small>Oct 21,2015 9:31PM</small></span>
+        </a>
+      </div>
+
+      <div class="panel-body">
+        <center><a href="#"> Show More </a></center>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-7">
+    <div class="panel panel-primary">
+
+      <div class="panel-heading">
+            Job Requests
+      </div>
+      <div class="panel-body">
+        <ul class="dash-list list-group">
+          {% for jobrequest in jobrequests %}
+          <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
+            <span class="badge">14</span>
+            {% if jobrequest.accepted %}
+            <span class="label label-lg label-success">Accepted</span>
+            {% elif jobrequest.declined %}
+            <span class="label label-lg label-danger">Declined</span>
+            {% else %}
+            <span class="label label-lg label-warning">Pending</span>
+            {% endif %}
+            {{ jobrequest.job.name }}
+          </a>
+          {% endfor %}
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

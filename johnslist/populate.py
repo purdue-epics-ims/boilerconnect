@@ -7,10 +7,16 @@ def populate():
         os.remove("db.sqlite3")
     call_command('syncdb', interactive=False)
     
+    #create default users
     for num in range(0,20):
         newuser = User.objects.create(username='user{0}'.format(num))
         newuser.set_password('asdf')
         newuser.save()
+        if(num % 2 == 0):
+           UserProfile.objects.create(name = newuser.username, user = newuser, purdueuser = True)
+        else:
+           UserProfile.objects.create(name = newuser.username, user = newuser, purdueuser = False)
+
 
     #add Organizations
     g=Group.objects.create(name="Purdue Linux Users Group")
@@ -50,13 +56,6 @@ def populate():
         plug.group.user_set.add(user)
         epics.group.user_set.add(user)
         amet.group.user_set.add(user)
-
-    #set is_admin
-    u = User.objects.get(pk=1)
-    for org in Organization.objects.all():
-        assign_perm('is_admin',u,org)
-        assign_perm('edit_organization',u,org)
-
 
     #add ServiceServiceCategory's
     categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']

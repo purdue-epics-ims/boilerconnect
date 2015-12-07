@@ -1,0 +1,39 @@
+{% extends "dbtest/base.html" %}
+
+
+{% block content %}
+<div class="jumbotron">
+{% block jumbotron %}
+
+{% endblock jumbotron %}
+	</div>
+&nbsp;
+
+<div class="row">
+	<div class="col-sm-5">
+		<!--left col-->
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				Notifications
+				<div class="badge">
+					5
+				</div>
+			</div>
+			{% block notifications %} {% endblock notifications %}
+    </div>
+  </div>
+
+	<div class="col-sm-7">
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				Purdue Organizations
+				<span class="badge">3</span>
+			</div>
+			<div class="panel-body">
+					{% block enumerated %} {% endblock enumerated %}
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,96 @@
+{% extends "dbtest/base.html" %}
+
+{% block content %}
+
+<center>
+<img src="{{organization.icon.url}}" width="140" height="140" class="img-circle">
+<h3>{{organization.name}} <small> Settings </small>
+  </h3>
+</center>
+
+<form action="{% url 'organization_settings' organization.id %}" method="post">
+
+  {% csrf_token %}
+
+  <div class="row">
+    <div class="col-sm-6">
+
+    Name
+    <div class="form-group">
+      <div class="input-group">
+          <span class="input-group-addon" id="addon1">
+            <i class="fa fa-institution"></i>
+          </span>
+
+          <input type="text" class="form-control" autofocus="true" placeholder="Edit Name" name="name" value="{{organization.name}}"></input>
+      </div>
+    </div>
+
+    Description
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon" id="addon1">
+          <i class="fa fa-coffee"></i>
+        </span>
+        <textarea class="form-control" placeholder="Edit Description" name="description">
+    {{organization.description}}
+  </textarea>
+      </div>
+    </div>
+
+    Categories
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-check-circle-o"></i>
+        </span>
+          {{modelform.categories}}
+      </div>
+    </div>
+
+    <div class="form-group">
+      Photo
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-camera-retro"></i>
+        </span>
+
+        {{modelform.icon}}
+
+      </div>
+    </div>
+
+    </div>
+
+    <div class="col-sm-6">
+      Availability
+      <div class="radio">
+        <label>
+            <input name="available" id="available" value=1
+                   {% if organization.available %} checked="" {% endif %}
+                   type="radio">
+          Accepting Jobs
+        </label>
+      </div>
+      <div class="radio">
+        <label>
+          <input name="available" id="available" value=0
+                  {% if organization.available = False %} checked="" {% endif %}
+                  type="radio">
+          Not accepting Jobs
+        </label>
+      </div>
+    </div>
+
+
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 col-sm-offset-5">
+    <input class="btn btn-primary" type="submit" value="Modify Organization">
+    </div>
+  </div>
+</form>
+
+
+{% endblock content %}
