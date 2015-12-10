@@ -1,0 +1,32 @@
+<div class="col-sm-5">
+  <!--left col-->
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      {{ title }}
+      <div class="badge">
+        {{ unread_notifications|length }}
+      </div>
+    </div>
+
+    <div class="list-group notifications">
+      {% for noti in unread_notifications %}
+      <a href="#" class="list-group-item">
+        <i class="fa fa-circle"></i>
+        {{ noti.verb }}
+        <span class="pull-right"><small>{{ noti.timestamp }}</small></span>
+      </a>
+      {% endfor %}
+      {% for noti in read_notifications %}
+      <a href="#" class="list-group-item read">
+        <i class="fa fa-circle"></i>
+        {{ noti.verb }}
+        <span class="pull-right"><small>{{ noti.timestamp }}</small></span>
+      </a>
+      {% endfor %}
+    </div>
+
+    <div class="panel-body">
+      <center><a href="#"> Show More </a></center>
+    </div>
+  </div>
+</div>

@@ -39,7 +39,11 @@ def user_dash(request):
     user = request.user
     if user.userprofile.purdueuser:
         orgs = [group.organization for group in user.groups.all()]
-        return render(request, 'dbtest/purdueuser_dash.html',{'user_dash': user,'organizations':orgs})
+        return render(request,
+                      'dbtest/purdueuser_dash.html',
+                      {'user_dash': user,
+                       'organizations':orgs,
+                       })
     else:
         jobs = user.jobs.all()
         return render(request, 'dbtest/communitypartner_dash.html',
