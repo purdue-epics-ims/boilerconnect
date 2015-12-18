@@ -1,16 +1,34 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
-<div class="panel-heading">
-  <div class="">
-    Job Information : {{ jobrequest.job.name }}
-  </div>
+
+<div class="jumbotron">
+  <center>
+    <h3>{{ jobrequest.job.name }}</h3>
+  </center>
+
+  <a href="" class="pull-right"><button class="btn btn-info">Settings</button></a>
 </div>
 
-<div class = "jumbotron" >
-    <p><u>Job Description</u> : {{jobrequest.job.description}}</p>
-    <p><u>Job Due Date</u> : {{jobrequest.job.duedate}}</p>
-    <p><u>Job Creator</u> : {{ jobrequest.job.creator }}</p>
-    {% if comment_text %}
+<div class="row">
+  <div class="col-sm-7 col-sm-offset-2">
+    <div class="panel panel-primary">
+
+      <div class="panel-heading">
+            Job Description
+      </div>
+      <div class="panel-body">
+          {{jobrequest.job.description}}
+      </div>
+
+      <div class="panel-heading">
+            Job Information
+      </div>
+      <div class="panel-body">
+          {{jobrequest.job.creator}}
+          {{jobrequest.job.duedate}}
+      </div>
+
+    </div>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -30,20 +48,8 @@
             </tr>
             {% endfor %}
         </tbody>
-        {% endif %}
 
     </table>
-    <div class = "contact-info box">
-        <form method=POST name="comment" action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
-            {% csrf_token %}
-            <div class="input-group">
-                <span class="input-group-addon">
-                    <i class="fa fa-bullhorn"></i>
-                </span>
-                <textarea class="form-control"  name="text_comment" placeholder="What do you think about this job?"></textarea>
-            </div>
-            <input class = "custom-btn" type="submit" name = "comment" value="Leave the comment">
-        </form>
-    </div>
+  </div>
 </div>
 {% endblock content %}

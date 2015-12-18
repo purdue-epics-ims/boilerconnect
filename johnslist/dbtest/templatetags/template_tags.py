@@ -7,11 +7,9 @@ register = template.Library()
 
 # render notifications in a panel
 @register.inclusion_tag('tags/notifications.html')
-def dash_notifications(title, notifications):
-    unread = notifications.filter(unread=True)
-    read = notifications.filter(unread=False)
-    context = {'unread_notifications':unread,
-               'read_notifications':read,
+def dash_notifications(title, unread, read):
+    context = {'unread':unread,
+               'read':read,
                'title':title
                }
     return context
