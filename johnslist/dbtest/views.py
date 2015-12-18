@@ -37,18 +37,25 @@ def login(request):
 @login_required
 def user_dash(request):
     user = request.user
+    read_notifications = list(request.user.notifications.read())
+    unread_notifications = list(request.user.notifications.unread())
+    request.user.notifications.mark_all_as_read()
     if user.userprofile.purdueuser:
         orgs = [group.organization for group in user.groups.all()]
         return render(request,
                       'dbtest/purdueuser_dash.html',
                       {'user_dash': user,
                        'organizations':orgs,
+                       'unread_notifications':unread_notifications,
+                       'read_notifications':read_notifications,
                        })
     else:
         jobs = user.jobs.all()
         return render(request, 'dbtest/communitypartner_dash.html',
                      {'user_dash': user,
-                       'jobs':jobs
+                       'jobs':jobs,
+                       'unread_notifications':unread_notifications,
+                       'read_notifications':read_notifications,
                      })
 
 #display job information, show jobrequests and their current state

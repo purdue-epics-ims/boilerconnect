@@ -9,13 +9,13 @@
     </div>
 
     <div class="list-group notifications">
-      {% for noti in unread_notifications %}
+      {% for noti in unread %}
       <a href="#" class="list-group-item">
         {{ noti.verb }}
         <span class="pull-right"><small>{{ noti.timestamp }}</small></span>
       </a>
       {% endfor %}
-      {% for noti in read_notifications %}
+      {% for noti in read %}
       <a href="#" class="list-group-item read">
         {{ noti.verb }}
         <span class="pull-right"><small>{{ noti.timestamp }}</small></span>
