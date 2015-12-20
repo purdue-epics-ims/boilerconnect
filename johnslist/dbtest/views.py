@@ -143,6 +143,19 @@ def jobrequest_dash(request,job_id,organization_id):
             comment = form.save(commit = False)
             comment.jobrequest = jobrequest
             comment.save()
+            # send notification to either Organization or Community partner
+            if request.user.userprofile.purdueuser:
+                notify.send(request.user,
+                            verb="commented on",
+                            action_object=job,
+                            recipient=job.creator,
+                            url=reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id}) )
+            else:
+                notify.send(request.user,
+                            verb="commented on",
+                            action_object=job,
+                            recipient=jobrequest.organization.group,
+                            url=reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id}) )
             return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'title':'comment saved!'})
         else:
             return render(request, 'dbtest/jobrequest_dash.html', {'jobrequest':jobrequest,'form':form,'error': 'The comment cannot be empty!','comment_text':comment_text})
