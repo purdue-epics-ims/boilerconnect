@@ -143,7 +143,7 @@ def jobrequest_dash(request,job_id,organization_id):
             comment = form.save(commit = False)
             comment.jobrequest = jobrequest
             comment.save()
-            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'title':'comment saved!','confirm':'You have saved the comment to {0}'.format(job.name)})
+            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'title':'comment saved!'})
         else:
             return render(request, 'dbtest/jobrequest_dash.html', {'jobrequest':jobrequest,'form':form,'error': 'The comment cannot be empty!','comment_text':comment_text})
 

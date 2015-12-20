@@ -1,30 +1,27 @@
-<div class="col-sm-5">
-  <!--left col-->
-  <div class="panel panel-primary">
-    <div class="panel-heading">
-      {{ title }}
-      <div class="badge">
-        {{ unread_notifications|length }}
-      </div>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    {{ title }}
+    <div class="badge">
+      {{ unread_notifications|length }}
     </div>
+  </div>
 
-    <div class="list-group notifications">
-      {% for noti in unread %}
-      <a href="#" class="list-group-item">
-        {{ noti.verb }}
-        <span class="pull-right"><small>{{ noti.timestamp }}</small></span>
-      </a>
-      {% endfor %}
-      {% for noti in read %}
-      <a href="#" class="list-group-item read">
-        {{ noti.verb }}
-        <span class="pull-right"><small>{{ noti.timestamp }}</small></span>
-      </a>
-      {% endfor %}
-    </div>
+  <div class="list-group notifications">
+    {% for noti in unread %}
+    <a href="{{noti.data.url}}" class="list-group-item">
+      {{noti.actor}} {{ noti.verb }} {{noti.action_object}}
+      <span class="pull-right"><small>{{ noti.timestamp }}</small></span>
+    </a>
+    {% endfor %}
+    {% for noti in read %}
+    <a href="{{noti.data.url}}" class="list-group-item read">
+      {{noti.actor}} {{ noti.verb }} {{noti.action_object}}
+      <span class="pull-right"><small>{{ noti.timestamp }}</small></span>
+    </a>
+    {% endfor %}
+  </div>
 
-    <div class="panel-body">
-      <center><a href="#"> Show More </a></center>
-    </div>
+  <div class="panel-body">
+    <center><a href="#"> Show More </a></center>
   </div>
 </div>
