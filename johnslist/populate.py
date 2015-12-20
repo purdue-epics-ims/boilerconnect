@@ -2,21 +2,11 @@ import os
 from django.core.management import call_command
 
 def populate():
-    #add Users
     if os.path.exists("db.sqlite3"):
         os.remove("db.sqlite3")
     call_command('syncdb', interactive=False)
-    
-    #create default users
-    for num in range(0,20):
-        newuser = User.objects.create(username='user{0}'.format(num))
-        newuser.set_password('asdf')
-        newuser.save()
-        if(num % 2 == 0):
-           UserProfile.objects.create(name = newuser.username, user = newuser, purdueuser = True)
-        else:
-           UserProfile.objects.create(name = newuser.username, user = newuser, purdueuser = False)
 
+    #--------------- Organizations ----------------
 
     #add Organizations
     g=Group.objects.create(name="Purdue Linux Users Group")
@@ -50,6 +40,18 @@ def populate():
         available=False)
     amet.icon.save('amet.png', File(open(PIC_POPULATE_DIR+'amet.png', 'r')))
 
+    #-------------- Users ------------------
+
+    #create users
+    for num in range(0,20):
+        newuser = User.objects.create(username='user{0}'.format(num))
+        newuser.set_password('asdf')
+        newuser.save()
+        if(num % 2 == 0):
+           UserProfile.objects.create(name = newuser.username, user = newuser, purdueuser = True)
+        else:
+           UserProfile.objects.create(name = newuser.username, user = newuser, purdueuser = False)
+
     #add Users to Organizations
     users = User.objects.all().exclude(username="AnonymousUser")
     for user in users[0:6]:
@@ -57,23 +59,30 @@ def populate():
         epics.group.user_set.add(user)
         amet.group.user_set.add(user)
 
-    #add ServiceServiceCategory's
+    #--------------- Categories --------------------
+
+    #create categories
     categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']
     for category in categories:
        Category.objects.create( name=category,description='' ) 
 
+    #tag Organizations with Categories
     plug.categories.add(Category.objects.get(name="computer science"), Category.objects.get(name="linux"))
     epics.categories.add(Category.objects.get(name = 'engineering'))
     amet.categories.add(Category.objects.get(name= 'engineering'))
     
-    #add Jobs
+    #--------------- Jobs --------------------
+
+    #create Jobs
     jobs = ['Installing linux','Configuring vim','Make a website', 'Make a car', 'Finish circuit board', 'Finish software']
-    user_num = 1
+    #all jobs are created by user1
+    user = User.objects.get(id=2)
     org_num = 1
     acc = True
 
+    #create JobRequests
     for job in jobs:
-        Job.objects.create(name=job, description = 'Description of the job', duedate = '2015-3-21', creator = User.objects.get(id = user_num))
+        Job.objects.create(name=job, description = 'Description of the job', duedate = '2015-3-21', creator = user)
         Job.objects.get(id = user_num).request_organization(Organization.objects.get(id = org_num))
         jr = JobRequest.objects.get(job=Job.objects.get(id=user_num),organization = Organization.objects.get(id=org_num))
         if acc == False:
