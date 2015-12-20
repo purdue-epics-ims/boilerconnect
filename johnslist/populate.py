@@ -1,12 +1,19 @@
 import os
 from django.core.management import call_command
+from itertools import cycle
+from django.utils import timezone
+import sys
 
 def populate():
+    print "Running syncdb..."
     if os.path.exists("db.sqlite3"):
         os.remove("db.sqlite3")
     call_command('syncdb', interactive=False)
 
+    print 'Populating database...'
+
     #--------------- Organizations ----------------
+    print '  creating Organizations'
 
     #add Organizations
     g=Group.objects.create(name="Purdue Linux Users Group")
@@ -18,7 +25,6 @@ def populate():
         phone_number="123-456-7890",
         available=False)
     plug.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
-        
 
     g=Group.objects.create(name="Engineering Projects in Community Service")
     epics = Organization.objects.create(
@@ -41,6 +47,7 @@ def populate():
     amet.icon.save('amet.png', File(open(PIC_POPULATE_DIR+'amet.png', 'r')))
 
     #-------------- Users ------------------
+    print '  creating Users'
 
     #create users
     for num in range(0,20):
@@ -60,43 +67,46 @@ def populate():
         amet.group.user_set.add(user)
 
     #--------------- Categories --------------------
+    print '  creating Categories'
 
     #create categories
     categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']
     for category in categories:
        Category.objects.create( name=category,description='' ) 
 
-    #tag Organizations with Categories
+    #tag Organizations with Cate
     plug.categories.add(Category.objects.get(name="computer science"), Category.objects.get(name="linux"))
     epics.categories.add(Category.objects.get(name = 'engineering'))
     amet.categories.add(Category.objects.get(name= 'engineering'))
-    
+
     #--------------- Jobs --------------------
+    print '  creating Jobs'
 
     #create Jobs
     jobs = ['Installing linux','Configuring vim','Make a website', 'Make a car', 'Finish circuit board', 'Finish software']
-    #all jobs are created by user1
-    user = User.objects.get(id=2)
-    org_num = 1
-    acc = True
+
+    community_partners = cycle([user_profile.user for user_profile in UserProfile.objects.filter(purdueuser=False)])
+    orgs = cycle(Organization.objects.all())
 
     #create JobRequests
-    for job in jobs:
-        Job.objects.create(name=job, description = 'Description of the job', duedate = '2015-3-21', creator = user)
-        Job.objects.get(id = user_num).request_organization(Organization.objects.get(id = org_num))
-        jr = JobRequest.objects.get(job=Job.objects.get(id=user_num),organization = Organization.objects.get(id=org_num))
-        if acc == False:
-            org_num += 1
-            acc = True
-        else:
-            jr.accepted = True
-            jr.save()
-            acc = False
-        user_num += 1
+    for job_name in jobs:
+        print '  ',job_name
+        job = Job.objects.create(name=job_name,
+                                description = 'Description of the job',
+                                duedate = timezone.now(),
+                                creator = community_partners.next())
+        #Make some jobrequests "randomly"
+        if job.id % 2 == 0:
+            print '    decline'
+            jr = job.request_organization(orgs.next())
+            jr.decline()
+        print '    accept'
+        jr = job.request_organization(orgs.next())
+        jr.accept()
+        print '    neither'
+        jr = job.request_organization(orgs.next())
 
 if __name__ == '__main__':
-        
-    print 'Populating database...'
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'johnslist.settings')
     from django.core.files import File
     from dbtest.models import *
