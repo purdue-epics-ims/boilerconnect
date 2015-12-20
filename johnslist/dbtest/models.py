@@ -5,6 +5,8 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User,Group
 from guardian.shortcuts import assign_perm
+from notifications import notify
+from django.core.urlresolvers import reverse
 
 class UserProfile(models.Model):
     def __unicode__(self):
@@ -130,6 +132,36 @@ class JobRequest(models.Model):
                 ( 'view_jobrequest','Can view JobRequest' ),
                 ( 'edit_jobrequest','Can edit JobRequest'),
                 )
+
+    def accept(self):
+        self.accepted = True
+        self.declined = False
+        self.save()
+        notify.send(self.organization,
+                    verb="accepted",
+                    action_object=self.job,
+                    recipient=self.job.creator,
+                    url=reverse('jobrequest_dash',kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
+
+    def set_pending(self):
+        self.accepted = False
+        self.declined = False
+        self.save()
+        notify.send(self.organization,
+                    verb="accepted",
+                    action_object=self.job,
+                    recipient=self.job.creator,
+                    url=reverse('jobrequest_dash',kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
+
+    def decline(self):
+        self.declined = True
+        self.accepted = False
+        self.save()
+        notify.send(self.organization,
+                    verb="declined",
+                    action_object=self.job,
+                    recipient=self.job.creator,
+                    url=reverse('jobrequest_dash',kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
 
 #add default jobrequest permissions
 @receiver(post_save, sender=JobRequest)

@@ -109,6 +109,9 @@ LOGIN_REDIRECT_URL = '/'
 
 #custom defined settings
 
+#notifications extra fields
+NOTIFICATIONS_USE_JSONFIELD = True
+
 # generic redirect url
 REDIRECT_URL = '/'
 
