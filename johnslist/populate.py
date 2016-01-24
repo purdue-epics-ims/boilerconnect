@@ -86,13 +86,13 @@ def populate():
         user_num += 1
 
 if __name__ == '__main__':
-
-    import django
-    django.setup()
+        
     print 'Populating database...'
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'johnslist.settings')
     from django.core.files import File
     from dbtest.models import *
     from johnslist.settings import PIC_POPULATE_DIR
     from time import sleep
+    import django
+    django.setup()
     populate()
