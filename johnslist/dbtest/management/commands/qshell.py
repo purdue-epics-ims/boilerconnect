@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.core.management import execute_from_command_line
 import code
+from django.utils import unittest
 from django.test import Client
 
 class Command(BaseCommand):
