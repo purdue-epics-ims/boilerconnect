@@ -1,8 +1,8 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib.auth.views import logout
 from dbtest import views
 
-urlpatterns = patterns('',
+urlpatterns = [
     #user urls
     url(r'^user/?$', views.user_dash,name='user_dash'),
     url(r'^user/create/?$', views.user_create,name='user_create'),
@@ -27,6 +27,5 @@ urlpatterns = patterns('',
     url(r'^about/?$', views.about, name='about'),
     url(r'^notifications/?$', views.notifications, name='notifications'),
     url(r'^quicksearch/?$', views.quicksearch,name='quicksearch'),
- )
-
+]
 
