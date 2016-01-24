@@ -5,7 +5,8 @@ def populate():
     #add Users
     if os.path.exists("db.sqlite3"):
         os.remove("db.sqlite3")
-    call_command('syncdb', interactive=False)
+    call_command('makemigrations dbtest', interactive=False)
+    call_command('migrate', interactive=False)
     
     #create default users
     for num in range(0,20):
@@ -87,10 +88,10 @@ def populate():
 
 if __name__ == '__main__':
 
-    import django
-    django.setup()
     print 'Populating database...'
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'johnslist.settings')
+    import django
+    django.setup()
     from django.core.files import File
     from dbtest.models import *
     from johnslist.settings import PIC_POPULATE_DIR
