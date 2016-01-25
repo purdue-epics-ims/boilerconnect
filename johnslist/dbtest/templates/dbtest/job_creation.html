@@ -159,10 +159,10 @@
 <div class="org_list list-group" id="org_results">
     {% for org in orgs %}
     <div class="org_item list-group-item" org_id="{{org.id}}">
-        <h4 class="org_name list-group-item-heading">
-          <a href="{% url 'organization_detail' org.id %}">
+        <h4 class="list-group-item-heading">
+        <a class="org_name" href="{% url 'organization_detail' org.id %}">
           {{org.name}}
-          </a>
+        </a>
           <a class="org_button btn btn-success pull-right">Add</a>
         </h4>
         <p>
