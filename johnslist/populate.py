@@ -5,11 +5,6 @@ from django.utils import timezone
 import sys
 
 def populate():
-    print "Running syncdb..."
-    if os.path.exists("db.sqlite3"):
-        os.remove("db.sqlite3")
-    call_command('syncdb', interactive=False)
-
     print 'Populating database...'
 
     #--------------- Organizations ----------------
@@ -106,10 +101,15 @@ def populate():
 
 if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'johnslist.settings')
+    import django
+    django.setup()
+    if os.path.exists("db.sqlite3"):
+        os.remove("db.sqlite3")
+    call_command('makemigrations', interactive=True)
+    call_command('migrate', interactive=True)
+    call_command('migrate', 'dbtest', interactive=False)
     from django.core.files import File
     from dbtest.models import *
     from johnslist.settings import PIC_POPULATE_DIR
     from time import sleep
-    import django
-    django.setup()
     populate()
