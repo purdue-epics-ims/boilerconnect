@@ -11,9 +11,7 @@
     {% for org in orgs %}
     <div class="org_item list-group-item" org_id="{{org.id}}">
         <h4 class="org_name list-group-item-heading">
-          <a href="{% url 'organization_detail' org.id %}">
-          {{org.name}}
-          </a>
+          <a href="{% url 'organization_detail' org.id %}">{{org.name}}</a>
           <a class="org_button btn btn-success pull-right">Add</a>
         </h4>
         <p>
@@ -32,9 +30,7 @@
     {% for org in orgs %}
     <div class="org_item list-group-item hidden" org_id="{{org.id}}">
         <h4 class="org_name list-group-item-heading">
-          <a href="{% url 'organization_detail' org.id %}">
-          {{org.name}}
-          </a>
+          <a href="{% url 'organization_detail' org.id %}">{{org.name}}</a>
           <a class="org_button btn btn-danger pull-right">Remove</a>
         </h4>
         <p>
@@ -72,7 +68,7 @@
   })
 
   //filter org_results list by name and category
-  function filter(){
+  $(function filter(){
       console.log('keypress')
       var search_text = $('#search').val().toLowerCase();
 
@@ -106,7 +102,7 @@
               $(org_item).hide()
           }
       })
-  }
+  });
 
   //filter for every keypress
   $('#search').keyup(function() {
