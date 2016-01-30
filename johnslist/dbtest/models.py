@@ -79,14 +79,14 @@ class Job(models.Model):
     def __unicode__(self):
         return self.name
     name = models.CharField('Job Name',max_length=128)
-    #short description
-    description = models.TextField('Job Description', max_length=256)
-    deliverable = models.TextField('Deliverable', max_length=256)
-    duedate = models.DateTimeField('Date Due')
-    stakeholders = models.TextField('Stakeholders')
-    tech_specs = models.TextField('Technical Specifications', blank = True)
-    budget = models.TextField('Budget')
-    attachments = models.FileField(upload_to='job', blank = True) 
+    client_organization = models.TextField('Deliverable', max_length=256) #what entity/organization needs this job?
+    description = models.TextField('Job Description', max_length=256) #short description
+    deliverable = models.TextField('Deliverable', max_length=256) #end product to be delivered
+    duedate = models.DateTimeField('Date Due') #when Job is due for completion
+    stakeholders = models.TextField('Stakeholders') #all persons who may be affected by project
+    tech_specs = models.TextField('Technical Specifications', blank = True) #important technical requirements
+    budget = models.TextField('Budget') #budget estimate
+    attachments = models.FileField(upload_to='job', blank = True) #file attachments
     creator = models.ForeignKey(User,related_name = 'jobs')  # User -o= Job
     organization = models.ManyToManyField(Organization, through = 'JobRequest')
     categories = models.ManyToManyField(Category)
@@ -98,16 +98,19 @@ class Job(models.Model):
             ( 'is_creator', 'Is a creator of Job')
             )
 
-    # function returns an array list of organization objects that have accepted = True in Jobrequest
+    # returns JobRequests that have been accepted
     def jobrequests_accepted(self):
         accepted = JobRequest.objects.filter(job = self, accepted = True)
         return accepted
+    # returns JobRequests that are pending
     def jobrequests_pending(self):
         pending = JobRequest.objects.filter(job = self, accepted = False, declined = False, completed = False)
         return pending
+    # returns JobRequests that have been declined
     def jobrequests_declined(self):
         declined = JobRequest.objects.filter(job = self, declined = True)
         return declined
+    # creates a new JobRequest
     def request_organization(self,organization):
         jr = JobRequest.objects.create(job = self,organization = organization);
         return jr
@@ -139,6 +142,7 @@ class JobRequest(models.Model):
                 ( 'edit_jobrequest','Can edit JobRequest'),
                 )
 
+    # set a JobRequest as accepted
     def accept(self):
         self.accepted = True
         self.declined = False
@@ -147,9 +151,11 @@ class JobRequest(models.Model):
                     verb="accepted",
                     action_object=self.job,
                     recipient=self.job.creator,
-                    url=reverse('jobrequest_dash',kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
+                    url=reverse('jobrequest_dash',
+                                kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
 
-    def set_pending(self):
+    # set a JobRequest as pending
+    def pend(self):
         self.accepted = False
         self.declined = False
         self.save()
@@ -157,8 +163,10 @@ class JobRequest(models.Model):
                     verb="accepted",
                     action_object=self.job,
                     recipient=self.job.creator,
-                    url=reverse('jobrequest_dash',kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
+                    url=reverse('jobrequest_dash',
+                                kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
 
+    # set a JobRequest as declined
     def decline(self):
         self.declined = True
         self.accepted = False
@@ -167,7 +175,8 @@ class JobRequest(models.Model):
                     verb="declined",
                     action_object=self.job,
                     recipient=self.job.creator,
-                    url=reverse('jobrequest_dash',kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
+                    url=reverse('jobrequest_dash',
+                                kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
 
 #add default jobrequest permissions
 @receiver(post_save, sender=JobRequest)
