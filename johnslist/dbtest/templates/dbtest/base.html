@@ -8,6 +8,8 @@
     <link rel="icon" type="image/png" href='{% static 'favicon.png' %}'/>
     <!-- Font awesome! -->
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
     <!-- Custom CSS -->
     <link rel='stylesheet' type='text/css' href='{% static 'style.css' %}'/>
@@ -23,11 +25,10 @@
         <div class="container">
             <div class="navbar-header">
 
-                <a  class="navbar-brand" rel="home" href="#" title="BoilerConnect">
+                <a  class="navbar-brand" rel="home" href="/" title="BoilerConnect">
                 <img draggable="false" style="max-width:27px;margin-top:-3px;margin-right:-7px;"
                         src='{% static 'brand.png' %}'>
                 </a>
-
                 <a href="{% url 'front_page' %}" class="navbar-brand">BoilerConnect</a>
                 <button class="navbar-toggle" type="button" data-toggle="collapse" data-target="#navbar-main">
                 <span class="icon-bar"></span>
@@ -38,9 +39,16 @@
 
             </div>
             <div class="navbar-collapse collapse" id="navbar-main">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav navbar-left">
     <li><a href="{%url 'about'%}">About</a></li>
+
     </ul>
+
+    <form class="navbar-form navbar-left">
+    {% if not user.userprofile.purdueuser %}
+    <a href = '/job_creation' class="btn btn-danger"> <i class="fa fa-certificate"></i> Create a Job</a>
+    {% endif %}
+</form>
 
             {% if user.is_authenticated %}
 
@@ -172,7 +180,5 @@
 
 </body>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-<script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 
 </html>

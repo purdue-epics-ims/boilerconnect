@@ -1,0 +1,275 @@
+{% load staticfiles %}
+{% load guardian_tags %}
+<html>
+
+<head>
+    <link rel='stylesheet' type='text/css' href='{% static 'bootstrap.min.css' %}'/>
+
+    <link rel="icon" type="image/png" href='{% static 'favicon.png' %}'/>
+    <!-- Font awesome! -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script type='text/javascript' src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel='stylesheet' type='text/css' href='{% static 'style.css' %}'/>
+
+    <title>
+        Guided Job Creation Process
+    </title>
+</head>
+
+<body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <a  class="navbar-brand" rel="home" href="/" title="BoilerConnect">
+                <img draggable="false" style="max-width:27px;margin-top:-3px;margin-right:-7px;"
+                        src='{% static 'brand.png' %}'>
+                </a>
+                <a class="navbar-brand">Job Creation Process</a>
+            </div>
+        </div>
+    </div>
+    </br></br></br>
+
+<div class="container">
+  <div class="form-group">
+    <form action="{% url 'job_creation' %}" method="post">
+        <ul class="nav nav-tabs">
+        <li class="active"><a href="#tutorial" data-toggle="tab" aria-expanded="true">Explanation of the process</a></li>
+        <li class=""><a href="#info" data-toggle="tab" aria-expanded="true">Basic information</a></li>
+        <li class=""><a href="#specs" data-toggle="tab" aria-expanded="true">Job Specifications</a></li>
+        <li class=""><a href="#orgs" data-toggle="tab" aria-expanded="true">Organizations selection</a></li>
+        </ul>
+
+        <div id="myTabContent" class="tab-content">
+            <div class="tab-pane fade active in" id="tutorial">
+                </br>
+                In the first stage of the Job Creation Process, we are going to explain you how to create a job that is going to be submitted to the Purdue Organizations. If you are already familiar with the entire process, you may consider skipping to the "Basic Information" tab.
+                </br></br>
+                Firstly, you need to provide <b> Basic information </b> about the job. In this part, you will be asked to provide name of the job, short description and deliverable that you expect as a result of the job. Please be as descriptive as possible as those are the first information that every organization is going to see after they get your Job Request. After you are done with this step, click on the <b> Job Specifications </b> tab.
+                </br></br>
+                In the <b> Job Specifications </b> tab, you are supposed to provide more in-depth information regarding the job. In this step, you are supposed to give as detailed information as possible. Also, you will be allowed to submit files as attachments to your job submission. After you are done with this step, click on the <b> Organizations selection </b> tab.
+                </br></br>
+                <b> Organization selection </b> is the last stage of the process. Here, you are able to search organizations by name or by category. As you search, organizations will be filtered, and you can add the ones that suit your needs by clicking on the Add button. Once you are satisfied with the information that you entered, click on the <b> Submit your job </b> button.
+                </br></br>
+                After your job is submitted, the copy of each submission is sent to all organizations that you selected. Those organizations will be able to review it, and they have an option to leave a comment on your job. If they do comment, you will be notified about this. 
+                <img src="static/Part1.png">
+                </br></br>
+                After that, organizations will decide if they have capabilities to perform the job. Based on that, they will either accept the job or decline it, and you will be notified on this website, as well as in email about their decision.<br>
+                <img src="static/Part2.png">
+                </br></br>
+                Finally, once you are satisfied with the responses from the organizations, you will be able to pick the organization that is going to do the job. We will exchange the contact information for you, and the rest of the communication is to be done on your behalf.
+                <img src="static/Part3.png"><br>
+                Now when you understand the process, click on the <b> Basic information </b> tab to start the process.
+            </div>
+
+            <div class="tab-pane fade" id="info">
+            </br>
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="fa fa-bullhorn"></i>
+                </span>
+                Name of the job.
+                <input class="form-control" type="text" name="name" placeholder="Example"></input>
+              </div>
+              <br/>
+
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="fa fa-coffee"></i>
+                </span>
+                Briefly describe the deliverable that you expect as a result of this project.
+                <textarea class="form-control" type="text" name="deliverable" placeholder="Example"></textarea>
+              </div>
+              <br/>
+
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="fa fa-coffee"></i>
+                </span>
+                Give a short description of the job. Later, you will be able to provide more detailed description, keep this one brief.
+                <textarea class="form-control" type="text" name="description" placeholder="Example"></textarea>
+              </div>
+              <br/>
+              One you filled in the basic information, procede to the <b> Job Specifications </b>section. 
+
+              <br/>
+            </div>
+
+            <div class="tab-pane fade" id="specs">
+
+              <br/>
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="fa fa-calendar"></i>
+                </span>
+                Specify the date when this project is due. If you are not sure of the exact date, give a close approximation.
+                <input type="text" class="form-control" placeholder="mm/dd/yyyy Due date" name="duedate"></input>
+              </div>
+
+              <br/>
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="fa fa-coffee"></i>
+                </span>
+                List the stakeholders included in the job. Also, provide one sentence long description for each stakeholder.
+                <textarea class="form-control" type="text" name="stakeholders" placeholder="Example"></textarea>
+              </div>
+
+              <br/>
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="fa fa-coffee"></i>
+                </span>
+                If available, provide the technical specifications of the deliverable. In this section, you should be as precise as you can. 
+                <textarea class="form-control" type="text" name="tech_specs" placeholder="Example"></textarea>
+              </div>
+              <br/>
+
+              <div class="input-group">
+                <span class="input-group-addon">
+                  <i class="fa fa-money"></i>
+                </span>
+                What is the budget that team can use for the project in USD? You can provide the explanation along with the budget, or the estimation if you do not have precise data at the moment.
+                <input class="form-control" type="text" name="budget" placeholder="Example"></textarea>
+              </div>
+              <br/>
+
+              <div class="input-group">
+                If there are any files that you want to add in your job submission, do it here. 
+                <input class="form-control" type="file" name="attachment" placeholder="Example"></textarea>
+              </div>
+              <br/>
+              Once you are satisfied with the information that you provided in this section, go to the <b> Organization selection </b> tab.
+
+            </div>
+
+              <br/>
+
+            <div class="tab-pane fade" id="orgs">
+            Filter the organizations to find the ones that you want to send the job request. If an organization suits your needs, click <b> Add </b>. You can add as many organizations as you want. Once you are done, click <b> Submit Job </b>.
+{% block content %}
+<h2>Search Organizations</h2>
+<div class="form-group">
+  <label class="control-label" for="search">Filter Purdue Groups by name or tag</label>
+  <input id="search" class="form-control input-lg" type="text" >
+</div>
+<div class="org_list list-group" id="org_results">
+    {% for org in orgs %}
+    <div class="org_item list-group-item" org_id="{{org.id}}">
+        <h4 class="org_name list-group-item-heading">
+          <a href="{% url 'organization_detail' org.id %}">
+          {{org.name}}
+          </a>
+          <a class="org_button btn btn-success pull-right">Add</a>
+        </h4>
+        <p>
+          {% for cat in org.categories.all %}
+          <span class="category label label-default">{{ cat }}</span>
+          {% endfor %}
+        </p>
+    </div>
+    {% endfor %}
+</div>
+
+<hr>
+
+<h2>Selected Organizations</h2>
+<div class="org_list list-group" id="org_selected">
+    {% for org in orgs %}
+    <div class="org_item list-group-item hidden" org_id="{{org.id}}">
+        <h4 class="org_name list-group-item-heading">
+          <a href="{% url 'organization_detail' org.id %}">
+          {{org.name}}
+          </a>
+          <a class="org_button btn btn-danger pull-right">Remove</a>
+        </h4>
+        <p>
+          {% for cat in org.categories.all %}
+          <span class="category label label-default">{{ cat }}</span>
+          {% endfor %}
+        </p>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+
+
+  //select an org
+    $('#org_results').find('.org_item').find('.org_button').click(function(){
+      var org_id = $(this).closest('.org_item').attr("org_id")
+      $('#org_results').find('[org_id="'+org_id+'"]').addClass("hidden")
+      $('#org_selected').find('[org_id="'+org_id+'"]').removeClass("hidden")
+    })
+
+
+  //deslect an org
+  $('#org_selected').find('.org_item').find('.org_button').click(function(){
+      var org_id = $(this).closest('.org_item').attr("org_id")
+      $('#org_results').find('[org_id="'+org_id+'"]').removeClass("hidden")
+      $('#org_selected').find('[org_id="'+org_id+'"]').addClass("hidden")
+  })
+
+
+  //handle tag click action
+  $('#org_results').find('.category').click(function(){
+      $('#search').val($(this).text())
+      filter()
+  })
+
+  //filter org_results list by name and category
+  function filter(){
+      console.log('keypress')
+      var search_text = $('#search').val().toLowerCase();
+
+      $('#org_results').find('.org_item').each(function(i,org_item){
+          var show = 0;
+          //check for match in each category, highlight match
+          console.log($(org_item).find('.organization'))
+          $(org_item).find('.category').each(function(i,cat_item){
+              if (search_text && $(cat_item).text().search(search_text) >=0) {
+                  show = 1;
+                  $(cat_item).removeClass('label-default')
+                  $(cat_item).addClass('label-warning')
+              }
+              else {
+                  $(cat_item).removeClass('label-warning')
+                  $(cat_item).addClass('label-default')
+              }
+          })
+
+          //check for match in name
+          var name_str = $(org_item).children('.org_name').text().toLowerCase();
+          if (name_str.search(search_text) >= 0){
+              show = 1
+          }
+
+          //hide or show
+          if (show) {
+              $(org_item).show()
+          }
+          else {
+              $(org_item).hide()
+          }
+      })
+  }
+
+  //filter for every keypress
+  $('#search').keyup(function() {
+      filter()
+  });
+</script>
+
+{% endblock content %}
+                <a href="\" class="btn btn-primary">Submit Job</a>
+            </div>
+        </div>
+        </div>
+    </form>
+</div>
+  </div>
+</body>
+</html>

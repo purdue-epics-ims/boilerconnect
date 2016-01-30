@@ -58,6 +58,7 @@ def populate():
            UserProfile.objects.create(name = newuser.username, user = newuser, purdueuser = True)
         else:
            UserProfile.objects.create(name = newuser.username, user = newuser, purdueuser = False)
+        print '    '+newuser.username
 
     #add Users to Organizations
     users = User.objects.all().exclude(username="AnonymousUser")
@@ -90,20 +91,17 @@ def populate():
 
     #create JobRequests
     for job_name in jobs:
-        print '  ',job_name
+        print '    '+job_name
         job = Job.objects.create(name=job_name,
                                 description = 'Description of the job',
                                 duedate = timezone.now(),
                                 creator = community_partners.next())
         #Make some jobrequests "randomly"
         if job.id % 2 == 0:
-            print '    decline'
             jr = job.request_organization(orgs.next())
             jr.decline()
-        print '    accept'
         jr = job.request_organization(orgs.next())
         jr.accept()
-        print '    neither'
         jr = job.request_organization(orgs.next())
 
 if __name__ == '__main__':

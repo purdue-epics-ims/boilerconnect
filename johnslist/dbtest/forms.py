@@ -1,4 +1,5 @@
 from django.db import models
+from django import forms
 from django.forms import ModelForm,PasswordInput,Textarea
 from django.contrib.auth.models import User
 from django.contrib.auth import forms
@@ -21,6 +22,11 @@ class JobCreateForm(ModelForm):
 	class Meta: 
 		model = Job 
 		exclude = ('creator',)	
+
+class JobCreationForm(ModelForm):
+    class Meta:
+        model = Job
+        exclude = ('creator',)
 	
 class CommentCreateForm(ModelForm):
     class Meta:

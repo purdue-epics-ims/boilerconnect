@@ -3,65 +3,60 @@
 
 <div class="jumbotron">
   <center>
-    <h3>{{ jobrequest.job.name }}</h3>
+    <h3>{{ jobrequest.job.name }}<small> Job Request Dashboard </small></h3>
+
+
+    <small>Created by</small> {{jobrequest.job.creator}}
+
+    <br><br>
+   <i class="fa fa-calendar"></i> Due on  <span class="badge "> {{jobrequest.job.duedate}}</span>
+
+<br><br>
+    <a class="btn btn-success"><i class="fa fa-check"></i> Accept Request</a> <a class="btn btn-danger"><i class="fa fa-remove"></i> Reject Request</a>
   </center>
 
-  <a href="" class="pull-right"><button class="btn btn-primary">Settings</button></a>
+
 </div>
 
-<div class="row">
-  <div class="col-sm-7 col-sm-offset-2">
-    <div class="panel panel-primary">
 
-      <div class="panel-heading">
-            Job Description
-      </div>
-      <div class="panel-body">
-          {{jobrequest.job.description}}
-      </div>
+<blockquote>
 
-      <div class="panel-heading">
-            Job Information
-      </div>
-      <div class="panel-body">
-          {{jobrequest.job.creator}}
-          {{jobrequest.job.duedate}}
-      </div>
+    {{jobrequest.job.description}}
 
+</blockquote>
+
+
+<div class="panel panel-primary">
+    <div class="panel-heading">Comments
     </div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Organization</th>
-                <th>Comment</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for comments in comment_text %}
-            <tr>
-                <td>
-                    {{comments.jobrequest.organization}}
-                </td>
-                <td>
-                    {{comments.text_comment}}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
+    {% if comment_text %}
+    <div class="list-group notifications">
 
-    </table>
-    <div class = "contact-info box">
-      <form method=POST name="comment" action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
-      {% csrf_token %}
-      <div class="form-group">
-        <textarea class="form-control"  name="text_comment" placeholder="Comment on this Job"></textarea>
-      </div>
-      <div class="form-group">
-        <input class = "btn btn-primary" type="submit" name = "comment" value="Submit">
-        </div >
-      </form>
+    {% for comments in comment_text %}
+
+<a href="#" class="list-group-item">
+
+ {{comments.text_comment}}
+ <span class="pull-right">                    {{comments.jobrequest.organization}}
+</span>
+</a>
+
+    {% endfor %}
     </div>
-  </div>
+
+    {% endif %}
+    <form method=POST name="comment" action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
+        {% csrf_token %}
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-bullhorn"></i>
+            </span>
+            <textarea class="form-control"  name="text_comment" placeholder="What do you think about this job?"></textarea>
+        </div>
+        <br>
+        <input class="btn btn-warning" type="submit" name = "comment" value="Submit Comment"></input>
+    </form>
 </div>
 
 {% endblock content %}
