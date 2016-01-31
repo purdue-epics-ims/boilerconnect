@@ -75,7 +75,7 @@
       <div class="radio">
         <label>
           <input name="available" id="available" value=0
-                  {% if organization.available = False %} checked="" {% endif %}
+                  {% if organization.available == False %} checked="" {% endif %}
                   type="radio">
           Not accepting Jobs
         </label>

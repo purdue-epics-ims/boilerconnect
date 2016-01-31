@@ -94,7 +94,7 @@ class UserTestCase(TestCase):
         #Test successful login
         r = login_as(self,self.u_pu.username,'asdf')
         #check redirect
-        self.assertRedirects(r,reverse('front_page'))
+        self.assertRedirects(r,reverse('user_dash'))
         #check logged in as user0
         r = self.client.get(reverse('front_page'))
         self.assertEqual(r.context['user'],self.u_pu)

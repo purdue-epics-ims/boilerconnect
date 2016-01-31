@@ -192,6 +192,14 @@ def add_perms_jobrequest(sender,**kwargs):
         #allow requested org to view jobrequest
         assign_perm('view_jobrequest',jobrequest.organization.group,jobrequest)
 
+        #notify users of new JobRequest
+        notify.send(job.creator,
+                    verb="created",
+                    action_object=jobrequest,
+                    recipient=jobrequest.organization.group,
+                    url=reverse('jobrequest_dash',
+                                kwargs={'organization_id':jobrequest.organization.id,'job_id':job.id}) )
+
 class Comment(models.Model):
     text_comment = models.TextField('text_comment')
     jobrequest = models.ForeignKey(JobRequest)
