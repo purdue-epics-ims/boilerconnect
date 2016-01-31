@@ -14,8 +14,10 @@ class Command(BaseCommand):
         from notifications.models import Notification
         from django.core.urlresolvers import reverse
 
-        u = User.objects.get(id=1)
-        u2 = User.objects.get(id=2)
+        pu = User.objects.get(id=1)
+        cp = User.objects.get(id=2)
+        u0 = pu
+        u1 = cp
         client = Client()
         o = Organization.objects.get(id=1)
         j = Job.objects.get(id=1)
