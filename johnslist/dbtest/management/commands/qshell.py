@@ -10,7 +10,8 @@ class Command(BaseCommand):
         from dbtest.models import *
         import unittest
         from django.test import Client
-        from notifications import notify
+        from notifications.signals import notify
+        from notifications.models import Notification
         from django.core.urlresolvers import reverse
 
         u = User.objects.get(id=1)
@@ -18,7 +19,9 @@ class Command(BaseCommand):
         client = Client()
         o = Organization.objects.get(id=1)
         j = Job.objects.get(id=1)
+        jr = JobRequest.objects.get(id=1)
         c = Category.objects.get(id=2)
         g = Group.objects.get(id=1)
+        n = Notification.objects.get(id=1)
         code.interact(local=locals())
 
