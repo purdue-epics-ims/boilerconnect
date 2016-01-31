@@ -13,7 +13,7 @@ class UserProfile(models.Model):
         return self.name
 
     name = models.TextField('Username')
-    user = models.OneToOneField(User) # UserProfile - User
+    user = models.OneToOneField(User,related_name = 'userprofile') # UserProfile - User
     # purdueuser or communitypartner
     purdueuser = models.BooleanField(default=True)
 
@@ -195,6 +195,7 @@ def add_perms_jobrequest(sender,**kwargs):
         #allow requested org to view jobrequest
         assign_perm('view_jobrequest',jobrequest.organization.group,jobrequest)
 
+
         #notify users of new JobRequest
         notify.send(job.creator,
                     verb="submitted",
@@ -206,3 +207,4 @@ def add_perms_jobrequest(sender,**kwargs):
 class Comment(models.Model):
     text_comment = models.TextField('text_comment')
     jobrequest = models.ForeignKey(JobRequest)
+    creator = models.ForeignKey(User,null=True, blank=True, default= None)
