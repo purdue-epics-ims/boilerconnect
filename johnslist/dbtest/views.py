@@ -141,6 +141,7 @@ def jobrequest_dash(request,job_id,organization_id):
         form = CommentCreateForm(request.POST)
         if form.is_valid():
             comment = form.save(commit = False)
+            comment.creator = request.user
             comment.jobrequest = jobrequest
             comment.save()
             # send notification to either Organization or Community partner
