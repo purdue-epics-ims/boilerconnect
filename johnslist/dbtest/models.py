@@ -130,6 +130,9 @@ def add_perms_job(sender,**kwargs):
             assign_perm('view_job',org.group,job)
 
 class JobRequest(models.Model):
+    def __unicode__(self):
+        return self.job.name
+
     job = models.ForeignKey(Job,related_name = 'jobrequests') # Job -= JobRequest
     organization = models.ForeignKey(Organization)
     accepted = models.NullBooleanField(default = False)	
@@ -191,6 +194,15 @@ def add_perms_jobrequest(sender,**kwargs):
         assign_perm('edit_jobrequest',job.creator,jobrequest)
         #allow requested org to view jobrequest
         assign_perm('view_jobrequest',jobrequest.organization.group,jobrequest)
+
+
+        #notify users of new JobRequest
+        notify.send(job.creator,
+                    verb="submitted",
+                    action_object=jobrequest,
+                    recipient=jobrequest.organization.group,
+                    url=reverse('jobrequest_dash',
+                                kwargs={'organization_id':jobrequest.organization.id,'job_id':job.id}) )
 
 class Comment(models.Model):
     text_comment = models.TextField('text_comment')
