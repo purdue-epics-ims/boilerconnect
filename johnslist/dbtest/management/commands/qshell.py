@@ -8,7 +8,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         from guardian.shortcuts import assign_perm
         from dbtest.models import *
-        from django.utils import unittest
+        import unittest
         from django.test import Client
         from notifications import notify
         from django.core.urlresolvers import reverse
