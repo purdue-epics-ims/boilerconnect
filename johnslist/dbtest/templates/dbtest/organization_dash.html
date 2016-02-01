@@ -29,7 +29,7 @@
             {% else %}
             <span class="label label-lg label-warning">Pending</span>
             {% endif %}
-            {{ jobrequest.job.name }}
+            {{ jobrequest.job.name }} by {{jobrequest.job.client_organization}}
           </a>
           {% endfor %}
         </ul>

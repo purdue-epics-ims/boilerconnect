@@ -3,11 +3,14 @@
 
 <div class="jumbotron">
   <center>
-    <h3>{{ jobrequest.job.name }}<small> {{ jobrequest.job.client_organization }}</small></h3>
+    <h3>{{ jobrequest.job.name }}</h3>
 
 
-    <small>Created by</small> {{jobrequest.job.creator}}
-
+    <small>Created by</small> {{jobrequest.job.client_organization}}
+    {%if not request.user.userprofile.purdueuser%}
+    <br>
+    <small>submitted to</small> <a href="{% url 'organization_detail' jobrequest.organization.id %}">{{jobrequest.organization.name}}</a>
+    {%endif%}
     <br><br>
    <i class="fa fa-calendar"></i> Due on  <span class="badge "> {{jobrequest.job.duedate}}</span>
 
