@@ -11,7 +11,6 @@ urlpatterns = [
     #organization urls
     url(r'^organization/(?P<organization_id>[0-9]+)/dash/?$', views.organization_dash,name='organization_dash'),
     url(r'^organization/(?P<organization_id>[0-9]+)/?$', views.organization_detail,name='organization_detail'),
-    url(r'^organization/(?P<organization_id>[0-9]+)/accept/?$', views.organization_accept_job,name='organization_accept_job'),
     url(r'^organization/create/?$', views.organization_create,name='organization_create'),
     url(r'^organization/(?P<organization_id>[0-9]+)/edit/?$', views.organization_settings,name='organization_settings'),
     #job urls
