@@ -82,6 +82,7 @@ def populate():
     jobs = ['Installing linux','Configuring vim','Make a website', 'Make a car', 'Finish circuit board', 'Finish software']
 
     community_partners = cycle([user_profile.user for user_profile in UserProfile.objects.filter(purdueuser=False)])
+    client_orgs = cycle(["United Way","Lafayette Crisis Center","Jimbob's Hamburger Stand"])
     orgs = cycle(Organization.objects.all())
 
     #create JobRequests
@@ -90,7 +91,8 @@ def populate():
         job = Job.objects.create(name=job_name,
                                 description = 'Description of the job',
                                 duedate = timezone.now(),
-                                creator = community_partners.next())
+                                creator = community_partners.next(),
+                                client_organization = client_orgs.next())
         #Make some jobrequests "randomly"
         if job.id % 2 == 0:
             jr = job.request_organization(orgs.next())
