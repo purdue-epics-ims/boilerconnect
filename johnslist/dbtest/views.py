@@ -100,36 +100,6 @@ def organization_dash(request,organization_id):
                    'jobrequests':jobrequests
                   })
 
-#accept or decline a requested Job
-@user_has_perm('edit_organization')
-def organization_accept_job(request,organization_id):
-   if(request.user.userprofile.purdueuser):
-       org = Organization.objects.get(id=organization_id)
-       if request.method == 'POST':
-           job = Job.objects.get(id=request.POST['job_id'])
-           jr = JobRequest.objects.get(job=job,organization = org)
-           if request.POST.get("action","") == "Accept Job":
-               if jr.accepted is False or jr.declined is False:
-                   jr.accepted = True
-                   jr.save()
-               else:
-                   return render(request,'dbtest/organization_accept_job.html',{'orgnanization':org,'error':'you have already accepted/declined the job'})
-               for user_org in org.group.user_set.all():
-                   notify.send(request.user, recipient = user_org, verb = 'accepted your job')
-               return render(request, 'dbtest/confirm.html',{'title':'Job acceptance','message':'You have accepted the job: {0}'.format(job.name)})  
-           if request.POST.get("action","") == "Decline Job":
-               if jr.accepted is False or jr.declined is False:
-                   jr.declined = True
-                   jr.save()
-               else:
-                   return render(request,'dbtest/organization_accept_job.html',{'orgnanization':org,'error':'you have already accepted/declined the job'})
-               for user_org in org.group.user_set.all():
-                   notify.send(request.user, recipient = user_org, verb = 'declined your job')
-               return render(request, 'dbtest/confirm.html',{'title':'Job decline','message':'You have declined the job: {0}'.format(job.name)})  
-       return render(request, 'dbtest/organization_accept_job.html',{'organization': org})
-   else:
-       return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
-
 #get detailed info about a jobrequest
 @user_has_perm('view_jobrequest')
 def jobrequest_dash(request,job_id,organization_id):
@@ -139,6 +109,18 @@ def jobrequest_dash(request,job_id,organization_id):
     comment_text = jobrequest.comment_set.all()
     if request.method == 'POST':
         form = CommentCreateForm(request.POST)
+        if request.POST.get("action","")=="Accept Request":
+            if jobrequest.accepted is False and jobrequest.declined is False:
+                jobrequest.accept()
+            else:
+                return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined the job'})
+            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have accepted the job: {0}'.format(job.name)})  
+        if request.POST.get("action","")=="Reject Request":
+            if jobrequest.accepted is False and jobrequest.declined is False:
+                jobrequest.decline()
+            else:
+                return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined the job'})
+            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined the job: {0}'.format()})  
         if form.is_valid():
             comment = form.save(commit = False)
             comment.creator = request.user
