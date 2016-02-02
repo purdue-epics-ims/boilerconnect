@@ -150,9 +150,20 @@
         <div class="alert alert-danger">
 
         <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-        <span class="sr-only">Error:</span>
-
         {{ error }}
+        {% if form.errors %}
+            <ol>
+            {% for field in form %}
+                {% if field.errors %}
+                    <li><strong> {{field.name}} </strong> -
+                    {% for error in field.errors %}
+                        {{ error|escape }}
+                    {% endfor %}
+                    </li>
+                {% endif %}
+            {% endfor %}
+            </ol>
+        {% endif %}
         </div>
     </div>
     {% endif %}

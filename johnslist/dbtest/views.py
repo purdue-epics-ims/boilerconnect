@@ -209,7 +209,7 @@ def user_create(request):
             elif request.POST.get('user_type') == "community":
                 purdue = False
             else:
-                return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields"})
+                return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields."})
             user = form.save()
             UserProfile.objects.create(name = user.username, user = user, purdueuser = purdue)
             form.save_m2m()
@@ -218,7 +218,7 @@ def user_create(request):
             confirm = "Thank you for creating an account."
             return render(request,'dbtest/login.html', {'title': title,'confirm':confirm})
         else:
-            return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields"})
+            return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields."})
     #if the request was a GET
     else:
         form = UserCreationForm()
