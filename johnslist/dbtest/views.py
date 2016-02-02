@@ -179,6 +179,8 @@ def user_membership(request,user_id):
        return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
 
 def user_create(request):
+    if request.user.is_authenticated():
+        return redirect('user_dash')
     #if this request was a POST and not a GET
     if request.method == 'POST':
         form = UserCreationForm(request.POST)
