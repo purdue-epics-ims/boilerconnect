@@ -206,6 +206,33 @@ class JobTestCase(TestCase):
         self.assertFalse('error' in r.context)
         self.assertEqual(jr,r.context['jobrequest'])
         #test accept job
+        logout(self)
+
+        login_as(self,self.u_cp.username,'asdf')
+        r = self.client.get(reverse('jobrequest_dash',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
+        self.assertFalse('error' in r.context)
+        self.assertEqual(jr,r.context['jobrequest'])
+
+    def test_jobrequest_accept_decline(self):
+        jr = self.j2.request_organization(self.o)
+        login_as(self,self.u_pu.username,'asdf')
+        #test that a user cannot accept a jobrequest after it has been accepted/rejected
+        jr.accept()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Accept Request"})
+        self.assertTrue('error' in response.context)
+        jr.decline()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Accept Request"})
+        self.assertTrue('error' in response.context)
+
+        #test that a user cannot reject a jobrequest after it has been accepted/rejected
+        jr.accept()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Reject Request"})
+        self.assertTrue('error' in response.context)
+        jr.decline()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Reject Request"})
+        self.assertTrue('error' in response.context)
+
+        #test that a user can accept/reject a jobrequest when it is still pending
         jr.pend()
         response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Accept Request"})
         self.assertTrue(response.status_code==200)
@@ -213,11 +240,6 @@ class JobTestCase(TestCase):
         response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Reject Request"})
         self.assertTrue(response.status_code==200)
         logout(self)
-
-        login_as(self,self.u_cp.username,'asdf')
-        r = self.client.get(reverse('jobrequest_dash',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
-        self.assertFalse('error' in r.context)
-        self.assertEqual(jr,r.context['jobrequest'])
 
 class OrganizationTestCase(TestCase):
     #django calls this initialization function automatically
