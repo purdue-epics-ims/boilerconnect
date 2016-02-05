@@ -79,7 +79,7 @@ class Job(models.Model):
     def __unicode__(self):
         return self.name
     name = models.CharField('Job Name',max_length=128)
-    client_organization = models.TextField('Deliverable', max_length=256) #what entity/organization needs this job?
+    client_organization = models.TextField('What organization do you represent?', max_length=256) #what entity/organization needs this job?
     description = models.TextField('Job Description', max_length=256) #short description
     deliverable = models.TextField('Deliverable', max_length=256) #end product to be delivered
     duedate = models.DateTimeField('Date Due') #when Job is due for completion
