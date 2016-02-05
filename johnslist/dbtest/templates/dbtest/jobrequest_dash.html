@@ -17,7 +17,7 @@
    <br><br>
    <form action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id%}" method ="post">
        {%csrf_token%}
-        <input type="hidden" name="jobrequest" value="{{jobrequest}}">
+       <input type="hidden" name="jobrequest" value="{{jobrequest}}">
        <i class="fa fa-check"></i><input class="btn btn-success" type="submit" name="action" value="Accept Request"><i class="fa fa-remove"></i><input class="btn btn-danger" type="submit" name="action" value="Reject Request">
    </form>
   </center>

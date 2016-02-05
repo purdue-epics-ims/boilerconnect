@@ -205,6 +205,13 @@ class JobTestCase(TestCase):
         self.assertTrue(self.u_pu.has_perm('view_jobrequest',jr))
         self.assertFalse('error' in r.context)
         self.assertEqual(jr,r.context['jobrequest'])
+        #test accept job
+        jr.pend()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Accept Request"})
+        self.assertTrue(response.status_code==200)
+        jr.pend()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Reject Request"})
+        self.assertTrue(response.status_code==200)
         logout(self)
 
         login_as(self,self.u_cp.username,'asdf')
@@ -275,23 +282,6 @@ class OrganizationTestCase(TestCase):
         r = self.client.get(reverse('organization_dash',kwargs={'organization_id':self.o.id}))
         self.assertTrue(r.status_code == 200)
         self.assertTrue(self.o == r.context['organization'])
-
-    #test organization_accept.html
-    def test_organization_accept_decline(self):
-        self.o.group.user_set.add(self.u2) 
-        login_as(self, self.u2.username, 'asdf')
-        j1 = Job.objects.create(name='foobar_job1',description="test description",duedate='2015-01-01',creator=self.u2)
-        j2 = Job.objects.create(name='foobar_job2',description="test description",duedate='2015-01-01',creator=self.u2)
-        j1.request_organization(self.o)
-        j2.request_organization(self.o)
-        assign_perm('edit_organization', self.u2, self.o)
-
-        #test accept job
-        response = self.client.post(reverse('organization_accept_job', kwargs = {'organization_id': self.o.id}), {'job_id':j1.id, 'action':"Accept Job"})
-        self.assertTrue(response.status_code == 200)
-        #test decline job
-        response = self.client.post(reverse('organization_accept_job', kwargs = {'organization_id': self.o.id}), {'job_id':j2.id, 'action':"Decline Job"})
-        self.assertTrue(response.status_code == 200)
 
     #test org creation
     def test_organization_create(self):
