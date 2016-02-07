@@ -218,7 +218,7 @@ def organization_create(request):
             return render(request, 'dbtest/organization_create.html', {'form':form})
         #if this request was a POST
         elif request.method == 'POST':
-            form = OrganizationCreateForm(request.POST)
+            form = OrganizationCreateForm(request.POST, request.FILES)
 
             #check form validity
             if form.is_valid() :
@@ -227,7 +227,6 @@ def organization_create(request):
                 group = Group.objects.create(name = organization.name)
                 organization.group = group
                 group.user_set.add(request.user)
-                organization.icon = request.FILES['icon']
                 organization.save()
                 form.save_m2m()
 
@@ -236,7 +235,7 @@ def organization_create(request):
             else:
                 print form.errors
                 return render(request, 'dbtest/organization_create.html', {'form':form,'error':form.errors})
-        #if communitypartner
+    #if communitypartner
     else:
         return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
 
