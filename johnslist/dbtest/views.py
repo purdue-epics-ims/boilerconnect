@@ -7,7 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
 from django.forms.models import inlineformset_factory
-from .decorators import user_has_perm, user_is_type, logout_required
+from .decorators import user_has_perm, user_is_type
 from .forms import*
 from guardian.shortcuts import assign_perm
 from notifications import notify
@@ -120,7 +120,7 @@ def jobrequest_dash(request,job_id,organization_id):
                 jobrequest.decline()
             else:
                 return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined the job'})
-            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined the job: {0}'.format(job.name)})  
+            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined the job: {0}'.format()})  
         if form.is_valid():
             comment = form.save(commit = False)
             comment.creator = request.user
@@ -177,6 +177,7 @@ def user_membership(request,user_id):
        return render(request,'dbtest/user_membership.html',{'membership': membership})
    else:
        return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
+
 def user_create(request):
     if request.user.is_authenticated():
         return redirect('user_dash')
