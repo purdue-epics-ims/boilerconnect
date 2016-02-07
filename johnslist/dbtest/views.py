@@ -113,14 +113,14 @@ def jobrequest_dash(request,job_id,organization_id):
             if jobrequest.accepted is False and jobrequest.declined is False:
                 jobrequest.accept()
             else:
-                return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined the job'})
-            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have accepted the job: {0}'.format(job.name)})  
+                return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'You have already accepted/declined the job'})
+            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have accepted this job.'})
         if request.POST.get("action","")=="Reject Request":
             if jobrequest.accepted is False and jobrequest.declined is False:
                 jobrequest.decline()
             else:
-                return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined the job'})
-            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined the job: {0}'.format()})  
+                return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined this job'})
+            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined this job.'})
         if form.is_valid():
             comment = form.save(commit = False)
             comment.creator = request.user
