@@ -2,7 +2,6 @@
 {% load guardian_tags %}
 {%load notifications_tags%}
 <html>
-    {% block head %}
     <head>
         <link rel='stylesheet' type='text/css' href="{% static 'bootstrap.min.css' %}"/>-->
 
@@ -16,9 +15,9 @@
             BoilerConnect - {%block title%}Connecting Jobs with Service Organizations{%endblock%}
         </title>
     </head>
-    {% endblock head %}
 
     <body>
+        {% block navbar %}
         <div class="navbar navbar-default navbar-fixed-top">
             <div class="container">
 
@@ -76,7 +75,7 @@
                             <li class="divider"></li>
                             {% endfor %}
 
-                            <li><a href="{%url 'job_create'%}"><strong><i class="fa fa-wrench"></i> Create Job</strong></a></li>
+                            <li><a href="{%url 'job_creation'%}"><strong><i class="fa fa-wrench"></i> Create Job</strong></a></li>
 
                         </ul>
                         </li>
@@ -135,6 +134,7 @@
                 </div>
             </div>
         </div>
+        {% endblock navbar %}
 
 
         <br><br><br>

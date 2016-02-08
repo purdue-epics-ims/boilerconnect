@@ -313,6 +313,7 @@ def job_creation(request):
        if request.method == 'POST':
            form = JobCreateForm(request.POST)
            #check form validity
+           print form.fields
            if form.is_valid():
                job = form.save(commit=False)
                job.creator = request.user
@@ -323,15 +324,11 @@ def job_creation(request):
                    JobRequest.objects.create(organization=organization, job = job)
                    for user in organization.group.user_set.all():
                        notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
-               #get the list of categories from the form
-               for cat in request.POST.getlist('categories'):
-                   job.categories.add(Category.objects.get(id=cat))
-                   job.save()
                title = "Job {0} created".format( job.name )
                message = "Thank you for creating the job."
                return render(request,'dbtest/front_page.html', {'title': title,'message':message})
            else:
-               return render(request, 'dbtest/job_create.html', {'form':form,'error':"There are incorrect fields"})
+               return render(request, 'dbtest/job_creation.html', {'form':form,'error':"There are incorrect fields"})
        #if the request was a GET
        else:
            orgs = Organization.objects.all()
