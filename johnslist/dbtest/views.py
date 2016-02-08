@@ -105,7 +105,7 @@ def organization_dash(request,organization_id):
 def jobrequest_dash(request,job_id,organization_id):
     job = Job.objects.get(id=job_id)
     organization = Organization.objects.get(id=organization_id)
-    jobrequest = JobRequest.objects.get(job = job, organization = organization);
+    jobrequest = JobRequest.objects.get(job = job, organization = organization)
     comment_text = jobrequest.comment_set.all()
     if request.method == 'POST':
         form = CommentCreateForm(request.POST)
@@ -176,7 +176,7 @@ def user_membership(request,user_id):
        membership = User.objects.get(id = user_id).groups
        return render(request,'dbtest/user_membership.html',{'membership': membership})
    else:
-       return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
+       return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"})
 
 def user_create(request):
     if request.user.is_authenticated():
@@ -237,7 +237,9 @@ def organization_create(request):
                 return render(request, 'dbtest/organization_create.html', {'form':form,'error':form.errors})
     #if communitypartner
     else:
-        return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});  
+        return render(request, 'dbtest/confirm.html',
+                      {'error': "You do not have permission to access to this page"}
+                      )
 
 @login_required
 def user_edit(request):
@@ -290,51 +292,22 @@ def organization_settings(request, organization_id):
                 organization.available = bool(int(request.POST['available']))
                 message = "Organization {0} has been modified.".format(organization.name)
                 organization.save()
-                return render(request,'dbtest/organization_settings.html', {'confirm':message,
-                                                                       'modelform':modelform,
-                                                                       'organization':organization})
+                return render(request,'dbtest/organization_settings.html',
+                              {'confirm':message, 'modelform':modelform, 'organization':organization}
+                              )
             else:
-                return render(request, 'dbtest/organization_settings.html', {'modelform':modelform,'error':modelform.errors, 'organization': organization})
+                return render(request, 'dbtest/organization_settings.html',
+                              {'modelform':modelform,'error':modelform.errors, 'organization': organization}
+                              )
     else:
-        return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"});
-
-@login_required
-def job_create(request):
-   if(request.user.userprofile.purdueuser):
-       return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"})  
-   else:
-       #if this request was a POST and not a GET
-       if request.method == 'POST':
-           form = JobCreateForm(request.POST)
-           #check form validity
-           if form.is_valid():
-               job = form.save(commit=False)
-               job.creator = request.user
-               job.save()
-               #get the list of orgs to request from the form
-               for org in request.POST.getlist('organization'):
-                   organization = Organization.objects.get(id = org)
-                   JobRequest.objects.create(organization=organization, job = job)
-                   for user in organization.group.user_set.all():
-                       notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
-               #get the list of categories from the form
-               for cat in request.POST.getlist('categories'):
-                   job.categories.add(Category.objects.get(id=cat))
-                   job.save()
-               title = "Job {0} created".format( job.name )
-               message = "Thank you for creating the job."
-               return render(request,'dbtest/confirm.html', {'title': title,'message':message})
-           else:
-               return render(request, 'dbtest/job_create.html', {'form':form,'error':"There are incorrect fields"})
-       #if the request was a GET
-       else:
-           form = JobCreateForm()
-           return render(request, 'dbtest/job_create.html', {'form':form})
+        return render(request, 'dbtest/confirm.html',
+                      {'error': "You do not have permission to access to this page"}
+                      )
 
 @login_required
 def job_creation(request):
     if(request.user.userprofile.purdueuser):
-        return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"})  
+        return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"})
     else:
        #if this request was a POST and not a GET
        if request.method == 'POST':
@@ -364,7 +337,6 @@ def job_creation(request):
            orgs = Organization.objects.all()
            form = JobCreateForm()
            return render(request, 'dbtest/job_creation.html', {'form':form, 'orgs':orgs})
-
 
 def about(request):
     return render(request, 'dbtest/about.html')
