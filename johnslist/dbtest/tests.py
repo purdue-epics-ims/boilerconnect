@@ -226,10 +226,10 @@ class JobTestCase(TestCase):
 
         #test that a user cannot reject a jobrequest after it has been accepted/rejected
         jr.accept()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Reject Request"})
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Decline Request"})
         self.assertTrue('error' in response.context)
         jr.decline()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Reject Request"})
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Decline Request"})
         self.assertTrue('error' in response.context)
 
         #test that a user can accept/reject a jobrequest when it is still pending
@@ -237,7 +237,7 @@ class JobTestCase(TestCase):
         response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Accept Request"})
         self.assertTrue(response.status_code==200)
         jr.pend()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Reject Request"})
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Decline Request"})
         self.assertTrue(response.status_code==200)
         logout(self)
 
