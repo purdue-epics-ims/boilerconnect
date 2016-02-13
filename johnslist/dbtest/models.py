@@ -89,7 +89,6 @@ class Job(models.Model):
     attachments = models.FileField(upload_to='job', blank = True) #file attachments
     creator = models.ForeignKey(User,related_name = 'jobs')  # User -o= Job
     organization = models.ManyToManyField(Organization, through = 'JobRequest')
-    categories = models.ManyToManyField(Category)
 
     class Meta:
         permissions = (

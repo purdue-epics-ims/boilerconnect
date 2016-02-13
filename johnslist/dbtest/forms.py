@@ -17,13 +17,8 @@ class OrganizationCreateForm(ModelForm):
 	class Meta:
 		model = Organization
 		fields = ['name','description','categories','icon']
-							 
-class JobCreateForm(ModelForm): 
-	class Meta: 
-		model = Job 
-		exclude = ('creator',)	
 
-class JobCreationForm(ModelForm):
+class JobCreateForm(ModelForm):
     class Meta:
         model = Job
         exclude = ('creator',)
