@@ -203,11 +203,49 @@
                 </div>
 
             </div>
+
+
+            <a id="prev_tab" style="display:none;" class="btn btn-primary" ">Previous</a>
+            <a id="next_tab" class="btn btn-primary" ">Next</a>
         </form>
     </div>
 </div>
 
 <script>
+
+<!------------------ tab navigation --------------------->
+
+ function update_visibility(active_tab){
+     console.log('active2:',active_tab.attr('href'));
+     if (active_tab.attr('href') == '#tutorial'){
+         $('#prev_tab').hide()
+     }
+     else if (active_tab.attr('href') == '#orgs'){
+         $('#next_tab').hide()
+     }
+     else {
+         $('#next_tab').show()
+         $('#prev_tab').show()
+     }
+ }
+$('#next_tab').click(function(){
+     active_tab = $('.nav-tabs > .active').next('li').find('a');
+     active_tab.trigger('click');
+     console.log('activea:',active_tab.attr('href'));
+     update_visibility(active_tab);
+     }
+);
+
+$('#prev_tab').click(function(){
+     active_tab = $('.nav-tabs > .active').prev('li').find('a');
+     active_tab.trigger('click');
+     console.log('activeb:',active_tab.attr('href'));
+     update_visibility(active_tab);
+     }
+);
+
+
+<!------------------ organization searching ---------------->
 //select an org
     $('#org_results').find('.org_item').find('.org_button').click(function(){
     var org_id = $(this).closest('.org_item').attr("org_id")
