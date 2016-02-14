@@ -234,7 +234,6 @@ def organization_create(request):
                 message = "Organization {0} created".format( organization.name )
                 return render(request,'dbtest/confirm.html', {'confirm':message})
             else:
-                print form.errors
                 return render(request, 'dbtest/organization_create.html', {'form':form,'error':form.errors})
     #if communitypartner
     else:
@@ -314,7 +313,6 @@ def job_creation(request):
        if request.method == 'POST':
            form = JobCreateForm(request.POST)
            #check form validity
-           print form.fields
            if form.is_valid():
                job = form.save(commit=False)
                job.creator = request.user

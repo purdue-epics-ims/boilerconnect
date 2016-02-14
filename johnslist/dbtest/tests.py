@@ -182,11 +182,24 @@ class JobTestCase(TestCase):
         self.assertEqual(r.context['user'],self.u_cp)
 
         #Create a job
-        r = self.client.post(reverse('job_create'),{'name':'interfacejob','description':"testjob description",'duedate':'2015-09-05','organization':self.o.pk,'categories':self.cat.pk},follow=True)
+        r = self.client.post(reverse('job_creation'),
+                             {
+                                 'name':'interfacejob',
+                                 'client_organization':'foo',
+                                 'description':"testjob description",
+                                 'deliverable':'foo',
+                                 'duedate':'2016-01-01',
+                                 'stakeholders':'foo',
+                                 'tech_specs':'foo',
+                                 'budget':'foo',
+                                 'creator':self.u_cp.pk,
+                                 'organization':self.o.pk,
+                             }
+                             ,follow=True)
         self.assertEqual(r.status_code, 200)
 
         #check if job exists
-#self.assertTrue(Job.objects.filter(name='interfacejob').first())
+        self.assertTrue(Job.objects.filter(name='interfacejob').first())
 
     #verify job_dash view
     def test_job_dash(self):
