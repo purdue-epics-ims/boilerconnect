@@ -109,18 +109,19 @@ def jobrequest_dash(request,job_id,organization_id):
     comment_text = jobrequest.comment_set.all()
     if request.method == 'POST':
         form = CommentCreateForm(request.POST)
-        if request.POST.get("action","")=="Accept Request":
-            if jobrequest.accepted is False and jobrequest.declined is False:
-                jobrequest.accept()
-            else:
-                return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'You have already accepted/declined the job'})
-            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have accepted this job.'})
-        if request.POST.get("action","")=="Reject Request":
-            if jobrequest.accepted is False and jobrequest.declined is False:
-                jobrequest.decline()
-            else:
-                return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined this job'})
-            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined this job.'})
+        if jobrequest.is_pending():
+            if request.POST.get("action","")=="Accept Request":
+                if jobrequest.accepted is False and jobrequest.declined is False:
+                    jobrequest.accept()
+                else:
+                    return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'You have already accepted/declined the job'})
+                return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have accepted this job.'})
+            if request.POST.get("action","")=="Decline Request":
+                if jobrequest.accepted is False and jobrequest.declined is False:
+                    jobrequest.decline()
+                else:
+                    return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined this job'})
+                return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined this job.'})
         if form.is_valid():
             comment = form.save(commit = False)
             comment.creator = request.user
@@ -233,7 +234,6 @@ def organization_create(request):
                 message = "Organization {0} created".format( organization.name )
                 return render(request,'dbtest/confirm.html', {'confirm':message})
             else:
-                print form.errors
                 return render(request, 'dbtest/organization_create.html', {'form':form,'error':form.errors})
     #if communitypartner
     else:
@@ -313,7 +313,6 @@ def job_creation(request):
        if request.method == 'POST':
            form = JobCreateForm(request.POST)
            #check form validity
-           print form.fields
            if form.is_valid():
                job = form.save(commit=False)
                job.creator = request.user

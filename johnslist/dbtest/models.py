@@ -180,6 +180,12 @@ class JobRequest(models.Model):
                     url=reverse('jobrequest_dash',
                                 kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
 
+    def is_pending(self):
+        if not self.accepted and not self.declined:
+            return True
+        else:
+            return False
+        
 #add default jobrequest permissions
 @receiver(post_save, sender=JobRequest)
 def add_perms_jobrequest(sender,**kwargs):
