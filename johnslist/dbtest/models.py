@@ -34,7 +34,7 @@ class Organization(models.Model):
     email = models.CharField('Organization email',max_length=64,null=True)
     group = models.OneToOneField(Group) # Organization - Group
     phone_number = models.CharField('Organization phone number',max_length=64,null=True)
-    icon = models.ImageField(upload_to='organization')
+    icon = models.ImageField(upload_to='organization', null=True)
     available = models.BooleanField(default=True)
 
     class Meta:
