@@ -144,3 +144,10 @@ REDIRECT_URL = '/'
 
 #django guardian config
 ANONYMOUS_USER_ID = -1
+
+#email configuration
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'boilerconnect1@gmail.com'
+EMAIL_HOST_PASSWORD = 'imsteam1'
+EMAIL_PORT = 587

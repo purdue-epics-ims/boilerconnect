@@ -11,6 +11,7 @@ from .decorators import user_has_perm, user_is_type
 from .forms import*
 from guardian.shortcuts import assign_perm
 from notifications import notify
+from django.core.mail import send_mail
 
 def quicksearch(request):
     orgs = Organization.objects.all()
@@ -321,6 +322,7 @@ def job_creation(request):
                for org in request.POST.getlist('organization'):
                    organization = Organization.objects.get(id = org)
                    JobRequest.objects.create(organization=organization, job = job)
+                   send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization', 'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
                    for user in organization.group.user_set.all():
                        notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
                title = "Job {0} created".format( job.name )
