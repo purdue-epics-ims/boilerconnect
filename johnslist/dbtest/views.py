@@ -233,7 +233,6 @@ def organization_create(request):
                 message = "Organization {0} created".format( organization.name )
                 return render(request,'dbtest/confirm.html', {'confirm':message})
             else:
-                print form.errors
                 return render(request, 'dbtest/organization_create.html', {'form':form,'error':form.errors})
     #if communitypartner
     else:
@@ -270,39 +269,39 @@ def user_edit(request):
             )
 
 @login_required
+@user_is_type('purdueuser')
 @user_has_perm('edit_organization')
 def organization_settings(request, organization_id):
-    if(request.user.userprofile.purdueuser):
+    organization = Organization.objects.get(id=organization_id)
+    #if the request was a GET
+    if request.method == 'GET':
         organization = Organization.objects.get(id=organization_id)
-        #if the request was a GET
-        if request.method == 'GET':
-            organization = Organization.objects.get(id=organization_id)
-            modelform = OrganizationCreateForm(request.POST, instance=organization)
-            return render(request, 'dbtest/organization_settings.html', {'modelform':modelform,'organization' : organization})
-        elif request.method == 'POST':
-            organization = Organization.objects.get(id=organization_id)
-            modelform = OrganizationCreateForm(request.POST, instance=organization)
-            modelform.actual_organization = organization
+        modelform = OrganizationCreateForm(request.POST, instance=organization)
+        return render(request, 'dbtest/organization_settings.html', {'modelform':modelform,'organization' : organization})
 
-           #check modelform validity
-            if modelform.is_valid() :
-                #get modelform info
-                organization = modelform.save(commit = False)
-                #get aux info
-                organization.available = bool(int(request.POST['available']))
-                message = "Organization {0} has been modified.".format(organization.name)
-                organization.save()
-                return render(request,'dbtest/organization_settings.html',
-                              {'confirm':message, 'modelform':modelform, 'organization':organization}
-                              )
-            else:
-                return render(request, 'dbtest/organization_settings.html',
-                              {'modelform':modelform,'error':modelform.errors, 'organization': organization}
-                              )
-    else:
-        return render(request, 'dbtest/confirm.html',
-                      {'error': "You do not have permission to access to this page"}
-                      )
+    elif request.method == 'POST':
+        organization = Organization.objects.get(id=organization_id)
+        print "ID:",organization.id
+        print "organization:",organization.categories.all()
+        print "POST:",request.POST['categories']
+        modelform = OrganizationCreateForm(request.POST, instance=organization)
+        model_out = modelform.save(commit = False)
+        print "model out:",model_out.categories.all()
+        # modelform.actual_organization = organization
+
+        #check modelform validity
+        if modelform.is_valid() :
+            #get modelform info
+            organization = modelform.save(commit = False)
+            message = "Organization {0} has been modified.".format(organization.name)
+            organization.save()
+            return render(request,'dbtest/organization_settings.html',
+                            {'confirm':message, 'modelform':modelform, 'organization':organization}
+                            )
+        else:
+            return render(request, 'dbtest/organization_settings.html',
+                            {'modelform':modelform,'error':modelform.errors, 'organization': organization}
+                            )
 
 @login_required
 def job_creation(request):
@@ -313,7 +312,6 @@ def job_creation(request):
        if request.method == 'POST':
            form = JobCreateForm(request.POST)
            #check form validity
-           print form.fields
            if form.is_valid():
                job = form.save(commit=False)
                job.creator = request.user

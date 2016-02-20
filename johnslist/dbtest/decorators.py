@@ -38,10 +38,10 @@ def user_has_perm(perm):
 
             #or, check if user has perm for User
 
-            #no permissions on user objects right now, just check if user is equal
+            #just check if user id is equal
             elif 'user_id' in kwargs.keys():
-                user = User.objects.get(id=kwargs['user_id'])
-                if request.user == user:
+                
+                if request.user == User.objects.get(id=kwargs['user_id']):
                     success = True
 
             if success == True:

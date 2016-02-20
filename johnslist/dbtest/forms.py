@@ -1,6 +1,5 @@
 from django.db import models
-from django import forms
-from django.forms import ModelForm,PasswordInput,Textarea
+from django.forms import ModelForm,PasswordInput,Textarea, RadioSelect
 from django.contrib.auth.models import User
 from django.contrib.auth import forms
 from .models import*
@@ -16,7 +15,7 @@ class OrganizationCreateForm(ModelForm):
 
 	class Meta:
 		model = Organization
-		fields = ['name','description','categories','icon']
+		fields = ['name','description','categories','icon','available']
 
 class JobCreateForm(ModelForm):
     class Meta:
