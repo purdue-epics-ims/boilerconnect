@@ -74,8 +74,6 @@
                 </div>
                 <br/>
 
-                {{form.organization}}
-
                 <div class="input-group">
                     <span class="input-group-addon">
                     <i class="fa fa-coffee"></i>
@@ -149,6 +147,9 @@
                 </div>
 
                 <!------------ Add Organizations Tab ---------------->
+                <div style="display: none;">
+                {{form.organization}}
+                </div>
 
                 <div class="tab-pane fade" id="orgs">
                     Filter the organizations to find the ones that you want to send the job request.
@@ -162,7 +163,7 @@
                     </div>
                     <div class="org_list list-group" id="org_results">
                         {% for org in orgs %}
-                        <div class="org_item list-group-item" org_id="{{org.id}}">
+                        <div class="org_item list-group-item" org_pk="{{org.id}}">
                             <h4 class="org_name list-group-item-heading">
                             <a href="{% url 'organization_detail' org.id %}">
                             {{org.name}}
@@ -183,7 +184,7 @@
                     <h2>Selected Organizations</h2>
                     <div class="org_list list-group" id="org_selected">
                         {% for org in orgs %}
-                        <div class="org_item list-group-item hidden" org_id="{{org.id}}">
+                        <div class="org_item list-group-item hidden" org_pk="{{org.id}}">
                             <h4 class="org_name list-group-item-heading">
                             <a href="{% url 'organization_detail' org.id %}">
                             {{org.name}}
@@ -199,7 +200,7 @@
                         {% endfor %}
                     </div>
 
-                    <input type="submit" class="btn btn-primary" value="Submit Job">
+                    <input type="submit" class="btn btn-primary" value="Submit Job" onclick="submitFunction()">
                 </div>
 
             </div>
@@ -244,23 +245,20 @@ $('#prev_tab').click(function(){
      }
 );
 
-
 <!------------------ organization searching ---------------->
 //select an org
     $('#org_results').find('.org_item').find('.org_button').click(function(){
-    var org_id = $(this).closest('.org_item').attr("org_id")
-    $('#org_results').find('[org_id="'+org_id+'"]').addClass("hidden")
-    $('#org_selected').find('[org_id="'+org_id+'"]').removeClass("hidden")
+    var org_pk = $(this).closest('.org_item').attr("org_pk")
+    $('#org_results').find('[org_pk="'+org_pk+'"]').addClass("hidden")
+    $('#org_selected').find('[org_pk="'+org_pk+'"]').removeClass("hidden")
     })
-
 
 //deslect an org
 $('#org_selected').find('.org_item').find('.org_button').click(function(){
-    var org_id = $(this).closest('.org_item').attr("org_id")
-    $('#org_results').find('[org_id="'+org_id+'"]').removeClass("hidden")
-    $('#org_selected').find('[org_id="'+org_id+'"]').addClass("hidden")
+    var org_pk = $(this).closest('.org_item').attr("org_pk")
+    $('#org_results').find('[org_pk="'+org_pk+'"]').removeClass("hidden")
+    $('#org_selected').find('[org_pk="'+org_pk+'"]').addClass("hidden")
 })
-
 
 //handle tag click action
 $('#org_results').find('.category').click(function(){
@@ -309,5 +307,11 @@ function filter(){
 $('#search').keyup(function() {
     filter()
 });
+
+<!------------------ submit button function ---------------->
+function submitFunction() {
+    $('#id_organization').val($("#org_selected").children(':not(.hidden)').map(function(){ return $(this).attr('org_pk') }))
+}
+
 </script>
 {% endblock content %}
