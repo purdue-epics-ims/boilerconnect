@@ -90,6 +90,10 @@ def populate():
         print '    '+job_name
         job = Job.objects.create(name=job_name,
                                 description = 'Description of the job',
+                                deliverable = 'deliverable',
+                                stakeholders = 'stakeholders',
+                                tech_specs = 'tech specs',
+                                budget = 'budget',
                                 duedate = timezone.now(),
                                 creator = community_partners.next(),
                                 client_organization = client_orgs.next())

@@ -141,7 +141,7 @@ def jobrequest_dash(request,job_id,organization_id):
                             action_object=job,
                             recipient=jobrequest.organization.group,
                             url=reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id}) )
-            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'title':'comment saved!'})
+                return render(request, 'dbtest/jobrequest_dash.html',{'form':form,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'comment saved!'})
         else:
             return render(request, 'dbtest/jobrequest_dash.html', {'jobrequest':jobrequest,'form':form,'error': 'The comment cannot be empty!','comment_text':comment_text})
 
