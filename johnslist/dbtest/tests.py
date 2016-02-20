@@ -27,7 +27,7 @@ from django.test import Client
             [x] - jobrequests_pending (use request_organization)
             [x] - jobrequests_declined (use request_organization)
         Interface:
-            [x] - job_create (check job exists, check default perms, check requested orgs)
+            [x] - job_creation (check job exists, check default perms, check requested orgs)
             [x] - jobrequest_dash (check r.context['job'] is the same that was created)
 
     Organization:
@@ -173,8 +173,8 @@ class JobTestCase(TestCase):
 
     ### Interface Tests ###
 
-    #verify job_create view
-    def test_job_create(self):
+    #verify job_creation view
+    def test_job_creation(self):
         #Login
         login_as(self,self.u_cp.username,'asdf')
         #check logged in as user0
@@ -182,7 +182,7 @@ class JobTestCase(TestCase):
         self.assertEqual(r.context['user'],self.u_cp)
 
         #Create a job
-        r = self.client.post(reverse('job_create'),{'name':'interfacejob','description':"testjob description",'duedate':'2015-09-05','organization':self.o.pk,'categories':self.cat.pk},follow=True)
+        r = self.client.post(reverse('job_creation'),{'name':'interfacejob','description':"testjob description",'duedate':'2015-09-05','organization':self.o.pk,'categories':self.cat.pk},follow=True)
         self.assertEqual(r.status_code, 200)
 
         #check if job exists
