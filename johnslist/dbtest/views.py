@@ -11,6 +11,7 @@ from .decorators import user_has_perm, user_is_type
 from .forms import*
 from guardian.shortcuts import assign_perm
 from notifications import notify
+from django.core.mail import send_mail
 
 def quicksearch(request):
     orgs = Organization.objects.all()
@@ -109,18 +110,19 @@ def jobrequest_dash(request,job_id,organization_id):
     comment_text = jobrequest.comment_set.all()
     if request.method == 'POST':
         form = CommentCreateForm(request.POST)
-        if request.POST.get("action","")=="Accept Request":
-            if jobrequest.accepted is False and jobrequest.declined is False:
-                jobrequest.accept()
-            else:
-                return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'You have already accepted/declined the job'})
-            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have accepted this job.'})
-        if request.POST.get("action","")=="Reject Request":
-            if jobrequest.accepted is False and jobrequest.declined is False:
-                jobrequest.decline()
-            else:
-                return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined this job'})
-            return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined this job.'})
+        if jobrequest.is_pending():
+            if request.POST.get("action","")=="Accept Request":
+                if jobrequest.accepted is False and jobrequest.declined is False:
+                    jobrequest.accept()
+                else:
+                    return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'You have already accepted/declined the job'})
+                return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have accepted this job.'})
+            if request.POST.get("action","")=="Decline Request":
+                if jobrequest.accepted is False and jobrequest.declined is False:
+                    jobrequest.decline()
+                else:
+                    return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined this job'})
+                return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined this job.'})
         if form.is_valid():
             comment = form.save(commit = False)
             comment.creator = request.user
@@ -320,6 +322,7 @@ def job_creation(request):
                for org in request.POST.getlist('organization'):
                    organization = Organization.objects.get(id = org)
                    JobRequest.objects.create(organization=organization, job = job)
+                   send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization', 'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
                    for user in organization.group.user_set.all():
                        notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
                title = "Job {0} created".format( job.name )

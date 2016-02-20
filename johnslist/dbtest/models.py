@@ -31,7 +31,7 @@ class Organization(models.Model):
     name = models.TextField('Organization Name',null=True)
     description = models.TextField('Organization Description')
     categories = models.ManyToManyField(Category)  # Category =-= Organization
-    email = models.CharField('Organization email',max_length=64,null=True)
+    email = models.CharField('Organization email',max_length=64, null=True)
     group = models.OneToOneField(Group) # Organization - Group
     phone_number = models.CharField('Organization phone number',max_length=64,null=True)
     icon = models.ImageField(upload_to='organization')
@@ -180,6 +180,12 @@ class JobRequest(models.Model):
                     url=reverse('jobrequest_dash',
                                 kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
 
+    def is_pending(self):
+        if not self.accepted and not self.declined:
+            return True
+        else:
+            return False
+        
 #add default jobrequest permissions
 @receiver(post_save, sender=JobRequest)
 def add_perms_jobrequest(sender,**kwargs):
