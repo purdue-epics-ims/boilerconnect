@@ -30,7 +30,7 @@
    {%if jobrequest.declined %}
    <span class="label label-danger">Declined</span>
    {% endif %}
-   {%if jobrequest.is_pending and not permission_to_edit %}
+   {%if jobrequest.is_pending %}
    <span class="label label-warning">Pending</span>
    {% endif %}
   </center>
