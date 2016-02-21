@@ -16,6 +16,8 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User,related_name = 'userprofile') # UserProfile - User
     # purdueuser or communitypartner
     purdueuser = models.BooleanField(default=True)
+    # save which pages the user has visited before for the purposes of showing helpful dialogs
+    visited_views = models.CharField(max_length=64)
 
 class Category(models.Model):
     def __unicode__(self):

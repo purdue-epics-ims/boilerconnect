@@ -18,6 +18,15 @@ def quicksearch(request):
     return render(request,'dbtest/quicksearch.html',
                 {'orgs':orgs})
 
+#determine if this is the first time a user has visited a page
+def first_visit(user,view):
+    if view not in user.userprofile.visited_views:
+        user.userprofile.visited_views += "{0},".format(view)
+        user.userprofile.save()
+        return True
+    else:
+        return False
+
 #login with provided user/pass
 def login(request):
     if request.method == 'POST':
@@ -33,14 +42,16 @@ def login(request):
     if request.method == 'GET':
         return render(request,'dbtest/login.html')
 
-#get detailed user information - email, phone number, Orgs they are part of, etc.
-# users don't have any permissions right now, so just check that request.user == user
 @login_required
 def user_dash(request):
     user = request.user
     read_notifications = list(request.user.notifications.read())
     unread_notifications = list(request.user.notifications.unread())
     request.user.notifications.mark_all_as_read()
+
+    #If this is the first time the user has visited this page, show a dialog
+    show_dialog = first_visit(user,'user_dash')
+
     if user.userprofile.purdueuser:
         orgs = [group.organization for group in user.groups.all()]
         return render(request,
@@ -49,6 +60,7 @@ def user_dash(request):
                        'organizations':orgs,
                        'unread_notifications':unread_notifications,
                        'read_notifications':read_notifications,
+                       'show_dialog':show_dialog
                        })
     else:
         jobs = user.jobs.all()
@@ -57,16 +69,21 @@ def user_dash(request):
                        'jobs':jobs,
                        'unread_notifications':unread_notifications,
                        'read_notifications':read_notifications,
+                       'show_dialog':show_dialog
                      })
 
 #display job information, show jobrequests and their current state
 @user_is_type('communitypartner')
 @user_has_perm('view_job')
 def job_dash(request,job_id):
+    #If this is the first time the user has visited this page, show a dialog
+    show_dialog = first_visit(request.user,'job_dash')
+
     job = Job.objects.get(id=job_id)
     return render(request, 'dbtest/job_dash.html',
                   {'job':job,
-                   'jobrequests':job.jobrequests.order_by('organization')
+                   'jobrequests':job.jobrequests.order_by('organization'),
+                   'show_dialog':show_dialog
                   })
 
 #a list of a user's notifications
@@ -92,22 +109,31 @@ def organization_detail(request,organization_id):
 @user_is_type('purdueuser')
 @user_has_perm('view_organization')
 def organization_dash(request,organization_id):
+    #If this is the first time the user has visited this page, show a dialog
+    show_dialog = first_visit(request.user,'organization_dash')
+
     org = Organization.objects.get(id=organization_id)
     members = org.group.user_set.all()
     jobrequests = JobRequest.objects.filter(organization=org)
     return render(request, 'dbtest/organization_dash.html',
                   {'organization':org,
                    'members':members,
-                   'jobrequests':jobrequests
+                   'jobrequests':jobrequests,
+                   'show_dialog':show_dialog
                   })
 
 #get detailed info about a jobrequest
 @user_has_perm('view_jobrequest')
 def jobrequest_dash(request,job_id,organization_id):
+    #If this is the first time the user has visited this page, show a dialog
+    show_dialog = first_visit(request.user,'jobrequest_dash')
+
     job = Job.objects.get(id=job_id)
     organization = Organization.objects.get(id=organization_id)
     jobrequest = JobRequest.objects.get(job = job, organization = organization)
     comment_text = jobrequest.comment_set.all()
+
+    # if request is a POST
     if request.method == 'POST':
         form = CommentCreateForm(request.POST)
         if jobrequest.is_pending():
@@ -145,7 +171,9 @@ def jobrequest_dash(request,job_id,organization_id):
         else:
             return render(request, 'dbtest/jobrequest_dash.html', {'jobrequest':jobrequest,'form':form,'error': 'The comment cannot be empty!','comment_text':comment_text})
 
-    return render(request, 'dbtest/jobrequest_dash.html',{'jobrequest':jobrequest,'comment_text':comment_text})
+    # if request is GET
+    return render(request, 'dbtest/jobrequest_dash.html',
+                  {'jobrequest':jobrequest,'comment_text':comment_text,'show_dialog':show_dialog})
 
 #load the front page with 3 random organizations in the gallery
 def front_page(request):
@@ -212,12 +240,16 @@ def user_create(request):
 
 @login_required
 def organization_create(request):
+    #If this is the first time the user has visited this page, show a dialog
+    show_dialog = first_visit(request.user,'organization_create')
+
     #if purdueuser
     if(request.user.userprofile.purdueuser):
         #if the request was a GET
         if request.method == 'GET':
             form = OrganizationCreateForm()
-            return render(request, 'dbtest/organization_create.html', {'form':form})
+            return render(request, 'dbtest/organization_create.html',
+                          {'form':form,'show_dialog':show_dialog})
         #if this request was a POST
         elif request.method == 'POST':
             form = OrganizationCreateForm(request.POST, request.FILES)
