@@ -16,7 +16,7 @@ def populate():
         name=g.name,
         group=g,
         description=" Linux is a free computer operating system. it runs on a large variety of computer hardware, and can be used for many purposes including desktop machines, small embedded systems and internet servers. you can find more information about Linux itself on the Linux international website. the Linux documentation project is also a good place to find general information about Linux.",
-        email="plug-president@purduelug.org",
+        email="malesevic.milos2@gmail.com",
         phone_number="123-456-7890",
         available=False)
     plug.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
