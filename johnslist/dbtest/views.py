@@ -283,12 +283,8 @@ def organization_settings(request, organization_id):
 
     elif request.method == 'POST':
         organization = Organization.objects.get(id=organization_id)
-        print "ID:",organization.id
-        print "organization:",organization.categories.all()
-        print "POST:",request.POST['categories']
         modelform = OrganizationCreateForm(request.POST, instance=organization)
         model_out = modelform.save(commit = False)
-        print "model out:",model_out.categories.all()
         # modelform.actual_organization = organization
 
         #check modelform validity

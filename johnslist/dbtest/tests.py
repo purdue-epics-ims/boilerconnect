@@ -331,7 +331,12 @@ class OrganizationTestCase(TestCase):
         category = self.cat.pk
         #creating the org
         with open(PIC_POPULATE_DIR+'plug.png') as icon:
-            response = self.client.post(reverse('organization_create'), {'name': 'test org', 'description': 'testing org', 'categories': category, 'icon':icon})
+            response = self.client.post(reverse('organization_create'),
+                                        {'name': 'test org',
+                                         'description': 'testing org',
+                                         'categories': category,
+                                         'icon':icon}
+                                        )
         self.assertTrue(response.status_code == 200)
         self.assertTrue(Organization.objects.get(name = 'test org'))
         org = Organization.objects.get(name = 'test org')
@@ -342,7 +347,13 @@ class OrganizationTestCase(TestCase):
     def test_organization_settings(self):
         self.o.group.user_set.add(self.u2) 
         login_as(self, self.u2.username, 'asdf')
-        response = self.client.post(reverse('organization_settings', kwargs = {'organization_id': self.o.pk}))
+        response = self.client.post(reverse('organization_settings',
+                                            kwargs = {'organization_id': self.o.pk}),
+                                    {'name': 'test org',
+                                    'description': 'testing org',
+                                    'categories': self.cat.pk,
+                                     }
+                                    )
         self.assertEqual(response.status_code, 200)
 
 
