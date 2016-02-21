@@ -132,22 +132,22 @@ def jobrequest_dash(request,job_id,organization_id):
     organization = Organization.objects.get(id=organization_id)
     jobrequest = JobRequest.objects.get(job = job, organization = organization)
     comment_text = jobrequest.comment_set.all()
-    permission_to_edit = request.user.has_perm('edit_jobrequest_state',jobrequest)
+    perm_to_edit_jobrequest_state = request.user.has_perm('edit_jobrequest_state',jobrequest)
     # if request is a POST
     if request.method == 'POST':
         form = CommentCreateForm(request.POST)
         if request.POST.get("action","")=="Accept Request":
             if jobrequest.is_pending():
                 jobrequest.accept()
-                return render(request, 'dbtest/jobrequest_dash.html',{'permission_to_edit':permission_to_edit,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have accepted this job.'})
+                return render(request, 'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have accepted this job.'})
             else:
-                return render(request,'dbtest/jobrequest_dash.html',{'permission_to_edit':permission_to_edit,'comment_text':comment_text,'jobrequest':jobrequest,'error':'You have already accepted/declined the job'})
+                return render(request,'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'error':'You have already accepted/declined the job'})
         if request.POST.get("action","")=="Decline Request":
             if jobrequest.is_pending():
                 jobrequest.decline()
-                return render(request, 'dbtest/jobrequest_dash.html',{'permission_to_edit':permission_to_edit,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined this job.'})
+                return render(request, 'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined this job.'})
             else:
-                return render(request,'dbtest/jobrequest_dash.html',{'permission_to_edit':permission_to_edit,'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined this job'})
+                return render(request,'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined this job'})
         if form.is_valid():
             comment = form.save(commit = False)
             comment.creator = request.user
@@ -172,7 +172,7 @@ def jobrequest_dash(request,job_id,organization_id):
 
     # if request is GET
     return render(request, 'dbtest/jobrequest_dash.html',
-            {'jobrequest':jobrequest,'comment_text':comment_text,'show_dialog':show_dialog,'permission_to_edit':permission_to_edit})
+            {'jobrequest':jobrequest,'comment_text':comment_text,'show_dialog':show_dialog,'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state})
 
 #load the front page with 3 random organizations in the gallery
 def front_page(request):
@@ -346,11 +346,10 @@ def job_creation(request):
                job.creator = request.user
                job.save()
                #get the list of orgs to request from the form
-               for org_id in request.POST.getlist('organization'):
-                   organization = Organization.objects.get(id = org_id)
-                   jr = JobRequest.objects.create(organization=organization, job = job)
-                   link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org_id}))
-                   send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link), 'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
+               for org in request.POST.getlist('organization'):
+                   organization = Organization.objects.get(id = org)
+                   JobRequest.objects.create(organization=organization, job = job)
+                   send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization', 'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
                    for user in organization.group.user_set.all():
                        notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
                title = "Job {0} created".format( job.name )
