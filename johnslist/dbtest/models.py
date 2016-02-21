@@ -16,6 +16,8 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User,related_name = 'userprofile') # UserProfile - User
     # purdueuser or communitypartner
     purdueuser = models.BooleanField(default=True)
+    # save which pages the user has visited before for the purposes of showing helpful dialogs
+    visited_views = models.CharField(max_length=64,default="")
 
 class Category(models.Model):
     def __unicode__(self):
@@ -35,7 +37,7 @@ class Organization(models.Model):
     group = models.OneToOneField(Group) # Organization - Group
     phone_number = models.CharField('Organization phone number',max_length=64,null=True)
     icon = models.ImageField(upload_to='organization', null=True)
-    available = models.BooleanField(default=True)
+    available = models.BooleanField(default=True,choices=((True, "Accepting Jobs"),(False, "Not accepting Jobs")))
 
     class Meta:
 		permissions = (
@@ -142,6 +144,7 @@ class JobRequest(models.Model):
             permissions = (
                 ( 'view_jobrequest','Can view JobRequest' ),
                 ( 'edit_jobrequest','Can edit JobRequest'),
+                ( 'edit_jobrequest_state','Can edit JobRequest state'),
                 )
 
     # set a JobRequest as accepted
@@ -199,7 +202,8 @@ def add_perms_jobrequest(sender,**kwargs):
         assign_perm('edit_jobrequest',job.creator,jobrequest)
         #allow requested org to view jobrequest
         assign_perm('view_jobrequest',jobrequest.organization.group,jobrequest)
-
+        #allow Purdue user to edit jobrequest state
+        assign_perm('edit_jobrequest_state',jobrequest.organization.group,jobrequest)
 
         #notify users of new JobRequest
         notify.send(job.creator,

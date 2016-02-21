@@ -35,6 +35,10 @@
 
 </div>
 
+    {{jobrequest.job.deliverable}}
+    {{jobrequest.job.stakeholders}}
+    {{jobrequest.job.tech_specs}}
+    {{jobrequest.job.budget}}
 <table class="table table-striped table-hover ">
   <thead>
     <tr>
@@ -56,8 +60,8 @@
     </tr>
     <tr class="success">
       <td>3</td>
-      <td>Stakeholders</td>
-      <td>{{jobrequest.job.stakeholders}}</td>
+      <td>Stackholders</td>
+      <td>{{jobrequest.job.stackholders}}</td>
     </tr>
     <tr class="danger">
       <td>4</td>
@@ -72,56 +76,49 @@
   </tbody>
 </table>
 
-
-<div class="list-group">
-    <div class="list-group-item active">
-    Comments
-    </div>
-    {%if comment_text %}
-        {% for comments in comment_text %}
-            <div class="list-group-item">
-            {{comments.text_comment}}
-            <span class="pull-right"> 
-                {% if comments.creator.userprofile.purdueuser %}
-                    {{comments.creator}} from {{comments.jobrequest.organization}}
-                {% else %}
-                    {{comments.creator}}
-                {% endif %}
-            </span>
-            </div>
-        {% endfor %}
-    {%else%}
-        <div class="list-group-item">
-            There's current no comment recorded for this job.
-        </div>
-    {%endif%}
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <h3 class="panel-title">Extra Information</h3>
+  </div>
+  <div class="panel-body">
+  </div>
 </div>
 
-<form class="form-horizontal" method=POST name="comment" action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
-    {% csrf_token %}
-<center>
-    <div class="form-group">
-        <label for="textArea" class="col-lg-2 control-label">Leave Your Comment</label>
-        <div class="col-lg-10">
-            <textarea class="form-control" rows="3"  name="text_comment"></textarea>
-        </div>
-    </div>
-</center>
-    <div class="form-group">
-      <div class="col-lg-10 col-lg-offset-2">
-        <button type="reset" class="btn btn-default">Cancel</button>
-        <button type="submit" class="btn btn-primary" name="comment">Submit</button>
-      </div>
-    </div>
-</form>
 
-{% if show_dialog %}
-    {% if user.userprofile.purdueuser %}
-        <script>alert("Here you can accept or reject job requests that you receive.  You can also make comments and suggestions to change the job request before accepting.");
-        </script>
-    {% else %}
-        <script>alert("This page shows whether your job request has been accepted or declined by this organization.  You can also view comments and make changes to the job request here.");
-        </script>
-    {% endif %}
+<div class="list-group">
+  <div class="list-group-item active">
+    Comments
+  </div>
+{%if not comments %}
+  <div class="list-group-item">
+    There is no comments for this job yet.
+  </div>
 {% endif %}
+    {% for comments in comment_text %}
+  <div class="list-group-item">
+            {{comments.text_comment}}
+            <span class="pull-right"> 
+            {% if comments.creator.userprofile.purdueuser %}
+                {{comments.creator}} from {{comments.jobrequest.organization}}
+            {% else %}
+                {{comments.creator}}
+            {% endif %}
+  </div>
+    {% endfor %}
+</div>
+
+    <form method=POST name="comment" action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
+        {% csrf_token %}
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-bullhorn"></i>
+            </span>
+            <textarea class="form-control"  name="text_comment" placeholder="What do you think about this job?"></textarea>
+        </div>
+        <br>
+        <input class="btn btn-warning" type="submit" name = "comment" value="Submit Comment"></input>
+    </form>
+</div>
+
 {% endblock content %}

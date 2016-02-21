@@ -27,7 +27,7 @@ from django.test import Client
             [x] - jobrequests_pending (use request_organization)
             [x] - jobrequests_declined (use request_organization)
         Interface:
-            [x] - job_create (check job exists, check default perms, check requested orgs)
+            [x] - job_creation (check job exists, check default perms, check requested orgs)
             [x] - jobrequest_dash (check r.context['job'] is the same that was created)
 
     Organization:
@@ -173,8 +173,8 @@ class JobTestCase(TestCase):
 
     ### Interface Tests ###
 
-    #verify job_create view
-    def test_job_create(self):
+    #verify job_creation view
+    def test_job_creation(self):
         #Login
         login_as(self,self.u_cp.username,'asdf')
         #check logged in as user0
@@ -194,6 +194,7 @@ class JobTestCase(TestCase):
                                  'budget':'foo',
                                  'creator':self.u_cp.pk,
                                  'organization':self.o.pk,
+                                 'categories':self.cat.pk
                              }
                              ,follow=True)
         self.assertEqual(r.status_code, 200)
@@ -330,7 +331,12 @@ class OrganizationTestCase(TestCase):
         category = self.cat.pk
         #creating the org
         with open(PIC_POPULATE_DIR+'plug.png') as icon:
-            response = self.client.post(reverse('organization_create'), {'name': 'test org', 'description': 'testing org', 'categories': category, 'icon':icon})
+            response = self.client.post(reverse('organization_create'),
+                                        {'name': 'test org',
+                                         'description': 'testing org',
+                                         'categories': category,
+                                         'icon':icon}
+                                        )
         self.assertTrue(response.status_code == 200)
         self.assertTrue(Organization.objects.get(name = 'test org'))
         org = Organization.objects.get(name = 'test org')
@@ -341,7 +347,13 @@ class OrganizationTestCase(TestCase):
     def test_organization_settings(self):
         self.o.group.user_set.add(self.u2) 
         login_as(self, self.u2.username, 'asdf')
-        response = self.client.post(reverse('organization_settings', kwargs = {'organization_id': self.o.pk}))
+        response = self.client.post(reverse('organization_settings',
+                                            kwargs = {'organization_id': self.o.pk}),
+                                    {'name': 'test org',
+                                    'description': 'testing org',
+                                    'categories': self.cat.pk,
+                                     }
+                                    )
         self.assertEqual(response.status_code, 200)
 
 

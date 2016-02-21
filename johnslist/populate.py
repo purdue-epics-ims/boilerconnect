@@ -58,9 +58,10 @@ def populate():
     #add Users to Organizations
     users = User.objects.all().exclude(username="AnonymousUser")
     for user in users[0:6]:
-        plug.group.user_set.add(user)
-        epics.group.user_set.add(user)
-        amet.group.user_set.add(user)
+        if user.userprofile.purdueuser:
+            plug.group.user_set.add(user)
+            epics.group.user_set.add(user)
+            amet.group.user_set.add(user)
 
     #--------------- Categories --------------------
     print '  creating Categories'
@@ -90,6 +91,10 @@ def populate():
         print '    '+job_name
         job = Job.objects.create(name=job_name,
                                 description = 'Description of the job',
+                                deliverable = 'deliverable',
+                                stakeholders = 'stakeholders',
+                                tech_specs = 'tech specs',
+                                budget = 'budget',
                                 duedate = timezone.now(),
                                 creator = community_partners.next(),
                                 client_organization = client_orgs.next())

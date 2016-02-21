@@ -75,22 +75,23 @@
 
     <div class="col-sm-6">
       Availability
-      <div class="radio">
-        <label>
-            <input name="available" id="available" value=1
-                   {% if organization.available %} checked="" {% endif %}
-                   type="radio">
-          Accepting Jobs
-        </label>
-      </div>
-      <div class="radio">
-        <label>
-          <input name="available" id="available" value=0
-                  {% if organization.available == False %} checked="" {% endif %}
-                  type="radio">
-          Not accepting Jobs
-        </label>
-      </div>
+        {{modelform.available}}
+        <!-- <div class="radio"> -->
+        <!-- <label> -->
+        <!-- <input name="available" id="available" value=1 -->
+        <!-- {% if organization.available %} checked="" {% endif %} -->
+        <!-- type="radio"> -->
+        <!-- Accepting Jobs -->
+        <!-- </label> -->
+        <!-- </div> -->
+        <!-- <div class="radio"> -->
+        <!-- <label> -->
+        <!-- <input name="available" id="available" value=0 -->
+        <!-- {% if organization.available == False %} checked="" {% endif %} -->
+        <!-- type="radio"> -->
+        <!-- Not accepting Jobs -->
+        <!-- </label> -->
+        <!-- </div> -->
     </div>
 
 

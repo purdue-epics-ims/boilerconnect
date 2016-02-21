@@ -1,5 +1,6 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
+
 <div class="panel-heading">
   <div class="">
     Create an organization
@@ -60,4 +61,9 @@
 
     </form>
 </div>
+
+{% if show_dialog %}
+<script>alert("Create your organization here.  Community members will be able to search for your organization by name or categories you select.");
+</script>
+{% endif %}
 {% endblock %}

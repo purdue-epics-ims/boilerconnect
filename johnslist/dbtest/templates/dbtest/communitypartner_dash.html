@@ -10,6 +10,7 @@
   <span class="pull-right"><button class="btn btn-info">User settings</button></span>
 </div>
 
+
 <div class="row">
   <div class="col-sm-6">
   {% dash_notifications "Notifications" unread_notifications read_notifications %}
@@ -35,4 +36,8 @@
   </div>
 </div>
 
+{% if show_dialog %}
+<script>alert("This page shows all notifications for jobs you have created.  Click 'Create Job' in the menu bar to begin creating a job.");
+</script>
+{% endif %}
 {% endblock content %}
