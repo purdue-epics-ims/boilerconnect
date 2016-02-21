@@ -132,23 +132,22 @@ def jobrequest_dash(request,job_id,organization_id):
     organization = Organization.objects.get(id=organization_id)
     jobrequest = JobRequest.objects.get(job = job, organization = organization)
     comment_text = jobrequest.comment_set.all()
-
+    permission_to_edit =  request.user.has_perm('edit_jobrequest_state',jobrequest)
     # if request is a POST
     if request.method == 'POST':
         form = CommentCreateForm(request.POST)
-        if jobrequest.is_pending():
-            if request.POST.get("action","")=="Accept Request":
-                if jobrequest.accepted is False and jobrequest.declined is False:
-                    jobrequest.accept()
-                else:
-                    return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'You have already accepted/declined the job'})
-                return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have accepted this job.'})
-            if request.POST.get("action","")=="Decline Request":
-                if jobrequest.accepted is False and jobrequest.declined is False:
-                    jobrequest.decline()
-                else:
-                    return render(request,'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined this job'})
-                return render(request, 'dbtest/jobrequest_dash.html',{'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined this job.'})
+        if request.POST.get("action","")=="Accept Request":
+            if jobrequest.is_pending():
+                jobrequest.accept()
+                return render(request, 'dbtest/jobrequest_dash.html',{permission_to_edit:'permission_to_edit','comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have accepted this job.'})
+            else:
+                return render(request,'dbtest/jobrequest_dash.html',{permission_to_edit:'permission_to_edit','comment_text':comment_text,'jobrequest':jobrequest,'error':'You have already accepted/declined the job'})
+        if request.POST.get("action","")=="Decline Request":
+            if jobrequest.is_pending():
+                jobrequest.decline()
+                return render(request, 'dbtest/jobrequest_dash.html',{permission_to_edit:'permission_to_edit','comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined this job.'})
+            else:
+                return render(request,'dbtest/jobrequest_dash.html',{permission_to_edit:'permission_to_edit','comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined this job'})
         if form.is_valid():
             comment = form.save(commit = False)
             comment.creator = request.user
