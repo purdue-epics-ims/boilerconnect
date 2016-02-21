@@ -15,12 +15,12 @@
    <i class="fa fa-calendar"></i> Due on  <span class="badge "> {{jobrequest.job.duedate}}</span>
 
    <br><br>
-   {%if jobrequest.is_pending and request.user.userprofile.purdueuser %}
+   {%if jobrequest.is_pending and perm_to_edit_jobrequest_state %}
    <form action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id%}" method ="post">
        {%csrf_token%}
        <input type="hidden" name="jobrequest" value="{{jobrequest}}">
-       <i class="fa fa-check"></i><input class="btn btn-success" type="submit" name="action" value="Accept Request">
-       <i class="fa fa-remove"></i><input class="btn btn-danger" type="submit" name="action" value="Decline Request">
+       <input class="btn btn-success" type="submit" name="action" value="Accept Request">
+       <input class="btn btn-danger" type="submit" name="action" value="Decline Request">
    </form>
    {%endif%}
 
@@ -30,6 +30,9 @@
    {%if jobrequest.declined %}
    <span class="label label-danger">Declined</span>
    {% endif %}
+   {%if jobrequest.is_pending and not permission_to_edit %}
+   <span class="label label-warning">Pending</span>
+   {% endif %}
   </center>
 
 
@@ -38,34 +41,28 @@
 <table class="table table-striped table-hover ">
   <thead>
     <tr>
-      <th>#</th>
       <th>Additional Information</th>
       <th>Content</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>1</td>
       <td>Description</td>
       <td>{{jobrequest.job.description}}</td>
     </tr>
     <tr class="info">
-      <td>2</td>
       <td>Deliverable</td>
       <td>{{jobrequest.job.deliverable}}</td>
     </tr>
     <tr class="success">
-      <td>3</td>
       <td>Stakeholders</td>
       <td>{{jobrequest.job.stakeholders}}</td>
     </tr>
     <tr class="danger">
-      <td>4</td>
       <td>Tech Specs</td>
       <td>{{jobrequest.job.tech_specs}}</td>
     </tr>
     <tr class="warning">
-      <td>5</td>
       <td>Budget</td>
       <td>{{jobrequest.job.budget}}</td>
     </tr>
@@ -116,12 +113,7 @@
 </form>
 
 {% if show_dialog %}
-    {% if user.userprofile.purdueuser %}
-        <script>alert("Here you can accept or reject job requests that you receive.  You can also make comments and suggestions to change the job request before accepting.");
-        </script>
-    {% else %}
-        <script>alert("This page shows whether your job request has been accepted or declined by this organization.  You can also view comments and make changes to the job request here.");
-        </script>
-    {% endif %}
+<script>alert('hihihi');
+</script>
 {% endif %}
 {% endblock content %}
