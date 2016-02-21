@@ -117,10 +117,11 @@
 
 {% if show_dialog %}
     {% if user.userprofile.purdueuser %}
-<script>alert("Here you can accept or reject job requests that you receive.  You can also make comments and suggestions to change the job request before accepting.");
-</script>
-{% else %}
-<script>alert("This page shows whether your job request has been accepted or declined by this organization.  You can also view comments and make changes to the job request here.");
-</script>
+        <script>alert("Here you can accept or reject job requests that you receive.  You can also make comments and suggestions to change the job request before accepting.");
+        </script>
+    {% else %}
+        <script>alert("This page shows whether your job request has been accepted or declined by this organization.  You can also view comments and make changes to the job request here.");
+        </script>
+    {% endif %}
 {% endif %}
 {% endblock content %}
