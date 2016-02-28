@@ -310,12 +310,16 @@ def organization_settings(request, organization_id):
     if request.method == 'GET':
         organization = Organization.objects.get(id=organization_id)
         modelform = OrganizationCreateForm(request.POST, instance=organization)
-        return render(request, 'dbtest/organization_settings.html', {'modelform':modelform,'organization' : organization})
+        categories_id = []
+        for category in organization.categories.all():
+            categories_id.insert(0, category.pk)
+        return render(request, 'dbtest/organization_settings.html', {'modelform':modelform,'organization' : organization, 'categories_id': categories_id})
 
     elif request.method == 'POST':
         organization = Organization.objects.get(id=organization_id)
         modelform = OrganizationCreateForm(request.POST, instance=organization)
         model_out = modelform.save(commit = False)
+
         # modelform.actual_organization = organization
 
         #check modelform validity
