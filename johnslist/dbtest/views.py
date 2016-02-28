@@ -357,9 +357,8 @@ def job_creation(request):
                    send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
                    for user in organization.group.user_set.all():
                        notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
-               title = "Job {0} created".format( job.name )
-               message = "Thank you for creating the job."
-               return render(request,'dbtest/front_page.html', {'title': title,'message':message})
+               message = "Job {0} created".format( job.name )
+               return render(request,'dbtest/confirm.html', {'confirm':message})
            else:
                return render(request, 'dbtest/job_creation.html', {'form':form,'error':"There are incorrect fields"})
        #if the request was a GET
