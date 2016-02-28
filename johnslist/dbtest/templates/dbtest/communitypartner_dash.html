@@ -25,7 +25,6 @@
         <ul class="list-group">
           {% for job in jobs %}
           <a class="list-group-item" href="{% url 'job_dash' job.id %}">
-            <span class="badge">14</span>
             {{ job.name }}
           </a>
           {% endfor %}

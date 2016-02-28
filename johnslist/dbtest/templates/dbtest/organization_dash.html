@@ -22,7 +22,6 @@
         <ul class="dash-list list-group">
           {% for jobrequest in jobrequests %}
           <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
-            <span class="badge">14</span>
             {% if jobrequest.accepted %}
             <span class="label label-lg label-success">Accepted</span>
             {% elif jobrequest.declined %}

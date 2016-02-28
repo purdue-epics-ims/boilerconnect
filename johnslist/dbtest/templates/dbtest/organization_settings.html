@@ -2,11 +2,14 @@
 
 {% block content %}
 
-<center>
-<img src="{{organization.icon.url}}" width="140" height="140" class="img-circle">
-<h3>{{organization.name}} <small> Settings </small>
-  </h3>
-</center>
+<div class="jumbotron">
+  <center>
+    <h3>{{ organization.name }}</h3>
+  </center>
+
+  <a href="{% url 'organization_dash' organization.id %}" class="pull-right"><button class="btn btn-info">Organization Dashboard</button></a>
+  <a href="{% url 'organization_detail' organization.id %}" class="pull-right"><button class="btn btn-info">View Public Profile</button></a>
+</div>
 
 <form action="{% url 'organization_settings' organization.id %}" method="post">
 
