@@ -333,6 +333,7 @@ class OrganizationTestCase(TestCase):
         with open(PIC_POPULATE_DIR+'plug.png') as icon:
             response = self.client.post(reverse('organization_create'),
                                         {'name': 'test org',
+                                         'email': 'evan@evanw.org',
                                          'description': 'testing org',
                                          'categories': category,
                                          'icon':icon}
@@ -350,8 +351,9 @@ class OrganizationTestCase(TestCase):
         response = self.client.post(reverse('organization_settings',
                                             kwargs = {'organization_id': self.o.pk}),
                                     {'name': 'test org',
-                                    'description': 'testing org',
-                                    'categories': self.cat.pk,
+                                     'email': 'evan@evanw.org',
+                                     'description': 'testing org',
+                                     'categories': self.cat.pk,
                                      }
                                     )
         self.assertEqual(response.status_code, 200)
