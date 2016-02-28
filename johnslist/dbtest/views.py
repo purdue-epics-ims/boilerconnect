@@ -310,12 +310,16 @@ def organization_settings(request, organization_id):
     if request.method == 'GET':
         organization = Organization.objects.get(id=organization_id)
         modelform = OrganizationCreateForm(request.POST, instance=organization)
-        return render(request, 'dbtest/organization_settings.html', {'modelform':modelform,'organization' : organization})
+        categories_id = []
+        for category in organization.categories.all():
+            categories_id.insert(0, category.pk)
+        return render(request, 'dbtest/organization_settings.html', {'modelform':modelform,'organization' : organization, 'categories_id': categories_id})
 
     elif request.method == 'POST':
         organization = Organization.objects.get(id=organization_id)
         modelform = OrganizationCreateForm(request.POST, instance=organization)
         model_out = modelform.save(commit = False)
+
         # modelform.actual_organization = organization
 
         #check modelform validity
@@ -346,10 +350,11 @@ def job_creation(request):
                job.creator = request.user
                job.save()
                #get the list of orgs to request from the form
-               for org in request.POST.getlist('organization'):
-                   organization = Organization.objects.get(id = org)
-                   JobRequest.objects.create(organization=organization, job = job)
-                   send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization', 'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
+               for org_id in request.POST.getlist('organization'):
+                   organization = Organization.objects.get(id = org_id)
+                   jr = JobRequest.objects.create(organization=organization, job = job)
+                   link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org_id}))
+                   send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
                    for user in organization.group.user_set.all():
                        notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
                title = "Job {0} created".format( job.name )
