@@ -139,7 +139,7 @@ def jobrequest_dash(request,job_id,organization_id):
 
         # handle accept button click
         if request.POST.get("action","")=="Accept Request":
-            if jobrequest.is_pending():
+            if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.accept()
                 return render(request, 'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have accepted this job.'})
             else:
@@ -147,7 +147,7 @@ def jobrequest_dash(request,job_id,organization_id):
 
         # handle decline button click
         if request.POST.get("action","")=="Decline Request":
-            if jobrequest.is_pending():
+            if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.decline()
                 return render(request, 'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined this job.'})
             else:
