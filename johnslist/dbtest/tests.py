@@ -255,6 +255,16 @@ class JobTestCase(TestCase):
         self.assertTrue(response.status_code==200)
         logout(self)
 
+        #test community user cannot accept/decline a jobrequest
+        login_as(self,self.u_cp.username,'asdf')
+        jr.pend()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Decline Request"})
+        self.assertTrue('error' in response.context)
+        jr.pend()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Accept Request"})
+        self.assertTrue('error' in response.context)
+        logout(self)
+
 class OrganizationTestCase(TestCase):
     #django calls this initialization function automatically
     def setUp(self):

@@ -137,13 +137,13 @@ def jobrequest_dash(request,job_id,organization_id):
     if request.method == 'POST':
         form = CommentCreateForm(request.POST)
         if request.POST.get("action","")=="Accept Request":
-            if jobrequest.is_pending():
+            if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.accept()
                 return render(request, 'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have accepted this job.'})
             else:
                 return render(request,'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'error':'You have already accepted/declined the job'})
         if request.POST.get("action","")=="Decline Request":
-            if jobrequest.is_pending():
+            if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.decline()
                 return render(request, 'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined this job.'})
             else:
