@@ -234,7 +234,10 @@ def user_create(request):
            
             title = "User {0} created".format( user.username )
             confirm = "Thank you for creating an account."
-            return render(request,'dbtest/login.html', {'title': title,'confirm':confirm})
+           # need to do auto login here
+           # login_user = authenticate(username=user.username, password=user.password)
+           # auth_login(request, login_user)
+            return render(request,'dbtest/front_page.html', {'title': title,'confirm':confirm})
         else:
             return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields."})
     #if the request was a GET
