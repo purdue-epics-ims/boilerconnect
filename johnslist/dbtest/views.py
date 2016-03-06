@@ -153,6 +153,12 @@ def jobrequest_dash(request,job_id,organization_id):
             else:
                 return render(request,'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined this job'})
 
+        if request.POST.get("confirm","")=="Confirm Request":
+            if not jobrequest.confirmed:
+                jobrequest.confirm()
+                return render(request,'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'you have confirmed this job request!'})
+            else:
+                return render(request,'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already confirmed this job request!'})
         if form.is_valid():
             comment = form.save(commit = False)
             comment.creator = request.user
