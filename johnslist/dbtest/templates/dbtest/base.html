@@ -40,11 +40,16 @@
                     <li><a href="{%url 'about'%}">About</a></li>
                     </ul>
 
-                    <form class="navbar-form navbar-left">
+                    <!-- <form class="navbar-form navbar-left"> -->
+                    <ul class="nav navbar-nav navbar-left">
+                        <li>
                         {% if not user.userprofile.purdueuser %}
+                        <p class="navbar-btn">
                         <a href = '/job_creation' class="btn btn-danger"> <i class="fa fa-certificate"></i> Create a Job</a>
+                        </p>
                         {% endif %}
-                    </form>
+                        </li>
+                    </ul>
 
                     <!-- Logged in user navbar -->
 
