@@ -202,7 +202,7 @@ class JobRequest(models.Model):
         job.closed = True
         job.save()
         for jr in job.jobrequests.all():
-            if jr is not self:
+            if jr != self:
                 remove_perm('view_jobrequest',jr.job.creator,jr)
                 remove_perm('view_jobrequest',jr.organization.group,jr)
                 notify.send(self.organization,
@@ -212,7 +212,7 @@ class JobRequest(models.Model):
                             url=reverse('jobrequest_dash',
                                         kwargs={'organization_id':jr.organization.id,'job_id':jr.job.id}) )
         
-        
+
 
    #check if a jobrequest is pending 
     def is_pending(self):
