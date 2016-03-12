@@ -27,24 +27,42 @@
                 <li class=""><a href="#orgs" data-toggle="tab" aria-expanded="true">Organizations selection</a></li>
             </ul>
 
+            <div style="text-align:right;">
+            <a id="prev_tab" style="display:none;" class="btn btn-primary" ">Previous</a>
+            <a id="next_tab" class="btn btn-primary" ">Next</a>
+            </div>
+
             <div id="myTabContent" class="tab-content">
 
-                <!------------ Explanation Tab --------------->
+                <!-- ############## Explanation Tab ############# -->
 
                 </br>
                 <div class="tab-pane fade active in" id="tutorial">
-                    After your job is submitted, the copy of each submission is sent to all organizations that you selected. Those organizations will be able to review it, and they have an option to leave a comment on your job. If they do comment, you will be notified about this. 
-                    <img src="static/Part1.png">
-                    </br></br>
-                    After that, organizations will decide if they have capabilities to perform the job. Based on that, they will either accept the job or decline it, and you will be notified on this website, as well as in email about their decision.<br>
-                    <img src="static/Part2.png">
-                    </br></br>
-                    Finally, once you are satisfied with the responses from the organizations, you will be able to pick the organization that is going to do the job. We will exchange the contact information for you, and the rest of the communication is to be done on your behalf.
-                    <img src="static/Part3.png"><br>
-                    Now when you understand the process, click Next to start your Job Creation process.
+                    <div class="row">
+                        <div class="col-sm-4">
+                        After your job is submitted, the copy of each submission is sent to all organizations that you selected. Those organizations will be able to review it, and they have an option to leave a comment on your job. If they do comment, you will be notified about this. 
+                        </div>
+                        <div class="col-sm-4">
+                        After that, organizations will decide if they have capabilities to perform the job. Based on that, they will either accept the job or decline it, and you will be notified on this website, as well as in email about their decision.<br>
+                        </div>
+                        <div class="col-sm-4">
+                        Finally, once you are satisfied with the responses from the organizations, you will be able to pick the organization that is going to do the job. We will exchange the contact information for you, and the rest of the communication is to be done on your behalf.
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-4">
+                        <img class="explanation" src="static/Part1.png"><br>
+                        </div>
+                        <div class="col-sm-4">
+                        <img class="explanation" src="static/Part2.png"><br>
+                        </div>
+                        <div class="col-sm-4">
+                        <img class="explanation" src="static/Part3.png"><br>
+                        </div>
+                    </div>
                 </div>
 
-                <!------------ Basic information Tab ------------>
+                <!--########## Basic information Tab ##########-->
 
                 <div class="tab-pane fade" id="info">
                 </br>
@@ -148,58 +166,59 @@
                     If an organization suits your needs, click <b> Add </b>.
                     You can add as many organizations as you want.
                     Once you are done, click <b> Submit Job </b>.
-                    <h2>Search Organizations</h2>
-                    <div class="form-group">
-                    <label class="control-label" for="search">Filter Purdue Groups by name or tag</label>
-                    <input id="search" class="form-control input-lg" type="text" >
-                    </div>
-                    <div class="org_list list-group" id="org_results">
-                        {% for org in orgs %}
-                        <div class="org_item list-group-item" org_pk="{{org.id}}">
-                            <h4 class="org_name list-group-item-heading">
-                            <a href="{% url 'organization_detail' org.id %}">
-                            {{org.name}}
-                            </a>
-                            <a class="org_button btn btn-success pull-right">Add</a>
-                            </h4>
-                            <p>
-                            {% for cat in org.categories.all %}
-                            <span class="category label label-default">{{ cat }}</span>
-                            {% endfor %}
-                            </p>
+                    <div class="row org_search">
+                        <div class="col-sm-6">
+                        <h2>Search Organizations</h2>
+                        <div class="form-group">
+                        <label class="control-label" for="search">Filter Purdue Groups by name or tag</label>
+                        <input id="search" class="form-control input-lg" type="text" >
                         </div>
-                        {% endfor %}
-                    </div>
-
-                    <hr>
-
-                    <h2>Selected Organizations</h2>
-                    <div class="org_list list-group" id="org_selected">
-                        {% for org in orgs %}
-                        <div class="org_item list-group-item hidden" org_pk="{{org.id}}">
-                            <h4 class="org_name list-group-item-heading">
-                            <a href="{% url 'organization_detail' org.id %}">
-                            {{org.name}}
-                            </a>
-                            <a class="org_button btn btn-danger pull-right">Remove</a>
-                            </h4>
-                            <p>
-                            {% for cat in org.categories.all %}
-                            <span class="category label label-default">{{ cat }}</span>
-                            {% endfor %}
-                            </p>
+                            <div class="org_list list-group" id="org_results">
+                                {% for org in orgs %}
+                                <div class="org_item list-group-item" org_pk="{{org.id}}">
+                                    <h4 class="org_name list-group-item-heading">
+                                    <a href="{% url 'organization_detail' org.id %}">
+                                    {{org.name}}
+                                    </a>
+                                    <a class="org_button btn btn-success pull-right">Add</a>
+                                    </h4>
+                                    <p>
+                                    {% for cat in org.categories.all %}
+                                    <span class="category label label-default">{{ cat }}</span>
+                                    {% endfor %}
+                                    </p>
+                                </div>
+                                {% endfor %}
+                            </div>
                         </div>
-                        {% endfor %}
-                    </div>
 
-                    <input type="submit" class="btn btn-primary" value="Submit Job" onclick="submitFunction()">
+                        <div class="col-sm-6">
+                            <h2>Selected Organizations</h2>
+                            <div class="org_list list-group" id="org_selected">
+                                {% for org in orgs %}
+                                <div class="org_item list-group-item hidden" org_pk="{{org.id}}">
+                                    <h4 class="org_name list-group-item-heading">
+                                    <a href="{% url 'organization_detail' org.id %}">
+                                    {{org.name}}
+                                    </a>
+                                    <a class="org_button btn btn-danger pull-right">Remove</a>
+                                    </h4>
+                                    <p>
+                                    {% for cat in org.categories.all %}
+                                    <span class="category label label-default">{{ cat }}</span>
+                                    {% endfor %}
+                                    </p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="row" style="text-align:right;">
+                        <input type="submit" class="btn btn-primary" value="Submit Job" onclick="submitFunction()">
+                    </div>
                 </div>
-
             </div>
-
-
-            <a id="prev_tab" style="display:none;" class="btn btn-primary" ">Previous</a>
-            <a id="next_tab" class="btn btn-primary" ">Next</a>
         </form>
     </div>
 </div>
@@ -209,22 +228,31 @@
 <!------------------ tab navigation --------------------->
 
  function update_visibility(active_tab){
-     console.log('active2:',active_tab.attr('href'));
+     console.log('active:',active_tab.attr('href'));
      if (active_tab.attr('href') == '#tutorial'){
-         $('#prev_tab').hide()
+         $('#prev_tab').hide();
+         $('#next_tab').show();
      }
      else if (active_tab.attr('href') == '#orgs'){
-         $('#next_tab').hide()
+         $('#next_tab').hide();
+         $('#prev_tab').show();
      }
      else {
-         $('#next_tab').show()
-         $('#prev_tab').show()
+         $('#next_tab').show();
+         $('#prev_tab').show();
      }
  }
+
+ $('.nav-tabs').click(function(event){
+     active_tab = $(event.target);
+     console.log('hi2');
+     update_visibility(active_tab);
+ });
+
 $('#next_tab').click(function(){
      active_tab = $('.nav-tabs > .active').next('li').find('a');
      active_tab.trigger('click');
-     console.log('activea:',active_tab.attr('href'));
+     console.log('active_n:',active_tab.attr('href'));
      update_visibility(active_tab);
      }
 );
@@ -232,18 +260,18 @@ $('#next_tab').click(function(){
 $('#prev_tab').click(function(){
      active_tab = $('.nav-tabs > .active').prev('li').find('a');
      active_tab.trigger('click');
-     console.log('activeb:',active_tab.attr('href'));
+     console.log('active_p:',active_tab.attr('href'));
      update_visibility(active_tab);
      }
 );
 
 <!------------------ organization searching ---------------->
 //select an org
-    $('#org_results').find('.org_item').find('.org_button').click(function(){
+$('#org_results').find('.org_item').find('.org_button').click(function(){
     var org_pk = $(this).closest('.org_item').attr("org_pk")
     $('#org_results').find('[org_pk="'+org_pk+'"]').addClass("hidden")
     $('#org_selected').find('[org_pk="'+org_pk+'"]').removeClass("hidden")
-    })
+})
 
 //deslect an org
 $('#org_selected').find('.org_item').find('.org_button').click(function(){

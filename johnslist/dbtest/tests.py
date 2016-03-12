@@ -255,6 +255,16 @@ class JobTestCase(TestCase):
         self.assertTrue(response.status_code==200)
         logout(self)
 
+        #test community user cannot accept/decline a jobrequest
+        login_as(self,self.u_cp.username,'asdf')
+        jr.pend()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Decline Request"})
+        self.assertTrue('error' in response.context)
+        jr.pend()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Accept Request"})
+        self.assertTrue('error' in response.context)
+        logout(self)
+
 class OrganizationTestCase(TestCase):
     #django calls this initialization function automatically
     def setUp(self):
@@ -333,6 +343,7 @@ class OrganizationTestCase(TestCase):
         with open(PIC_POPULATE_DIR+'plug.png') as icon:
             response = self.client.post(reverse('organization_create'),
                                         {'name': 'test org',
+                                         'email': 'evan@evanw.org',
                                          'description': 'testing org',
                                          'categories': category,
                                          'icon':icon}
@@ -350,8 +361,9 @@ class OrganizationTestCase(TestCase):
         response = self.client.post(reverse('organization_settings',
                                             kwargs = {'organization_id': self.o.pk}),
                                     {'name': 'test org',
-                                    'description': 'testing org',
-                                    'categories': self.cat.pk,
+                                     'email': 'evan@evanw.org',
+                                     'description': 'testing org',
+                                     'categories': self.cat.pk,
                                      }
                                     )
         self.assertEqual(response.status_code, 200)

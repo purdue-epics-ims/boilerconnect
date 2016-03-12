@@ -136,18 +136,29 @@ def jobrequest_dash(request,job_id,organization_id):
     # if request is a POST
     if request.method == 'POST':
         form = CommentCreateForm(request.POST)
+
+        # handle accept button click
         if request.POST.get("action","")=="Accept Request":
-            if jobrequest.is_pending():
+            if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.accept()
                 return render(request, 'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have accepted this job.'})
             else:
                 return render(request,'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'error':'You have already accepted/declined the job'})
+
+        # handle decline button click
         if request.POST.get("action","")=="Decline Request":
-            if jobrequest.is_pending():
+            if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.decline()
                 return render(request, 'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined this job.'})
             else:
                 return render(request,'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined this job'})
+
+        if request.POST.get("confirm","")=="Confirm Request":
+            if not jobrequest.confirmed:
+                jobrequest.confirm()
+                return render(request,'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'you have confirmed this job request!'})
+            else:
+                return render(request,'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already confirmed this job request!'})
         if form.is_valid():
             comment = form.save(commit = False)
             comment.creator = request.user
@@ -229,7 +240,10 @@ def user_create(request):
            
             title = "User {0} created".format( user.username )
             confirm = "Thank you for creating an account."
-            return render(request,'dbtest/login.html', {'title': title,'confirm':confirm})
+           # need to do auto login here
+           # login_user = authenticate(username=user.username, password=user.password)
+           # auth_login(request, login_user)
+            return render(request,'dbtest/front_page.html', {'title': title,'confirm':confirm})
         else:
             return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields."})
     #if the request was a GET
@@ -310,9 +324,7 @@ def organization_settings(request, organization_id):
     if request.method == 'GET':
         organization = Organization.objects.get(id=organization_id)
         modelform = OrganizationCreateForm(request.POST, instance=organization)
-        categories_id = []
-        for category in organization.categories.all():
-            categories_id.insert(0, category.pk)
+        categories_id = [category.pk for category in organization.categories.all()]
         return render(request, 'dbtest/organization_settings.html', {'modelform':modelform,'organization' : organization, 'categories_id': categories_id})
 
     elif request.method == 'POST':
@@ -357,9 +369,8 @@ def job_creation(request):
                    send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
                    for user in organization.group.user_set.all():
                        notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
-               title = "Job {0} created".format( job.name )
-               message = "Thank you for creating the job."
-               return render(request,'dbtest/front_page.html', {'title': title,'message':message})
+               message = "Job {0} created".format( job.name )
+               return render(request,'dbtest/confirm.html', {'confirm':message})
            else:
                return render(request, 'dbtest/job_creation.html', {'form':form,'error':"There are incorrect fields"})
        #if the request was a GET

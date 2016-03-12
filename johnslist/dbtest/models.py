@@ -138,6 +138,7 @@ class JobRequest(models.Model):
     organization = models.ForeignKey(Organization)
     accepted = models.NullBooleanField(default = False)	
     declined = models.NullBooleanField(default = False)
+    confirmed = models.NullBooleanField(default = False)
     completed = models.NullBooleanField(default = False)
 
     class Meta:
@@ -183,6 +184,34 @@ class JobRequest(models.Model):
                     url=reverse('jobrequest_dash',
                                 kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
 
+    #set a JobRequest as confirmed
+    def confirm(self):
+        self.declined = False
+        self.accepted = True
+        self.confirmed = True
+        self.save()
+        # iterate through all jobrequests in this job and remove permission for other jobrequests 
+        job = self.job
+        for jr in job.jobrequests.all():
+            if jr is not self:
+                remove_perm('view_jobrequest',jr.job.creator,jr)
+                remove_perm('view_jobrequest',jr.organization.group,jr)
+                notify.send(self.organization,
+                        verb="has closed the job: ",
+                            action_object=self.job,
+                            recipient=jr.organization.group,
+                            url=reverse('jobrequest_dash',
+                                        kwargs={'organization_id':jr.organization.id,'job_id':jr.job.id}) )
+        
+        notify.send(self.organization,
+                    verb="confirmed",
+                    action_object=self.job,
+                    recipient=self.organization.group,
+                    url=reverse('jobrequest_dash',
+                                kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
+        
+
+   #check if a jobrequest is pending 
     def is_pending(self):
         if not self.accepted and not self.declined:
             return True

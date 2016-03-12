@@ -15,24 +15,46 @@
    <i class="fa fa-calendar"></i> Due on  <span class="badge "> {{jobrequest.job.duedate}}</span>
 
    <br><br>
+   <!--form acton for Purdue group to accept/decline a jobrequest-->
    {%if jobrequest.is_pending and perm_to_edit_jobrequest_state %}
-   <form action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id%}" method ="post">
-       {%csrf_token%}
-       <input type="hidden" name="jobrequest" value="{{jobrequest}}">
-       <input class="btn btn-success" type="submit" name="action" value="Accept Request">
-       <input class="btn btn-danger" type="submit" name="action" value="Decline Request">
-   </form>
+       <form action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id%}" method ="post">
+           {%csrf_token%}
+           <input type="hidden" name="jobrequest" value="{{jobrequest}}">
+           <input class="btn btn-success" type="submit" name="action" value="Accept Request">
+           <input class="btn btn-danger" type="submit" name="action" value="Decline Request">
+       </form>
+   {%else%}
+       {%if not jobrequest.confirmed%}
+       <form action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id%}" method ="post">
+           {%csrf_token%}
+           <input type="hidden" name="jobrequest" value="{{jobrequest}}">
+           <input class="btn btn-success" type="submit" name="confirm" value="Confirm Request">
+       </form>
+       {%endif%}
    {%endif%}
 
-   {%if jobrequest.accepted %}
-   <span class="label label-success">Accepted</span>
-   {% endif %}
-   {%if jobrequest.declined %}
-   <span class="label label-danger">Declined</span>
-   {% endif %}
+   <!--only appears when the jobrequest has been accepted by the Purdue group -->
+
+   <!-- should show pending for both types of user -->
+
    {%if jobrequest.is_pending %}
    <span class="label label-warning">Pending</span>
    {% endif %}
+
+   <!--perm_to_edit_jobrequest_state checks the user type -->
+    
+   {%if perm_to_edit_jobrequest_state%}
+       {%if jobrequest.accepted %}
+       <span class="label label-success">Accepted</span>
+       {% endif %}
+       {%if jobrequest.declined %}
+       <span class="label label-danger">Declined</span>
+       {% endif %}
+   {%else%}
+       {%if jobrequest.confirmed %}
+       <span class="label label-success">Confirmed</span>
+       {% endif %}
+   {%endif%}
   </center>
 
 
@@ -74,6 +96,7 @@
     <div class="list-group-item active">
     Comments
     </div>
+    <!--check the user type to determine whether the organization name should be display-->
     {%if comment_text %}
         {% for comments in comment_text %}
             <div class="list-group-item">
@@ -94,6 +117,7 @@
     {%endif%}
 </div>
 
+<!-- form action to submit a comment -->
 <form class="form-horizontal" method=POST name="comment" action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
     {% csrf_token %}
 <center>
@@ -112,6 +136,7 @@
     </div>
 </form>
 
+<!--this message appears for new user only -->
 {% if show_dialog %}
     {% if user.userprofile.purdueuser %}
         <script>alert("Here you can accept or reject job requests that you receive.  You can also make comments and suggestions to change the job request before accepting.");
