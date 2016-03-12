@@ -4,7 +4,7 @@ from django.contrib.auth import forms
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User,Group
-from guardian.shortcuts import assign_perm
+from guardian.shortcuts import assign_perm, remove_perm
 from notifications.signals import notify
 from django.core.urlresolvers import reverse
 
@@ -91,6 +91,7 @@ class Job(models.Model):
     attachments = models.FileField(upload_to='job', blank = True) #file attachments
     creator = models.ForeignKey(User,related_name = 'jobs')  # User -o= Job
     organization = models.ManyToManyField(Organization, through = 'JobRequest')
+    closed = models.NullBooleanField(default = False)
 
     class Meta:
         permissions = (
@@ -190,8 +191,16 @@ class JobRequest(models.Model):
         self.accepted = True
         self.confirmed = True
         self.save()
+        notify.send(self.organization,
+                    verb="confirmed",
+                    action_object=self.job,
+                    recipient=self.organization.group,
+                    url=reverse('jobrequest_dash',
+                                kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
         # iterate through all jobrequests in this job and remove permission for other jobrequests 
         job = self.job
+        job.closed = True
+        job.save()
         for jr in job.jobrequests.all():
             if jr is not self:
                 remove_perm('view_jobrequest',jr.job.creator,jr)
@@ -203,12 +212,6 @@ class JobRequest(models.Model):
                             url=reverse('jobrequest_dash',
                                         kwargs={'organization_id':jr.organization.id,'job_id':jr.job.id}) )
         
-        notify.send(self.organization,
-                    verb="confirmed",
-                    action_object=self.job,
-                    recipient=self.organization.group,
-                    url=reverse('jobrequest_dash',
-                                kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
         
 
    #check if a jobrequest is pending 

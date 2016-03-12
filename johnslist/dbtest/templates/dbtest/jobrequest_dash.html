@@ -24,7 +24,7 @@
            <input class="btn btn-danger" type="submit" name="action" value="Decline Request">
        </form>
    {%else%}
-       {%if not jobrequest.confirmed%}
+       {%if not jobrequest.confirmed and not perm_to_edit_jobrequest_state%}
        <form action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id%}" method ="post">
            {%csrf_token%}
            <input type="hidden" name="jobrequest" value="{{jobrequest}}">

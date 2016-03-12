@@ -264,6 +264,29 @@ class JobTestCase(TestCase):
         response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Accept Request"})
         self.assertTrue('error' in response.context)
         logout(self)
+    def test_jobrequest_confirm(self):
+        jr = self.j2.request_organization(self.o)
+        #make sure it fail to confirm as purdue user
+        login_as(self,self.u_pu.username,'asdf')
+        jr.confirm()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'confirm':"Confirm Request"})
+        self.assertTrue('error' in response.context)
+        logout(self)
+
+        #check that it works for community user
+        login_as(self,self.u_cp.username,'asdf')
+        jr.confirmed = False
+        jr.save()
+        jr.confirm()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'confirm':"Confirm Request"})
+        self.assertTrue(response.status_code==200)
+
+        #check that it does not work to double confirm it
+        jr.confirmed = True
+        jr.confirm()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'confirm':"Confirm Request"})
+        self.assertTrue('error' in response.context)
+        logout(self)
 
 class OrganizationTestCase(TestCase):
     #django calls this initialization function automatically
