@@ -91,7 +91,10 @@ def notifications(request):
     read_notifications = list(request.user.notifications.read())
     unread_notifications = list(request.user.notifications.unread())
     request.user.notifications.mark_all_as_read()
-    return render(request, 'dbtest/notifications.html', {'unread_notifications' : unread_notifications,'read_notifications':read_notifications})
+    return render(request, 'dbtest/notifications.html',
+                  {'unread_notifications' : unread_notifications,
+                   'read_notifications':read_notifications
+                   })
 
 #get detailed organization information - email, phone #, users in Org, admins, etc.
 def organization_detail(request,organization_id):
@@ -141,24 +144,54 @@ def jobrequest_dash(request,job_id,organization_id):
         if request.POST.get("action","")=="Accept Request":
             if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.accept()
-                return render(request, 'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have accepted this job.'})
+                return render(request, 'dbtest/jobrequest_dash.html',
+                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
+                               'comment_text':comment_text,
+                               'jobrequest':jobrequest,
+                               'confirm':'You have accepted this job.'
+                               })
             else:
-                return render(request,'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'error':'You have already accepted/declined the job'})
+                return render(request,'dbtest/jobrequest_dash.html',
+                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
+                               'comment_text':comment_text,
+                               'jobrequest':jobrequest,
+                               'error':'You have already accepted/declined the job'
+                               })
 
         # handle decline button click
         if request.POST.get("action","")=="Decline Request":
             if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.decline()
-                return render(request, 'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'You have declined this job.'})
+                return render(request, 'dbtest/jobrequest_dash.html',
+                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
+                               'comment_text':comment_text,
+                               'jobrequest':jobrequest,
+                               'confirm':'You have declined this job.'
+                               })
             else:
-                return render(request,'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already accepted/declined this job'})
+                return render(request,'dbtest/jobrequest_dash.html',
+                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
+                               'comment_text':comment_text,
+                               'jobrequest':jobrequest,
+                               'error':'you have already accepted/declined this job'
+                               })
 
         if request.POST.get("confirm","")=="Confirm Request":
             if not jobrequest.confirmed:
                 jobrequest.confirm()
-                return render(request,'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'you have confirmed this job request!'})
+                return render(request,'dbtest/jobrequest_dash.html',
+                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
+                               'comment_text':comment_text,
+                               'jobrequest':jobrequest,
+                               'confirm':'you have confirmed this job request!'
+                               })
             else:
-                return render(request,'dbtest/jobrequest_dash.html',{'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,'comment_text':comment_text,'jobrequest':jobrequest,'error':'you have already confirmed this job request!'})
+                return render(request,'dbtest/jobrequest_dash.html',
+                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
+                               'comment_text':comment_text,
+                               'jobrequest':jobrequest,
+                               'error':'you have already confirmed this job request!'
+                               })
         if form.is_valid():
             comment = form.save(commit = False)
             comment.creator = request.user
@@ -177,20 +210,37 @@ def jobrequest_dash(request,job_id,organization_id):
                             action_object=job,
                             recipient=jobrequest.organization.group,
                             url=reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id}) )
-                return render(request, 'dbtest/jobrequest_dash.html',{'form':form,'comment_text':comment_text,'jobrequest':jobrequest,'confirm':'comment saved!'})
+                return render(request, 'dbtest/jobrequest_dash.html',
+                              {'form':form,
+                               'comment_text':comment_text,
+                               'jobrequest':jobrequest,
+                               'confirm':'comment saved!'
+                               })
         else:
-            return render(request, 'dbtest/jobrequest_dash.html', {'jobrequest':jobrequest,'form':form,'error': 'The comment cannot be empty!','comment_text':comment_text})
+            return render(request, 'dbtest/jobrequest_dash.html',
+                          {'jobrequest':jobrequest,
+                           'form':form,
+                           'error': 'The comment cannot be empty!',
+                           'comment_text':comment_text
+                           })
 
     # if request is GET
     return render(request, 'dbtest/jobrequest_dash.html',
-            {'jobrequest':jobrequest,'comment_text':comment_text,'show_dialog':show_dialog,'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state})
+                  {'jobrequest':jobrequest,
+                   'comment_text':comment_text,
+                   'show_dialog':show_dialog,
+                   'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state
+                   })
 
 #load the front page with 3 random organizations in the gallery
 def front_page(request):
     orgs = Organization.objects.all()
     if(len(orgs) >= 3):
         orgs = random.sample(orgs,3)
-        return render(request, 'dbtest/front_page.html',{'active_organization':orgs[0],'organizations':orgs[1:]})
+        return render(request, 'dbtest/front_page.html',
+                      {'active_organization':orgs[0],
+                       'organizations':orgs[1:]
+                       })
     else:
         return render(request, 'dbtest/front_page.html')
 
