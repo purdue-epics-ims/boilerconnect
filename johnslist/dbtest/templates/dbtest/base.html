@@ -21,7 +21,7 @@
         <div class="navbar navbar-default navbar-fixed-top">
             <div class="container">
 
-                <!------------ NAVBAR -------------->
+                <!------------ NAVBAR ----->
                 <div class="navbar-header">
                     <a  class="navbar-brand" rel="home" href="/" title="BoilerConnect">
                     <img draggable="false" style="max-width:27px;margin-top:-3px;margin-right:-7px;"
@@ -39,10 +39,18 @@
                     <ul class="nav navbar-nav navbar-left">
                     <li><a href="{%url 'about'%}">About</a></li>
                     </ul>
-
+                    <!-- display both when user is not logged in, else ckeck user type -->
                     <form class="navbar-form navbar-left">
-                        {% if not user.userprofile.purdueuser %}
+                        {% if not user.is_authenticated %}
                         <a href = '/job_creation' class="btn btn-danger"> <i class="fa fa-certificate"></i> Create a Job</a>
+                        <a href = "{% url 'organization_create' %}" class="btn btn-danger"> <i class="fa fa-certificate"></i> Create an Organization</a>
+                        {%else%}
+                            {% if not user.userprofile.purdueuser %}
+                            <a href = '/job_creation' class="btn btn-danger"> <i class="fa fa-certificate"></i> Create a Job</a>
+                            {% endif %}
+                            {% if user.userprofile.purdueuser %}
+                            <a href = "{% url 'organization_create' %}" class="btn btn-danger"> <i class="fa fa-certificate"></i> Create an Organization</a>
+                            {% endif %}
                         {% endif %}
                     </form>
 
@@ -176,7 +184,7 @@
         </div>
         {% endif %}
 
-        <!-------------- Main Page Content -------------------->
+        <!-------------- Main Page Content ------------------>
 
         {% block content %}
         {% endblock %}
