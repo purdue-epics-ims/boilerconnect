@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 import random
 from django.forms.models import inlineformset_factory
 from .decorators import user_has_perm, user_is_type
-from .forms import*
+from .forms import *
 from guardian.shortcuts import assign_perm
 from notifications import notify
 from django.core.mail import send_mail
@@ -257,7 +257,6 @@ def search(request):
             search_result = category.organization_set.all()
         if search_by.lower() == 'name':
             search_result = Organization.objects.filter(name__icontains=search)
-            
     return render(request,'dbtest/search.html',{'search_result': search_result})
 
 @user_has_perm('view_user')
@@ -283,17 +282,16 @@ def user_create(request):
             elif request.POST.get('user_type') == "community":
                 purdue = False
             else:
-                return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields."})
+                return render(request, 'dbtest/user_create.html', {'form':form,'error':form.errors})
             user = form.save()
             UserProfile.objects.create(name = user.username, user = user, purdueuser = purdue)
             form.save_m2m()
-           
             title = "User {0} created".format( user.username )
             confirm = "Thank you for creating an account."
            # need to do auto login here
            # login_user = authenticate(username=user.username, password=user.password)
            # auth_login(request, login_user)
-            return render(request,'dbtest/front_page.html', {'title': title,'confirm':confirm})
+            return redirect('user_dash')
         else:
             return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields."})
     #if the request was a GET
