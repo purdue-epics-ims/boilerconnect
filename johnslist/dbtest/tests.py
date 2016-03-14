@@ -106,10 +106,10 @@ class UserTestCase(TestCase):
     def test_user_create(self):
         #successful user creation
         response = self.client.post(reverse('user_create'), {'username': 'user', 'password1':'zxcv', 'password2':'zxcv', 'user_type': 'purdue'})
-        self.assertTrue('Thank you for creating an account' in response.content)
+        self.assertTrue(User.objects.get(username='user'))
         #unsuccessful user creation
-        response = self.client.post(reverse('user_create'), {'username': 'user1', 'password1':'zxcv', 'password2':'zxcvhg'})
-        self.assertFalse('Thank you for creating an account' in response.content)
+        response = self.client.post(reverse('user_create'), {'username': 'user_fail', 'password1':'zxcv', 'password2':'zxcvhg'})
+        self.assertEqual(0,len(User.objects.filter(username='user_fail')))
 
     def test_user_edit(self):
         response = self.client.post(reverse('user_edit'))
@@ -262,6 +262,29 @@ class JobTestCase(TestCase):
         self.assertTrue('error' in response.context)
         jr.pend()
         response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Accept Request"})
+        self.assertTrue('error' in response.context)
+        logout(self)
+    def test_jobrequest_confirm(self):
+        jr = self.j2.request_organization(self.o)
+        #make sure it fail to confirm as purdue user
+        login_as(self,self.u_pu.username,'asdf')
+        jr.confirm()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'confirm':"Confirm Request"})
+        self.assertTrue('error' in response.context)
+        logout(self)
+
+        #check that it works for community user
+        login_as(self,self.u_cp.username,'asdf')
+        jr.confirmed = False
+        jr.save()
+        jr.confirm()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'confirm':"Confirm Request"})
+        self.assertTrue(response.status_code==200)
+
+        #check that it does not work to double confirm it
+        jr.confirmed = True
+        jr.confirm()
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'confirm':"Confirm Request"})
         self.assertTrue('error' in response.context)
         logout(self)
 

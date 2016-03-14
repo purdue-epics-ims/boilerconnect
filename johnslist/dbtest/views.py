@@ -12,6 +12,7 @@ from .forms import *
 from guardian.shortcuts import assign_perm
 from notifications import notify
 from django.core.mail import send_mail
+from itertools import chain
 
 def quicksearch(request):
     orgs = Organization.objects.all()
@@ -118,6 +119,7 @@ def organization_dash(request,organization_id):
     org = Organization.objects.get(id=organization_id)
     members = org.group.user_set.all()
     jobrequests = JobRequest.objects.filter(organization=org)
+    jobrequests = [jr for jr in org.jobrequest_set.all() if jr.confirmed or jr.job.closed == False]
     return render(request, 'dbtest/organization_dash.html',
                   {'organization':org,
                    'members':members,
@@ -177,7 +179,7 @@ def jobrequest_dash(request,job_id,organization_id):
                                })
 
         if request.POST.get("confirm","")=="Confirm Request":
-            if not jobrequest.confirmed:
+            if not jobrequest.confirmed and not jobrequest.job.closed:
                 jobrequest.confirm()
                 return render(request,'dbtest/jobrequest_dash.html',
                               {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
