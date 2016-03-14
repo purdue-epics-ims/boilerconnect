@@ -1,6 +1,7 @@
 {% extends "dbtest/base.html" %}
 {% load staticfiles %}
 {% load guardian_tags %}
+{% load widget_tweaks %}
 
 {% block navbar %}
 <div class="navbar navbar-inverse navbar-fixed-top">
@@ -36,7 +37,6 @@
 
                 <!-- ############## Explanation Tab ############# -->
 
-                </br>
                 <div class="tab-pane fade active in" id="tutorial">
                     <div class="row">
                         <div class="col-sm-4">
@@ -65,94 +65,100 @@
                 <!--########## Basic information Tab ##########-->
 
                 <div class="tab-pane fade" id="info">
-                </br>
-                <div class="input-group">
-                    <span class="input-group-addon">
-                    <i class="fa fa-bullhorn"></i>
-                    </span>
-                    Name of the job.
-                    <input class="form-control" type="text" name="name" placeholder="Example"></input>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-bullhorn"></i>
+                        </span>
+                        Name of the job.
+                        {% render_field form.name class+="form-control" placeholder="Build a hotdog stand" %}
+                    </div>
                 </div>
-                <br/>
 
-                <div class="input-group">
-                    <span class="input-group-addon">
-                    <i class="fa fa-coffee"></i>
-                    </span>
-                    What organization or group are you representing?
-                    <textarea class="form-control" type="text" name="client_organization" placeholder="eg. Jimbob's Hotdog Joint"></textarea>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-coffee"></i>
+                        </span>
+                        What organization or group are you representing?
+                        {% render_field form.client_organization class+="form-control" placeholder="eg. Jimbobs Hotdog Joint" %}
+                    </div>
                 </div>
-                <br/>
 
-                <div class="input-group">
-                    <span class="input-group-addon">
-                    <i class="fa fa-coffee"></i>
-                    </span>
-                    Briefly describe the deliverable that you expect as a result of this project.
-                    <textarea class="form-control" type="text" name="deliverable" placeholder="Example"></textarea>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-coffee"></i>
+                        </span>
+                        Briefly describe the deliverables that you expect as a result of this project.
+                        {% render_field form.deliverable class+="form-control" placeholder="A dozen savory, roasted weiners" %}
+                    </div>
                 </div>
-                <br/>
 
-                <div class="input-group">
-                    <span class="input-group-addon">
-                    <i class="fa fa-coffee"></i>
-                    </span>
-                    Give a short description of the job. Later, you will be able to provide more detailed description, keep this one brief.
-                    <textarea class="form-control" type="text" name="description" placeholder="Example"></textarea>
-                </div>
-                <br/>
-                One you filled in the basic information, procede to the <b> Job Specifications </b>section. 
-
-                <br/>
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-coffee"></i>
+                        </span>
+                        Give a short description of the job. Later, you will be able to provide more detailed description, keep this one brief.
+                        {% render_field form.name class+="form-control" %}
+                    </div>
                 </div>
 
                 <!------------ Technical specifications Tab ------------>
 
                 <div class="tab-pane fade" id="specs">
 
-                <br/>
-                <div class="input-group">
-                    <span class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                    </span>
-                    Specify the date when this project is due. If you are not sure of the exact date, give a close approximation.
-                    <input type="text" class="form-control" placeholder="mm/dd/yyyy Due date" name="duedate"></input>
-                </div>
+                  <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                        </span>
+                        Specify the date when this project is due. If you are not sure of the exact date, give a close approximation.
+                        {% render_field form.duedate class+="form-control" placeholder="yyyy-mm-dd" %}
+                    </div>
+                  </div>
 
-                <br/>
-                <div class="input-group">
-                    <span class="input-group-addon">
-                    <i class="fa fa-coffee"></i>
-                    </span>
-                    List the stakeholders included in the job. Also, provide one sentence long description for each stakeholder.
-                    <textarea class="form-control" type="text" name="stakeholders" placeholder="Example"></textarea>
-                </div>
+                  <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-coffee"></i>
+                        </span>
+                        List stakeholders and anyone who might be affected by this work.  Give a description if necessary.
+                        {% render_field form.stakeholders class+="form-control" placeholder="Jimbobs Hotdog Joint customers" %}
+                    </div>
+                  </div>
 
-                <br/>
-                <div class="input-group">
-                    <span class="input-group-addon">
-                    <i class="fa fa-coffee"></i>
-                    </span>
-                    If available, provide the technical specifications of the deliverable. In this section, you should be as precise as you can. 
-                    <textarea class="form-control" type="text" name="tech_specs" placeholder="Example"></textarea>
-                </div>
-                <br/>
+                  <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-cogs"></i>
+                        </span>
+                        If available, provide the technical specifications of the deliverable. In this section, you should be as precise as you can. 
+                        {% render_field form.tech_specs class+="form-control" %}
+                    </div>
+                  </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon">
-                    <i class="fa fa-money"></i>
-                    </span>
-                    What is the budget that team can use for the project in USD? You can provide the explanation along with the budget, or the estimation if you do not have precise data at the moment.
-                    <input class="form-control" type="text" name="budget" placeholder="Example"></textarea>
-                </div>
-                <br/>
 
-                <div class="input-group">
-                    If there are any files that you want to add in your job submission, do it here. 
-                    <input class="form-control" type="file" name="attachment" placeholder="Example"></textarea>
-                </div>
-                <br/>
-                Once you are satisfied with the information that you provided in this section, go to the <b> Organization selection </b> tab.
+                  <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-money"></i>
+                        </span>
+                        What is the budget that team can use for the project? You can provide the explanation along with the budget, or the estimation if you do not have precise data at the moment.
+                      {% render_field form.budget class+="form-control" %}
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-file"></i>
+                        </span>
+                        If there are any files that you want to add in your job submission, do it here. 
+                        {% render_field form.attachments %}
+                    </div>
+                  </div>
 
                 </div>
 

@@ -1,4 +1,5 @@
 {% extends "dbtest/base.html" %}
+{% load widget_tweaks %}
 
 {% block content %}
 
@@ -25,7 +26,7 @@
             <i class="fa fa-institution"></i>
           </span>
 
-          <input type="text" class="form-control" autofocus="true" placeholder="Edit Name" name="name" value="{{organization.name}}"></input>
+          {% render_field modelform.name class+="form-control" %}
       </div>
     </div>
 
@@ -33,10 +34,10 @@
     <div class="form-group">
       <div class="input-group">
           <span class="input-group-addon" id="addon1">
-            <i class="fa fa-institution"></i>
+            <i class="fa fa-at"></i>
           </span>
 
-          <input type="text" class="form-control" placeholder="Edit Email" name="email" value="{{organization.email}}"></input>
+        {% render_field modelform.email class+="form-control" %}
       </div>
     </div>
 
@@ -44,11 +45,9 @@
     <div class="form-group">
       <div class="input-group">
         <span class="input-group-addon" id="addon1">
-          <i class="fa fa-coffee"></i>
+          <i class="fa fa-quote-right"></i>
         </span>
-        <textarea class="form-control" placeholder="Edit Description" name="description">
-    {{organization.description}}
-  </textarea>
+        {% render_field modelform.description %}
       </div>
     </div>
 
@@ -56,9 +55,9 @@
     <div class="form-group">
       <div class="input-group">
         <span class="input-group-addon">
-          <i class="fa fa-check-circle-o"></i>
+          <i class="fa fa-list"></i>
         </span>
-          {{modelform.categories}}
+        {% render_field modelform.categories class+="form-control" %}
       </div>
     </div>
 
@@ -66,10 +65,10 @@
       Photo
       <div class="input-group">
         <span class="input-group-addon">
-          <i class="fa fa-camera-retro"></i>
+          <i class="fa fa-image"></i>
         </span>
 
-        {{modelform.icon}}
+        {% render_field modelform.icon class+="form-control" %}
 
       </div>
     </div>
@@ -78,23 +77,12 @@
 
     <div class="col-sm-6">
       Availability
-        {{modelform.available}}
-        <!-- <div class="radio"> -->
-        <!-- <label> -->
-        <!-- <input name="available" id="available" value=1 -->
-        <!-- {% if organization.available %} checked="" {% endif %} -->
-        <!-- type="radio"> -->
-        <!-- Accepting Jobs -->
-        <!-- </label> -->
-        <!-- </div> -->
-        <!-- <div class="radio"> -->
-        <!-- <label> -->
-        <!-- <input name="available" id="available" value=0 -->
-        <!-- {% if organization.available == False %} checked="" {% endif %} -->
-        <!-- type="radio"> -->
-        <!-- Not accepting Jobs -->
-        <!-- </label> -->
-        <!-- </div> -->
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-check"></i>
+        </span>
+        {% render_field modelform.available class+="form-control" %}
+      </div>
     </div>
 
 

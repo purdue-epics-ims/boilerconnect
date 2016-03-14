@@ -1,4 +1,5 @@
 {% extends "dbtest/base.html" %}
+{% load widget_tweaks %}
 
 {% block content %}
 <div class="panel-heading">
@@ -7,7 +8,6 @@
   </div>
 </div>
 <div class = "jumbotron">
-
   {% if username %}
   <p>Welcome {{ username }}.  Please check your email for a confirmation message.</p>
   {% else %}
@@ -21,62 +21,62 @@
   </div>
   {% endif %}
   
-  <form class="login" action="{% url 'user_create' %}" method='POST'>
-    
-    <div class="input-group">
-      <span class="input-group-addon" id="addon-e,">
-        <div class="glyphicon glyphicon-user"></div>
-      </span>
-      <input id="id_username" name="username" maxlength="30" type="text" class="form-control" placeholder="Choose username" autofocus="true" autocomplete="off" aria-describedby="addon1">
-    </div>
-    &nbsp;
-
-    <div class="input-group">
-      <span class="input-group-addon" id="addon-pa">
-        <div class="glyphicon glyphicon-lock"></div>
-      </span>
-      <input type="password" maxlength="30" id="id_password1" name="password1" value="{{password}}" class="form-control" placeholder="Choose Password" aria-describedby="addon1">
-      
-    </div>
-    
-    &nbsp;
-    
-    <div class="input-group">
-      <span class="input-group-addon" id="addon-pa">
-        <div class="glyphicon glyphicon-lock"></div>
-      </span>
-      <input type="password" id="id_password2" maxlength="30" name="password2" value="{{password}}" class="form-control" placeholder="Confirm it" aria-describedby="addon1">
-      
+<form class="form-horizontal" action="{% url 'user_create' %}" method='POST'>
+{% csrf_token %}
+  <fieldset>
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon" id="addon-e,">
+            <div class="fa fa-user"></div>
+        </span>
+        {% render_field form.username class+="form-control" placeholder="Username" %}
+      </div>
     </div>
 
-    &nbsp;
-
-    <div class="input-group">
-      <span class="input-group-addon" id="addon-pa">
-        <div class="glyphicon glyphicon-user"></div>
-      </span>
-      <input type="radio" name="user_type" value="purdue">I am a Purdue User<br>
-      <input type="radio" name="user_type" value="community">I am a Community User
-      
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon" id="addon-pa">
+          <div class="fa fa-lock"></div>
+        </span>
+        {% render_field form.password1 class+="form-control" placeholder="Password" %}
+      </div>
     </div>
-    
-    <br>
-    {% csrf_token %}
 
-    <div>
-      <button type="submit" value="Create User" class="btn btn-primary">Create Account</button>
-      
-      <span class="pull-right">
-        <p>Already a user?
-          <a href="{% url 'login' %}">Login</a>
-        </p>
-        
-      </span>
-      
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon" id="addon-pa">
+          <div class="fa fa-lock"></div>
+        </span>
+        {% render_field form.password2 class+="form-control" placeholder="Confirm" %}
+      </div>
     </div>
-  </form>
-  
-  {% endif %}
+
+    <div class="form-group">
+      <div class="input-group">
+        <span class="input-group-addon" id="basic-addon">
+          <div class="fa fa-user"></div>
+        </span>
+        <select class="form-control" name="user_type">
+          <option>[Select User Type]</option>
+          <option value="purdue">Purdue User (requires @purdue.edu email)</option>
+          <option value="community">Community Partner</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <div>
+        <button type="submit" value="Create User" class="btn btn-primary">Create Account</button>
+        <span class="pull-right">
+          <p>Already a user?
+            <a href="{% url 'login' %}">Login</a>
+          </p>
+        </span>
+      </div>
+    </div>
+  </fieldset>
+</form>
+{% endif %}
 
 </div>
 
