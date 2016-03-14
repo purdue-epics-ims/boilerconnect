@@ -373,13 +373,14 @@ def organization_settings(request, organization_id):
     #if the request was a GET
     if request.method == 'GET':
         organization = Organization.objects.get(id=organization_id)
-        modelform = OrganizationCreateForm(request.POST, instance=organization)
+        modelform = OrganizationEditForm(instance=organization)
         categories_id = [category.pk for category in organization.categories.all()]
+        print 'email',modelform['email']
         return render(request, 'dbtest/organization_settings.html', {'modelform':modelform,'organization' : organization, 'categories_id': categories_id})
 
     elif request.method == 'POST':
         organization = Organization.objects.get(id=organization_id)
-        modelform = OrganizationCreateForm(request.POST, instance=organization)
+        modelform = OrganizationEditForm(request.POST, instance=organization)
         model_out = modelform.save(commit = False)
 
         # modelform.actual_organization = organization

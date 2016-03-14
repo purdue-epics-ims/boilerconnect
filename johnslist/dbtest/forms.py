@@ -8,6 +8,12 @@ class OrganizationCreateForm(ModelForm):
 
 	class Meta:
 		model = Organization
+		fields = ['name','description','categories','email','icon']
+
+class OrganizationEditForm(ModelForm):
+
+	class Meta:
+		model = Organization
 		fields = ['name','description','categories','email','icon','available']
 
 class JobCreateForm(ModelForm):
