@@ -30,12 +30,12 @@ class Organization(models.Model):
     def __unicode__(self):
         return self.name
 
-    name = models.TextField('Organization Name',null=True)
+    name = models.CharField('Organization Name',max_length=64)
     description = models.TextField('Organization Description')
     categories = models.ManyToManyField(Category)  # Category =-= Organization
-    email = models.CharField('Organization email',max_length=64, null=True)
+    email = models.CharField('Organization email',max_length=64)
     group = models.OneToOneField(Group) # Organization - Group
-    phone_number = models.CharField('Organization phone number',max_length=64,null=True)
+    phone_number = models.CharField('Organization phone number',max_length=64)
     icon = models.ImageField(upload_to='organization', null=True)
     available = models.BooleanField(default=True,choices=((True, "Accepting Jobs"),(False, "Not accepting Jobs")))
 
@@ -81,7 +81,7 @@ class Job(models.Model):
     def __unicode__(self):
         return self.name
     name = models.CharField('Job Name',max_length=128)
-    client_organization = models.TextField('What organization do you represent?', max_length=256) #what entity/organization needs this job?
+    client_organization = models.CharField('What organization do you represent?', max_length=64) #what entity/organization needs this job?
     description = models.TextField('Job Description', max_length=256) #short description
     deliverable = models.TextField('Deliverable', max_length=256) #end product to be delivered
     duedate = models.DateTimeField('Date Due') #when Job is due for completion
@@ -245,4 +245,4 @@ def add_perms_jobrequest(sender,**kwargs):
 class Comment(models.Model):
     text_comment = models.TextField('text_comment')
     jobrequest = models.ForeignKey(JobRequest)
-    creator = models.ForeignKey(User,null=True, blank=True, default= None)
+    creator = models.ForeignKey(User, default= None)
