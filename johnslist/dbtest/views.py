@@ -34,7 +34,7 @@ def login(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        if user is not None and user.is_active:
+        if user != None and user.is_active:
             auth_login(request, user)
             return redirect('user_dash')
         else:
