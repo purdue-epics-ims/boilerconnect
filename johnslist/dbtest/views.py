@@ -3,6 +3,7 @@ from .models import *
 from django.http import HttpResponseRedirect
 from django.contrib.auth.views import login as auth_login
 from django.contrib.auth import authenticate
+from django.contrib.auth import login as login_auth
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
@@ -269,7 +270,7 @@ def user_create(request):
             username_auth = request.POST['username']
             password_auth = request.POST['password1']
             login_user = authenticate(username=username_auth, password=password_auth)
-            auth_login(request, login_user)
+            login_auth(request, login_user)
             return redirect('user_dash')
 
         #if forms are not valid 
