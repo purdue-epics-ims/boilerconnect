@@ -324,33 +324,34 @@ def user_edit(request):
             user = form.save(commit = False)
             #user.username = request.user.username()
             title = "User {0} modified".format( user.username )
-            confirm = "Your account has been modified."
             user.save()
-            return render(request,'dbtest/user_dash.html', {'title': title,'confirm':confirm})
+
+            message = "Your account has been modified."
+            messages.add_message(request, messages.INFO, message)
+            return redirect('user_dash')
         else:
-            return render(request, 'dbtest/user_edit.html', {'form':form,'error':"There are incorrect fields"})
+            message = "There are incorrect fields."
+            messages.add_message(request, messages.ERROR, message)
+
     #if the request was a GET
     else:
         if request.user.is_authenticated():
             form = UserCreationForm(instance=request.user)
         else:
             form = UserCreationForm()
-        return render(request, 'dbtest/user_edit.html', 
-            {'form':form}
-            )
+
+    return render(request, 'dbtest/user_edit.html', {'form':form})
 
 @login_required
 @user_is_type('purdueuser')
 @user_has_perm('edit_organization')
 def organization_settings(request, organization_id):
     organization = Organization.objects.get(id=organization_id)
+    categories_id = [category.pk for category in organization.categories.all()]
     #if the request was a GET
     if request.method == 'GET':
         organization = Organization.objects.get(id=organization_id)
         modelform = OrganizationEditForm(instance=organization)
-        categories_id = [category.pk for category in organization.categories.all()]
-        print 'email',modelform['email']
-        return render(request, 'dbtest/organization_settings.html', {'modelform':modelform,'organization' : organization, 'categories_id': categories_id})
 
     elif request.method == 'POST':
         organization = Organization.objects.get(id=organization_id)
@@ -363,49 +364,47 @@ def organization_settings(request, organization_id):
         if modelform.is_valid() :
             #get modelform info
             organization = modelform.save(commit = False)
-            message = "Organization {0} has been modified.".format(organization.name)
             organization.save()
-            return render(request,'dbtest/organization_settings.html',
-                            {'confirm':message, 'modelform':modelform, 'organization':organization}
-                            )
-        else:
-            return render(request, 'dbtest/organization_settings.html',
-                            {'modelform':modelform,'error':modelform.errors, 'organization': organization}
-                            )
+
+            message = "Organization {0} has been modified.".format(organization.name)
+            messages.add_message(request, messages.INFO, message)
+
+    return render(request, 'dbtest/organization_settings.html', {'modelform':modelform,'organization' : organization, 'categories_id': categories_id})
 
 @login_required
+@user_is_type('communitypartner')
 def job_creation(request):
-    if(request.user.userprofile.purdueuser):
-        return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"})
-    else:
-       #if this request was a POST and not a GET
-        if request.method == 'POST':
-            form = JobCreateForm(request.POST)
-            #check form validity
-            print request.POST.getlist('organization')
-            if form.is_valid():
-                job = form.save(commit=False)
-                job.creator = request.user
-                job.save()
-                #get the list of orgs to request from the form
-                for org_id in request.POST.getlist('organization'):
-                    organization = Organization.objects.get(id = org_id)
-                    jr = JobRequest.objects.create(organization=organization, job = job)
-                    link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org_id}))
-                    send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
-                    for user in organization.group.user_set.all():
-                        notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
-                message = "Job {0} created".format( job.name )
-                messages.add_message(request, messages.INFO, message)
-                return redirect('job_dash',job_id=job.id)
-            else:
-                orgs = Organization.objects.filter(id__in = request.POST.getlist('organization'))
-                return render(request, 'dbtest/job_creation.html', {'form':form,'error':"There are incorrect fields",'orgs':orgs})
-       #if the request was a GET
+
+    #if request was POST
+    if request.method == 'POST':
+        form = JobCreateForm(request.POST)
+        #check form validity
+        if form.is_valid():
+            job = form.save(commit=False)
+            job.creator = request.user
+            job.save()
+
+            #get the list of orgs to request from the form
+            for org_id in request.POST.getlist('organization'):
+                organization = Organization.objects.get(id = org_id)
+                jr = JobRequest.objects.create(organization=organization, job = job)
+                link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org_id}))
+                send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
+                for user in organization.group.user_set.all():
+                    notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
+
+            message = "Job {0} created".format( job.name )
+            messages.add_message(request, messages.INFO, message)
+            return redirect('job_dash',job_id=job.id)
         else:
-            orgs = Organization.objects.all()
-            form = JobCreateForm()
-            return render(request, 'dbtest/job_creation.html', {'form':form, 'orgs':orgs})
+            orgs = Organization.objects.filter(id__in = request.POST.getlist('organization'))
+
+    #if the request was a GET
+    else:
+        orgs = Organization.objects.all()
+        form = JobCreateForm()
+
+    return render(request, 'dbtest/job_creation.html', {'form':form,'orgs':orgs})
 
 def about(request):
     return render(request, 'dbtest/about.html')
