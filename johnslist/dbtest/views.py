@@ -83,9 +83,14 @@ def job_dash(request,job_id):
     show_dialog = first_visit(request.user,'job_dash')
 
     job = Job.objects.get(id=job_id)
+    if job.closed:
+        jobrequests = job.jobrequests.order_by('organization').filter(confirmed = True)
+    else:
+        jobrequests = job.jobrequests.order_by('organization')
+
     return render(request, 'dbtest/job_dash.html',
                   {'job':job,
-                   'jobrequests':job.jobrequests.order_by('organization'),
+                   'jobrequests':jobrequests,
                    'show_dialog':show_dialog
                   })
 
