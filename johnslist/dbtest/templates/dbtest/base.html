@@ -151,37 +151,32 @@
 
         <!--------------- Generic Error Message ------------------->
 
-        {% if error %}
+        {% if form.errors %}
         <div id="error">
             <div class="alert alert-danger">
 
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            {{ error }}
-            {% if form.errors %}
-                <ol>
-                {% for field in form %}
-                    {% if field.errors %}
-                        <li><strong> {{field.name}} </strong> -
-                        {% for error in field.errors %}
-                            {{ error|escape }}
-                        {% endfor %}
-                        </li>
-                    {% endif %}
-                {% endfor %}
-                </ol>
-            {% endif %}
+            {{ form.errors }}
             </div>
         </div>
         {% endif %}
 
         <!--------------- Generic Success Message --------------->
-        {% if confirm %}
-        <div id='confirm'>
-            <div class="alert alert-dismissible alert-success">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">confirm:</span>
-            {{ confirm }}
-            </div>
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+                {% if message.tags == 'info' %}
+                <div class="confirm alert alert-dismissible alert-success">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    {{ message }}
+                </div>
+                {% elif message.tags == 'error' %}
+                <div class="error alert alert-dismissible alert-danger">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    {{ message }}
+                </div>
+                {% endif %}
+            {% endfor %}
         </div>
         {% endif %}
 
