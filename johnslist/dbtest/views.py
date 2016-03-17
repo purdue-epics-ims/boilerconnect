@@ -13,6 +13,7 @@ from guardian.shortcuts import assign_perm
 from notifications import notify
 from django.core.mail import send_mail
 from itertools import chain
+from django.contrib import messages
 
 def quicksearch(request):
     orgs = Organization.objects.all()
@@ -276,40 +277,33 @@ def user_create(request):
         return render(request, 'dbtest/user_create.html', {'form':form})
 
 @login_required
+@user_is_type('purdueuser')
 def organization_create(request):
     #If this is the first time the user has visited this page, show a dialog
     show_dialog = first_visit(request.user,'organization_create')
 
-    #if purdueuser
-    if(request.user.userprofile.purdueuser):
-        #if the request was a GET
-        if request.method == 'GET':
-            form = OrganizationCreateForm()
-            return render(request, 'dbtest/organization_create.html',
-                          {'form':form,'show_dialog':show_dialog})
-        #if this request was a POST
-        elif request.method == 'POST':
-            form = OrganizationCreateForm(request.POST, request.FILES)
+    #if the request was a GET
+    if request.method == 'GET':
+        form = OrganizationCreateForm()
+    #if this request was a POST
+    elif request.method == 'POST':
+        form = OrganizationCreateForm(request.POST, request.FILES)
 
-            #check form validity
-            if form.is_valid() :
-                #create new Group + Organization
-                organization = form.save(commit=False)
-                group = Group.objects.create(name = organization.name)
-                organization.group = group
-                group.user_set.add(request.user)
-                organization.save()
-                form.save_m2m()
+        #check form validity
+        if form.is_valid() :
+            #create new Group + Organization
+            organization = form.save(commit=False)
+            group = Group.objects.create(name = organization.name)
+            organization.group = group
+            group.user_set.add(request.user)
+            organization.save()
+            form.save_m2m()
 
-                message = "Organization {0} created".format( organization.name )
-                return render(request,'dbtest/confirm.html', {'confirm':message})
-            else:
-                return render(request, 'dbtest/organization_create.html', {'form':form,'error':form.errors})
-    #if communitypartner
-    else:
-        return render(request, 'dbtest/confirm.html',
-                      {'error': "You do not have permission to access to this page"}
-                      )
+            message = "Organization {0} created".format( organization.name )
+            messages.add_message(request, messages.INFO, message)
+            return redirect('user_dash')
+
+    return render(request, 'dbtest/organization_create.html', {'form':form,'show_dialog':show_dialog})
 
 @login_required
 def user_edit(request):
