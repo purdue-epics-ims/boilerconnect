@@ -145,7 +145,7 @@ def jobrequest_dash(request,job_id,organization_id):
     if request.method == 'POST':
 
         # handle accept button click
-        if request.POST.get("action","")=="Accept Request":
+        if request.POST.get("action","")=="accept":
             if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.accept()
                 message = "You have accepted this job."
@@ -155,7 +155,7 @@ def jobrequest_dash(request,job_id,organization_id):
                 messages.add_message(request, messages.ERROR, message)
 
         # handle decline button click
-        if request.POST.get("action","")=="Decline Request":
+        if request.POST.get("action","")=="decline":
             if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.decline()
                 message = "You have declined this job."
@@ -165,7 +165,7 @@ def jobrequest_dash(request,job_id,organization_id):
                 messages.add_message(request, messages.ERROR, message)
 
         # handle confirm button click
-        if request.POST.get("confirm","")=="Confirm Request":
+        if request.POST.get("action","")=="confirm":
             if not jobrequest.confirmed and not jobrequest.job.closed:
                 jobrequest.confirm()
                 message = "You have confirmed this job."
@@ -176,8 +176,8 @@ def jobrequest_dash(request,job_id,organization_id):
 
         # handle decline button click
         if request.POST.get("action","")=="comment":
+            form = CommentCreateForm(request.POST)
             if form.is_valid():
-                form = CommentCreateForm(request.POST)
                 comment = form.save(commit = False)
                 comment.creator = request.user
                 comment.jobrequest = jobrequest
