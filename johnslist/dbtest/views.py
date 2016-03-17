@@ -405,30 +405,33 @@ def job_creation(request):
         return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"})
     else:
        #if this request was a POST and not a GET
-       if request.method == 'POST':
-           form = JobCreateForm(request.POST)
-           #check form validity
-           if form.is_valid():
-               job = form.save(commit=False)
-               job.creator = request.user
-               job.save()
-               #get the list of orgs to request from the form
-               for org_id in request.POST.getlist('organization'):
-                   organization = Organization.objects.get(id = org_id)
-                   jr = JobRequest.objects.create(organization=organization, job = job)
-                   link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org_id}))
-                   send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
-                   for user in organization.group.user_set.all():
-                       notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
-               message = "Job {0} created".format( job.name )
-               return render(request,'dbtest/confirm.html', {'confirm':message})
-           else:
-               return render(request, 'dbtest/job_creation.html', {'form':form,'error':"There are incorrect fields"})
+        if request.method == 'POST':
+            form = JobCreateForm(request.POST)
+            #check form validity
+            print request.POST.getlist('organization')
+            if form.is_valid():
+                job = form.save(commit=False)
+                job.creator = request.user
+                job.save()
+                #get the list of orgs to request from the form
+                for org_id in request.POST.getlist('organization'):
+                    organization = Organization.objects.get(id = org_id)
+                    jr = JobRequest.objects.create(organization=organization, job = job)
+                    link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org_id}))
+                    send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
+                    for user in organization.group.user_set.all():
+                        notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
+                message = "Job {0} created".format( job.name )
+                messages.add_message(request, messages.INFO, message)
+                return redirect('job_dash',job_id=job.id)
+            else:
+                orgs = Organization.objects.filter(id__in = request.POST.getlist('organization'))
+                return render(request, 'dbtest/job_creation.html', {'form':form,'error':"There are incorrect fields",'orgs':orgs})
        #if the request was a GET
-       else:
-           orgs = Organization.objects.all()
-           form = JobCreateForm()
-           return render(request, 'dbtest/job_creation.html', {'form':form, 'orgs':orgs})
+        else:
+            orgs = Organization.objects.all()
+            form = JobCreateForm()
+            return render(request, 'dbtest/job_creation.html', {'form':form, 'orgs':orgs})
 
 def about(request):
     return render(request, 'dbtest/about.html')
