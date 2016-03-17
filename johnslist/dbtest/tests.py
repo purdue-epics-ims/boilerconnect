@@ -60,12 +60,12 @@ def set_up(self):
         self.u_pu = User.objects.create(username='foobar_purdueuser')
         self.u_pu.set_password('asdf')
         self.u_pu.save()
-        UserProfile.objects.create(name = self.u_pu.username, user = self.u_pu, purdueuser = True)
+        UserProfile.objects.create(user = self.u_pu, purdueuser = True)
 
         self.u_cp = User.objects.create(username='foobar_communitypartner')
         self.u_cp.set_password('asdf')
         self.u_cp.save()
-        UserProfile.objects.create(name = self.u_cp.username, user = self.u_cp, purdueuser = False)
+        UserProfile.objects.create(user = self.u_cp, purdueuser = False)
         #create group/org
         self.g=Group.objects.create(name="foobar_group")
         self.g.user_set.add(self.u_pu)
@@ -298,7 +298,7 @@ class OrganizationTestCase(TestCase):
         self.u2 = User.objects.create(username='nonmember_user')
         self.u2.set_password('asdf')
         self.u2.save()
-        UserProfile.objects.create(name = self.u2.username, user = self.u2, purdueuser = True)
+        UserProfile.objects.create(user = self.u2, purdueuser = True)
 
     ### Backend Tests ###
 

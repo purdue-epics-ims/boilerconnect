@@ -5,8 +5,7 @@ from django.contrib.auth import forms
 from .models import*
 
 class OrganizationCreateForm(ModelForm):
-
-	class Meta:
+    class Meta:
 		model = Organization
 		fields = ['name','description','categories','email','icon']
 
@@ -26,3 +25,7 @@ class CommentCreateForm(ModelForm):
         model = Comment
         exclude = ('jobrequest',)
 
+class ProfileCreationForm(ModelForm):
+    class Meta:
+        model = UserProfile
+        exclude = ('user','visited_views',)
