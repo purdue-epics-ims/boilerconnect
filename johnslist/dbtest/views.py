@@ -14,6 +14,8 @@ from notifications import notify
 from django.core.mail import send_mail
 from itertools import chain
 
+import pdb
+
 def quicksearch(request):
     orgs = Organization.objects.all()
     return render(request,'dbtest/quicksearch.html',
@@ -270,36 +272,42 @@ def user_membership(request,user_id):
        return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"})
 
 def user_create(request):
+    #if user is logged in with an existing account
     if request.user.is_authenticated():
         return redirect('user_dash')
-    #if this request was a POST and not a GET
+
+    #if this request was a POST
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        user_form = UserCreationForm(request.POST)
+        profile_form = ProfileCreationForm(request.POST)
 
         #check form validity
-        if form.is_valid() :
-            #save user to db and store info to 'user'
-            if request.POST.get('user_type') == "purdue":
-                purdue = True
-            elif request.POST.get('user_type') == "community":
-                purdue = False
-            else:
-                return render(request, 'dbtest/user_create.html', {'form':form,'error':form.errors})
-            user = form.save()
-            UserProfile.objects.create(name = user.username, user = user, purdueuser = purdue)
-            form.save_m2m()
+        if all([user_form.is_valid(), profile_form.is_valid()]):
+            #creating user and userprofile
+            user=user_form.save()
+            profile=profile_form.save()
+            profile.user=user
+            profile.save()
+            user_form.save_m2m()
             title = "User {0} created".format( user.username )
             confirm = "Thank you for creating an account."
-           # need to do auto login here
-           # login_user = authenticate(username=user.username, password=user.password)
-           # auth_login(request, login_user)
+
+            #automatic login after account creation
+            username_auth = request.POST['username']
+            password_auth = request.POST['password1']
+            login_user = authenticate(username=username_auth, password=password_auth)
+            auth_login(request, login_user)
             return redirect('user_dash')
+
+        #if forms are not valid 
         else:
-            return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields."})
+            return render(request, 'dbtest/user_create.html', {'user_form':user_form,'profile_form':profile_form,'error':"There are incorrect fields."})
+
     #if the request was a GET
     else:
-        form = UserCreationForm()
-        return render(request, 'dbtest/user_create.html', {'form':form})
+        user_form = UserCreationForm()
+        profile_form = ProfileCreationForm()
+        return render(request, 'dbtest/user_create.html', {'user_form':user_form, 'profile_form':profile_form})
 
 @login_required
 def organization_create(request):
