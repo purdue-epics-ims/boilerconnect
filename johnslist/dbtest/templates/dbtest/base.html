@@ -59,15 +59,6 @@
 
                     {% if user.is_authenticated %}
                     <ul class="nav navbar-nav navbar-right">
-                        <li>
-                        <a href="{%url 'notifications'%}">
-                        <span class="glyphicon glyphicon-inbox"></span>
-                        <span class="badge">
-                        {%notifications_unread as unread_count%}
-                        {{unread_count}}
-                        </span>
-                        </a>
-                        </li>
 
                         <!---------  Navbar Jobs Pulldown ------------>
                         {% if not user.userprofile.purdueuser %}

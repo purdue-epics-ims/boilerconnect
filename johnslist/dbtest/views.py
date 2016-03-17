@@ -89,16 +89,6 @@ def job_dash(request,job_id):
                    'show_dialog':show_dialog
                   })
 
-#a list of a user's notifications
-def notifications(request):
-    read_notifications = list(request.user.notifications.read())
-    unread_notifications = list(request.user.notifications.unread())
-    request.user.notifications.mark_all_as_read()
-    return render(request, 'dbtest/notifications.html',
-                  {'unread_notifications' : unread_notifications,
-                   'read_notifications':read_notifications
-                   })
-
 #get detailed organization information - email, phone #, users in Org, admins, etc.
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
