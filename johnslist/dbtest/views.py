@@ -15,8 +15,6 @@ from django.core.mail import send_mail
 from itertools import chain
 from django.contrib import messages
 
-import pdb
-
 def quicksearch(request):
     orgs = Organization.objects.all()
     return render(request,'dbtest/quicksearch.html',
@@ -276,7 +274,7 @@ def user_create(request):
 
         #if forms are not valid 
         else:
-            return render(request, 'dbtest/user_create.html', {'user_form':user_form,'profile_form':profile_form,'error':"There are incorrect fields."})
+            return render(request, 'dbtest/user_create.html', {'user_form':user_form,'profile_form':profile_form,})
 
     #if the request was a GET
     else:
@@ -331,9 +329,6 @@ def user_edit(request):
             message = "Your account has been modified."
             messages.add_message(request, messages.INFO, message)
             return redirect('user_dash')
-        else:
-            message = "There are incorrect fields."
-            messages.add_message(request, messages.ERROR, message)
 
     #if the request was a GET
     else:
