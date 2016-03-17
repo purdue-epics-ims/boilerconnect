@@ -2,6 +2,13 @@
 {% load template_tags %}
 
 {% block content %}
+{% if show_dialog %}
+<div class="confirm alert alert-dismissible alert-info">
+    <i type="button" class="close fa fa-close" data-dismiss="alert"></i>
+    <h4> This page shows all notifications for jobs you have created.  Click 'Create Job' in the menu bar to begin creating a job.</h4>
+</div>
+{% endif %}
+
 <div class="jumbotron">
   <center>
     <h3>{{ request.user }}</h3>
@@ -35,8 +42,4 @@
   </div>
 </div>
 
-{% if show_dialog %}
-<script>alert("This page shows all notifications for jobs you have created.  Click 'Create Job' in the menu bar to begin creating a job.");
-</script>
-{% endif %}
 {% endblock content %}

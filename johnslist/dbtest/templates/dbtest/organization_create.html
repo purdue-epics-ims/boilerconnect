@@ -1,6 +1,12 @@
 {% extends "dbtest/base.html" %}
-{% block content %}
 {% load widget_tweaks %}
+{% block content %}
+{% if show_dialog %}
+<div class="confirm alert alert-dismissible alert-info">
+    <i type="button" class="close fa fa-close" data-dismiss="alert"></i>
+    <h4>Create your organization here.  Community members will be able to search for your organization by name or categories you select.</h4>
+</div>
+{% endif %}
 
 <div class="panel-heading">
   <div class="">
@@ -65,8 +71,4 @@
   </form>
 </div>
 
-{% if show_dialog %}
-<script>alert("Create your organization here.  Community members will be able to search for your organization by name or categories you select.");
-</script>
-{% endif %}
 {% endblock %}

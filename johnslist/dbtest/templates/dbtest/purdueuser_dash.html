@@ -2,6 +2,12 @@
 {% load template_tags %}
 
 {% block content %}
+{% if show_dialog %}
+<div class="confirm alert alert-dismissible alert-info">
+    <i type="button" class="close fa fa-close" data-dismiss="alert"></i>
+    <h4> This page shows all notifications for organizations that you a part of.  You need to create an organization before you can begin receiving job requests.  Click 'Create Organization' in the menubar to create an organization.</h4>
+</div>
+{% endif %}
 
 <div class="jumbotron">
 
@@ -38,8 +44,4 @@
   </div>
 </div>
 
-{% if show_dialog %}
-<script>alert("This page shows all notifications for organizations that you a part of.  You need to create an organization before you can begin receiving job requests.  Click 'Create Organization' in the menubar to create an organization");
-</script>
-{% endif %}
 {% endblock content %}

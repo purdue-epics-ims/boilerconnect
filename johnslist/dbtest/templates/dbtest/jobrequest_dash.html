@@ -1,5 +1,18 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
+{% if show_dialog %}
+    {% if user.userprofile.purdueuser %}
+        <div class="confirm alert alert-dismissible alert-info">
+            <i type="button" class="close fa fa-close" data-dismiss="alert"></i>
+            <h4> Here you can accept or reject job requests that you receive.  You can also make comments and suggestions to change the job request before accepting.</h4>
+        </div>
+    {% else %}
+        <div class="confirm alert alert-dismissible alert-info">
+            <i type="button" class="close fa fa-close" data-dismiss="alert"></i>
+            <h4> This page shows whether your job request has been accepted or declined by this organization.  You can also view comments and make changes to the job request here.</h4>
+        </div>
+    {% endif %}
+{% endif %}
 
 <div class="jumbotron">
   <center>
@@ -137,13 +150,4 @@
 </form>
 
 <!--this message appears for new user only -->
-{% if show_dialog %}
-    {% if user.userprofile.purdueuser %}
-        <script>alert("Here you can accept or reject job requests that you receive.  You can also make comments and suggestions to change the job request before accepting.");
-        </script>
-    {% else %}
-        <script>alert("This page shows whether your job request has been accepted or declined by this organization.  You can also view comments and make changes to the job request here.");
-        </script>
-    {% endif %}
-{% endif %}
 {% endblock content %}
