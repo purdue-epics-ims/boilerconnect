@@ -38,10 +38,10 @@ def login(request):
             auth_login(request, user)
             return redirect('user_dash')
         else:
-            error = "There was a problem with your login.  Please try again." 
-            return render(request,'dbtest/login.html',{'error':error})
-    if request.method == 'GET':
-        return render(request,'dbtest/login.html')
+            message = "There was a problem with your login.  Please try again." 
+            messages.add_message(request, messages.ERROR, message)
+
+    return render(request,'dbtest/login.html')
 
 @login_required
 def user_dash(request):
@@ -138,100 +138,76 @@ def jobrequest_dash(request,job_id,organization_id):
     jobrequest = JobRequest.objects.get(job = job, organization = organization)
     comment_text = jobrequest.comment_set.all()
     perm_to_edit_jobrequest_state = request.user.has_perm('edit_jobrequest_state',jobrequest)
+    form = CommentCreateForm()
+
     # if request is a POST
     if request.method == 'POST':
-        form = CommentCreateForm(request.POST)
 
         # handle accept button click
         if request.POST.get("action","")=="Accept Request":
             if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.accept()
-                return render(request, 'dbtest/jobrequest_dash.html',
-                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
-                               'comment_text':comment_text,
-                               'jobrequest':jobrequest,
-                               'confirm':'You have accepted this job.'
-                               })
+                message = "You have accepted this job."
+                messages.add_message(request, messages.INFO, message)
             else:
-                return render(request,'dbtest/jobrequest_dash.html',
-                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
-                               'comment_text':comment_text,
-                               'jobrequest':jobrequest,
-                               'error':'You have already accepted/declined the job'
-                               })
+                message = "You have already accepted this job."
+                messages.add_message(request, messages.ERROR, message)
 
         # handle decline button click
         if request.POST.get("action","")=="Decline Request":
             if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.decline()
-                return render(request, 'dbtest/jobrequest_dash.html',
-                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
-                               'comment_text':comment_text,
-                               'jobrequest':jobrequest,
-                               'confirm':'You have declined this job.'
-                               })
+                message = "You have declined this job."
+                messages.add_message(request, messages.INFO, message)
             else:
-                return render(request,'dbtest/jobrequest_dash.html',
-                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
-                               'comment_text':comment_text,
-                               'jobrequest':jobrequest,
-                               'error':'you have already accepted/declined this job'
-                               })
+                message = "You have already declined this job."
+                messages.add_message(request, messages.ERROR, message)
 
+        # handle confirm button click
         if request.POST.get("confirm","")=="Confirm Request":
             if not jobrequest.confirmed and not jobrequest.job.closed:
                 jobrequest.confirm()
-                return render(request,'dbtest/jobrequest_dash.html',
-                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
-                               'comment_text':comment_text,
-                               'jobrequest':jobrequest,
-                               'confirm':'you have confirmed this job request!'
-                               })
+                message = "You have confirmed this job."
+                messages.add_message(request, messages.INFO, message)
             else:
-                return render(request,'dbtest/jobrequest_dash.html',
-                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
-                               'comment_text':comment_text,
-                               'jobrequest':jobrequest,
-                               'error':'you have already confirmed this job request!'
-                               })
-        if form.is_valid():
-            comment = form.save(commit = False)
-            comment.creator = request.user
-            comment.jobrequest = jobrequest
-            comment.save()
-            # send notification to either Organization or Community partner
-            if request.user.userprofile.purdueuser:
+                message = "You have already confirmed this job."
+                messages.add_message(request, messages.ERROR, message)
+
+        # handle decline button click
+        if request.POST.get("action","")=="comment":
+            if form.is_valid():
+                form = CommentCreateForm(request.POST)
+                comment = form.save(commit = False)
+                comment.creator = request.user
+                comment.jobrequest = jobrequest
+                comment.save()
+
+                message = "Comment saved."
+                messages.add_message(request, messages.INFO, message)
+
+                # send notification to either Organization or Community partner
+                action_object = job
+                verb = "commented on"
+                if request.user.userprofile.purdueuser:
+                    recipient = job.creator
+                else:
+                    recipient = jobrequest.organization.group
                 notify.send(request.user,
-                            verb="commented on",
-                            action_object=job,
-                            recipient=job.creator,
+                            verb=verb,
+                            action_object=action_object,
+                            recipient=recipient,
                             url=reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id}) )
             else:
-                notify.send(request.user,
-                            verb="commented on",
-                            action_object=job,
-                            recipient=jobrequest.organization.group,
-                            url=reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id}) )
-                return render(request, 'dbtest/jobrequest_dash.html',
-                              {'form':form,
-                               'comment_text':comment_text,
-                               'jobrequest':jobrequest,
-                               'confirm':'comment saved!'
-                               })
-        else:
-            return render(request, 'dbtest/jobrequest_dash.html',
-                          {'jobrequest':jobrequest,
-                           'form':form,
-                           'error': 'The comment cannot be empty!',
-                           'comment_text':comment_text
-                           })
+                message = "The comment cannot be empty."
+                messages.add_message(request, messages.ERROR, message)
 
     # if request is GET
     return render(request, 'dbtest/jobrequest_dash.html',
                   {'jobrequest':jobrequest,
                    'comment_text':comment_text,
                    'show_dialog':show_dialog,
-                   'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state
+                   'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
+                   'form':form
                    })
 
 #load the front page with 3 random organizations in the gallery
@@ -262,12 +238,10 @@ def search(request):
     return render(request,'dbtest/search.html',{'search_result': search_result})
 
 @user_has_perm('view_user')
+@user_is_type('purdueuser')
 def user_membership(request,user_id):
-   if(request.user.userprofile.purdueuser):
-       membership = User.objects.get(id = user_id).groups
-       return render(request,'dbtest/user_membership.html',{'membership': membership})
-   else:
-       return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"})
+    membership = User.objects.get(id = user_id).groups
+    return render(request,'dbtest/user_membership.html',{'membership': membership})
 
 def user_create(request):
     if request.user.is_authenticated():

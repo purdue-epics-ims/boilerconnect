@@ -248,4 +248,4 @@ def add_perms_jobrequest(sender,**kwargs):
 class Comment(models.Model):
     text_comment = models.TextField('text_comment')
     jobrequest = models.ForeignKey(JobRequest)
-    creator = models.ForeignKey(User, default= None)
+    creator = models.ForeignKey(User, blank = True, null = True) #creator added after form is validated
