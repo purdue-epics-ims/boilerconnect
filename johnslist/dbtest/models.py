@@ -10,12 +10,11 @@ from django.core.urlresolvers import reverse
 
 class UserProfile(models.Model):
     def __unicode__(self):
-        return self.name
+        return self.user.username
 
-    name = models.TextField('Username')
-    user = models.OneToOneField(User,related_name = 'userprofile') # UserProfile - User
+    user = models.OneToOneField(User,related_name = 'userprofile',null=True, blank = False) # UserProfile - User
     # purdueuser or communitypartner
-    purdueuser = models.BooleanField(default=True)
+    purdueuser = models.BooleanField(default=True, choices=((True, 'Purdue User'),(False, 'Community User')))
     # save which pages the user has visited before for the purposes of showing helpful dialogs
     visited_views = models.CharField(max_length=64,default="")
 
@@ -248,4 +247,4 @@ def add_perms_jobrequest(sender,**kwargs):
 class Comment(models.Model):
     text_comment = models.TextField('text_comment')
     jobrequest = models.ForeignKey(JobRequest)
-    creator = models.ForeignKey(User, default= None)
+    creator = models.ForeignKey(User, blank = True, null = True) #creator added after form is validated

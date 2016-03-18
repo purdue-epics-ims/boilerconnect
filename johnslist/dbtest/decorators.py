@@ -2,6 +2,7 @@ from django.shortcuts import render
 from guardian.shortcuts import get_perms_for_model
 from johnslist.settings import REDIRECT_URL
 from .models import *
+from django.contrib import messages
 
 #general purpose decorator to check if user can access various objects
 def user_has_perm(perm):
@@ -48,8 +49,10 @@ def user_has_perm(perm):
             if success == True:
                 return func(request,*args,**kwargs)
             else:
-                return render(request,'dbtest/confirm.html',
-                              {'error':'You do not have access to this resource'})
+
+                message = "You do not have access to this resource."
+                messages.add_message(request, messages.ERROR, message)
+                return render(request,'dbtest/confirm.html')
         return wrapper
     return decorator
 
@@ -59,21 +62,24 @@ def user_is_type(user_type):
         def wrapper(request,*args,**kwargs):
             #reject anonymous user implicitly
             if request.user.is_anonymous():
-                return render(request,'dbtest/confirm.html',
-                              {'error':'You do not have access to this resource'})
+                message = "You do not have access to this resource."
+                messages.add_message(request, messages.ERROR, message)
+                return render(request,'dbtest/confirm.html')
             is_purdueuser = request.user.userprofile.purdueuser
             if user_type == 'purdueuser':
                 if is_purdueuser:
                     return func(request,*args,**kwargs)
                 else:
-                    return render(request,'dbtest/confirm.html',
-                                  {'error':'You do not have access to this resource'})
+                    message = "You do not have access to this resource."
+                    messages.add_message(request, messages.ERROR, message)
+                    return render(request,'dbtest/confirm.html')
             elif user_type == 'communitypartner':
                 if not is_purdueuser:
                     return func(request,*args,**kwargs)
                 else:
-                    return render(request,'dbtest/confirm.html',
-                                  {'error':'You do not have access to this resource'})
+                    message = "You do not have access to this resource."
+                    messages.add_message(request, messages.ERROR, message)
+                    return render(request,'dbtest/confirm.html')
             else:
                 raise Exception('User type not recognized')
         return wrapper

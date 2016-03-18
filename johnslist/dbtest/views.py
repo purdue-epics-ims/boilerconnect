@@ -3,6 +3,7 @@ from .models import *
 from django.http import HttpResponseRedirect
 from django.contrib.auth.views import login as auth_login
 from django.contrib.auth import authenticate
+from django.contrib.auth import login as login_auth
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
@@ -13,6 +14,7 @@ from guardian.shortcuts import assign_perm
 from notifications import notify
 from django.core.mail import send_mail
 from itertools import chain
+from django.contrib import messages
 
 def quicksearch(request):
     orgs = Organization.objects.all()
@@ -38,10 +40,10 @@ def login(request):
             auth_login(request, user)
             return redirect('user_dash')
         else:
-            error = "There was a problem with your login.  Please try again." 
-            return render(request,'dbtest/login.html',{'error':error})
-    if request.method == 'GET':
-        return render(request,'dbtest/login.html')
+            message = "There was a problem with your login.  Please try again." 
+            messages.add_message(request, messages.ERROR, message)
+
+    return render(request,'dbtest/login.html')
 
 @login_required
 def user_dash(request):
@@ -87,16 +89,6 @@ def job_dash(request,job_id):
                    'show_dialog':show_dialog
                   })
 
-#a list of a user's notifications
-def notifications(request):
-    read_notifications = list(request.user.notifications.read())
-    unread_notifications = list(request.user.notifications.unread())
-    request.user.notifications.mark_all_as_read()
-    return render(request, 'dbtest/notifications.html',
-                  {'unread_notifications' : unread_notifications,
-                   'read_notifications':read_notifications
-                   })
-
 #get detailed organization information - email, phone #, users in Org, admins, etc.
 def organization_detail(request,organization_id):
     organization = Organization.objects.get(id=organization_id)
@@ -138,100 +130,76 @@ def jobrequest_dash(request,job_id,organization_id):
     jobrequest = JobRequest.objects.get(job = job, organization = organization)
     comment_text = jobrequest.comment_set.all()
     perm_to_edit_jobrequest_state = request.user.has_perm('edit_jobrequest_state',jobrequest)
+    form = CommentCreateForm()
+
     # if request is a POST
     if request.method == 'POST':
-        form = CommentCreateForm(request.POST)
 
         # handle accept button click
-        if request.POST.get("action","")=="Accept Request":
+        if request.POST.get("action","")=="accept":
             if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.accept()
-                return render(request, 'dbtest/jobrequest_dash.html',
-                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
-                               'comment_text':comment_text,
-                               'jobrequest':jobrequest,
-                               'confirm':'You have accepted this job.'
-                               })
+                message = "You have accepted this job."
+                messages.add_message(request, messages.INFO, message)
             else:
-                return render(request,'dbtest/jobrequest_dash.html',
-                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
-                               'comment_text':comment_text,
-                               'jobrequest':jobrequest,
-                               'error':'You have already accepted/declined the job'
-                               })
+                message = "You have already accepted this job."
+                messages.add_message(request, messages.ERROR, message)
 
         # handle decline button click
-        if request.POST.get("action","")=="Decline Request":
+        if request.POST.get("action","")=="decline":
             if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.decline()
-                return render(request, 'dbtest/jobrequest_dash.html',
-                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
-                               'comment_text':comment_text,
-                               'jobrequest':jobrequest,
-                               'confirm':'You have declined this job.'
-                               })
+                message = "You have declined this job."
+                messages.add_message(request, messages.INFO, message)
             else:
-                return render(request,'dbtest/jobrequest_dash.html',
-                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
-                               'comment_text':comment_text,
-                               'jobrequest':jobrequest,
-                               'error':'you have already accepted/declined this job'
-                               })
+                message = "You have already declined this job."
+                messages.add_message(request, messages.ERROR, message)
 
-        if request.POST.get("confirm","")=="Confirm Request":
+        # handle confirm button click
+        if request.POST.get("action","")=="confirm":
             if not jobrequest.confirmed and not jobrequest.job.closed:
                 jobrequest.confirm()
-                return render(request,'dbtest/jobrequest_dash.html',
-                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
-                               'comment_text':comment_text,
-                               'jobrequest':jobrequest,
-                               'confirm':'you have confirmed this job request!'
-                               })
+                message = "You have confirmed this job."
+                messages.add_message(request, messages.INFO, message)
             else:
-                return render(request,'dbtest/jobrequest_dash.html',
-                              {'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
-                               'comment_text':comment_text,
-                               'jobrequest':jobrequest,
-                               'error':'you have already confirmed this job request!'
-                               })
-        if form.is_valid():
-            comment = form.save(commit = False)
-            comment.creator = request.user
-            comment.jobrequest = jobrequest
-            comment.save()
-            # send notification to either Organization or Community partner
-            if request.user.userprofile.purdueuser:
+                message = "You have already confirmed this job."
+                messages.add_message(request, messages.ERROR, message)
+
+        # handle decline button click
+        if request.POST.get("action","")=="comment":
+            form = CommentCreateForm(request.POST)
+            if form.is_valid():
+                comment = form.save(commit = False)
+                comment.creator = request.user
+                comment.jobrequest = jobrequest
+                comment.save()
+
+                message = "Comment saved."
+                messages.add_message(request, messages.INFO, message)
+
+                # send notification to either Organization or Community partner
+                action_object = job
+                verb = "commented on"
+                if request.user.userprofile.purdueuser:
+                    recipient = job.creator
+                else:
+                    recipient = jobrequest.organization.group
                 notify.send(request.user,
-                            verb="commented on",
-                            action_object=job,
-                            recipient=job.creator,
+                            verb=verb,
+                            action_object=action_object,
+                            recipient=recipient,
                             url=reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id}) )
             else:
-                notify.send(request.user,
-                            verb="commented on",
-                            action_object=job,
-                            recipient=jobrequest.organization.group,
-                            url=reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id}) )
-                return render(request, 'dbtest/jobrequest_dash.html',
-                              {'form':form,
-                               'comment_text':comment_text,
-                               'jobrequest':jobrequest,
-                               'confirm':'comment saved!'
-                               })
-        else:
-            return render(request, 'dbtest/jobrequest_dash.html',
-                          {'jobrequest':jobrequest,
-                           'form':form,
-                           'error': 'The comment cannot be empty!',
-                           'comment_text':comment_text
-                           })
+                message = "The comment cannot be empty."
+                messages.add_message(request, messages.ERROR, message)
 
     # if request is GET
     return render(request, 'dbtest/jobrequest_dash.html',
                   {'jobrequest':jobrequest,
                    'comment_text':comment_text,
                    'show_dialog':show_dialog,
-                   'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state
+                   'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
+                   'form':form
                    })
 
 #load the front page with 3 random organizations in the gallery
@@ -262,80 +230,77 @@ def search(request):
     return render(request,'dbtest/search.html',{'search_result': search_result})
 
 @user_has_perm('view_user')
+@user_is_type('purdueuser')
 def user_membership(request,user_id):
-   if(request.user.userprofile.purdueuser):
-       membership = User.objects.get(id = user_id).groups
-       return render(request,'dbtest/user_membership.html',{'membership': membership})
-   else:
-       return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"})
+    membership = User.objects.get(id = user_id).groups
+    return render(request,'dbtest/user_membership.html',{'membership': membership})
 
 def user_create(request):
+    #if user is logged in with an existing account
     if request.user.is_authenticated():
         return redirect('user_dash')
-    #if this request was a POST and not a GET
+
+    #if this request was a POST
     if request.method == 'POST':
-        form = UserCreationForm(request.POST)
+        user_form = UserCreationForm(request.POST)
+        profile_form = ProfileCreationForm(request.POST)
 
         #check form validity
-        if form.is_valid() :
-            #save user to db and store info to 'user'
-            if request.POST.get('user_type') == "purdue":
-                purdue = True
-            elif request.POST.get('user_type') == "community":
-                purdue = False
-            else:
-                return render(request, 'dbtest/user_create.html', {'form':form,'error':form.errors})
-            user = form.save()
-            UserProfile.objects.create(name = user.username, user = user, purdueuser = purdue)
-            form.save_m2m()
+        if all([user_form.is_valid(), profile_form.is_valid()]):
+            #creating user and userprofile
+            user=user_form.save()
+            profile=profile_form.save()
+            profile.user=user
+            profile.save()
+            user_form.save_m2m()
             title = "User {0} created".format( user.username )
             confirm = "Thank you for creating an account."
-           # need to do auto login here
-           # login_user = authenticate(username=user.username, password=user.password)
-           # auth_login(request, login_user)
+
+            #automatic login after account creation
+            username_auth = request.POST['username']
+            password_auth = request.POST['password1']
+            login_user = authenticate(username=username_auth, password=password_auth)
+            login_auth(request, login_user)
             return redirect('user_dash')
+
+        #if forms are not valid 
         else:
-            return render(request, 'dbtest/user_create.html', {'form':form,'error':"There are incorrect fields."})
+            return render(request, 'dbtest/user_create.html', {'user_form':user_form,'profile_form':profile_form,})
+
     #if the request was a GET
     else:
-        form = UserCreationForm()
-        return render(request, 'dbtest/user_create.html', {'form':form})
+        user_form = UserCreationForm()
+        profile_form = ProfileCreationForm()
+        return render(request, 'dbtest/user_create.html', {'user_form':user_form, 'profile_form':profile_form})
 
 @login_required
+@user_is_type('purdueuser')
 def organization_create(request):
     #If this is the first time the user has visited this page, show a dialog
     show_dialog = first_visit(request.user,'organization_create')
 
-    #if purdueuser
-    if(request.user.userprofile.purdueuser):
-        #if the request was a GET
-        if request.method == 'GET':
-            form = OrganizationCreateForm()
-            return render(request, 'dbtest/organization_create.html',
-                          {'form':form,'show_dialog':show_dialog})
-        #if this request was a POST
-        elif request.method == 'POST':
-            form = OrganizationCreateForm(request.POST, request.FILES)
+    #if the request was a GET
+    if request.method == 'GET':
+        form = OrganizationCreateForm()
+    #if this request was a POST
+    elif request.method == 'POST':
+        form = OrganizationCreateForm(request.POST, request.FILES)
 
-            #check form validity
-            if form.is_valid() :
-                #create new Group + Organization
-                organization = form.save(commit=False)
-                group = Group.objects.create(name = organization.name)
-                organization.group = group
-                group.user_set.add(request.user)
-                organization.save()
-                form.save_m2m()
+        #check form validity
+        if form.is_valid() :
+            #create new Group + Organization
+            organization = form.save(commit=False)
+            group = Group.objects.create(name = organization.name)
+            organization.group = group
+            group.user_set.add(request.user)
+            organization.save()
+            form.save_m2m()
 
-                message = "Organization {0} created".format( organization.name )
-                return render(request,'dbtest/confirm.html', {'confirm':message})
-            else:
-                return render(request, 'dbtest/organization_create.html', {'form':form,'error':form.errors})
-    #if communitypartner
-    else:
-        return render(request, 'dbtest/confirm.html',
-                      {'error': "You do not have permission to access to this page"}
-                      )
+            message = "Organization {0} created".format( organization.name )
+            messages.add_message(request, messages.INFO, message)
+            return redirect('user_dash')
+
+    return render(request, 'dbtest/organization_create.html', {'form':form,'show_dialog':show_dialog})
 
 @login_required
 def user_edit(request):
@@ -350,33 +315,31 @@ def user_edit(request):
             user = form.save(commit = False)
             #user.username = request.user.username()
             title = "User {0} modified".format( user.username )
-            confirm = "Your account has been modified."
             user.save()
-            return render(request,'dbtest/user_dash.html', {'title': title,'confirm':confirm})
-        else:
-            return render(request, 'dbtest/user_edit.html', {'form':form,'error':"There are incorrect fields"})
+
+            message = "Your account has been modified."
+            messages.add_message(request, messages.INFO, message)
+            return redirect('user_dash')
+
     #if the request was a GET
     else:
         if request.user.is_authenticated():
             form = UserCreationForm(instance=request.user)
         else:
             form = UserCreationForm()
-        return render(request, 'dbtest/user_edit.html', 
-            {'form':form}
-            )
+
+    return render(request, 'dbtest/user_edit.html', {'form':form})
 
 @login_required
 @user_is_type('purdueuser')
 @user_has_perm('edit_organization')
 def organization_settings(request, organization_id):
     organization = Organization.objects.get(id=organization_id)
+    categories_id = [category.pk for category in organization.categories.all()]
     #if the request was a GET
     if request.method == 'GET':
         organization = Organization.objects.get(id=organization_id)
         modelform = OrganizationEditForm(instance=organization)
-        categories_id = [category.pk for category in organization.categories.all()]
-        print 'email',modelform['email']
-        return render(request, 'dbtest/organization_settings.html', {'modelform':modelform,'organization' : organization, 'categories_id': categories_id})
 
     elif request.method == 'POST':
         organization = Organization.objects.get(id=organization_id)
@@ -389,46 +352,47 @@ def organization_settings(request, organization_id):
         if modelform.is_valid() :
             #get modelform info
             organization = modelform.save(commit = False)
-            message = "Organization {0} has been modified.".format(organization.name)
             organization.save()
-            return render(request,'dbtest/organization_settings.html',
-                            {'confirm':message, 'modelform':modelform, 'organization':organization}
-                            )
-        else:
-            return render(request, 'dbtest/organization_settings.html',
-                            {'modelform':modelform,'error':modelform.errors, 'organization': organization}
-                            )
+
+            message = "Organization {0} has been modified.".format(organization.name)
+            messages.add_message(request, messages.INFO, message)
+
+    return render(request, 'dbtest/organization_settings.html', {'modelform':modelform,'organization' : organization, 'categories_id': categories_id})
 
 @login_required
+@user_is_type('communitypartner')
 def job_creation(request):
-    if(request.user.userprofile.purdueuser):
-        return render(request, 'dbtest/confirm.html',{'error': "You do not have permission to access to this page"})
+
+    #if request was POST
+    if request.method == 'POST':
+        form = JobCreateForm(request.POST)
+        #check form validity
+        if form.is_valid():
+            job = form.save(commit=False)
+            job.creator = request.user
+            job.save()
+
+            #get the list of orgs to request from the form
+            for org_id in request.POST.getlist('organization'):
+                organization = Organization.objects.get(id = org_id)
+                jr = JobRequest.objects.create(organization=organization, job = job)
+                link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org_id}))
+                send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
+                for user in organization.group.user_set.all():
+                    notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
+
+            message = "Job {0} created".format( job.name )
+            messages.add_message(request, messages.INFO, message)
+            return redirect('job_dash',job_id=job.id)
+        else:
+            orgs = Organization.objects.filter(id__in = request.POST.getlist('organization'))
+
+    #if the request was a GET
     else:
-       #if this request was a POST and not a GET
-       if request.method == 'POST':
-           form = JobCreateForm(request.POST)
-           #check form validity
-           if form.is_valid():
-               job = form.save(commit=False)
-               job.creator = request.user
-               job.save()
-               #get the list of orgs to request from the form
-               for org_id in request.POST.getlist('organization'):
-                   organization = Organization.objects.get(id = org_id)
-                   jr = JobRequest.objects.create(organization=organization, job = job)
-                   link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org_id}))
-                   send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
-                   for user in organization.group.user_set.all():
-                       notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
-               message = "Job {0} created".format( job.name )
-               return render(request,'dbtest/confirm.html', {'confirm':message})
-           else:
-               return render(request, 'dbtest/job_creation.html', {'form':form,'error':"There are incorrect fields"})
-       #if the request was a GET
-       else:
-           orgs = Organization.objects.all()
-           form = JobCreateForm()
-           return render(request, 'dbtest/job_creation.html', {'form':form, 'orgs':orgs})
+        orgs = Organization.objects.all()
+        form = JobCreateForm()
+
+    return render(request, 'dbtest/job_creation.html', {'form':form,'orgs':orgs})
 
 def about(request):
     return render(request, 'dbtest/about.html')

@@ -59,15 +59,6 @@
 
                     {% if user.is_authenticated %}
                     <ul class="nav navbar-nav navbar-right">
-                        <li>
-                        <a href="{%url 'notifications'%}">
-                        <span class="glyphicon glyphicon-inbox"></span>
-                        <span class="badge">
-                        {%notifications_unread as unread_count%}
-                        {{unread_count}}
-                        </span>
-                        </a>
-                        </li>
 
                         <!---------  Navbar Jobs Pulldown ------------>
                         {% if not user.userprofile.purdueuser %}
@@ -149,39 +140,34 @@
         <br><br><br>
         <div class="container container-fluid">
 
-        <!--------------- Generic Error Message ------------------->
+        <!--------------- Generic Form Message ------------------->
 
-        {% if error %}
+        {% if form.errors %}
         <div id="error">
             <div class="alert alert-danger">
 
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            {{ error }}
-            {% if form.errors %}
-                <ol>
-                {% for field in form %}
-                    {% if field.errors %}
-                        <li><strong> {{field.name}} </strong> -
-                        {% for error in field.errors %}
-                            {{ error|escape }}
-                        {% endfor %}
-                        </li>
-                    {% endif %}
-                {% endfor %}
-                </ol>
-            {% endif %}
+            {{ form.errors }}
             </div>
         </div>
         {% endif %}
 
-        <!--------------- Generic Success Message --------------->
-        {% if confirm %}
-        <div id='confirm'>
-            <div class="alert alert-dismissible alert-success">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">confirm:</span>
-            {{ confirm }}
-            </div>
+        <!--------------- Generic Message --------------->
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+                {% if message.tags == 'info' %}
+                <div class="confirm alert alert-dismissible alert-success">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    {{ message }}
+                </div>
+                {% elif message.tags == 'error' %}
+                <div class="error alert alert-dismissible alert-danger">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    {{ message }}
+                </div>
+                {% endif %}
+            {% endfor %}
         </div>
         {% endif %}
 

@@ -50,9 +50,9 @@ def populate():
         newuser.set_password('asdf')
         newuser.save()
         if(num % 2 == 0):
-           UserProfile.objects.create(name = newuser.username, user = newuser, purdueuser = True)
+           UserProfile.objects.create(user = newuser, purdueuser = True)
         else:
-           UserProfile.objects.create(name = newuser.username, user = newuser, purdueuser = False)
+           UserProfile.objects.create(user = newuser, purdueuser = False)
         print '    '+newuser.username
 
     #add Users to Organizations

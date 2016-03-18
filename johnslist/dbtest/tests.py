@@ -28,7 +28,7 @@ from django.test import Client
             [x] - jobrequests_declined (use request_organization)
         Interface:
             [x] - job_creation (check job exists, check default perms, check requested orgs)
-            [x] - jobrequest_dash (check r.context['job'] is the same that was created)
+            [x] - jobrequest_dash (check response.context['job'] is the same that was created)
 
     Organization:
         Backend:
@@ -60,12 +60,12 @@ def set_up(self):
         self.u_pu = User.objects.create(username='foobar_purdueuser')
         self.u_pu.set_password('asdf')
         self.u_pu.save()
-        UserProfile.objects.create(name = self.u_pu.username, user = self.u_pu, purdueuser = True)
+        UserProfile.objects.create(user = self.u_pu, purdueuser = True)
 
         self.u_cp = User.objects.create(username='foobar_communitypartner')
         self.u_cp.set_password('asdf')
         self.u_cp.save()
-        UserProfile.objects.create(name = self.u_cp.username, user = self.u_cp, purdueuser = False)
+        UserProfile.objects.create(user = self.u_cp, purdueuser = False)
         #create group/org
         self.g=Group.objects.create(name="foobar_group")
         self.g.user_set.add(self.u_pu)
@@ -87,21 +87,21 @@ class UserTestCase(TestCase):
 
     def test_login(self):
         #Test for login failure
-        r = login_as(self,'invalid_user0','password')
-        self.assertEqual(r.status_code, 200)
-        self.assertTrue('error' in r.context)
+        response = login_as(self,'invalid_user0','password')
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue('error' in list(response.context['messages'])[0].tags)
 
         #Test successful login
-        r = login_as(self,self.u_pu.username,'asdf')
+        response = login_as(self,self.u_pu.username,'asdf')
         #check redirect
-        self.assertRedirects(r,reverse('user_dash'))
+        self.assertRedirects(response,reverse('user_dash'))
         #check logged in as user0
-        r = self.client.get(reverse('front_page'))
-        self.assertEqual(r.context['user'],self.u_pu)
+        response = self.client.get(reverse('front_page'))
+        self.assertEqual(response.context['user'],self.u_pu)
 
         #Test logout
-        r = logout(self)
-        self.assertNotEqual(r.context['user'],self.u_pu)
+        response = logout(self)
+        self.assertNotEqual(response.context['user'],self.u_pu)
 
     def test_user_create(self):
         #successful user creation
@@ -121,13 +121,13 @@ class UserTestCase(TestCase):
 
     def test_view_permissions(self):
         #verify user is redirected
-        r = self.client.get(reverse('user_dash'))
-        self.assertRedirects(r,'/login?next='+reverse('user_dash'))
+        response = self.client.get(reverse('user_dash'))
+        self.assertRedirects(response,'/login?next='+reverse('user_dash'))
         login_as(self,self.u_pu.username,'asdf')
         #verify user can view their own detail page
-        r = self.client.get(reverse('user_dash',))
-        self.assertFalse('error' in r.context)
-        self.assertTrue(r.status_code == 200)
+        response = self.client.get(reverse('user_dash',))
+        self.assertTrue(len(response.context['messages']) == 0)
+        self.assertTrue(response.status_code == 200)
 
 class JobTestCase(TestCase):
     #django calls this initialization function automatically
@@ -178,11 +178,11 @@ class JobTestCase(TestCase):
         #Login
         login_as(self,self.u_cp.username,'asdf')
         #check logged in as user0
-        r = self.client.get(reverse('front_page'))
-        self.assertEqual(r.context['user'],self.u_cp)
+        response = self.client.get(reverse('front_page'))
+        self.assertEqual(response.context['user'],self.u_cp)
 
         #Create a job
-        r = self.client.post(reverse('job_creation'),
+        response = self.client.post(reverse('job_creation'),
                              {
                                  'name':'interfacejob',
                                  'client_organization':'foo',
@@ -197,7 +197,7 @@ class JobTestCase(TestCase):
                                  'categories':self.cat.pk
                              }
                              ,follow=True)
-        self.assertEqual(r.status_code, 200)
+        self.assertEqual(response.status_code, 200)
 
         #check if job exists
         self.assertTrue(Job.objects.filter(name='interfacejob').first())
@@ -205,72 +205,72 @@ class JobTestCase(TestCase):
     #verify job_dash view
     def test_job_dash(self):
         login_as(self,self.u_cp.username,'asdf')
-        r = self.client.get(reverse('job_dash',kwargs={'job_id':self.j.id}))
-        self.assertFalse('error' in r.context)
-        self.assertTrue(r.status_code == 200)
-        self.assertTrue(self.j == r.context['job'])
+        response = self.client.get(reverse('job_dash',kwargs={'job_id':self.j.id}))
+        self.assertTrue(len(response.context['messages']) == 0)
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue(self.j == response.context['job'])
 
     #verify jobrequest_dash view
     def test_jobrequest_dash(self):
         jr = self.j2.request_organization(self.o)
 
         login_as(self,self.u_pu.username,'asdf')
-        r = self.client.get(reverse('jobrequest_dash',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
+        response = self.client.get(reverse('jobrequest_dash',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
         self.assertTrue(self.u_pu.has_perm('view_jobrequest',jr))
-        self.assertFalse('error' in r.context)
-        self.assertEqual(jr,r.context['jobrequest'])
+        self.assertTrue(len(response.context['messages']) == 0)
+        self.assertEqual(jr,response.context['jobrequest'])
         #test accept job
         logout(self)
 
         login_as(self,self.u_cp.username,'asdf')
-        r = self.client.get(reverse('jobrequest_dash',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
-        self.assertFalse('error' in r.context)
-        self.assertEqual(jr,r.context['jobrequest'])
+        response = self.client.get(reverse('jobrequest_dash',kwargs={'job_id':self.j2.id,'organization_id':self.o.id}))
+        self.assertTrue(len(response.context['messages']) == 0)
+        self.assertEqual(jr,response.context['jobrequest'])
 
     def test_jobrequest_accept_decline(self):
         jr = self.j2.request_organization(self.o)
         login_as(self,self.u_pu.username,'asdf')
         #test that a user cannot accept a jobrequest after it has been accepted/rejected
         jr.accept()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Accept Request"})
-        self.assertTrue('error' in response.context)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"accept"})
+        self.assertTrue('error' in list(response.context['messages'])[0].tags)
         jr.decline()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Accept Request"})
-        self.assertTrue('error' in response.context)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"accept"})
+        self.assertTrue('error' in list(response.context['messages'])[0].tags)
 
         #test that a user cannot reject a jobrequest after it has been accepted/rejected
         jr.accept()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Decline Request"})
-        self.assertTrue('error' in response.context)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"decline"})
+        self.assertTrue('error' in list(response.context['messages'])[0].tags)
         jr.decline()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Decline Request"})
-        self.assertTrue('error' in response.context)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"decline"})
+        self.assertTrue('error' in list(response.context['messages'])[0].tags)
 
         #test that a user can accept/reject a jobrequest when it is still pending
         jr.pend()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Accept Request"})
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"accept"})
         self.assertTrue(response.status_code==200)
         jr.pend()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Decline Request"})
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"decline"})
         self.assertTrue(response.status_code==200)
         logout(self)
 
         #test community user cannot accept/decline a jobrequest
         login_as(self,self.u_cp.username,'asdf')
         jr.pend()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Decline Request"})
-        self.assertTrue('error' in response.context)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"decline"})
+        self.assertTrue('error' in list(response.context['messages'])[0].tags)
         jr.pend()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"Accept Request"})
-        self.assertTrue('error' in response.context)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"accept"})
+        self.assertTrue('error' in list(response.context['messages'])[0].tags)
         logout(self)
     def test_jobrequest_confirm(self):
         jr = self.j2.request_organization(self.o)
         #make sure it fail to confirm as purdue user
         login_as(self,self.u_pu.username,'asdf')
         jr.confirm()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'confirm':"Confirm Request"})
-        self.assertTrue('error' in response.context)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"confirm"})
+        self.assertTrue('error' in list(response.context['messages'])[0].tags)
         logout(self)
 
         #check that it works for community user
@@ -278,14 +278,14 @@ class JobTestCase(TestCase):
         jr.confirmed = False
         jr.save()
         jr.confirm()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'confirm':"Confirm Request"})
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"confirm"})
         self.assertTrue(response.status_code==200)
 
         #check that it does not work to double confirm it
         jr.confirmed = True
         jr.confirm()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'confirm':"Confirm Request"})
-        self.assertTrue('error' in response.context)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"confirm"})
+        self.assertTrue('error' in list(response.context['messages'])[0].tags)
         logout(self)
 
 class OrganizationTestCase(TestCase):
@@ -298,7 +298,7 @@ class OrganizationTestCase(TestCase):
         self.u2 = User.objects.create(username='nonmember_user')
         self.u2.set_password('asdf')
         self.u2.save()
-        UserProfile.objects.create(name = self.u2.username, user = self.u2, purdueuser = True)
+        UserProfile.objects.create(user = self.u2, purdueuser = True)
 
     ### Backend Tests ###
 
@@ -348,9 +348,9 @@ class OrganizationTestCase(TestCase):
     #test organization_dash.html
     def test_organization_dash(self):
         login_as(self, self.u_pu.username, 'asdf')
-        r = self.client.get(reverse('organization_dash',kwargs={'organization_id':self.o.id}))
-        self.assertTrue(r.status_code == 200)
-        self.assertTrue(self.o == r.context['organization'])
+        response = self.client.get(reverse('organization_dash',kwargs={'organization_id':self.o.id}))
+        self.assertTrue(response.status_code == 200)
+        self.assertTrue(self.o == response.context['organization'])
 
     #test org creation
     def test_organization_create(self):
@@ -371,7 +371,7 @@ class OrganizationTestCase(TestCase):
                                          'categories': category,
                                          'icon':icon}
                                         )
-        self.assertTrue(response.status_code == 200)
+        self.assertTrue(response.status_code == 302)
         self.assertTrue(Organization.objects.get(name = 'test org'))
         org = Organization.objects.get(name = 'test org')
         response = self.client.get('/organization/{0}'.format(org.id))

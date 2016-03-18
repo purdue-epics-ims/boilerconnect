@@ -20,15 +20,15 @@
        <form action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id%}" method ="post">
            {%csrf_token%}
            <input type="hidden" name="jobrequest" value="{{jobrequest}}">
-           <input class="btn btn-success" type="submit" name="action" value="Accept Request">
-           <input class="btn btn-danger" type="submit" name="action" value="Decline Request">
+           <button class="btn btn-success" type="submit" name="action" value="accept">Accept Request</button>
+           <button class="btn btn-danger" type="submit" name="action" value="decline">Decline Request</button>
        </form>
    {%else%}
        {%if not jobrequest.confirmed and not perm_to_edit_jobrequest_state%}
        <form action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id%}" method ="post">
            {%csrf_token%}
            <input type="hidden" name="jobrequest" value="{{jobrequest}}">
-           <input class="btn btn-success" type="submit" name="confirm" value="Confirm Request">
+           <button class="btn btn-success" type="submit" name="action" value="confirm">Confirm Request</button>
        </form>
        {%endif%}
    {%endif%}
@@ -131,7 +131,7 @@
     <div class="form-group">
       <div class="col-lg-10 col-lg-offset-2">
         <button type="reset" class="btn btn-default">Cancel</button>
-        <button type="submit" class="btn btn-primary" name="comment">Submit</button>
+        <button type="submit" class="btn btn-primary" name="action" value="comment">Submit</button>
       </div>
     </div>
 </form>
