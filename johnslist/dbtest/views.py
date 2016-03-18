@@ -263,7 +263,6 @@ def user_create(request):
             login_auth(request, login_user)
             return redirect('user_dash')
 
-        #if forms are not valid 
         else:
             return render(request, 'dbtest/user_create.html', {'user_form':user_form,'profile_form':profile_form,})
 
