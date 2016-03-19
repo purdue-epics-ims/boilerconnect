@@ -342,21 +342,15 @@ def organization_settings(request, organization_id):
     categories_id = [category.pk for category in organization.categories.all()]
     #if the request was a GET
     if request.method == 'GET':
-        organization = Organization.objects.get(id=organization_id)
         modelform = OrganizationEditForm(instance=organization)
 
     elif request.method == 'POST':
-        organization = Organization.objects.get(id=organization_id)
         modelform = OrganizationEditForm(request.POST, instance=organization)
-        model_out = modelform.save(commit = False)
-
-        # modelform.actual_organization = organization
 
         #check modelform validity
         if modelform.is_valid() :
             #get modelform info
-            organization = modelform.save(commit = False)
-            organization.save()
+            organization = modelform.save()
 
             message = "Organization {0} has been modified.".format(organization.name)
             messages.add_message(request, messages.INFO, message)
@@ -389,14 +383,42 @@ def job_creation(request):
             messages.add_message(request, messages.INFO, message)
             return redirect('job_dash',job_id=job.id)
         else:
-            orgs = Organization.objects.filter(id__in = request.POST.getlist('organization'))
+            orgs_selected = [org.pk for org in Organization.objects.filter(id__in = request.POST.getlist('organization'))]
 
     #if the request was a GET
     else:
-        orgs = Organization.objects.all()
+        orgs_selected = []
         form = JobCreateForm()
 
-    return render(request, 'dbtest/job_creation.html', {'form':form,'orgs':orgs})
+    orgs= Organization.objects.all()
+    return render(request, 'dbtest/job_creation.html', {'form':form,'orgs':orgs,'orgs_selected':orgs_selected})
 
 def about(request):
     return render(request, 'dbtest/about.html')
+
+@login_required
+@user_is_type('communitypartner')
+def job_settings(request,job_id):
+    job = Job.objects.get(id=job_id)
+
+    #if the request was a GET
+    if request.method == 'GET':
+        orgs_selected = []
+        form = JobEditForm(instance=job)
+
+    elif request.method == 'POST':
+        form = JobEditForm(request.POST, instance=job)
+
+        #check form validity
+        if form.is_valid() :
+            #get form info
+            job = form.save()
+
+            message = "Job {0} has been modified.".format(job.name)
+            messages.add_message(request, messages.INFO, message)
+
+        else:
+            orgs_selected = [org.pk for org in Organization.objects.filter(id__in = request.POST.getlist('organization'))]
+
+    orgs= Organization.objects.all()
+    return render(request, 'dbtest/job_settings.html', {'form':form,'job' : job, 'orgs':orgs, 'orgs_selected':orgs_selected})

@@ -292,6 +292,15 @@ $('#org_results').find('.category').click(function(){
     filter()
 })
 
+//handle already selected orgs on pageload
+$(document).ready(function(){
+  {% for org_pk in orgs_selected %}
+    $('#org_results').find('[org_pk="'+{{org_pk}}+'"]').addClass("hidden")
+    $('#org_selected').find('[org_pk="'+{{org_pk}}+'"]').removeClass("hidden")
+  {% endfor %}
+
+})
+
 //filter org_results list by name and category
 function filter(){
     console.log('keypress')
