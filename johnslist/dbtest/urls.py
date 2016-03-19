@@ -19,11 +19,10 @@ urlpatterns = [
     url(r'^job_creation$', views.job_creation,name='job_creation'),
     #misc urls
     url(r'^$',views.front_page,name='front_page'),
-	url(r'^search/?$',views.search,name='search'),
+    url(r'^search/?$',views.search,name='search'),
     url(r'^login/?$', views.login,name='login'),
-	url(r'^logout/?$', logout,{'template_name':'dbtest/logout.html'},name='logout'),
+    url(r'^logout/?$', logout,{'template_name':'dbtest/logout.html'},name='logout'),
     url(r'^about/?$', views.about, name='about'),
-    url(r'^notifications/?$', views.notifications, name='notifications'),
     url(r'^quicksearch/?$', views.quicksearch,name='quicksearch'),
 ]
 

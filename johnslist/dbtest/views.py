@@ -36,7 +36,7 @@ def login(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(username=username, password=password)
-        if user is not None and user.is_active:
+        if user != None and user.is_active:
             auth_login(request, user)
             return redirect('user_dash')
         else:
@@ -93,16 +93,6 @@ def job_dash(request,job_id):
                    'jobrequests':jobrequests,
                    'show_dialog':show_dialog
                   })
-
-#a list of a user's notifications
-def notifications(request):
-    read_notifications = list(request.user.notifications.read())
-    unread_notifications = list(request.user.notifications.unread())
-    request.user.notifications.mark_all_as_read()
-    return render(request, 'dbtest/notifications.html',
-                  {'unread_notifications' : unread_notifications,
-                   'read_notifications':read_notifications
-                   })
 
 #get detailed organization information - email, phone #, users in Org, admins, etc.
 def organization_detail(request,organization_id):
@@ -278,7 +268,6 @@ def user_create(request):
             login_auth(request, login_user)
             return redirect('user_dash')
 
-        #if forms are not valid 
         else:
             return render(request, 'dbtest/user_create.html', {'user_form':user_form,'profile_form':profile_form,})
 
