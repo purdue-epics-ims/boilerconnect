@@ -38,7 +38,7 @@ def login(request):
         user = authenticate(username=username, password=password)
         if user != None and user.is_active:
             auth_login(request, user)
-            return redirect('user_dash')
+            return HttpResponseRedirect(request.POST.get('next'))
         else:
             message = "There was a problem with your login.  Please try again." 
             messages.add_message(request, messages.ERROR, message)
