@@ -189,11 +189,13 @@ def jobrequest_dash(request,job_id,organization_id):
                     recipient = job.creator
                 else:
                     recipient = jobrequest.organization.group
+                url = reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id})
                 notify.send(request.user,
                             verb=verb,
                             action_object=action_object,
                             recipient=recipient,
-                            url=reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id}) )
+                            url=url)
+                return HttpResponseRedirect(url)
             else:
                 message = "The comment cannot be empty."
                 messages.add_message(request, messages.ERROR, message)
