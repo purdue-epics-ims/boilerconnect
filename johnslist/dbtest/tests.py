@@ -3,6 +3,7 @@ from django.test import TestCase
 from django.core.files import File
 from django.core.urlresolvers import reverse
 from johnslist.settings import PIC_POPULATE_DIR
+from dbtest.forms import*
 #for login test
 from django.contrib.auth.models import AnonymousUser
 
@@ -286,6 +287,16 @@ class JobTestCase(TestCase):
         jr.confirm()
         response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"confirm"})
         self.assertTrue('error' in list(response.context['messages'])[0].tags)
+        logout(self)
+    def test_comments(self):
+        jr = self.j2.request_organization(self.o)
+        login_as(self,self.u_pu.username,'asdf')
+        form_data = {'text_comment': 'test case'}
+        form = CommentCreateForm(data = form_data)
+        self.assertTrue(form.is_valid())
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"comment",'text_comment':'test case'})
+        self.assertTrue(response.status_code==302)
+        self.assertTrue(jr.comment_set.get(text_comment='test case'))
         logout(self)
 
 class OrganizationTestCase(TestCase):
