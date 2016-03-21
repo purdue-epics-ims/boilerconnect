@@ -112,10 +112,10 @@ class UserTestCase(TestCase):
         self.assertEqual(0,len(User.objects.filter(username='user_fail')))
 
     def test_user_edit(self):
-        response = self.client.post(reverse('user_edit'))
+        response = self.client.post(reverse('user_settings'))
         self.assertTrue(response.status_code == 302)
         login_as(self, self.u_pu.username, 'asdf')
-        response = self.client.post(reverse('user_edit'))
+        response = self.client.post(reverse('user_settings'))
         self.assertTrue(response.status_code == 200)
         #change the users username, then try to log in again
 
