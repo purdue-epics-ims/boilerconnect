@@ -314,7 +314,7 @@ def organization_create(request):
     return render(request, 'dbtest/organization_create.html', {'form':form,'show_dialog':show_dialog})
 
 @login_required
-def user_edit(request):
+def user_settings(request):
         #if this request was a POST and not a GET
     if request.method == 'POST':
         form = UserCreationForm(request.POST, instance=request.user)
@@ -330,6 +330,12 @@ def user_edit(request):
 
             message = "Your account has been modified."
             messages.add_message(request, messages.INFO, message)
+
+            #logging the user back in
+            username_auth = request.POST['username']
+            password_auth = request.POST['password1']
+            login_user = authenticate(username=username_auth, password=password_auth)
+            login_auth(request, login_user)
             return redirect('user_dash')
 
     #if the request was a GET
@@ -339,7 +345,7 @@ def user_edit(request):
         else:
             form = UserCreationForm()
 
-    return render(request, 'dbtest/user_edit.html', {'form':form})
+    return render(request, 'dbtest/user_settings.html', {'form':form})
 
 @login_required
 @user_is_type('purdueuser')
