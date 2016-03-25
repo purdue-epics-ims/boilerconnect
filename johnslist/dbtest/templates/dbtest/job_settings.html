@@ -100,54 +100,7 @@
 
   </div>
 
-                    <div class="row org_search">
-                        <div class="col-sm-6">
-                        <h2>Search Organizations</h2>
-                        <div class="form-group">
-                        <label class="control-label" for="search">Filter Purdue Groups by name or tag</label>
-                        <input id="search" class="form-control input-lg" type="text" >
-                        </div>
-                            <div class="org_list list-group" id="org_results">
-                                {% for org in orgs %}
-                                <div class="org_item list-group-item" org_pk="{{org.id}}">
-                                    <h4 class="org_name list-group-item-heading">
-                                    <a href="{% url 'organization_detail' org.id %}">
-                                    {{org.name}}
-                                    </a>
-                                    <a class="org_button btn btn-success pull-right">Add</a>
-                                    </h4>
-                                    <p>
-                                    {% for cat in org.categories.all %}
-                                    <span class="category label label-default">{{ cat }}</span>
-                                    {% endfor %}
-                                    </p>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-
-                        <div class="col-sm-6">
-                            <h2>Selected Organizations</h2>
-                            <div class="org_list list-group" id="org_selected">
-                                {% for org in orgs %}
-                                <div class="org_item list-group-item hidden" org_pk="{{org.id}}">
-                                    <h4 class="org_name list-group-item-heading">
-                                    <a href="{% url 'organization_detail' org.id %}">
-                                    {{org.name}}
-                                    </a>
-                                    <a class="org_button btn btn-danger pull-right">Remove</a>
-                                    </h4>
-                                    <p>
-                                    {% for cat in org.categories.all %}
-                                    <span class="category label label-default">{{ cat }}</span>
-                                    {% endfor %}
-                                    </p>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-
-                    </div>
+  {% widget "widgets:org_search" %}
 
   <div class="row">
     <div class="col-sm-12 col-sm-offset-5">

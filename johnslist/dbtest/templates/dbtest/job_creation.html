@@ -172,54 +172,9 @@
                     If an organization suits your needs, click <b> Add </b>.
                     You can add as many organizations as you want.
                     Once you are done, click <b> Submit Job </b>.
-                    <div class="row org_search">
-                        <div class="col-sm-6">
-                        <h2>Search Organizations</h2>
-                        <div class="form-group">
-                        <label class="control-label" for="search">Filter Purdue Groups by name or tag</label>
-                        <input id="search" class="form-control input-lg" type="text" >
-                        </div>
-                            <div class="org_list list-group" id="org_results">
-                                {% for org in deselected_orgs %}
-                                <div class="org_item list-group-item" onclick="select_org(this);" org_pk="{{org.id}}">
-                                    <h4 class="org_name list-group-item-heading">
-                                    <a href="{% url 'organization_detail' org.id %}">
-                                    {{org.name}}
-                                    </a>
-                                    <a class="org_button btn btn-success pull-right">Add</a>
-                                    </h4>
-                                    <p>
-                                    {% for cat in org.categories.all %}
-                                    <span class="category label label-default">{{ cat }}</span>
-                                    {% endfor %}
-                                    </p>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
 
-                        <div class="col-sm-6">
-                            <h2>Selected Organizations</h2>
-                            <div class="org_list list-group" id="org_selected">
-                                {% for org in selected_orgs %}
-                                <div class="org_item list-group-item hidden" org_pk="{{org.id}}">
-                                    <h4 class="org_name list-group-item-heading">
-                                    <a href="{% url 'organization_detail' org.id %}">
-                                    {{org.name}}
-                                    </a>
-                                    <a class="org_button btn btn-danger pull-right">Remove</a>
-                                    </h4>
-                                    <p>
-                                    {% for cat in org.categories.all %}
-                                    <span class="category label label-default">{{ cat }}</span>
-                                    {% endfor %}
-                                    </p>
-                                </div>
-                                {% endfor %}
-                            </div>
-                        </div>
+                    {% widget "widgets:org_search" %}
 
-                    </div>
                     <div class="button_group">
                         <input type="submit" class="btn btn-primary" value="Submit Job" onclick="submitFunction()">
                     </div>
@@ -234,135 +189,11 @@
     </div>
 </div>
 
-<script>
-
-<!------------------ tab navigation --------------------->
-
- function update_visibility(active_tab){
-     console.log('active:',active_tab.attr('href'));
-     if (active_tab.attr('href') == '#tutorial'){
-         $('.prev_tab').hide();
-         $('.next_tab').show();
-     }
-     else if (active_tab.attr('href') == '#orgs'){
-         $('.next_tab').hide();
-         $('.prev_tab').show();
-     }
-     else {
-         $('.next_tab').show();
-         $('.prev_tab').show();
-     }
- }
-
- $('.nav-tabs').click(function(event){
-     active_tab = $(event.target);
-     console.log('hi2');
-     update_visibility(active_tab);
- });
-
-$('.next_tab').click(function(){
-     active_tab = $('.nav-tabs > .active').next('li').find('a');
-     active_tab.trigger('click');
-     console.log('active_n:',active_tab.attr('href'));
-     update_visibility(active_tab);
-     }
-);
-
-$('.prev_tab').click(function(){
-     active_tab = $('.nav-tabs > .active').prev('li').find('a');
-     active_tab.trigger('click');
-     console.log('active_p:',active_tab.attr('href'));
-     update_visibility(active_tab);
-     }
-);
-
-<!------------------ organization searching ---------------->
- //select an org
-
-function select_org(elem){
-     $(elem).attr("onclick","deselect_org(this);")
-
-     button = $(elem).find(".org_button")
-     $(button).removeClass("btn-success")
-     $(button).addClass("btn-danger")
-     $(button).html("Remove")
-
-     $(elem).appendTo("#org_selected")
-}
-
-function deselect_org(elem){
-     $(elem).attr("onclick","select_org(this);")
-
-     button = $(elem).find(".org_button")
-     $(button).removeClass("btn-danger")
-     $(button).addClass("btn-success")
-     $(button).html("Add")
-
-     $(elem).appendTo("#org_results")
-}
-
-
-//handle tag click action
-$('#org_results').find('.category').click(function(){
-    $('#search').val($(this).text())
-    filter()
-})
-
-//handle already selected orgs on pageload
-$(document).ready(function(){
-  {% for org_pk in orgs_selected %}
-    $('#org_results').find('[org_pk="'+{{org_pk}}+'"]').addClass("hidden")
-    $('#org_selected').find('[org_pk="'+{{org_pk}}+'"]').removeClass("hidden")
-  {% endfor %}
-
-})
-
-//filter org_results list by name and category
-function filter(){
-    console.log('keypress')
-    var search_text = $('#search').val().toLowerCase();
-
-    $('#org_results').find('.org_item').each(function(i,org_item){
-        var show = 0;
-        //check for match in each category, highlight match
-        console.log($(org_item).find('.organization'))
-        $(org_item).find('.category').each(function(i,cat_item){
-            if (search_text && $(cat_item).text().search(search_text) >=0) {
-                show = 1;
-                $(cat_item).removeClass('label-default')
-                $(cat_item).addClass('label-warning')
-            }
-            else {
-                $(cat_item).removeClass('label-warning')
-                $(cat_item).addClass('label-default')
-            }
-        })
-
-        //check for match in name
-        var name_str = $(org_item).children('.org_name').text().toLowerCase();
-        if (name_str.search(search_text) >= 0){
-            show = 1
-        }
-
-        //hide or show
-        if (show) {
-            $(org_item).show()
-        }
-        else {
-            $(org_item).hide()
-        }
-    })
-}
-
-//filter for every keypress
-$('#search').keyup(function() {
-    filter()
-});
 
 <!------------------ submit button function ---------------->
-function submitFunction() {
-    $('#id_organization').val($("#org_selected").children(':not(.hidden)').map(function(){ return $(this).attr('org_pk') }))
-}
-
+<script>
+  function submitFunction() {
+      $('#id_organization').val($("#org_selected").children(':not(.hidden)').map(function(){ return $(this).attr('org_pk') }))
+  }
 </script>
 {% endblock content %}

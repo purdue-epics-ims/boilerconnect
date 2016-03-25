@@ -417,22 +417,27 @@ def job_settings(request,job_id):
 
     #if the request was a GET
     if request.method == 'GET':
-        orgs_selected = []
         form = JobEditForm(instance=job)
+        selected_orgs = job.organization.all()
+        deselected_orgs = Organization.objects.exclude(id__in = [org.id for org in selected_orgs])
 
     elif request.method == 'POST':
         form = JobEditForm(request.POST, instance=job)
+        selected_orgs = Organization.objects.filter(id__in = request.POST.getlist('organization'))
 
         #check form validity
         if form.is_valid() :
             #get form info
             job = form.save()
 
+            #add new orgs/remove removed orgs here
+
             message = "Job {0} has been modified.".format(job.name)
             messages.add_message(request, messages.INFO, message)
 
         else:
-            orgs_selected = [org.pk for org in Organization.objects.filter(id__in = request.POST.getlist('organization'))]
+            deselected_orgs = Organization.objects.exclude(pk__in = request.POST.getlist('organization'))
 
-    orgs= Organization.objects.all()
-    return render(request, 'dbtest/job_settings.html', {'form':form,'job' : job, 'orgs':orgs, 'orgs_selected':orgs_selected})
+    print selected_orgs
+    print deselected_orgs
+    return render(request, 'dbtest/job_settings.html', {'form':form,'job' : job, 'selected_orgs':selected_orgs, 'deselected_orgs':deselected_orgs})

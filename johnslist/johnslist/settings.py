@@ -37,7 +37,8 @@ INSTALLED_APPS = (
     'easy_thumbnails',
     'guardian',
     'notifications',
-    'widget_tweaks'
+    'widget_tweaks',
+    'sniplates',
 )
 
 try:
