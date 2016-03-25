@@ -383,6 +383,7 @@ def job_creation(request):
     #if request was POST
     if request.method == 'POST':
         form = JobCreateForm(request.POST)
+        selected_orgs = request.POST.getlist('organization')
         #check form validity
         if form.is_valid():
             job = form.save(commit=False)
@@ -390,7 +391,7 @@ def job_creation(request):
             job.save()
 
             #get the list of orgs to request from the form
-            for org_id in request.POST.getlist('organization'):
+            for org_id in selected_orgs:
                 organization = Organization.objects.get(id = org_id)
                 jr = JobRequest.objects.create(organization=organization, job = job)
                 link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org_id}))
@@ -402,14 +403,15 @@ def job_creation(request):
             messages.add_message(request, messages.INFO, message)
             return redirect('job_dash',job_id=job.id)
         else:
-            orgs = Organization.objects.filter(id__in = request.POST.getlist('organization'))
+            deselected_orgs = Organization.objects.filter(id__in = request.POST.getlist('organization'))
 
     #if the request was a GET
     else:
-        orgs = Organization.objects.all()
+        selected_orgs = []
+        deselected_orgs = Organization.objects.all()
         form = JobCreateForm()
 
-    return render(request, 'dbtest/job_creation.html', {'form':form,'orgs':orgs})
+    return render(request, 'dbtest/job_creation.html', {'form':form,'selected_orgs':selected_orgs,'deselected_orgs':deselected_orgs})
 
 def about(request):
     return render(request, 'dbtest/about.html')

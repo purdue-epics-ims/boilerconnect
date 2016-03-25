@@ -28,12 +28,12 @@
                 <li class=""><a href="#orgs" data-toggle="tab" aria-expanded="true">Organizations selection</a></li>
             </ul>
 
-            <div style="text-align:right;">
-            <a id="prev_tab" style="display:none;" class="btn btn-primary" ">Previous</a>
-            <a id="next_tab" class="btn btn-primary" ">Next</a>
+            <div class="button_group">
+            <a style="display:none;" class="prev_tab btn btn-primary" ">Previous</a>
+            <a class="next_tab btn btn-primary">Next</a>
             </div>
 
-            <div id="myTabContent" class="tab-content">
+            <div class="row tab-content">
 
                 <!-- ############## Explanation Tab ############# -->
 
@@ -71,7 +71,7 @@
                         <i class="fa fa-bullhorn"></i>
                         </span>
                         Name of the job.
-                        {% render_field form.name class+="form-control" placeholder="Build a hotdog stand" %}
+                        {% render_field form.name class+="form-control" placeholder="eg. Irrigation System" %}
                     </div>
                 </div>
 
@@ -82,7 +82,7 @@
                         <i class="fa fa-coffee"></i>
                         </span>
                         What organization or group are you representing?
-                        {% render_field form.client_organization class+="form-control" placeholder="eg. Jimbobs Hotdog Joint" %}
+                        {% render_field form.client_organization class+="form-control" placeholder="eg. Lafayette City Farms" %}
                     </div>
                 </div>
 
@@ -92,7 +92,7 @@
                         <i class="fa fa-coffee"></i>
                         </span>
                         Briefly describe the deliverables that you expect as a result of this project.
-                        {% render_field form.deliverable class+="form-control" placeholder="A dozen savory, roasted weiners" %}
+                        {% render_field form.deliverable class+="form-control" placeholder="eg. An pump system to handle Spring flooding." %}
                     </div>
                 </div>
 
@@ -125,7 +125,7 @@
                         <i class="fa fa-coffee"></i>
                         </span>
                         List stakeholders and anyone who might be affected by this work.  Give a description if necessary.
-                        {% render_field form.stakeholders class+="form-control" placeholder="Jimbobs Hotdog Joint customers" %}
+                        {% render_field form.stakeholders class+="form-control" placeholder="eg. Lafayette City Farms, Lafayette farmers" %}
                     </div>
                   </div>
 
@@ -180,8 +180,8 @@
                         <input id="search" class="form-control input-lg" type="text" >
                         </div>
                             <div class="org_list list-group" id="org_results">
-                                {% for org in orgs %}
-                                <div class="org_item list-group-item" org_pk="{{org.id}}">
+                                {% for org in deselected_orgs %}
+                                <div class="org_item list-group-item" onclick="select_org(this);" org_pk="{{org.id}}">
                                     <h4 class="org_name list-group-item-heading">
                                     <a href="{% url 'organization_detail' org.id %}">
                                     {{org.name}}
@@ -201,7 +201,7 @@
                         <div class="col-sm-6">
                             <h2>Selected Organizations</h2>
                             <div class="org_list list-group" id="org_selected">
-                                {% for org in orgs %}
+                                {% for org in selected_orgs %}
                                 <div class="org_item list-group-item hidden" org_pk="{{org.id}}">
                                     <h4 class="org_name list-group-item-heading">
                                     <a href="{% url 'organization_detail' org.id %}">
@@ -220,10 +220,15 @@
                         </div>
 
                     </div>
-                    <div class="row" style="text-align:right;">
+                    <div class="button_group">
                         <input type="submit" class="btn btn-primary" value="Submit Job" onclick="submitFunction()">
                     </div>
                 </div>
+            </div>
+
+            <div class="button_group">
+            <a style="display:none;" class="prev_tab btn btn-primary" ">Previous</a>
+            <a class="next_tab btn btn-primary">Next</a>
             </div>
         </form>
     </div>
@@ -236,16 +241,16 @@
  function update_visibility(active_tab){
      console.log('active:',active_tab.attr('href'));
      if (active_tab.attr('href') == '#tutorial'){
-         $('#prev_tab').hide();
-         $('#next_tab').show();
+         $('.prev_tab').hide();
+         $('.next_tab').show();
      }
      else if (active_tab.attr('href') == '#orgs'){
-         $('#next_tab').hide();
-         $('#prev_tab').show();
+         $('.next_tab').hide();
+         $('.prev_tab').show();
      }
      else {
-         $('#next_tab').show();
-         $('#prev_tab').show();
+         $('.next_tab').show();
+         $('.prev_tab').show();
      }
  }
 
@@ -255,7 +260,7 @@
      update_visibility(active_tab);
  });
 
-$('#next_tab').click(function(){
+$('.next_tab').click(function(){
      active_tab = $('.nav-tabs > .active').next('li').find('a');
      active_tab.trigger('click');
      console.log('active_n:',active_tab.attr('href'));
@@ -263,7 +268,7 @@ $('#next_tab').click(function(){
      }
 );
 
-$('#prev_tab').click(function(){
+$('.prev_tab').click(function(){
      active_tab = $('.nav-tabs > .active').prev('li').find('a');
      active_tab.trigger('click');
      console.log('active_p:',active_tab.attr('href'));
@@ -272,19 +277,30 @@ $('#prev_tab').click(function(){
 );
 
 <!------------------ organization searching ---------------->
-//select an org
-$('#org_results').find('.org_item').find('.org_button').click(function(){
-    var org_pk = $(this).closest('.org_item').attr("org_pk")
-    $('#org_results').find('[org_pk="'+org_pk+'"]').addClass("hidden")
-    $('#org_selected').find('[org_pk="'+org_pk+'"]').removeClass("hidden")
-})
+ //select an org
 
-//deslect an org
-$('#org_selected').find('.org_item').find('.org_button').click(function(){
-    var org_pk = $(this).closest('.org_item').attr("org_pk")
-    $('#org_results').find('[org_pk="'+org_pk+'"]').removeClass("hidden")
-    $('#org_selected').find('[org_pk="'+org_pk+'"]').addClass("hidden")
-})
+function select_org(elem){
+     $(elem).attr("onclick","deselect_org(this);")
+
+     button = $(elem).find(".org_button")
+     $(button).removeClass("btn-success")
+     $(button).addClass("btn-danger")
+     $(button).html("Remove")
+
+     $(elem).appendTo("#org_selected")
+}
+
+function deselect_org(elem){
+     $(elem).attr("onclick","select_org(this);")
+
+     button = $(elem).find(".org_button")
+     $(button).removeClass("btn-danger")
+     $(button).addClass("btn-success")
+     $(button).html("Add")
+
+     $(elem).appendTo("#org_results")
+}
+
 
 //handle tag click action
 $('#org_results').find('.category').click(function(){
