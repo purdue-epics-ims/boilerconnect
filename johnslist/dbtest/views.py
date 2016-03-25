@@ -377,7 +377,7 @@ def job_creation(request):
     #if request was POST
     if request.method == 'POST':
         form = JobCreateForm(request.POST)
-        selected_orgs = request.POST.getlist('organization')
+        selected_orgs = Organization.objects.filter(pk__in = request.POST.getlist('organization'))
         #check form validity
         if form.is_valid():
             job = form.save(commit=False)
@@ -397,7 +397,7 @@ def job_creation(request):
             messages.add_message(request, messages.INFO, message)
             return redirect('job_dash',job_id=job.id)
         else:
-            deselected_orgs = Organization.objects.filter(id__in = request.POST.getlist('organization'))
+            deselected_orgs = Organization.objects.exclude(pk__in = request.POST.getlist('organization'))
 
     #if the request was a GET
     else:
@@ -405,6 +405,8 @@ def job_creation(request):
         deselected_orgs = Organization.objects.all()
         form = JobCreateForm()
 
+    print selected_orgs
+    print deselected_orgs
     return render(request, 'dbtest/job_creation.html', {'form':form,'selected_orgs':selected_orgs,'deselected_orgs':deselected_orgs})
 
 def about(request):
@@ -419,11 +421,11 @@ def job_settings(request,job_id):
     if request.method == 'GET':
         form = JobEditForm(instance=job)
         selected_orgs = job.organization.all()
-        deselected_orgs = Organization.objects.exclude(id__in = [org.id for org in selected_orgs])
+        deselected_orgs = Organization.objects.exclude(pk__in = [org.pk for org in selected_orgs])
 
     elif request.method == 'POST':
         form = JobEditForm(request.POST, instance=job)
-        selected_orgs = Organization.objects.filter(id__in = request.POST.getlist('organization'))
+        selected_orgs = Organization.objects.filter(pk__in = request.POST.getlist('organization'))
 
         #check form validity
         if form.is_valid() :

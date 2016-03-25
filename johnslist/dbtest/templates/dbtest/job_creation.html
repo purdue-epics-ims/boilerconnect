@@ -2,6 +2,8 @@
 {% load staticfiles %}
 {% load guardian_tags %}
 {% load widget_tweaks %}
+{% load sniplates %}
+{% load_widgets widgets="dbtest/widgets.html" %}
 
 {% block navbar %}
 <div class="navbar navbar-inverse navbar-fixed-top">
@@ -190,10 +192,48 @@
 </div>
 
 
-<!------------------ submit button function ---------------->
 <script>
-  function submitFunction() {
-      $('#id_organization').val($("#org_selected").children(':not(.hidden)').map(function(){ return $(this).attr('org_pk') }))
-  }
+//------------------ tab navigation ---------------------
+
+function update_visibility(active_tab){
+    console.log('active:',active_tab.attr('href'));
+    if (active_tab.attr('href') == '#tutorial'){
+        $('.prev_tab').hide();
+        $('.next_tab').show();
+    }
+    else if (active_tab.attr('href') == '#orgs'){
+        $('.next_tab').hide();
+        $('.prev_tab').show();
+    }
+    else {
+        $('.next_tab').show();
+        $('.prev_tab').show();
+    }
+}
+
+$('.nav-tabs').click(function(event){
+    active_tab = $(event.target);
+    console.log('hi2');
+    update_visibility(active_tab);
+});
+
+$('.next_tab').click(function(){
+    active_tab = $('.nav-tabs > .active').next('li').find('a');
+    active_tab.trigger('click');
+    console.log('active_n:',active_tab.attr('href'));
+    update_visibility(active_tab);
+});
+
+$('.prev_tab').click(function(){
+    active_tab = $('.nav-tabs > .active').prev('li').find('a');
+    active_tab.trigger('click');
+    console.log('active_p:',active_tab.attr('href'));
+    update_visibility(active_tab);
+});
+
+//------------------ submit button function ----------------
+function submitFunction() {
+    $('#id_organization').val($("#org_selected").children(':not(.hidden)').map(function(){ return $(this).attr('org_pk') }))
+}
 </script>
 {% endblock content %}
