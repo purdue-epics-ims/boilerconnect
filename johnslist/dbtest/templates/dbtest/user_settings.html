@@ -2,19 +2,22 @@
 
 {% block content %}
 
+<div class="jumbotron">
   <center>
-  <h3>{{user.username}} <small> Settings </small>
-    </h3>
-    </center>
+    <h3>{{ user.username }} Settings</h3>
+  </center>
 
+  <a href="{% url 'user_dash' %}" class="pull-right"><button class="btn btn-info">User Dashboard</button></a>
+
+</div>
 
   {% if username %}
   <b>Welcome {{ username }}.  Please check your email for a confirmation message.</b>
   {% else %}
-  <form action="{% url 'user_edit' %}" method="post">
+  <form action="{% url 'user_settings' %}" method="post">
 
     {% csrf_token %}
-    <div class="input-group">
+    <div class="input-group" style="display:none;">
       <span class="input-group-addon" id="addon-e,">
         <div class="glyphicon glyphicon-user"></div>
       </span>

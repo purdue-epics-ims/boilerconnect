@@ -38,7 +38,12 @@ def login(request):
         user = authenticate(username=username, password=password)
         if user != None and user.is_active:
             auth_login(request, user)
-            return redirect('user_dash')
+            #redirect users to page they originally requested
+            next = request.POST.get('next')
+            if next:
+                return HttpResponseRedirect(request.POST.get('next'))
+            else:
+                return redirect('user_dash')
         else:
             message = "There was a problem with your login.  Please try again." 
             messages.add_message(request, messages.ERROR, message)
@@ -189,11 +194,13 @@ def jobrequest_dash(request,job_id,organization_id):
                     recipient = job.creator
                 else:
                     recipient = jobrequest.organization.group
+                url = reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id})
                 notify.send(request.user,
                             verb=verb,
                             action_object=action_object,
                             recipient=recipient,
-                            url=reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id}) )
+                            url=url)
+                return HttpResponseRedirect(url)
             else:
                 message = "The comment cannot be empty."
                 messages.add_message(request, messages.ERROR, message)
@@ -307,7 +314,7 @@ def organization_create(request):
     return render(request, 'dbtest/organization_create.html', {'form':form,'show_dialog':show_dialog})
 
 @login_required
-def user_edit(request):
+def user_settings(request):
         #if this request was a POST and not a GET
     if request.method == 'POST':
         form = UserCreationForm(request.POST, instance=request.user)
@@ -323,6 +330,12 @@ def user_edit(request):
 
             message = "Your account has been modified."
             messages.add_message(request, messages.INFO, message)
+
+            #logging the user back in
+            username_auth = request.POST['username']
+            password_auth = request.POST['password1']
+            login_user = authenticate(username=username_auth, password=password_auth)
+            login_auth(request, login_user)
             return redirect('user_dash')
 
     #if the request was a GET
@@ -332,7 +345,7 @@ def user_edit(request):
         else:
             form = UserCreationForm()
 
-    return render(request, 'dbtest/user_edit.html', {'form':form})
+    return render(request, 'dbtest/user_settings.html', {'form':form})
 
 @login_required
 @user_is_type('purdueuser')
@@ -364,6 +377,7 @@ def job_creation(request):
     #if request was POST
     if request.method == 'POST':
         form = JobCreateForm(request.POST)
+        selected_orgs = request.POST.getlist('organization')
         #check form validity
         if form.is_valid():
             job = form.save(commit=False)
@@ -371,7 +385,7 @@ def job_creation(request):
             job.save()
 
             #get the list of orgs to request from the form
-            for org_id in request.POST.getlist('organization'):
+            for org_id in selected_orgs:
                 organization = Organization.objects.get(id = org_id)
                 jr = JobRequest.objects.create(organization=organization, job = job)
                 link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org_id}))
@@ -383,15 +397,15 @@ def job_creation(request):
             messages.add_message(request, messages.INFO, message)
             return redirect('job_dash',job_id=job.id)
         else:
-            orgs_selected = [org.pk for org in Organization.objects.filter(id__in = request.POST.getlist('organization'))]
+            deselected_orgs = Organization.objects.filter(id__in = request.POST.getlist('organization'))
 
     #if the request was a GET
     else:
-        orgs_selected = []
+        selected_orgs = []
+        deselected_orgs = Organization.objects.all()
         form = JobCreateForm()
 
-    orgs= Organization.objects.all()
-    return render(request, 'dbtest/job_creation.html', {'form':form,'orgs':orgs,'orgs_selected':orgs_selected})
+    return render(request, 'dbtest/job_creation.html', {'form':form,'selected_orgs':selected_orgs,'deselected_orgs':deselected_orgs})
 
 def about(request):
     return render(request, 'dbtest/about.html')

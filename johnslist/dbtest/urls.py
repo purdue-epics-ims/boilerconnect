@@ -7,7 +7,7 @@ urlpatterns = [
     url(r'^user/?$', views.user_dash,name='user_dash'),
     url(r'^user/create/?$', views.user_create,name='user_create'),
     url(r'^user/(?P<user_id>[0-9]+)/user_membership/?$', views.user_membership,name='user_membership'),
-    url(r'^user/edit/?$', views.user_edit,name='user_edit'),
+    url(r'^user/edit/?$', views.user_settings,name='user_settings'),
     #organization urls
     url(r'^organization/(?P<organization_id>[0-9]+)/dash/?$', views.organization_dash,name='organization_dash'),
     url(r'^organization/(?P<organization_id>[0-9]+)/?$', views.organization_detail,name='organization_detail'),
