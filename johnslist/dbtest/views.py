@@ -81,6 +81,7 @@ def user_dash(request):
                      })
 
 #display job information, show jobrequests and their current state
+@login_required
 @user_is_type('communitypartner')
 @user_has_perm('view_job')
 def job_dash(request,job_id):
@@ -112,6 +113,7 @@ def organization_detail(request,organization_id):
                  })
 
 #display jobs and members of an organization
+@login_required
 @user_is_type('purdueuser')
 @user_has_perm('view_organization')
 def organization_dash(request,organization_id):
@@ -130,6 +132,7 @@ def organization_dash(request,organization_id):
                   })
 
 #get detailed info about a jobrequest
+@login_required
 @user_has_perm('view_jobrequest')
 def jobrequest_dash(request,job_id,organization_id):
     #If this is the first time the user has visited this page, show a dialog
@@ -241,6 +244,7 @@ def search(request):
             search_result = Organization.objects.filter(name__icontains=search)
     return render(request,'dbtest/search.html',{'search_result': search_result})
 
+@login_required
 @user_has_perm('view_user')
 @user_is_type('purdueuser')
 def user_membership(request,user_id):
