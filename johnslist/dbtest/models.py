@@ -86,7 +86,7 @@ class Job(models.Model):
     duedate = models.DateTimeField('Date Due') #when Job is due for completion
     stakeholders = models.TextField('Stakeholders') #all persons who may be affected by project
     tech_specs = models.TextField('Technical Specifications', blank = True) #important technical requirements
-    budget = models.TextField('Budget') #budget estimate
+    budget = models.CharField('Budget', max_length=64) #budget estimate
     attachments = models.FileField(upload_to='job', blank = True) #file attachments
     creator = models.ForeignKey(User,related_name = 'jobs')  # User -o= Job
     organization = models.ManyToManyField(Organization, through = 'JobRequest')

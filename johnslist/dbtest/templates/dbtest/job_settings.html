@@ -1,0 +1,117 @@
+{% extends "dbtest/base.html" %}
+{% load widget_tweaks %}
+{% load sniplates %}
+{% load_widgets widgets="dbtest/widgets.html" %}
+
+{% block content %}
+
+<div class="jumbotron">
+  <center>
+    <h3>{{ job.name }}</h3>
+  </center>
+
+  <a href="{% url 'job_dash' job.id %}" class="pull-right"><button class="btn btn-info">Job Dashboard</button></a>
+</div>
+
+<form action="{% url 'job_settings' job.id %}" method="post">
+
+  {% csrf_token %}
+
+  <div class="row">
+
+    <div class="col-sm-6">
+
+      Name
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-bullhorn"></i>
+        </span>
+        {% render_field form.name class+="form-control" %}
+      </div>
+
+      Client Organization
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-coffee"></i>
+        </span>
+        {% render_field form.client_organization class+="form-control" %}
+      </div>
+
+      Deliverable
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-check"></i>
+        </span>
+        {% render_field form.deliverable class+="form-control" %}
+      </div>
+
+      Description
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-coffee"></i>
+        </span>
+        {% render_field form.description class+="form-control" %}
+      </div>
+
+      Due Date
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-calendar"></i>
+        </span>
+        {% render_field form.duedate class+="form-control" %}
+      </div>
+
+      Stakeholders
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-coffee"></i>
+        </span>
+        {% render_field form.stakeholders class+="form-control" %}
+      </div>
+
+    </div>
+
+    <div class="col-sm-6">
+
+
+      Technical Specifications
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-cogs"></i>
+        </span>
+        {% render_field form.tech_specs class+="form-control" %}
+      </div>
+
+      Budget
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-money"></i>
+        </span>
+        {% render_field form.budget class+="form-control" %}
+      </div>
+
+      Attachments
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-file"></i>
+        </span>
+        {% render_field form.attachments class+="form-control" %}
+      </div>
+
+    </div>
+
+  </div>
+
+  {% widget "widgets:org_search" %}
+
+  <div class="row">
+    <div class="col-sm-12 col-sm-offset-5">
+    <input class="btn btn-primary" type="submit" value="Modify Organization">
+    </div>
+  </div>
+</form>
+<script>
+  $('#id_categories').val({{ categories_id }});
+</script>
+
+{% endblock content %}

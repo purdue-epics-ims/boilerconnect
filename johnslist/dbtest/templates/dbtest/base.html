@@ -1,6 +1,8 @@
 {% load staticfiles %}
 {% load guardian_tags %}
 {%load notifications_tags%}
+{% load sniplates %}
+{% load_widgets widgets="dbtest/widgets.html" %}
 <html>
     <head>
         <link rel='stylesheet' type='text/css' href="{% static 'bootstrap.min.css' %}"/>-->
@@ -140,13 +142,14 @@
         <br><br><br>
         <div class="container container-fluid">
 
-        <!--------------- Generic Form Message ------------------->
+        <!--------------- Form Messages ------------------->
 
         {% if form.errors %}
         <div id="error">
             <div class="alert alert-danger">
 
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            There are incorrect fields.
             {{ form.errors }}
             </div>
         </div>

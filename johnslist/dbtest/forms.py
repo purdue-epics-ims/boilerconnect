@@ -20,6 +20,11 @@ class JobCreateForm(ModelForm):
         model = Job
         exclude = ('creator',)
 
+class JobEditForm(ModelForm):
+    class Meta:
+        model = Job
+        exclude = ('creator',)
+
 class CommentCreateForm(ModelForm):
     class Meta:
         model = Comment

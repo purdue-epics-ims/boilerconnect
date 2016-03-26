@@ -13,7 +13,7 @@
     <h3>{{ job.name }}<small> {{job.client_organization}}</small></h3>
   </center>
 
-  <span class="pull-right"><button class="btn btn-info">Job settings</button></span>
+  <a href="{% url 'job_settings' job.id %}" class="pull-right"><button class="btn btn-info">Job Settings</button></a>
 </div>
 
 <div class="row">
