@@ -251,7 +251,7 @@ def user_membership(request,user_id):
     membership = User.objects.get(id = user_id).groups
     return render(request,'dbtest/user_membership.html',{'membership': membership})
 
-def user_create(request):
+def user_create(request, profile):
     #if user is logged in with an existing account
     if request.user.is_authenticated():
         return redirect('user_dash')
@@ -285,7 +285,10 @@ def user_create(request):
     #if the request was a GET
     else:
         user_form = UserCreationForm()
-        profile_form = ProfileCreationForm()
+        if(profile == "purdue"):
+            profile_form = ProfileCreationForm(initial={'purdueuser': True})
+        else:
+            profile_form = ProfileCreationForm(initial={'purdueuser': False})
         return render(request, 'dbtest/user_create.html', {'user_form':user_form, 'profile_form':profile_form})
 
 @login_required

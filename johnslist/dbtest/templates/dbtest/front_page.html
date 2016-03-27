@@ -7,7 +7,7 @@
 
 <!-- Search Box -->
 
-<div class = "jumbotron search-box">
+<div class = "jumbotron">
   <h1>Welcome to BoilerConnect</h1>
   <br>
   <p>Connecting the talents of community and campus</p>
@@ -23,57 +23,64 @@
 
 
 <script>
-  document.body.style.background = "url({% static 'purdue_background.jpg' %}) no-repeat 70% 15% fixed";
+  document.body.style.background = white;
 
 </script>
 
 
-
-<!----------- Gallery ---------->
-
-<div id="carousel" class="carousel slide" data-ride="carousel">
-  <ol class="carousel-indicators">
-    <li data-target="#carousel" data-slide-to="0" class="active"></li>
-    <li data-target="#carousel" data-slide-to="1"></li>
-    <li data-target="#carousel" data-slide-to="2"></li>
-  </ol>
-  <div class="carousel-inner">
-    {% if active_organization %}
-    <div class="item active">
-      <div class="container">
-        <div>
-          <img src="{{ active_organization.icon.url }}" alt="{{ active_organization.name }} icon">
-        </div>
-        <div class="carousel-caption">
-          <h1>{{ active_organization.name }}</h1>
-          <p><a class="search-btn btn btn-lg btn-primary" href="{% url 'organization_detail' active_organization.id %}" role="button">Click here to view this organization</a></p>
-        </div>
-      </div>
-    </div>
-    {% endif %}
-    {% for organization in organizations %}
-    <div class="item">
-      <div class="container">
-        <div>
-          <img src="{{ organization.icon.url }}" alt="{{ organization.name }} icon">
-        </div>
-        <div class="carousel-caption">
-          <h1>{{ organization.name }}</h1>
-          <p><a class="btn btn-lg btn-primary" href="{% url 'organization_detail' organization.id %}" role="button">Click here to view this organization</a></p>
-        </div>
-      </div>
-    </div>
-    {% endfor %}
+  {% if not user.is_authenticated %}
+  <div class="btn-group btn-group-justified" style="height: 300px;">
+    <a href="{% url 'user_create' "purdue" %}" class="btn btn-primary">I am part of a Purdue organization that wants to make impact in the community</a>
+    <a href="{% url 'user_create' "community" %}" class="btn btn-primary">I have a job to submit for a Purdue organization</a>
   </div>
-  <a class="left carousel-control" href="#carousel" role="button" data-slide="prev">
-    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
-  </a>
-  <a class="right carousel-control" href="#carousel" role="button" data-slide="next">
-    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
-  </a>
-</div>
+  {% else %}
+  <!----------- Gallery ---------->
+
+  <div id="carousel" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#carousel" data-slide-to="0" class="active"></li>
+      <li data-target="#carousel" data-slide-to="1"></li>
+      <li data-target="#carousel" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+      {% if active_organization %}
+      <div class="item active">
+        <div class="container">
+          <div>
+            <img src="{{ active_organization.icon.url }}" alt="{{ active_organization.name }} icon">
+          </div>
+          <div class="carousel-caption">
+            <h1>{{ active_organization.name }}</h1>
+            <p><a class="search-btn btn btn-lg btn-primary" href="{% url 'organization_detail' active_organization.id %}" role="button">Click here to view this organization</a></p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% for organization in organizations %}
+      <div class="item">
+        <div class="container">
+          <div>
+            <img src="{{ organization.icon.url }}" alt="{{ organization.name }} icon">
+          </div>
+          <div class="carousel-caption">
+            <h1>{{ organization.name }}</h1>
+            <p><a class="btn btn-lg btn-primary" href="{% url 'organization_detail' organization.id %}" role="button">Click here to view this organization</a></p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <a class="left carousel-control" href="#carousel" role="button" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#carousel" role="button" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+  {% endif %}
+
 <script>
   $(document).ready(function(){
   $('.carousel').carousel();

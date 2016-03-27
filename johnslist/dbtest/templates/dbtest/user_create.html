@@ -24,7 +24,7 @@
   </div>
   {% endif %}
   
-<form class="form-horizontal" action="{% url 'user_create' %}" method='POST'>
+<form class="form-horizontal" action="{% url 'user_create' "purdue" %}" method='POST'>
 {% csrf_token %}
   <fieldset>
     <div class="form-group">

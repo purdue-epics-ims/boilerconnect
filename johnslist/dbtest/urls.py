@@ -5,7 +5,7 @@ from dbtest import views
 urlpatterns = [
     #user urls
     url(r'^user/?$', views.user_dash,name='user_dash'),
-    url(r'^user/create/?$', views.user_create,name='user_create'),
+    url(r'^user/create/(?P<profile>[a-z]+)/?$', views.user_create,name='user_create'),
     url(r'^user/(?P<user_id>[0-9]+)/user_membership/?$', views.user_membership,name='user_membership'),
     url(r'^user/edit/?$', views.user_settings,name='user_settings'),
     #organization urls
