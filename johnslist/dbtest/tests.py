@@ -106,10 +106,10 @@ class UserTestCase(TestCase):
 
     def test_user_create(self):
         #successful user creation
-        response = self.client.post(reverse('user_create'), {'username': 'user', 'password1':'zxcv', 'password2':'zxcv', 'user_type': 'purdue'})
+        response = self.client.post(reverse('user_create', kwargs={'profile': "purdue"}), {'username': 'user', 'password1':'zxcv', 'password2':'zxcv', 'user_type': 'purdue'})
         self.assertTrue(User.objects.get(username='user'))
         #unsuccessful user creation
-        response = self.client.post(reverse('user_create'), {'username': 'user_fail', 'password1':'zxcv', 'password2':'zxcvhg'})
+        response = self.client.post(reverse('user_create', kwargs={'profile': "purdue"}), {'username': 'user_fail', 'password1':'zxcv', 'password2':'zxcvhg'})
         self.assertEqual(0,len(User.objects.filter(username='user_fail')))
 
     def test_user_edit(self):

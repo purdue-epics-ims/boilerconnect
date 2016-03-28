@@ -392,10 +392,10 @@ def job_creation(request):
             job.save()
 
             #get the list of orgs to request from the form
-            for org_id in selected_orgs:
-                organization = Organization.objects.get(id = org_id)
+            for org in selected_orgs:
+                organization = Organization.objects.get(id = org.pk)
                 jr = JobRequest.objects.create(organization=organization, job = job)
-                link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org_id}))
+                link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org.pk}))
                 send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
                 for user in organization.group.user_set.all():
                     notify.send(request.user, recipient = user, verb = 'sent {0} a job request'.format(organization.name))
