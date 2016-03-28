@@ -5259,8 +5259,7 @@ a.thumbnail.active {
   margin-bottom: -1px;
   background-color: #ffffff;
   border: 1px solid #dddddd;
-  overflow:hidden;
-  text-overflow: ellipsis;
+  overflow:scroll;
   white-space: nowrap;
 }
 .list-group-item:first-child {
