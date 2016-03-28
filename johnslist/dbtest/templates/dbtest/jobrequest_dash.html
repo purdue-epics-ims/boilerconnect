@@ -88,7 +88,7 @@
         {% for comments in comment_text %}
             <div class="list-group-item">
             {{comments.text_comment}}
-            <span class="pull-right"> 
+            <span class="pull-right">
                 {% if comments.creator.userprofile.purdueuser %}
                     {{comments.creator}} from {{comments.jobrequest.organization}}
                 {% else %}
