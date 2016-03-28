@@ -165,10 +165,6 @@
                 </div>
 
                 <!------------ Add Organizations Tab ---------------->
-                <div style="display: none;">
-                {{form.organization}}
-                </div>
-
                 <div class="tab-pane fade" id="orgs">
                     Filter the organizations to find the ones that you want to send the job request.
                     If an organization suits your needs, click <b> Add </b>.
@@ -231,9 +227,4 @@ $('.prev_tab').click(function(){
     update_visibility(active_tab);
 });
 
-//------------------ submit button function ----------------
-function submitFunction() {
-    $('#id_organization').val($("#org_selected").children(':not(.hidden)').map(function(){ return $(this).attr('org_pk') }))
-}
-</script>
 {% endblock content %}
