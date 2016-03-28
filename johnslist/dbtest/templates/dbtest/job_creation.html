@@ -192,7 +192,6 @@
 //------------------ tab navigation ---------------------
 
 function update_visibility(active_tab){
-    console.log('active:',active_tab.attr('href'));
     if (active_tab.attr('href') == '#tutorial'){
         $('.prev_tab').hide();
         $('.next_tab').show();
@@ -209,22 +208,20 @@ function update_visibility(active_tab){
 
 $('.nav-tabs').click(function(event){
     active_tab = $(event.target);
-    console.log('hi2');
     update_visibility(active_tab);
 });
 
 $('.next_tab').click(function(){
     active_tab = $('.nav-tabs > .active').next('li').find('a');
     active_tab.trigger('click');
-    console.log('active_n:',active_tab.attr('href'));
     update_visibility(active_tab);
 });
 
 $('.prev_tab').click(function(){
     active_tab = $('.nav-tabs > .active').prev('li').find('a');
     active_tab.trigger('click');
-    console.log('active_p:',active_tab.attr('href'));
     update_visibility(active_tab);
 });
+</script>
 
 {% endblock content %}
