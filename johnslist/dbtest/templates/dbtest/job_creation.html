@@ -165,10 +165,6 @@
                 </div>
 
                 <!------------ Add Organizations Tab ---------------->
-                <div style="display: none;">
-                {{form.organization}}
-                </div>
-
                 <div class="tab-pane fade" id="orgs">
                     Filter the organizations to find the ones that you want to send the job request.
                     If an organization suits your needs, click <b> Add </b>.
@@ -196,7 +192,6 @@
 //------------------ tab navigation ---------------------
 
 function update_visibility(active_tab){
-    console.log('active:',active_tab.attr('href'));
     if (active_tab.attr('href') == '#tutorial'){
         $('.prev_tab').hide();
         $('.next_tab').show();
@@ -213,27 +208,20 @@ function update_visibility(active_tab){
 
 $('.nav-tabs').click(function(event){
     active_tab = $(event.target);
-    console.log('hi2');
     update_visibility(active_tab);
 });
 
 $('.next_tab').click(function(){
     active_tab = $('.nav-tabs > .active').next('li').find('a');
     active_tab.trigger('click');
-    console.log('active_n:',active_tab.attr('href'));
     update_visibility(active_tab);
 });
 
 $('.prev_tab').click(function(){
     active_tab = $('.nav-tabs > .active').prev('li').find('a');
     active_tab.trigger('click');
-    console.log('active_p:',active_tab.attr('href'));
     update_visibility(active_tab);
 });
-
-//------------------ submit button function ----------------
-function submitFunction() {
-    $('#id_organization').val($("#org_selected").children(':not(.hidden)').map(function(){ return $(this).attr('org_pk') }))
-}
 </script>
+
 {% endblock content %}

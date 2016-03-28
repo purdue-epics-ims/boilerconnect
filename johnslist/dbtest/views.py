@@ -258,38 +258,40 @@ def user_create(request, profile):
 
     #if this request was a POST
     if request.method == 'POST':
-        user_form = UserCreationForm(request.POST)
+        form = UserCreationForm(request.POST)
         profile_form = ProfileCreationForm(request.POST)
 
         #check form validity
-        if all([user_form.is_valid(), profile_form.is_valid()]):
-            #creating user and userprofile
-            user=user_form.save()
-            profile=profile_form.save()
-            profile.user=user
-            profile.save()
-            user_form.save_m2m()
-            title = "User {0} created".format( user.username )
-            confirm = "Thank you for creating an account."
+        if form.is_valid():
+            if profile_form.is_valid():
+                #creating user and userprofile
+                user=form.save()
+                profile=profile_form.save()
+                profile.user=user
+                profile.save()
+                form.save_m2m()
+                title = "User {0} created".format( user.username )
+                confirm = "Thank you for creating an account."
 
-            #automatic login after account creation
-            username_auth = request.POST['username']
-            password_auth = request.POST['password1']
-            login_user = authenticate(username=username_auth, password=password_auth)
-            login_auth(request, login_user)
-            return redirect('user_dash')
+                #automatic login after account creation
+                username_auth = request.POST['username']
+                password_auth = request.POST['password1']
+                login_user = authenticate(username=username_auth, password=password_auth)
+                login_auth(request, login_user)
+                return redirect('user_dash')
+            else:
+                return render(request, 'dbtest/user_create.html', {'form':form, 'profile_form':profile_form,'error':"Profile type error."})
 
-        else:
-            return render(request, 'dbtest/user_create.html', {'user_form':user_form,'profile_form':profile_form,})
 
     #if the request was a GET
     else:
-        user_form = UserCreationForm()
+        form = UserCreationForm()
         if(profile == "purdue"):
             profile_form = ProfileCreationForm(initial={'purdueuser': True})
         else:
             profile_form = ProfileCreationForm(initial={'purdueuser': False})
-        return render(request, 'dbtest/user_create.html', {'user_form':user_form, 'profile_form':profile_form})
+
+    return render(request, 'dbtest/user_create.html', {'form':form, 'profile_form':profile_form})
 
 @login_required
 @user_is_type('purdueuser')
@@ -382,6 +384,7 @@ def organization_settings(request, organization_id):
 def job_creation(request):
 
     #if request was POST
+
     if request.method == 'POST':
         form = JobCreateForm(request.POST)
         selected_orgs = Organization.objects.filter(pk__in = request.POST.getlist('organization'))
@@ -412,8 +415,6 @@ def job_creation(request):
         deselected_orgs = Organization.objects.all()
         form = JobCreateForm()
 
-    print selected_orgs
-    print deselected_orgs
     return render(request, 'dbtest/job_creation.html', {'form':form,'selected_orgs':selected_orgs,'deselected_orgs':deselected_orgs})
 
 def about(request):
@@ -424,15 +425,14 @@ def about(request):
 def job_settings(request,job_id):
     job = Job.objects.get(id=job_id)
 
+    selected_orgs = job.organization.all()
+    deselected_orgs = Organization.objects.exclude(pk__in = [org.pk for org in selected_orgs])
     #if the request was a GET
     if request.method == 'GET':
         form = JobEditForm(instance=job)
-        selected_orgs = job.organization.all()
-        deselected_orgs = Organization.objects.exclude(pk__in = [org.pk for org in selected_orgs])
 
     elif request.method == 'POST':
         form = JobEditForm(request.POST, instance=job)
-        selected_orgs = Organization.objects.filter(pk__in = request.POST.getlist('organization'))
 
         #check form validity
         if form.is_valid() :
@@ -445,8 +445,7 @@ def job_settings(request,job_id):
             messages.add_message(request, messages.INFO, message)
 
         else:
+            selected_orgs = Organization.objects.filter(pk__in = request.POST.getlist('organization'))
             deselected_orgs = Organization.objects.exclude(pk__in = request.POST.getlist('organization'))
 
-    print selected_orgs
-    print deselected_orgs
     return render(request, 'dbtest/job_settings.html', {'form':form,'job' : job, 'selected_orgs':selected_orgs, 'deselected_orgs':deselected_orgs})
