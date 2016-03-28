@@ -254,17 +254,17 @@ def user_create(request):
 
     #if this request was a POST
     if request.method == 'POST':
-        user_form = UserCreationForm(request.POST)
+        form = UserCreationForm(request.POST)
         profile_form = ProfileCreationForm(request.POST)
 
         #check form validity
-        if all([user_form.is_valid(), profile_form.is_valid()]):
+        if form.is_valid() and profile_form.is_valid():
             #creating user and userprofile
-            user=user_form.save()
+            user=form.save()
             profile=profile_form.save()
             profile.user=user
             profile.save()
-            user_form.save_m2m()
+            form.save_m2m()
             title = "User {0} created".format( user.username )
             confirm = "Thank you for creating an account."
 
@@ -275,14 +275,12 @@ def user_create(request):
             login_auth(request, login_user)
             return redirect('user_dash')
 
-        else:
-            return render(request, 'dbtest/user_create.html', {'user_form':user_form,'profile_form':profile_form,})
-
     #if the request was a GET
     else:
-        user_form = UserCreationForm()
+        form = UserCreationForm()
         profile_form = ProfileCreationForm()
-        return render(request, 'dbtest/user_create.html', {'user_form':user_form, 'profile_form':profile_form})
+
+    return render(request, 'dbtest/user_create.html', {'form':form, 'profile_form':profile_form})
 
 @login_required
 @user_is_type('purdueuser')
@@ -375,6 +373,7 @@ def organization_settings(request, organization_id):
 def job_creation(request):
 
     #if request was POST
+
     if request.method == 'POST':
         form = JobCreateForm(request.POST)
         selected_orgs = Organization.objects.filter(pk__in = request.POST.getlist('organization'))
