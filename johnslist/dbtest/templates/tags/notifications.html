@@ -7,9 +7,6 @@
   </div>
 
   <div class="list-group notifications">
-    {% if unread_notifications|length == 0 %}
-      <center>There are no new notifications</center>
-    {% endif %}
     {% for noti in unread %}
     <a href="{{noti.data.url}}" class="list-group-item">
       {{noti.actor}} {{ noti.verb }} {{noti.action_object}}
