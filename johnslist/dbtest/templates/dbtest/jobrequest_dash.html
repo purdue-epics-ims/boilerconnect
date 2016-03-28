@@ -1,5 +1,6 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
+
 {% if show_dialog %}
     {% if user.userprofile.purdueuser %}
         <div class="confirm alert alert-dismissible alert-info">
@@ -45,32 +46,6 @@
        </form>
        {%endif%}
    {%endif%}
-
-   <!--only appears when the jobrequest has been accepted by the Purdue group -->
-
-   <!-- should show pending for both types of user -->
-
-   {%if jobrequest.is_pending %}
-   <span class="label label-warning">Pending</span>
-   {% endif %}
-
-   <!--perm_to_edit_jobrequest_state checks the user type -->
-    
-   {%if perm_to_edit_jobrequest_state%}
-       {%if jobrequest.accepted %}
-       <span class="label label-success">Accepted</span>
-       {% endif %}
-       {%if jobrequest.declined %}
-       <span class="label label-danger">Declined</span>
-       {% endif %}
-   {%else%}
-       {%if jobrequest.confirmed %}
-       <span class="label label-success">Confirmed</span>
-       {% endif %}
-   {%endif%}
-  </center>
-
-
 </div>
 
 <table class="table table-striped table-hover ">
@@ -114,7 +89,7 @@
         {% for comments in comment_text %}
             <div class="list-group-item">
             {{comments.text_comment}}
-            <span class="pull-right"> 
+            <span class="pull-right">
                 {% if comments.creator.userprofile.purdueuser %}
                     {{comments.creator}} from {{comments.jobrequest.organization}}
                 {% else %}
