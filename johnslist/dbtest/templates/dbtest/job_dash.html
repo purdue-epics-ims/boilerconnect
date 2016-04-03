@@ -10,7 +10,7 @@
 
 <div class="jumbotron">
   <center>
-    <h3>{{ job.name }}<small> {{job.client_organization}}</small></h3>
+    <h3>{{ job.name }} <small>Dashboard</small></h3>
   </center>
 
   <a href="{% url 'job_settings' job.id %}" class="pull-right"><button class="btn btn-info">Job Settings</button></a>
@@ -36,7 +36,7 @@
                 {% else %}
                 <span class="label label-warning">Pending</span>
                 {% endif %}
-            <img src="{{ jobrequest.organization.icon.url }}" height="70px"></img>
+                <img class="icon" src="{{ jobrequest.organization.icon.url }}"></img>
             {{ jobrequest.organization }}
             </a>
           {% endfor %}

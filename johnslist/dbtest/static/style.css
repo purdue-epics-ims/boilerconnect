@@ -35,6 +35,11 @@
   background-color: #f04124;
 }
 
+.icon {
+    height: 70px;
+    max-width: 150px;
+}
+
 /* ---------------Dashboards---------------------- */
 
 /* make bootswatch labels bigger */

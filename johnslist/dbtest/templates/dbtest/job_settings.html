@@ -7,7 +7,7 @@
 
 <div class="jumbotron">
   <center>
-    <h3>{{ job.name }}</h3>
+    <h3>{{ job.name }} <small>Settings</small></h3>
   </center>
 
   <a href="{% url 'job_dash' job.id %}" class="pull-right"><button class="btn btn-info">Job Dashboard</button></a>
@@ -106,7 +106,7 @@
 
   <div class="row">
     <div class="col-sm-12 col-sm-offset-5">
-    <input class="btn btn-primary" type="submit" value="Modify Organization">
+    <input class="btn btn-primary" type="submit" value="Save Changes">
     </div>
   </div>
 </form>

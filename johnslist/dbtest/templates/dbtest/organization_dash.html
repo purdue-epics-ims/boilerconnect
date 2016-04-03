@@ -10,7 +10,7 @@
 
 <div class="jumbotron">
   <center>
-    <h3>{{ organization.name }}</h3>
+    <h3>{{ organization.name }} <small>Dashboard</small></h3>
   </center>
 
   <a href="{% url 'organization_settings' organization.id %}" class="pull-right"><button class="btn btn-info">Organization Settings</button></a>
@@ -45,8 +45,4 @@
   </div>
 </div>
 
-{% if show_dialog %}
-<script>alert("Any job requests your organization receives will appear here.  Click 'Organization Settings' to set email preferences and organization availability.");
-</script>
-{% endif %}
 {% endblock content %}

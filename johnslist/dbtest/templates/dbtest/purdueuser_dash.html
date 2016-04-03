@@ -34,7 +34,7 @@
         <ul class="list-group">
         {% for org in organizations %}
         <a class="list-group-item" href="{% url 'organization_dash' org.id %}">
-          <img src="{{ org.icon.url }}" height="70px"></img>
+          <img class="icon" src="{{ org.icon.url }}"></img>
           {{ org.name }}
         </a>
         {% endfor %}
