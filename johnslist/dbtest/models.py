@@ -243,6 +243,14 @@ def add_perms_jobrequest(sender,**kwargs):
                     recipient=jobrequest.organization.group,
                     url=reverse('jobrequest_dash',
                                 kwargs={'organization_id':jobrequest.organization.id,'job_id':job.id}) )
+    else:
+        #notify users of changed JobRequest
+        notify.send(job.creator,
+                    verb="modified",
+                    action_object=jobrequest,
+                    recipient=jobrequest.organization.group,
+                    url=reverse('jobrequest_dash',
+                                kwargs={'organization_id':jobrequest.organization.id,'job_id':job.id}) )
 
 class Comment(models.Model):
     text_comment = models.TextField('text_comment')
