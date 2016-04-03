@@ -80,7 +80,9 @@
   <div class="panel-body">
     {%if comment_text %}
         {% for comments in comment_text %}
-            <span class="pull-left">
+            <div class="list-group-item">
+            {{comments.text_comment}}
+            <span class="pull-right"> 
                 {% if comments.creator.userprofile.purdueuser %}
                     <b>{{comments.creator}}</b> from <b>{{comments.jobrequest.organization}}</b>: 
                 {% else %}
