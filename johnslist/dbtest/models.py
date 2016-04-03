@@ -210,8 +210,6 @@ class JobRequest(models.Model):
                             recipient=jr.organization.group,
                             url=reverse('jobrequest_dash',
                                         kwargs={'organization_id':jr.organization.id,'job_id':jr.job.id}) )
-        
-
 
    #check if a jobrequest is pending 
     def is_pending(self):
@@ -219,14 +217,15 @@ class JobRequest(models.Model):
             return True
         else:
             return False
-        
+
 #add default jobrequest permissions
 @receiver(post_save, sender=JobRequest)
 def add_perms_jobrequest(sender,**kwargs):
+    jobrequest=kwargs['instance']
+    job = jobrequest.job
+
     #check if this post_save signal was generated from a Model create
     if 'created' in kwargs and kwargs['created']:
-        jobrequest=kwargs['instance']
-        job = jobrequest.job
 
         #allow creator to view and edit jobrequest
         assign_perm('view_jobrequest',job.creator,jobrequest)
