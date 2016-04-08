@@ -1,3 +1,8 @@
+/* -------------- Front Page -------------*/
+.user_create_button {
+    font-size: 200%;
+    white-space: normal;
+}
 ::selection {
 	background: #ffb7b7; /* WebKit/Blink Browsers */
 }
@@ -327,3 +332,8 @@ background:#e1d8d8;
 /* #prev_tab { */
 /*     float: right; */
 /* } */
+
+/* ----------------- Job Request Dash ----------------- */
+.comment-body{
+    word-wrap: break-word;
+}
