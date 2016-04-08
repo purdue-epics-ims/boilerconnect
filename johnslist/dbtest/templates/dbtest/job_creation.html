@@ -23,17 +23,15 @@
 <div class="container">
     <div class="form-group">
         <form action="{% url 'job_creation' %}" method="post">{% csrf_token %}
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#tutorial" data-toggle="tab" aria-expanded="true">Explanation of the process</a></li>
-                <li class=""><a href="#info" data-toggle="tab" aria-expanded="true">Basic information</a></li>
-                <li class=""><a href="#specs" data-toggle="tab" aria-expanded="true">Job Specifications</a></li>
-                <li class=""><a href="#orgs" data-toggle="tab" aria-expanded="true">Organizations selection</a></li>
+            <ul class="pagination pagination-lg page-tabs">
+                <li><a class="page-tab prev_tab btn btn-primary">Previous</a></li>
+                <li class="active"><a class="page-tab" href="#tutorial" data-toggle="tab">1</a></li>
+                <li><a class="page-tab" href="#info" data-toggle="tab">2</a></li>
+                <li><a class="page-tab" href="#specs" data-toggle="tab">3</a></li>
+                <li><a class="page-tab" href="#orgs" data-toggle="tab">4</a></li>
+                <li><a class="active next_tab btn btn-primary">Next</a></li>
             </ul>
 
-            <div class="button_group">
-            <a style="display:none;" class="prev_tab btn btn-primary" ">Previous</a>
-            <a class="next_tab btn btn-primary">Next</a>
-            </div>
 
             <div class="row tab-content">
 
@@ -179,9 +177,15 @@
                 </div>
             </div>
 
-            <div class="button_group">
-            <a style="display:none;" class="prev_tab btn btn-primary" ">Previous</a>
-            <a class="next_tab btn btn-primary">Next</a>
+            <ul class="pagination pagination-lg page-tabs">
+                <li><a class="page-tab prev_tab btn btn-primary">Previous</a></li>
+                <li class="active"><a class="page-tab" href="#tutorial" data-toggle="tab">1</a></li>
+                <li><a class="page-tab" href="#info" data-toggle="tab">2</a></li>
+                <li><a class="page-tab" href="#specs" data-toggle="tab">3</a></li>
+                <li><a class="page-tab" href="#orgs" data-toggle="tab">4</a></li>
+                <li><a class="active next_tab btn btn-primary">Next</a></li>
+            </ul>
+
             </div>
         </form>
     </div>
@@ -193,32 +197,32 @@
 
 function update_visibility(active_tab){
     if (active_tab.attr('href') == '#tutorial'){
-        $('.prev_tab').hide();
-        $('.next_tab').show();
+        $('.prev_tab').removeClass("active");
+        $('.next_tab').addClass("active");
     }
     else if (active_tab.attr('href') == '#orgs'){
-        $('.next_tab').hide();
-        $('.prev_tab').show();
+        $('.prev_tab').addClass("active");
+        $('.next_tab').removeClass("active");
     }
     else {
-        $('.next_tab').show();
-        $('.prev_tab').show();
+        $('.next_tab').addClass("active");
+        $('.prev_tab').addClass("active");
     }
 }
 
-$('.nav-tabs').click(function(event){
+$('.page-tab').click(function(event){
     active_tab = $(event.target);
     update_visibility(active_tab);
 });
 
 $('.next_tab').click(function(){
-    active_tab = $('.nav-tabs > .active').next('li').find('a');
+    active_tab = $('.page-tabs > .active').next('li').find('a');
     active_tab.trigger('click');
     update_visibility(active_tab);
 });
 
 $('.prev_tab').click(function(){
-    active_tab = $('.nav-tabs > .active').prev('li').find('a');
+    active_tab = $('.page-tabs > .active').prev('li').find('a');
     active_tab.trigger('click');
     update_visibility(active_tab);
 });

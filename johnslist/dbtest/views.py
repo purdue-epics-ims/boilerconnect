@@ -387,19 +387,11 @@ def job_creation(request):
 
     if request.method == 'POST':
         form = JobCreateForm(request.POST)
-        selected_orgs = Organization.objects.filter(pk__in = request.POST.getlist('organization'))
+        selected_orgs = Organization.objects.filter(pk__in = form.data['organization'])
+
         #check form validity
         if form.is_valid():
-            job = form.save(commit=False)
-            job.creator = request.user
-            job.save()
-
-            #get the list of orgs to request from the form
-            for org in selected_orgs:
-                organization = Organization.objects.get(id = org.pk)
-                jr = JobRequest.objects.create(organization=organization, job = job)
-                link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org.pk}))
-                send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
+            job = form.save(request)
 
             message = "Job {0} created".format( job.name )
             messages.add_message(request, messages.INFO, message)
@@ -408,6 +400,7 @@ def job_creation(request):
             deselected_orgs = Organization.objects.exclude(pk__in = request.POST.getlist('organization'))
 
     #if the request was a GET
+
     else:
         selected_orgs = []
         deselected_orgs = Organization.objects.all()
@@ -423,11 +416,13 @@ def about(request):
 def job_settings(request,job_id):
     job = Job.objects.get(id=job_id)
 
-    selected_orgs = job.organization.all()
-    deselected_orgs = Organization.objects.exclude(pk__in = [org.pk for org in selected_orgs])
+    print Organization.objects.filter(pk__in = request.POST.getlist('organization'))
+
     #if the request was a GET
     if request.method == 'GET':
         form = JobEditForm(instance=job)
+        selected_orgs = job.organization.all()
+        deselected_orgs = Organization.objects.exclude(pk__in = [org.pk for org in selected_orgs])
 
     elif request.method == 'POST':
         form = JobEditForm(request.POST, instance=job)
@@ -435,12 +430,14 @@ def job_settings(request,job_id):
         #check form validity
         if form.is_valid() :
             #get form info
-            job = form.save()
+            job = form.save(request)
 
             #add new orgs/remove removed orgs here
 
             message = "Job {0} has been modified.".format(job.name)
             messages.add_message(request, messages.INFO, message)
+            selected_orgs = job.organization.all()
+            deselected_orgs = Organization.objects.exclude(pk__in = [org.pk for org in selected_orgs])
 
         else:
             selected_orgs = Organization.objects.filter(pk__in = request.POST.getlist('organization'))

@@ -61,6 +61,10 @@
         {% render_field form.duedate class+="form-control" %}
       </div>
 
+    </div>
+
+    <div class="col-sm-6">
+
       Stakeholders
       <div class="input-group">
         <span class="input-group-addon">
@@ -68,11 +72,6 @@
         </span>
         {% render_field form.stakeholders class+="form-control" %}
       </div>
-
-    </div>
-
-    <div class="col-sm-6">
-
 
       Technical Specifications
       <div class="input-group">
@@ -102,11 +101,13 @@
 
   </div>
 
+  <hr>
+
   {% widget "widgets:org_search" %}
 
   <div class="row">
     <div class="col-sm-12 col-sm-offset-5">
-    <input class="btn btn-primary" type="submit" value="Save Changes">
+    <input class="btn btn-primary" type="submit" value="Save Changes" onclick="submitFunction()">
     </div>
   </div>
 </form>
