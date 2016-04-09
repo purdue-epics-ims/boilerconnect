@@ -416,8 +416,6 @@ def about(request):
 def job_settings(request,job_id):
     job = Job.objects.get(id=job_id)
 
-    print Organization.objects.filter(pk__in = request.POST.getlist('organization'))
-
     #if the request was a GET
     if request.method == 'GET':
         form = JobEditForm(instance=job)

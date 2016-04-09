@@ -26,6 +26,6 @@ class Command(BaseCommand):
         jr = JobRequest.objects.get(id=1)
         c = Category.objects.get(id=2)
         g = Group.objects.get(id=1)
-        n = Notification.objects.get(id=1)
+        # n = Notification.objects.get(id=1)
         code.interact(local=locals())
 

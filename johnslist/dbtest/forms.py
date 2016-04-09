@@ -22,12 +22,10 @@ class JobForm(ModelForm):
         job.creator = request.user
         job.save()
 
-        print "POST",request.POST
-        print  "clean",self.cleaned_data['organization']
-        print  "other",job.organization.all()
         #make a request to all the new organizations
         for org in self.cleaned_data['organization']:
             if org not in job.organization.all():
+                verb = "submitted"
                 organization = Organization.objects.get(id = org.pk)
                 jr = JobRequest.objects.create(organization=organization, job = job)
                 link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org.pk}))
@@ -37,7 +35,7 @@ class JobForm(ModelForm):
         for org in job.organization.all():
             if org not in self.cleaned_data['organization']:
                 organization = Organization.objects.get(id = org.pk)
-                jr = JobRequest.objects.get(organization=organization, job = job).delete()
+                jr =  JobRequest.objects.get(organization=organization, job = job).delete()
 
         return job
 

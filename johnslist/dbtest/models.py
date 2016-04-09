@@ -2,7 +2,7 @@ from django.db import models
 from django.forms import ModelForm,PasswordInput
 from django.contrib.auth import forms
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_delete
 from django.contrib.auth.models import User,Group
 from guardian.shortcuts import assign_perm, remove_perm
 from notifications.signals import notify
@@ -90,7 +90,7 @@ class Job(models.Model):
     attachments = models.FileField(upload_to='job', blank = True) #file attachments
     creator = models.ForeignKey(User,related_name = 'jobs')  # User -o= Job
     organization = models.ManyToManyField(Organization, through = 'JobRequest')
-    closed = models.NullBooleanField(default = False)
+    closed = models.NullBooleanField(default = False)  # Job is closed after a jr is confirmed
 
     class Meta:
         permissions = (
@@ -120,8 +120,8 @@ class Job(models.Model):
 @receiver(post_save, sender=Job)
 def add_perms_job(sender,**kwargs):
     #check if this post_save signal was generated from a Model create
+    job=kwargs['instance']
     if 'created' in kwargs and kwargs['created']:
-        job=kwargs['instance']
 
         #allow creator to view and edit job
         assign_perm('view_job',job.creator,job)
@@ -129,6 +129,20 @@ def add_perms_job(sender,**kwargs):
         #allow requested orgs to view job
         for org in job.organization.all():
             assign_perm('view_job',org.group,job)
+    else:
+        #notify users of changed JobRequest
+        if job.closed:
+            jobrequests = job.jobrequests_accepted();
+        else:
+            jobrequests = job.jobrequests_accepted() | job.jobrequests_pending()
+        for jobrequest in jobrequests:
+            notify.send(job.creator,
+                        verb="modified",
+                        action_object=jobrequest,
+                        recipient=jobrequest.organization.group,
+                        url=reverse('jobrequest_dash',
+                                    kwargs={'organization_id':jobrequest.organization.id,'job_id':job.id}) )
+
 
 class JobRequest(models.Model):
     def __unicode__(self):
@@ -220,7 +234,7 @@ class JobRequest(models.Model):
 
 #add default jobrequest permissions
 @receiver(post_save, sender=JobRequest)
-def add_perms_jobrequest(sender,**kwargs):
+def jobrequest_save(sender,**kwargs):
     jobrequest=kwargs['instance']
     job = jobrequest.job
 
@@ -242,14 +256,17 @@ def add_perms_jobrequest(sender,**kwargs):
                     recipient=jobrequest.organization.group,
                     url=reverse('jobrequest_dash',
                                 kwargs={'organization_id':jobrequest.organization.id,'job_id':job.id}) )
-    else:
-        #notify users of changed JobRequest
-        notify.send(job.creator,
-                    verb="modified",
-                    action_object=jobrequest,
-                    recipient=jobrequest.organization.group,
-                    url=reverse('jobrequest_dash',
-                                kwargs={'organization_id':jobrequest.organization.id,'job_id':job.id}) )
+
+#add default jobrequest permissions
+@receiver(pre_delete, sender=JobRequest)
+def jobrequest_delete(sender,**kwargs):
+    jobrequest=kwargs['instance']
+    job = jobrequest.job
+    #notify users of changed JobRequest
+    notify.send(job.creator,
+                verb="deleted {0}".format(jobrequest),
+                recipient=jobrequest.organization.group)
+
 
 class Comment(models.Model):
     text_comment = models.TextField('text_comment')
