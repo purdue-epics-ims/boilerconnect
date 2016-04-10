@@ -95,6 +95,7 @@ def populate():
                                 stakeholders = 'stakeholders',
                                 tech_specs = 'tech specs',
                                 budget = 'budget',
+                                contact_information = 'contact_informatin@gmail.com',
                                 duedate = timezone.now(),
                                 creator = community_partners.next(),
                                 client_organization = client_orgs.next())
