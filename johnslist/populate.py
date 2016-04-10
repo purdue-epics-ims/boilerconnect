@@ -96,9 +96,9 @@ def populate():
         #Make some jobrequests "randomly"
         if job.id % 2 == 0:
             jr = job.request_organization(orgs.next())
-            jr.decline()
+            # jr.decline()
         jr = job.request_organization(orgs.next())
-        jr.accept()
+        # jr.accept()
         jr = job.request_organization(orgs.next())
 
 if __name__ == '__main__':

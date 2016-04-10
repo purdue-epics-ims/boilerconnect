@@ -73,11 +73,11 @@
   </tbody>
 </table>
 
-<div class="panel panel-info">
+<div class="panel panel-info comments">
   <div class="panel-heading">
     <h3 class="panel-title">Comments</h3>
   </div>
-  <div class="panel-body">
+  <div class="panel-body ">
     {%if comment_text %}
         {% for comments in comment_text %}
             <span class="pull-left"> 
@@ -88,7 +88,7 @@
                 {% endif %}
             </span>
             <br>
-            <div class="well well-lg">
+            <div class="well well-lg comment-body">
             {{comments.text_comment}}
             </div>
         {% endfor %}
