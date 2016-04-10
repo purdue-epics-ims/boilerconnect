@@ -93,7 +93,7 @@ def populate():
                                 description = 'Description of the job',                
                                 deliverable = 'deliverable',
                                 stakeholders = 'stakeholders',
-                                tech_specs = 'tech specs',
+                                additional_information = 'additional_information',
                                 budget = 'budget',
                                 contact_information = 'contact_information@gmail.com',
                                 duedate = timezone.now(),
