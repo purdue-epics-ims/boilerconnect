@@ -48,34 +48,31 @@
    {%endif%}
 </div>
 
-<table class="table table-striped table-hover ">
-  <tbody>
-    <tr>
-      <td>Description</td>
-      <td>{{jobrequest.job.description}}</td>
-    </tr>
-    <tr>
-      <td>Contact Information</td>
-      <td>{{jobrequest.job.contact_information}}</td>
-    </tr>
-    <tr>
-      <td>Deliverable</td>
-      <td>{{jobrequest.job.deliverable}}</td>
-    </tr>
-    <tr>
-      <td>Stakeholders</td>
-      <td>{{jobrequest.job.stakeholders}}</td>
-    </tr>
-    <tr>
-      <td>Tech Specs</td>
-      <td>{{jobrequest.job.tech_specs}}</td>
-    </tr>
-    <tr>
-      <td>Budget</td>
-      <td>{{jobrequest.job.budget}}</td>
-    </tr>
-  </tbody>
-</table>
+<div class="panel panel-primary">
+  <div class="panel-heading">
+    <h3 class="panel-title">Information about the Job</h3>
+  </div>
+  <div class="panel-body">
+    <div class="well well-sm information-body">
+        <b>Description</b>: {{jobrequest.job.description}}
+    </div>
+    <div class="well well-sm information-body">
+        <b>Contact Information</b>: {{jobrequest.job.contact_information}}
+    </div>
+    <div class="well well-sm information-body">
+        <b>Deliverable</b>: {{jobrequest.job.deliverable}}
+    </div>
+    <div class="well well-sm information-body">
+        <b>Stakeholders</b>: {{jobrequest.job.stakeholders}}
+    </div>
+    <div class="well well-sm information-body">
+        <b>Additional Information</b>: {{jobrequest.job.additional_information}}
+    </div>
+    <div class="well well-sm information-body">
+        <b>Budget</b>: {{jobrequest.job.budget}}
+    </div>
+  </div>
+</div>
 
 <div class="panel panel-info comments">
   <div class="panel-heading">
@@ -98,7 +95,7 @@
         {% endfor %}
     {%else%}
         <div class="well">
-            There's current no comment recorded for this job.
+            No comments
         </div>
     {%endif%}
   </div>

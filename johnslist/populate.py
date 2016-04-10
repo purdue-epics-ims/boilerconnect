@@ -90,12 +90,12 @@ def populate():
     for job_name in jobs:
         print '    '+job_name
         job = Job.objects.create(name=job_name,
-                                description = 'Description of the job',
+                                description = 'Description of the job',                
                                 deliverable = 'deliverable',
                                 stakeholders = 'stakeholders',
-                                tech_specs = 'tech specs',
+                                additional_information = 'additional_information',
                                 budget = 'budget',
-                                contact_information = 'contact_informatin@gmail.com',
+                                contact_information = 'contact_information@gmail.com',
                                 duedate = timezone.now(),
                                 creator = community_partners.next(),
                                 client_organization = client_orgs.next())
