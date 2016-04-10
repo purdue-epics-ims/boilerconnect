@@ -7,13 +7,13 @@ from .models import*
 class OrganizationCreateForm(ModelForm):
     class Meta:
 		model = Organization
-		fields = ['name','description','categories','email','icon']
+		fields = ['name','description','categories','icon']
 
 class OrganizationEditForm(ModelForm):
 
 	class Meta:
 		model = Organization
-		fields = ['name','description','categories','email','icon','available']
+		fields = ['name','description','categories','icon','available']
 
 class JobCreateForm(ModelForm):
     class Meta:
@@ -33,4 +33,4 @@ class CommentCreateForm(ModelForm):
 class ProfileCreationForm(ModelForm):
     class Meta:
         model = UserProfile
-        exclude = ('user','visited_views',)
+        exclude = ('user','visited_views')

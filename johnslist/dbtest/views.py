@@ -256,14 +256,13 @@ def user_create(request, profile):
     if request.user.is_authenticated():
         return redirect('user_dash')
 
-    #if this request was a POST
-    if request.method == 'POST':
-        form = UserCreationForm(request.POST)
-        profile_form = ProfileCreationForm(request.POST)
+        #if this request was a POST
+        if request.method == 'POST':
+            form = UserCreationForm(request.POST)
+            profile_form = ProfileCreationForm(request.POST)
 
         #check form validity
-        if form.is_valid():
-            if profile_form.is_valid():
+        if all([user_form.is_valid(), profile_form.is_valid()]):
                 #creating user and userprofile
                 user=form.save()
                 profile=profile_form.save()
@@ -279,9 +278,8 @@ def user_create(request, profile):
                 login_user = authenticate(username=username_auth, password=password_auth)
                 login_auth(request, login_user)
                 return redirect('user_dash')
-            else:
+        else:
                 return render(request, 'dbtest/user_create.html', {'form':form, 'profile_form':profile_form,'error':"Profile type error."})
-
 
     #if the request was a GET
     else:
@@ -327,12 +325,16 @@ def user_settings(request):
         #if this request was a POST and not a GET
     if request.method == 'POST':
         form = UserCreationForm(request.POST, instance=request.user)
+        profile_form = ProfileCreationForm(request.POST, instance=request.user.userprofile)
         form.actual_user = request.user
 
         #check form validity
-        if form.is_valid() :
+        if all([user_form.is_valid(), profile_form.is_valid()]):
             #save user to db and store info to 'user'
             user = form.save(commit = False)
+            profile=profile_form.save()
+            profile.user=user
+            profile.save()
             #user.username = request.user.username()
             title = "User {0} modified".format( user.username )
             user.save()
@@ -351,8 +353,10 @@ def user_settings(request):
     else:
         if request.user.is_authenticated():
             form = UserCreationForm(instance=request.user)
+            profile_form = ProfileCreationForm(instance=request.user.userprofile)
         else:
             form = UserCreationForm()
+            profile_form = ProfileCreationForm()
 
     return render(request, 'dbtest/user_settings.html', {'form':form})
 

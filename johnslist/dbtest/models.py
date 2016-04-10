@@ -17,6 +17,8 @@ class UserProfile(models.Model):
     purdueuser = models.BooleanField(default=True, choices=((True, 'Purdue User'),(False, 'Community User')))
     # save which pages the user has visited before for the purposes of showing helpful dialogs
     visited_views = models.CharField(max_length=64,default="")
+    email = models.EmailField(default="")
+
 
 class Category(models.Model):
     def __unicode__(self):
@@ -32,7 +34,6 @@ class Organization(models.Model):
     name = models.CharField('Organization Name',max_length=64)
     description = models.TextField('Organization Description')
     categories = models.ManyToManyField(Category)  # Category =-= Organization
-    email = models.CharField('Organization email',max_length=64)
     group = models.OneToOneField(Group) # Organization - Group
     phone_number = models.CharField('Organization phone number',max_length=64)
     icon = models.ImageField(upload_to='organization', null=True)
