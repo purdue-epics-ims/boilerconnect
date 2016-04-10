@@ -38,15 +38,16 @@
                 <!-- ############## Explanation Tab ############# -->
 
                 <div class="tab-pane fade active in" id="tutorial">
+                    <h1>Explanation of the process</h1>
                     <div class="row">
                         <div class="col-sm-4">
-                        After your job is submitted, the copy of each submission is sent to all organizations that you selected. Those organizations will be able to review it, and they have an option to leave a comment on your job. If they do comment, you will be notified about this. 
+                          Pick a few organizations that you think would be a good match for your job.
                         </div>
                         <div class="col-sm-4">
-                        After that, organizations will decide if they have capabilities to perform the job. Based on that, they will either accept the job or decline it, and you will be notified on this website, as well as in email about their decision.<br>
+                          Wait for a few organizations to respond.
                         </div>
                         <div class="col-sm-4">
-                        Finally, once you are satisfied with the responses from the organizations, you will be able to pick the organization that is going to do the job. We will exchange the contact information for you, and the rest of the communication is to be done on your behalf.
+                          Finally, you will choose which one is going to do the job for you.
                         </div>
                     </div>
                     <div class="row">
@@ -65,50 +66,52 @@
                 <!--########## Basic information Tab ##########-->
 
                 <div class="tab-pane fade" id="info">
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                        <i class="fa fa-bullhorn"></i>
-                        </span>
-                        Name of the job.
-                        {% render_field form.name class+="form-control" placeholder="eg. Irrigation System" %}
-                    </div>
-                </div>
+                  <h1>Basic information</h1>
+                  <div class="form-group">
+                      <div class="input-group">
+                          <span class="input-group-addon">
+                          <i class="fa fa-bullhorn"></i>
+                          </span>
+                          Name of the job.
+                          {% render_field form.name class+="form-control" placeholder="eg. Irrigation System" %}
+                      </div>
+                  </div>
 
 
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                        <i class="fa fa-coffee"></i>
-                        </span>
-                        What organization or group are you representing?
-                        {% render_field form.client_organization class+="form-control" placeholder="eg. Lafayette City Farms" %}
-                    </div>
-                </div>
+                  <div class="form-group">
+                      <div class="input-group">
+                          <span class="input-group-addon">
+                          <i class="fa fa-coffee"></i>
+                          </span>
+                          What organization or group are you representing?
+                          {% render_field form.client_organization class+="form-control" placeholder="eg. Lafayette City Farms" %}
+                      </div>
+                  </div>
 
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                        <i class="fa fa-coffee"></i>
-                        </span>
-                        Briefly describe the deliverables that you expect as a result of this project.
-                        {% render_field form.deliverable class+="form-control" placeholder="eg. An pump system to handle Spring flooding." %}
-                    </div>
-                </div>
+                  <div class="form-group">
+                      <div class="input-group">
+                          <span class="input-group-addon">
+                          <i class="fa fa-coffee"></i>
+                          </span>
+                          Briefly describe the deliverables that you expect as a result of this project.
+                          {% render_field form.deliverable class+="form-control" placeholder="eg. An pump system to handle Spring flooding." %}
+                      </div>
+                  </div>
 
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                        <i class="fa fa-coffee"></i>
-                        </span>
-                        Give a short description of the job. Later, you will be able to provide more detailed description, keep this one brief.
-                        {% render_field form.description class+="form-control" %}
-                    </div>
+                      <div class="input-group">
+                          <span class="input-group-addon">
+                          <i class="fa fa-coffee"></i>
+                          </span>
+                          Give a short description of the job. Later, you will be able to provide more detailed description, keep this one brief.
+                          {% render_field form.description class+="form-control" %}
+                      </div>
                 </div>
 
                 <!------------ Technical specifications Tab ------------>
 
                 <div class="tab-pane fade" id="specs">
 
+                  <h1>Technical specifications</h1>
                   <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
