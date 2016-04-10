@@ -82,18 +82,18 @@
     <h3 class="panel-title">Comments</h3>
   </div>
   <div class="panel-body ">
-    {%if comment_text %}
-        {% for comments in comment_text %}
+    {%if comments %}
+        {% for comment in comments %}
             <span class="pull-left"> 
-                {% if comments.creator.userprofile.purdueuser %}
-                    <b>{{comments.creator}}</b> from <b>{{comments.jobrequest.organization}}</b>: 
+                {% if comment.creator.userprofile.purdueuser %}
+                    <b>{{comment.creator}}</b> from <b><a href="{% url 'organization_detail' comment.jobrequest.organization.id %}">{{comment.jobrequest.organization}}</a></b> at {{comment.created}}: 
                 {% else %}
-                    <b>{{comments.creator}}</b>
+                    <b>{{comment.creator}}</b> at {{comment.created}}
                 {% endif %}
             </span>
             <br>
             <div class="well well-lg comment-body">
-            {{comments.text_comment}}
+            {{comment.text_comment}}
             </div>
         {% endfor %}
     {%else%}
