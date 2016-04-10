@@ -91,6 +91,16 @@
                         <span class="input-group-addon">
                         <i class="fa fa-coffee"></i>
                         </span>
+                        Contact Information
+                        {% render_field form.contact_information class+="form-control" placeholder="eg. emails, phone number" %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-coffee"></i>
+                        </span>
                         Briefly describe the deliverables that you expect as a result of this project.
                         {% render_field form.deliverable class+="form-control" placeholder="eg. An pump system to handle Spring flooding." %}
                     </div>
