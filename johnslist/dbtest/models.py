@@ -86,11 +86,12 @@ class Job(models.Model):
     deliverable = models.TextField('Deliverable', max_length=256) #end product to be delivered
     duedate = models.DateTimeField('Date Due') #when Job is due for completion
     stakeholders = models.TextField('Stakeholders') #all persons who may be affected by project
-    tech_specs = models.TextField('Technical Specifications', blank = True) #important technical requirements
+    additional_information = models.TextField('Additional Information', blank = True) #important technical requirements
     budget = models.CharField('Budget', max_length=64) #budget estimate
     attachments = models.FileField(upload_to='job', blank = True) #file attachments
     creator = models.ForeignKey(User,related_name = 'jobs')  # User -o= Job
     organization = models.ManyToManyField(Organization, through = 'JobRequest')
+    contact_information = models.CharField('Contact Information', max_length = 256, blank = True)
     closed = models.NullBooleanField(default = False)  # Job is closed after a jr is confirmed
 
     class Meta:
@@ -273,3 +274,4 @@ class Comment(models.Model):
     text_comment = models.TextField('text_comment')
     jobrequest = models.ForeignKey(JobRequest)
     creator = models.ForeignKey(User, blank = True, null = True) #creator added after form is validated
+    created = models.DateTimeField('Created',auto_now_add=True) #when comment was made

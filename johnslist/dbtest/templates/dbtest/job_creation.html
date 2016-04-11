@@ -88,15 +88,25 @@
                       </div>
                   </div>
 
-                  <div class="form-group">
-                      <div class="input-group">
-                          <span class="input-group-addon">
-                          <i class="fa fa-coffee"></i>
-                          </span>
-                          Briefly describe the deliverables that you expect as a result of this project.
-                          {% render_field form.deliverable class+="form-control" placeholder="eg. An pump system to handle Spring flooding." %}
-                      </div>
-                  </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-coffee"></i>
+                        </span>
+                        Contact Information
+                        {% render_field form.contact_information class+="form-control" placeholder="eg. emails, phone number" %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                        <i class="fa fa-coffee"></i>
+                        </span>
+                        Briefly describe the deliverables that you expect as a result of this project.
+                        {% render_field form.deliverable class+="form-control" placeholder="eg. An pump system to handle Spring flooding." %}
+                    </div>
+                </div>
 
                       <div class="input-group">
                           <span class="input-group-addon">
@@ -137,8 +147,8 @@
                         <span class="input-group-addon">
                         <i class="fa fa-cogs"></i>
                         </span>
-                        If available, provide the technical specifications of the deliverable. In this section, you should be as precise as you can. 
-                        {% render_field form.tech_specs class+="form-control" %}
+                        If available, provide any additional information about the deliverable. In this section, you should be as precise as you can. 
+                        {% render_field form.additional_information class+="form-control" %}
                     </div>
                   </div>
 
@@ -180,14 +190,14 @@
                 </div>
             </div>
 
-            <ul class="pagination pagination-lg page-tabs">
-                <li><a class="page-tab prev_tab btn btn-primary">Previous</a></li>
-                <li class="active"><a class="page-tab" href="#tutorial" data-toggle="tab">1</a></li>
-                <li><a class="page-tab" href="#info" data-toggle="tab">2</a></li>
-                <li><a class="page-tab" href="#specs" data-toggle="tab">3</a></li>
-                <li><a class="page-tab" href="#orgs" data-toggle="tab">4</a></li>
-                <li><a class="active next_tab btn btn-primary">Next</a></li>
-            </ul>
+            <!-- <ul class="pagination pagination-lg page-tabs"> -->
+            <!-- <li><a class="page-tab prev_tab btn btn-primary">Previous</a></li> -->
+            <!-- <li class="active"><a class="page-tab" href="#tutorial" data-toggle="tab">1</a></li> -->
+            <!-- <li><a class="page-tab" href="#info" data-toggle="tab">2</a></li> -->
+            <!-- <li><a class="page-tab" href="#specs" data-toggle="tab">3</a></li> -->
+            <!-- <li><a class="page-tab" href="#orgs" data-toggle="tab">4</a></li> -->
+            <!-- <li><a class="active next_tab btn btn-primary">Next</a></li> -->
+            <!-- </ul> -->
 
             </div>
         </form>

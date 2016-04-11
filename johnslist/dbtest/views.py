@@ -141,7 +141,7 @@ def jobrequest_dash(request,job_id,organization_id):
     job = Job.objects.get(id=job_id)
     organization = Organization.objects.get(id=organization_id)
     jobrequest = JobRequest.objects.get(job = job, organization = organization)
-    comment_text = jobrequest.comment_set.all()
+    comments = jobrequest.comment_set.all()
     perm_to_edit_jobrequest_state = request.user.has_perm('edit_jobrequest_state',jobrequest)
     form = CommentCreateForm()
 
@@ -218,7 +218,7 @@ def jobrequest_dash(request,job_id,organization_id):
     # if request is GET
     return render(request, 'dbtest/jobrequest_dash.html',
                   {'jobrequest':jobrequest,
-                   'comment_text':comment_text,
+                   'comments':comments,
                    'show_dialog':show_dialog,
                    'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
                    'form':form
