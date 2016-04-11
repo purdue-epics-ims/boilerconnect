@@ -274,4 +274,4 @@ class Comment(models.Model):
     text_comment = models.TextField('text_comment')
     jobrequest = models.ForeignKey(JobRequest)
     creator = models.ForeignKey(User, blank = True, null = True) #creator added after form is validated
-    created = models.DateTimeField('Created',auto_now_add=True) #when comment was made
+    created = models.DateTimeField('Created',auto_now_add=True,null=True) #when comment was made
