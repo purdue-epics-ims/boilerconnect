@@ -153,7 +153,10 @@ def jobrequest_dash(request,job_id,organization_id):
             if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.accept()
                 message = "You have accepted this job."
+                link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jobrequest.job.id, 'organization_id': organization_id}))
+                send_mail('BoilerConnect - Job Request Accepted', '{0} has accepted your Job Request!. Click on the link to see the request. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
                 messages.add_message(request, messages.INFO, message)
+
             else:
                 message = "You have already accepted this job."
                 messages.add_message(request, messages.ERROR, message)
@@ -164,6 +167,8 @@ def jobrequest_dash(request,job_id,organization_id):
                 jobrequest.decline()
                 message = "You have declined this job."
                 messages.add_message(request, messages.INFO, message)
+                link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jobrequest.job.id, 'organization_id': organization_id}))
+                send_mail('BoilerConnect - Job Request Accepted', '{0} has declined your Job Request!. Click on the link to see the request. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
             else:
                 message = "You have already declined this job."
                 messages.add_message(request, messages.ERROR, message)
@@ -195,6 +200,8 @@ def jobrequest_dash(request,job_id,organization_id):
                 verb = "commented on"
                 if request.user.userprofile.purdueuser:
                     recipient = job.creator
+                    link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jobrequest.job.id, 'organization_id': organization_id}))
+                    send_mail('BoilerConnect - Job Request Accepted', '{0} has commented on your Job Request!. Click on the link to see the comment. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
                 else:
                     recipient = jobrequest.organization.group
                 url = reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id})
@@ -256,18 +263,19 @@ def user_create(request, profile):
     if request.user.is_authenticated():
         return redirect('user_dash')
 
-        #if this request was a POST
-        if request.method == 'POST':
-            form = UserCreationForm(request.POST)
-            profile_form = ProfileCreationForm(request.POST)
+    #if this request was a POST
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        profile_form = ProfileCreationForm(request.POST)
 
         #check form validity
-        if all([user_form.is_valid(), profile_form.is_valid()]):
+        if all([form.is_valid(), profile_form.is_valid()]):
                 #creating user and userprofile
                 user=form.save()
                 profile=profile_form.save()
                 profile.user=user
                 profile.save()
+                user.save()
                 form.save_m2m()
                 title = "User {0} created".format( user.username )
                 confirm = "Thank you for creating an account."
@@ -279,9 +287,10 @@ def user_create(request, profile):
                 login_auth(request, login_user)
                 return redirect('user_dash')
         else:
+                print "or here"
                 return render(request, 'dbtest/user_create.html', {'form':form, 'profile_form':profile_form,'error':"Profile type error."})
 
-    #if the request was a GET
+#if the request was a GET
     else:
         form = UserCreationForm()
         if(profile == "purdue"):
@@ -326,10 +335,9 @@ def user_settings(request):
     if request.method == 'POST':
         form = UserCreationForm(request.POST, instance=request.user)
         profile_form = ProfileCreationForm(request.POST, instance=request.user.userprofile)
-        form.actual_user = request.user
 
         #check form validity
-        if all([user_form.is_valid(), profile_form.is_valid()]):
+        if all([form.is_valid(), profile_form.is_valid()]):
             #save user to db and store info to 'user'
             user = form.save(commit = False)
             profile=profile_form.save()
@@ -358,7 +366,7 @@ def user_settings(request):
             form = UserCreationForm()
             profile_form = ProfileCreationForm()
 
-    return render(request, 'dbtest/user_settings.html', {'form':form})
+    return render(request, 'dbtest/user_settings.html', {'form':form, 'profile_form':profile_form})
 
 @login_required
 @user_is_type('purdueuser')

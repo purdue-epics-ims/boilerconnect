@@ -1,4 +1,5 @@
 {% extends "dbtest/base.html" %}
+{% load widget_tweaks %}
 
 {% block content %}
 
@@ -33,19 +34,18 @@
             <span class="input-group-addon" id="addon1">
               <i class="fa fa-institution"></i>
             </span>
-
-            {% render_field modelform.email class+="form-control" %}
+            {% render_field profile_form.email class+="form-control"  placeholder="Email" %}
         </div>
       </div>
 
-      New Password 
+      Password 
       <div class="form-group">
         <div class="input-group">
             <span class="input-group-addon" id="addon1">
               <i class="fa fa-institution"></i>
             </span>
 
-            {% render_field modelform.password1 class+="form-control" %}
+            {% render_field form.password1 class+="form-control" %}
         </div>
       </div>
 
@@ -56,7 +56,7 @@
               <i class="fa fa-institution"></i>
             </span>
 
-            {% render_field modelform.password1 class+="form-control" %}
+            {% render_field form.password2 class+="form-control" %}
         </div>
       </div>
 

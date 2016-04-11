@@ -42,7 +42,7 @@ def populate():
     print '  creating Users'
 
     #create users
-    emails = cycle(['evan@evanw.org',''])
+    emails = cycle(['evan@evanw.org','malesevic.milos2@gmail.com'])
     types = cycle([True,False])
     for num in range(0,10):
         newuser = User.objects.create(username='user{0}'.format(num))
