@@ -15,7 +15,7 @@
       </h3>
 
       {% for category in organization.categories.all %}
-      <a href="{% url 'search' %}?search={{ category.name }}&search_model=organization&search_by=category" class="label label-primary">{{category.name}}</a>
+      <a href="{% url 'search' %}?search={{ category.name }}&search_model=organization&search_by=category" class="btn btn-default">{{category.name}}</a>
       {%endfor%}
 
     </center>
