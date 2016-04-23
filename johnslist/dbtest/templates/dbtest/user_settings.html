@@ -1,4 +1,5 @@
 {% extends "dbtest/base.html" %}
+{% load widget_tweaks %}
 
 {% block content %}
 
@@ -23,26 +24,45 @@
       </span>
       <input id="id_username" name="username" maxlength="30" type="text" class="form-control" placeholder="Edit username" autofocus="true" autocomplete="off" aria-describedby="addon1" value="{{user.username}}">
     </div>
-    &nbsp;
 
-    <div class="input-group">
-      <span class="input-group-addon" id="addon-pa">
-        <div class="glyphicon glyphicon-lock"></div>
-      </span>
-      <input type="password" maxlength="30" id="id_password1" name="password1"  class="form-control" placeholder="Change Password" aria-describedby="addon1">
+    <div class="row">
+      <div class="col-sm-6">
+
+      Email
+      <div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon" id="addon1">
+              <i class="fa fa-institution"></i>
+            </span>
+            {% render_field profile_form.email class+="form-control"  placeholder="Email" %}
+        </div>
+      </div>
+
+      Password 
+      <div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon" id="addon1">
+              <i class="fa fa-institution"></i>
+            </span>
+
+            {% render_field form.password1 class+="form-control" %}
+        </div>
+      </div>
+
+      Confirm Password 
+      <div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon" id="addon1">
+              <i class="fa fa-institution"></i>
+            </span>
+
+            {% render_field form.password2 class+="form-control" %}
+        </div>
+      </div>
 
     </div>
+  </div>
 
-    &nbsp;
-
-    <div class="input-group">
-      <span class="input-group-addon" id="addon-pa">
-        <div class="glyphicon glyphicon-lock"></div>
-      </span>
-      <input type="password" id="id_password2" maxlength="30" name="password2"  class="form-control" placeholder="Confirm change password" aria-describedby="addon1">
-
-    </div>
-    <br>
     <input class="btn btn-primary" type="submit" value="Modify User">
   </form>
   {% endif %}

@@ -71,5 +71,5 @@ $('#search').keyup(function() {
 
 //------------------ submit button function ----------------
 function submitFunction() {
-    $('#id_organization').val($("#org_selected").children(':not(.hidden)').map(function(){ return $(this).attr('org_pk') }))
+    $('#id_organization').val($("#org_selected").children().map(function(){ return $(this).attr('org_pk') }))
 }

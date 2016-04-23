@@ -23,32 +23,31 @@
 <div class="container">
     <div class="form-group">
         <form action="{% url 'job_creation' %}" method="post">{% csrf_token %}
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#tutorial" data-toggle="tab" aria-expanded="true">Explanation of the process</a></li>
-                <li class=""><a href="#info" data-toggle="tab" aria-expanded="true">Basic information</a></li>
-                <li class=""><a href="#specs" data-toggle="tab" aria-expanded="true">Job Specifications</a></li>
-                <li class=""><a href="#orgs" data-toggle="tab" aria-expanded="true">Organizations selection</a></li>
+            <ul class="pagination pagination-lg page-tabs">
+                <li><a class="page-tab prev_tab btn btn-primary">Previous</a></li>
+                <li class="active"><a class="page-tab" href="#tutorial" data-toggle="tab">1</a></li>
+                <li><a class="page-tab" href="#info" data-toggle="tab">2</a></li>
+                <li><a class="page-tab" href="#specs" data-toggle="tab">3</a></li>
+                <li><a class="page-tab" href="#orgs" data-toggle="tab">4</a></li>
+                <li><a class="active next_tab btn btn-primary">Next</a></li>
             </ul>
 
-            <div class="button_group">
-            <a style="display:none;" class="prev_tab btn btn-primary" ">Previous</a>
-            <a class="next_tab btn btn-primary">Next</a>
-            </div>
 
             <div class="row tab-content">
 
                 <!-- ############## Explanation Tab ############# -->
 
                 <div class="tab-pane fade active in" id="tutorial">
+                    <h1>Explanation of the process</h1>
                     <div class="row">
                         <div class="col-sm-4">
-                        After your job is submitted, the copy of each submission is sent to all organizations that you selected. Those organizations will be able to review it, and they have an option to leave a comment on your job. If they do comment, you will be notified about this. 
+                          Pick a few organizations that you think would be a good match for your job.
                         </div>
                         <div class="col-sm-4">
-                        After that, organizations will decide if they have capabilities to perform the job. Based on that, they will either accept the job or decline it, and you will be notified on this website, as well as in email about their decision.<br>
+                          Wait for a few organizations to respond.
                         </div>
                         <div class="col-sm-4">
-                        Finally, once you are satisfied with the responses from the organizations, you will be able to pick the organization that is going to do the job. We will exchange the contact information for you, and the rest of the communication is to be done on your behalf.
+                          Finally, you will choose which one is going to do the job for you.
                         </div>
                     </div>
                     <div class="row">
@@ -67,24 +66,35 @@
                 <!--########## Basic information Tab ##########-->
 
                 <div class="tab-pane fade" id="info">
-                <div class="form-group">
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                        <i class="fa fa-bullhorn"></i>
-                        </span>
-                        Name of the job.
-                        {% render_field form.name class+="form-control" placeholder="eg. Irrigation System" %}
-                    </div>
-                </div>
+                  <h1>Basic information</h1>
+                  <div class="form-group">
+                      <div class="input-group">
+                          <span class="input-group-addon">
+                          <i class="fa fa-bullhorn"></i>
+                          </span>
+                          Name of the job.
+                          {% render_field form.name class+="form-control" placeholder="eg. Irrigation System" %}
+                      </div>
+                  </div>
 
+
+                  <div class="form-group">
+                      <div class="input-group">
+                          <span class="input-group-addon">
+                          <i class="fa fa-coffee"></i>
+                          </span>
+                          What organization or group are you representing?
+                          {% render_field form.client_organization class+="form-control" placeholder="eg. Lafayette City Farms" %}
+                      </div>
+                  </div>
 
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
                         <i class="fa fa-coffee"></i>
                         </span>
-                        What organization or group are you representing?
-                        {% render_field form.client_organization class+="form-control" placeholder="eg. Lafayette City Farms" %}
+                        Contact Information
+                        {% render_field form.contact_information class+="form-control" placeholder="eg. emails, phone number" %}
                     </div>
                 </div>
 
@@ -93,24 +103,25 @@
                         <span class="input-group-addon">
                         <i class="fa fa-coffee"></i>
                         </span>
-                        Briefly describe the deliverables that you expect as a result of this project.
+                        Briefly describe the product or service that you expect as a result of this project.
                         {% render_field form.deliverable class+="form-control" placeholder="eg. An pump system to handle Spring flooding." %}
                     </div>
                 </div>
 
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                        <i class="fa fa-coffee"></i>
-                        </span>
-                        Give a short description of the job. Later, you will be able to provide more detailed description, keep this one brief.
-                        {% render_field form.description class+="form-control" %}
-                    </div>
+                      <div class="input-group">
+                          <span class="input-group-addon">
+                          <i class="fa fa-coffee"></i>
+                          </span>
+                          Give a short description of the job. Later, you will be able to provide more detailed description, keep this one brief.
+                          {% render_field form.description class+="form-control" %}
+                      </div>
                 </div>
 
                 <!------------ Technical specifications Tab ------------>
 
                 <div class="tab-pane fade" id="specs">
 
+                  <h1>Technical specifications</h1>
                   <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
@@ -126,7 +137,7 @@
                         <span class="input-group-addon">
                         <i class="fa fa-coffee"></i>
                         </span>
-                        List stakeholders and anyone who might be affected by this work.  Give a description if necessary.
+                        List any individuals or groups who might be affected by this work.  Give a description if necessary.
                         {% render_field form.stakeholders class+="form-control" placeholder="eg. Lafayette City Farms, Lafayette farmers" %}
                     </div>
                   </div>
@@ -136,8 +147,8 @@
                         <span class="input-group-addon">
                         <i class="fa fa-cogs"></i>
                         </span>
-                        If available, provide the technical specifications of the deliverable. In this section, you should be as precise as you can. 
-                        {% render_field form.tech_specs class+="form-control" %}
+                        If available, provide any additional information about project. In this section, you should be as precise as you can. 
+                        {% render_field form.additional_information class+="form-control" %}
                     </div>
                   </div>
 
@@ -179,9 +190,15 @@
                 </div>
             </div>
 
-            <div class="button_group">
-            <a style="display:none;" class="prev_tab btn btn-primary" ">Previous</a>
-            <a class="next_tab btn btn-primary">Next</a>
+            <!-- <ul class="pagination pagination-lg page-tabs"> -->
+            <!-- <li><a class="page-tab prev_tab btn btn-primary">Previous</a></li> -->
+            <!-- <li class="active"><a class="page-tab" href="#tutorial" data-toggle="tab">1</a></li> -->
+            <!-- <li><a class="page-tab" href="#info" data-toggle="tab">2</a></li> -->
+            <!-- <li><a class="page-tab" href="#specs" data-toggle="tab">3</a></li> -->
+            <!-- <li><a class="page-tab" href="#orgs" data-toggle="tab">4</a></li> -->
+            <!-- <li><a class="active next_tab btn btn-primary">Next</a></li> -->
+            <!-- </ul> -->
+
             </div>
         </form>
     </div>
@@ -193,32 +210,32 @@
 
 function update_visibility(active_tab){
     if (active_tab.attr('href') == '#tutorial'){
-        $('.prev_tab').hide();
-        $('.next_tab').show();
+        $('.prev_tab').removeClass("active");
+        $('.next_tab').addClass("active");
     }
     else if (active_tab.attr('href') == '#orgs'){
-        $('.next_tab').hide();
-        $('.prev_tab').show();
+        $('.prev_tab').addClass("active");
+        $('.next_tab').removeClass("active");
     }
     else {
-        $('.next_tab').show();
-        $('.prev_tab').show();
+        $('.next_tab').addClass("active");
+        $('.prev_tab').addClass("active");
     }
 }
 
-$('.nav-tabs').click(function(event){
+$('.page-tab').click(function(event){
     active_tab = $(event.target);
     update_visibility(active_tab);
 });
 
 $('.next_tab').click(function(){
-    active_tab = $('.nav-tabs > .active').next('li').find('a');
+    active_tab = $('.page-tabs > .active').next('li').find('a');
     active_tab.trigger('click');
     update_visibility(active_tab);
 });
 
 $('.prev_tab').click(function(){
-    active_tab = $('.nav-tabs > .active').prev('li').find('a');
+    active_tab = $('.page-tabs > .active').prev('li').find('a');
     active_tab.trigger('click');
     update_visibility(active_tab);
 });

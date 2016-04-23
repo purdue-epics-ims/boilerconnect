@@ -17,7 +17,7 @@ urlpatterns = [
     url(r'^job/(?P<job_id>[0-9]+)/?$', views.job_dash,name='job_dash'),
     url(r'^organization/(?P<organization_id>[0-9]+)/job/(?P<job_id>[0-9]+)/?$', views.jobrequest_dash,name='jobrequest_dash'),
     url(r'^job_creation$', views.job_creation,name='job_creation'),
-    url(r'^job/(?P<job_id>[0-9]+)/edit?$', views.job_settings,name='job_settings'),
+    url(r'^job/(?P<job_id>[0-9]+)/edit/?$', views.job_settings,name='job_settings'),
     #misc urls
     url(r'^$',views.front_page,name='front_page'),
     url(r'^search/?$',views.search,name='search'),

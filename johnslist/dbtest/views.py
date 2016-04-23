@@ -141,7 +141,7 @@ def jobrequest_dash(request,job_id,organization_id):
     job = Job.objects.get(id=job_id)
     organization = Organization.objects.get(id=organization_id)
     jobrequest = JobRequest.objects.get(job = job, organization = organization)
-    comment_text = jobrequest.comment_set.all()
+    comments = jobrequest.comment_set.all()
     perm_to_edit_jobrequest_state = request.user.has_perm('edit_jobrequest_state',jobrequest)
     form = CommentCreateForm()
 
@@ -153,7 +153,10 @@ def jobrequest_dash(request,job_id,organization_id):
             if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.accept()
                 message = "You have accepted this job."
+                link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jobrequest.job.id, 'organization_id': organization_id}))
+                send_mail('BoilerConnect - Job Request Accepted', '{0} has accepted your Job Request!. Click on the link to see the request. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
                 messages.add_message(request, messages.INFO, message)
+
             else:
                 message = "You have already accepted this job."
                 messages.add_message(request, messages.ERROR, message)
@@ -164,6 +167,8 @@ def jobrequest_dash(request,job_id,organization_id):
                 jobrequest.decline()
                 message = "You have declined this job."
                 messages.add_message(request, messages.INFO, message)
+                link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jobrequest.job.id, 'organization_id': organization_id}))
+                send_mail('BoilerConnect - Job Request Accepted', '{0} has declined your Job Request!. Click on the link to see the request. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
             else:
                 message = "You have already declined this job."
                 messages.add_message(request, messages.ERROR, message)
@@ -195,6 +200,8 @@ def jobrequest_dash(request,job_id,organization_id):
                 verb = "commented on"
                 if request.user.userprofile.purdueuser:
                     recipient = job.creator
+                    link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jobrequest.job.id, 'organization_id': organization_id}))
+                    send_mail('BoilerConnect - Job Request Accepted', '{0} has commented on your Job Request!. Click on the link to see the comment. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
                 else:
                     recipient = jobrequest.organization.group
                 url = reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id})
@@ -211,7 +218,7 @@ def jobrequest_dash(request,job_id,organization_id):
     # if request is GET
     return render(request, 'dbtest/jobrequest_dash.html',
                   {'jobrequest':jobrequest,
-                   'comment_text':comment_text,
+                   'comments':comments,
                    'show_dialog':show_dialog,
                    'perm_to_edit_jobrequest_state':perm_to_edit_jobrequest_state,
                    'form':form
@@ -262,13 +269,13 @@ def user_create(request, profile):
         profile_form = ProfileCreationForm(request.POST)
 
         #check form validity
-        if form.is_valid():
-            if profile_form.is_valid():
+        if all([form.is_valid(), profile_form.is_valid()]):
                 #creating user and userprofile
                 user=form.save()
                 profile=profile_form.save()
                 profile.user=user
                 profile.save()
+                user.save()
                 form.save_m2m()
                 title = "User {0} created".format( user.username )
                 confirm = "Thank you for creating an account."
@@ -279,11 +286,11 @@ def user_create(request, profile):
                 login_user = authenticate(username=username_auth, password=password_auth)
                 login_auth(request, login_user)
                 return redirect('user_dash')
-            else:
+        else:
+                print "or here"
                 return render(request, 'dbtest/user_create.html', {'form':form, 'profile_form':profile_form,'error':"Profile type error."})
 
-
-    #if the request was a GET
+#if the request was a GET
     else:
         form = UserCreationForm()
         if(profile == "purdue"):
@@ -327,12 +334,15 @@ def user_settings(request):
         #if this request was a POST and not a GET
     if request.method == 'POST':
         form = UserCreationForm(request.POST, instance=request.user)
-        form.actual_user = request.user
+        profile_form = ProfileCreationForm(request.POST, instance=request.user.userprofile)
 
         #check form validity
-        if form.is_valid() :
+        if all([form.is_valid(), profile_form.is_valid()]):
             #save user to db and store info to 'user'
             user = form.save(commit = False)
+            profile=profile_form.save()
+            profile.user=user
+            profile.save()
             #user.username = request.user.username()
             title = "User {0} modified".format( user.username )
             user.save()
@@ -351,10 +361,12 @@ def user_settings(request):
     else:
         if request.user.is_authenticated():
             form = UserCreationForm(instance=request.user)
+            profile_form = ProfileCreationForm(instance=request.user.userprofile)
         else:
             form = UserCreationForm()
+            profile_form = ProfileCreationForm()
 
-    return render(request, 'dbtest/user_settings.html', {'form':form})
+    return render(request, 'dbtest/user_settings.html', {'form':form, 'profile_form':profile_form})
 
 @login_required
 @user_is_type('purdueuser')
@@ -387,19 +399,11 @@ def job_creation(request):
 
     if request.method == 'POST':
         form = JobCreateForm(request.POST)
-        selected_orgs = Organization.objects.filter(pk__in = request.POST.getlist('organization'))
+        selected_orgs = Organization.objects.filter(pk__in = form.data['organization'])
+
         #check form validity
         if form.is_valid():
-            job = form.save(commit=False)
-            job.creator = request.user
-            job.save()
-
-            #get the list of orgs to request from the form
-            for org in selected_orgs:
-                organization = Organization.objects.get(id = org.pk)
-                jr = JobRequest.objects.create(organization=organization, job = job)
-                link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org.pk}))
-                send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [organization.email], fail_silently=False)
+            job = form.save(request)
 
             message = "Job {0} created".format( job.name )
             messages.add_message(request, messages.INFO, message)
@@ -408,6 +412,7 @@ def job_creation(request):
             deselected_orgs = Organization.objects.exclude(pk__in = request.POST.getlist('organization'))
 
     #if the request was a GET
+
     else:
         selected_orgs = []
         deselected_orgs = Organization.objects.all()
@@ -423,11 +428,11 @@ def about(request):
 def job_settings(request,job_id):
     job = Job.objects.get(id=job_id)
 
-    selected_orgs = job.organization.all()
-    deselected_orgs = Organization.objects.exclude(pk__in = [org.pk for org in selected_orgs])
     #if the request was a GET
     if request.method == 'GET':
         form = JobEditForm(instance=job)
+        selected_orgs = job.organization.all()
+        deselected_orgs = Organization.objects.exclude(pk__in = [org.pk for org in selected_orgs])
 
     elif request.method == 'POST':
         form = JobEditForm(request.POST, instance=job)
@@ -435,12 +440,14 @@ def job_settings(request,job_id):
         #check form validity
         if form.is_valid() :
             #get form info
-            job = form.save()
+            job = form.save(request)
 
             #add new orgs/remove removed orgs here
 
             message = "Job {0} has been modified.".format(job.name)
             messages.add_message(request, messages.INFO, message)
+            selected_orgs = job.organization.all()
+            deselected_orgs = Organization.objects.exclude(pk__in = [org.pk for org in selected_orgs])
 
         else:
             selected_orgs = Organization.objects.filter(pk__in = request.POST.getlist('organization'))
