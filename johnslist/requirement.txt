@@ -1,0 +1,12 @@
+#
+############ Dependencies for BoilerConnect Project ###############
+#
+########### Requirements without version specifiers ###############
+django
+easy-thumbnails
+django-guardian
+django-notifications-hq
+django-model-utils
+pillow
+django-widget-tweaks
+django-sniplates
