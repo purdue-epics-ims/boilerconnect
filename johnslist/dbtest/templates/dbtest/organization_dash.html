@@ -16,6 +16,7 @@
   <a href="{% url 'organization_settings' organization.id %}" class="pull-right"><button class="btn btn-info">Organization Settings</button></a>
   <a href="{% url 'organization_detail' organization.id %}" class="pull-right"><button class="btn btn-info">View Public Profile</button></a>
 </div>
+<div class="jobrequest-overlay-contain"></div>
 
 <div class="row">
   <div class="col-sm-7">
@@ -27,7 +28,8 @@
       <div class="panel-body">
         <ul class="dash-list list-group">
           {% for jobrequest in jobrequests %}
-          <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
+          <div class="list-group-item">
+            <a class="label label-info jobrequest-overlay-trigger" jobrequestID={{jobrequest.id}}>Show</a>
             {% if jobrequest.accepted %}
             <span class="label label-lg label-success">Accepted</span>
             {% elif jobrequest.declined %}
@@ -36,7 +38,17 @@
             <span class="label label-lg label-warning">Pending</span>
             {% endif %}
             {{ jobrequest.job.name }} by {{jobrequest.job.client_organization}}
-          </a>
+            <script>
+              var overlayID = {{jobrequest.id}};
+              var orgID = "{{jobrequest.organization.id}}";
+              var jobID = "{{jobrequest.job.id}}";
+              var jobrequestOverlay = $('<div></div>').addClass('jobrequest-overlay');
+              jobrequestOverlay.attr('overlayID', overlayID);
+              jobrequestOverlay.append($('<a class="exit-overlay">X</a>'));
+              $(".jobrequest-overlay-contain").append(jobrequestOverlay);
+              jobrequestOverlay.load(window.location.origin+"/organization/"+orgID+"/job/"+jobID);
+            </script>
+          </div>
           {% endfor %}
         </ul>
       </div>
@@ -45,4 +57,48 @@
   </div>
 </div>
 
+<script>
+    var ESC_KEY = 27; // ecs key value
+
+    function closeOverlay() {
+        $(".jobrequest-overlay:visible").hide();
+        $(".jobrequest-overlay-contain").hide();
+    }
+
+    function showOverlay(event){
+        event.preventDefault();
+        event.stopPropagation();
+        var jobrequestID = $(event.target).attr("jobrequestID");
+        $(".jobrequest-overlay-contain").show();
+        $('[overlayID="'+jobrequestID+'"]').show();
+    }
+
+    $(".jobrequest-overlay-trigger").click(showOverlay);
+
+    $(".jobrequest-overlay-contain").click(function(event){
+        event.stopPropagation();
+
+        // this prevent the event getting triggered when clicking overlay
+        if ($(event.target).hasClass("jobrequest-overlay-contain") || $(event.target).hasClass("exit-overlay")) {
+            closeOverlay();
+        }
+    }).css({ // set the height and width to fit
+        height: $(window).height(),
+        width: $(window).width()
+    });
+
+    $(window).resize(function (event) { // handle the window resize
+       $(".jobrequest-overlay-contain").css({
+           height: $(window).height(),
+           width: $(window).width()
+       }) ;
+    });
+
+    $(document).keydown(function (event) {
+        // if the key pressed is ESC or jobrequest-overlay-contain is visible
+        if (event.which == ESC_KEY && $(".jobrequest-overlay-contain:visible")[0]) {
+            closeOverlay();
+        }
+    });
+</script>
 {% endblock content %}

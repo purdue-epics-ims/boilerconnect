@@ -95,10 +95,10 @@ def job_dash(request,job_id):
         jobrequests = job.jobrequests.order_by('organization')
 
     return render(request, 'dbtest/job_dash.html',
-                  {'job':job,
-                   'jobrequests':jobrequests,
-                   'show_dialog':show_dialog
-                  })
+                  {'job': job,
+                   'jobrequests': jobrequests,
+                   'show_dialog': show_dialog
+                   })
 
 #get detailed organization information - email, phone #, users in Org, admins, etc.
 def organization_detail(request,organization_id):
@@ -122,7 +122,6 @@ def organization_dash(request,organization_id):
 
     org = Organization.objects.get(id=organization_id)
     members = org.group.user_set.all()
-    jobrequests = JobRequest.objects.filter(organization=org)
     jobrequests = [jr for jr in org.jobrequest_set.all() if jr.confirmed or jr.job.closed == False]
     return render(request, 'dbtest/organization_dash.html',
                   {'organization':org,
@@ -140,7 +139,10 @@ def jobrequest_dash(request,job_id,organization_id):
 
     job = Job.objects.get(id=job_id)
     organization = Organization.objects.get(id=organization_id)
+
+    # this is the jobrequest for a particular organization
     jobrequest = JobRequest.objects.get(job = job, organization = organization)
+    request.session['originalJobrequestID'] = jobrequest.id
     comments = jobrequest.comment_set.all()
     perm_to_edit_jobrequest_state = request.user.has_perm('edit_jobrequest_state',jobrequest)
     form = CommentCreateForm()
@@ -154,7 +156,7 @@ def jobrequest_dash(request,job_id,organization_id):
                 jobrequest.accept()
                 message = "You have accepted this job."
                 link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jobrequest.job.id, 'organization_id': organization_id}))
-                send_mail('BoilerConnect - Job Request Accepted', '{0} has accepted your Job Request!. Click on the link to see the request. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
+                #send_mail('BoilerConnect - Job Request Accepted', '{0} has accepted your Job Request!. Click on the link to see the request. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
                 messages.add_message(request, messages.INFO, message)
 
             else:
@@ -168,7 +170,7 @@ def jobrequest_dash(request,job_id,organization_id):
                 message = "You have declined this job."
                 messages.add_message(request, messages.INFO, message)
                 link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jobrequest.job.id, 'organization_id': organization_id}))
-                send_mail('BoilerConnect - Job Request Accepted', '{0} has declined your Job Request!. Click on the link to see the request. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
+                #send_mail('BoilerConnect - Job Request Accepted', '{0} has declined your Job Request!. Click on the link to see the request. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
             else:
                 message = "You have already declined this job."
                 messages.add_message(request, messages.ERROR, message)
@@ -183,7 +185,7 @@ def jobrequest_dash(request,job_id,organization_id):
                 message = "You have already confirmed this job."
                 messages.add_message(request, messages.ERROR, message)
 
-        # handle decline button click
+        # handle comment button click
         if request.POST.get("action","")=="comment":
             form = CommentCreateForm(request.POST)
             if form.is_valid():
@@ -201,7 +203,7 @@ def jobrequest_dash(request,job_id,organization_id):
                 if request.user.userprofile.purdueuser:
                     recipient = job.creator
                     link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jobrequest.job.id, 'organization_id': organization_id}))
-                    send_mail('BoilerConnect - Job Request Accepted', '{0} has commented on your Job Request!. Click on the link to see the comment. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
+                    #send_mail('BoilerConnect - Job Request Accepted', '{0} has commented on your Job Request!. Click on the link to see the comment. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
                 else:
                     recipient = jobrequest.organization.group
                 url = reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id})
@@ -210,11 +212,13 @@ def jobrequest_dash(request,job_id,organization_id):
                             action_object=action_object,
                             recipient=recipient,
                             url=url)
-                return HttpResponseRedirect(url)
             else:
                 message = "The comment cannot be empty."
                 messages.add_message(request, messages.ERROR, message)
-
+        if request.user.userprofile.purdueuser:
+            return HttpResponseRedirect(reverse('organization_dash', kwargs = {'organization_id':organization.id}));
+        else:
+            return HttpResponseRedirect(reverse('job_dash', kwargs={'job_id': job.id}));
     # if request is GET
     return render(request, 'dbtest/jobrequest_dash.html',
                   {'jobrequest':jobrequest,

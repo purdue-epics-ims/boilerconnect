@@ -334,9 +334,53 @@ background:#e1d8d8;
 /* } */
 
 /* ----------------- Job Request Dash ----------------- */
-.comment-body{
+.jobrequest-overlay-contain {
+    z-index: 1;
+    display: none;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform:translate(-50%,-50%);
+    overflow-x: hidden;
+	background-color: rgba(0,0,0,0.8);
+}
+
+.exit-overlay {
+    cursor: pointer;
+    color: darkgray;
+    max-width: 5%;
+    font-size: x-large;
+    transform: translateX(10px);
+}
+
+.jobrequest-overlay-block-content {
+    max-width: 80%;
+    transform: translateX(15%);
+}
+
+.jobrequest-overlay {
+    opacity: 1;
+    z-index: 3;
+    position: relative;
+    display: none;
+    left: 50%;
+    top: 50%;
+    transform:translate(-50%,-50%);
+    background-color: white;
+    width: 50%;
+    height:80%;
+    cursor: auto;
+    overflow: scroll;
+}
+
+.comment-body {
     word-wrap: break-word;
 }
-.information-body{
+
+.comment-header {
+    overflow-wrap: break-word;
+}
+
+.information-body {
     word-wrap: break-word;
 }

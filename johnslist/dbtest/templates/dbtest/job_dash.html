@@ -16,6 +16,8 @@
   <a href="{% url 'job_settings' job.id %}" class="pull-right"><button class="btn btn-info">Job Settings</button></a>
 </div>
 
+<div class="jobrequest-overlay-contain"></div>
+
 <div class="row">
   <div class="col-sm-7">
     <div class="panel panel-primary">
@@ -25,8 +27,9 @@
       </div>
       <div class="panel-body">
         <ul class="list-group dash-list">
-          {% for jobrequest in jobrequests %}
-            <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
+            {% for jobrequest in jobrequests %}
+            <div class="list-group-item">
+                <a class="label label-info jobrequest-overlay-trigger" jobrequestID={{jobrequest.id}}>Show</a>
                 {% if jobrequest.confirmed %}
                 <span class="label label-success">Confirmed</span>
                 {% elif jobrequest.accepted %}
@@ -37,8 +40,19 @@
                 <span class="label label-warning">Pending</span>
                 {% endif %}
                 <img class="icon" src="{{ jobrequest.organization.icon.url }}"></img>
-            {{ jobrequest.organization }}
-            </a>
+                {{ jobrequest.organization }}
+                <script>
+                    var overlayID = {{jobrequest.id}};
+                    var orgID = "{{jobrequest.organization.id}}";
+                    var jobID = "{{jobrequest.job.id}}";
+                    var jobrequestOverlay = $('<div></div>').addClass('jobrequest-overlay');
+                    jobrequestOverlay.attr('overlayID', overlayID);
+                    $(".jobrequest-overlay-contain").append(jobrequestOverlay);
+
+                    // send a GET request to jobrequest_dash in view.py and display the content in overlay
+                    jobrequestOverlay.load(window.location.origin+"/organization/"+orgID+"/job/"+jobID);
+                </script>
+            </div>
           {% endfor %}
         </ul>
       </div>
@@ -46,4 +60,49 @@
   </div>
 </div>
 
+<!--this message appears for new user only -->
+<script>
+    var ESC_KEY = 27; // ecs key value
+
+    function closeOverlay() {
+        $(".jobrequest-overlay:visible").hide();
+        $(".jobrequest-overlay-contain").hide();
+    }
+
+    function showOverlay(event){
+        event.preventDefault();
+        event.stopPropagation();
+        var jobrequestID = $(event.target).attr("jobrequestID");
+        $(".jobrequest-overlay-contain").show();
+        $('[overlayID="'+jobrequestID+'"]').show();
+    }
+
+    $(".jobrequest-overlay-trigger").click(showOverlay);
+
+    $(".jobrequest-overlay-contain").click(function(event){
+        event.stopPropagation();
+
+        // this prevent the event getting triggered when clicking overlay
+        if ($(event.target).hasClass("jobrequest-overlay-contain") || $(event.target).hasClass("exit-overlay")) {
+            closeOverlay();
+        }
+    }).css({ // set the height and width to fit
+        height: $(window).height(),
+        width: $(window).width()
+    });
+
+    $(window).resize(function (event) { // handle the window resize
+       $(".jobrequest-overlay-contain").css({
+           height: $(window).height(),
+           width: $(window).width()
+       }) ;
+    });
+
+    $(document).keydown(function (event) {
+        // if the key pressed is ESC or jobrequest-overlay-contain is visible
+        if (event.which == ESC_KEY && $(".jobrequest-overlay-contain:visible")[0]) {
+            closeOverlay();
+        }
+    });
+</script>
 {% endblock content %}
