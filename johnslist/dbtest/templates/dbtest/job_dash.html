@@ -28,8 +28,7 @@
       <div class="panel-body">
         <ul class="list-group dash-list">
             {% for jobrequest in jobrequests %}
-            <div class="list-group-item">
-                <a class="label label-info jobrequest-overlay-trigger" jobrequestID={{jobrequest.id}}>Show</a>
+            <a class="list-group-item jobrequest-overlay-trigger" href="" jobrequestID={{jobrequest.id}}>
                 {% if jobrequest.confirmed %}
                 <span class="label label-success">Confirmed</span>
                 {% elif jobrequest.accepted %}
@@ -52,7 +51,7 @@
                     // send a GET request to jobrequest_dash in view.py and display the content in overlay
                     jobrequestOverlay.load(window.location.origin+"/organization/"+orgID+"/job/"+jobID);
                 </script>
-            </div>
+            </a>
           {% endfor %}
         </ul>
       </div>
