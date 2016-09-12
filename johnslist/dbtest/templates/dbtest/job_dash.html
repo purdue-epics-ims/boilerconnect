@@ -28,7 +28,7 @@
       <div class="panel-body">
         <ul class="list-group dash-list">
             {% for jobrequest in jobrequests %}
-            <a class="list-group-item jobrequest-overlay-trigger" href="" jobrequestID={{jobrequest.id}}>
+            <a class="list-group-item jobrequest-overlay-trigger" jobrequestID={{jobrequest.id}}>
                 {% if jobrequest.confirmed %}
                 <span class="label label-success">Confirmed</span>
                 {% elif jobrequest.accepted %}
@@ -71,7 +71,13 @@
     function showOverlay(event){
         event.preventDefault();
         event.stopPropagation();
-        var jobrequestID = $(event.target).attr("jobrequestID");
+        var jobrequestID;
+        if ($(event.target).hasClass("jobrequest-overlay-trigger")) {
+            jobrequestID = $(event.target).attr("jobrequestID");
+        } else {
+            jobrequestID = $(event.target).parent().attr("jobrequestID");
+        }
+
         $(".jobrequest-overlay-contain").show();
         $('[overlayID="'+jobrequestID+'"]').show();
     }

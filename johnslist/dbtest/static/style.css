@@ -373,6 +373,10 @@ background:#e1d8d8;
     overflow: scroll;
 }
 
+.jobrequest-overlay-trigger {
+	cursor: pointer;
+}
+
 .comment-body {
     word-wrap: break-word;
 }
