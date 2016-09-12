@@ -28,8 +28,7 @@
       <div class="panel-body">
         <ul class="dash-list list-group">
           {% for jobrequest in jobrequests %}
-          <div class="list-group-item">
-            <a class="label label-info jobrequest-overlay-trigger" jobrequestID={{jobrequest.id}}>Show</a>
+          <a class="list-group-item jobrequest-overlay-trigger" href="" jobrequestID={{jobrequest.id}}>
             {% if jobrequest.accepted %}
             <span class="label label-lg label-success">Accepted</span>
             {% elif jobrequest.declined %}
@@ -48,7 +47,7 @@
               $(".jobrequest-overlay-contain").append(jobrequestOverlay);
               jobrequestOverlay.load(window.location.origin+"/organization/"+orgID+"/job/"+jobID);
             </script>
-          </div>
+          </a>
           {% endfor %}
         </ul>
       </div>
