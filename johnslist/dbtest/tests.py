@@ -70,7 +70,7 @@ def set_up(self):
         #create group/org
         self.g=Group.objects.create(name="foobar_group")
         self.g.user_set.add(self.u_pu)
-        self.o = Organization.objects.create(name = self.g.name, group = self.g, description="test description",email="test@email.com",phone_number="123-456-7890")
+        self.o = Organization.objects.create(name = self.g.name, group = self.g, description="test description",phone_number="123-456-7890")
         self.o.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
         #create category owned by foobar_purdueuser
         self.cat = Category.objects.create(name='foobar_category',description="test description")
@@ -106,7 +106,7 @@ class UserTestCase(TestCase):
 
     def test_user_create(self):
         #successful user creation
-        response = self.client.post(reverse('user_create', kwargs={'profile': "purdue"}), {'username': 'user', 'password1':'zxcv', 'password2':'zxcv', 'user_type': 'purdue'})
+        response = self.client.post(reverse('user_create', kwargs={'profile': "purdue"}), {'username': 'user', 'password1':'zxcv', 'password2':'zxcv', 'user_type': 'purdue','email':'evan@evanw.org'})
         self.assertTrue(User.objects.get(username='user'))
         #unsuccessful user creation
         response = self.client.post(reverse('user_create', kwargs={'profile': "purdue"}), {'username': 'user_fail', 'password1':'zxcv', 'password2':'zxcvhg'})
