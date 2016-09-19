@@ -1,49 +1,35 @@
-{% extends "dbtest/base.html" %}
-
-{% block content %}
-{% if show_dialog %}
-<div class="confirm alert alert-dismissible alert-info">
-    <i type="button" class="close fa fa-close" data-dismiss="alert"></i>
-    <h4> This page shows the organizations you submitted this job request to, and whether they have accepted or declined it.  Click on the organization's name to make changes to the request sent to that particular organization.</h4>
-</div>
-{% endif %}
-
-<div class="jumbotron">
-  <center>
-    <h3>{{ job.name }} <small>Dashboard</small></h3>
-  </center>
-
-  <a href="{% url 'job_settings' job.id %}" class="pull-right"><button class="btn btn-info">Job Settings</button></a>
-</div>
-
-<div class="row">
-  <div class="col-sm-7">
-    <div class="panel panel-primary">
-
-      <div class="panel-heading">
-            Job Requests
-      </div>
-      <div class="panel-body">
-        <ul class="list-group dash-list">
-          {% for jobrequest in jobrequests %}
-            <a class="list-group-item" href="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
-                {% if jobrequest.confirmed %}
-                <span class="label label-success">Confirmed</span>
-                {% elif jobrequest.accepted %}
-                <span class="label label-success">Accepted</span>
-                {% elif jobrequest.declined %}
-                <span class="label label-danger">Declined</span>
-                {% else %}
-                <span class="label label-warning">Pending</span>
-                {% endif %}
-                <img class="icon" src="{{ jobrequest.organization.icon.url }}"></img>
-            {{ jobrequest.organization }}
-            </a>
-          {% endfor %}
-        </ul>
-      </div>
-    </div>
-  </div>
-</div>
-
-{% endblock content %}
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="1404.47">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 14.0px; font: 12.0px Times; color: #000000; -webkit-text-stroke: #000000}
+    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 13.0px; font: 11.0px '.AppleSystemUIFont'; color: #000000; -webkit-text-stroke: #000000}
+    li.li5 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 14.0px; font: 12.0px Times; color: #0000ee; -webkit-text-stroke: #0000ee}
+    span.s1 {font-kerning: none}
+    span.s2 {font: 12.0px Times; font-kerning: none}
+    span.s3 {text-decoration: underline ; font-kerning: none; background-color: #c0c0c0}
+    span.s4 {color: #000000; -webkit-text-stroke: 0px #000000}
+    span.s5 {font-kerning: none; color: #000000; -webkit-text-stroke: 0px #000000}
+    span.s6 {text-decoration: underline ; font-kerning: none; color: #0000ee; -webkit-text-stroke: 0px #0000ee}
+    span.s7 {font-kerning: none; color: #0000ee; -webkit-text-stroke: 0px #0000ee}
+    ul.ul1 {list-style-type: disc}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">{% extends "dbtest/base.html" %} {% block content %} {% if show_dialog %}</span></p>
+<h4 style="margin: 0.0px 0.0px 16.0px 0.0px; line-height: 14.0px; font: 12.0px Times; color: #000000; -webkit-text-stroke: #000000"><span class="s1"><b>This page shows the organizations you submitted this job request to, and whether they have accepted or declined it. Click on the organization's name to make changes to the request sent to that particular organization.</b></span></h4>
+<p class="p1"><span class="s1">{% endif %}</span></p>
+<h3 style="margin: 0.0px 0.0px 14.0px 0.0px; text-align: center; line-height: 17.0px; font: 14.0px Times; color: #000000; -webkit-text-stroke: #000000"><span class="s1"><b>{{ job.name }} </b></span><span class="s2"><b>Dashboard</b></span></h3>
+<p class="p4"><span class="s3"><a href="file:///Users/Shankar_Krish/boilerconnect/johnslist/dbtest/templates/dbtest/%7B%25%20url%20'job_settings'%20job.id%20%25%7D">Job Settings</a></span><span class="s2"><span class="Apple-converted-space"> </span></span></p>
+<p class="p1"><span class="s1">Job Requests<span class="Apple-converted-space"> </span></span></p>
+<ul class="ul1">
+  <li class="li5"><span class="s4"></span><span class="s5">{% for jobrequest in jobrequests %} <a href="file:///Users/Shankar_Krish/boilerconnect/johnslist/dbtest/templates/dbtest/%7B%25%20url%20'jobrequest_dash'%20jobrequest.organization.id%20jobrequest.job.id%20%25%7D"><span class="s6">{% if jobrequest.confirmed %} Confirmed {% elif jobrequest.accepted %} Accepted {% elif jobrequest.declined %} Declined {% else %} Pending {% endif %} </span><span class="s7"></span><span class="s6"> {{ jobrequest.organization }} </span></a>{% endfor %}<span class="Apple-converted-space"> </span></span></li>
+</ul>
+<p class="p1"><span class="s1">{% endblock content %}<span class="Apple-converted-space"> </span></span></p>
+</body>
+</html>
