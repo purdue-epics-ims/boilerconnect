@@ -1,6 +1,3 @@
-{% extends "dbtest/base.html" %}
-{% block content %}
-
 {% if show_dialog %}
     {% if user.userprofile.purdueuser %}
         <div class="confirm alert alert-dismissible alert-info">
@@ -14,8 +11,8 @@
         </div>
     {% endif %}
 {% endif %}
-
-<div class="jumbotron">
+<button type="button" class="close exit-overlay">&times;</button>
+<div class="jumbotron jobrequest-overlay-block-content">
   <center>
     <h3>{{ jobrequest.job.name }}</h3>
 
@@ -35,7 +32,7 @@
            {%csrf_token%}
            <input type="hidden" name="jobrequest" value="{{jobrequest}}">
            <button class="btn btn-success" type="submit" name="action" value="apply">Apply</button>
-           <button class="btn btn-danger" type="submit" name="action" value="not interested">Not interested</button>
+           <button class="btn btn-danger" type="submit" name="action" value="notInterested">Not Interested</button>
        </form>
    {%else%}
        {%if jobrequest.accepted and not jobrequest.confirmed and not perm_to_edit_jobrequest_state%}
@@ -48,7 +45,7 @@
    {%endif%}
 </div>
 
-<div class="panel panel-primary">
+<div class="panel panel-primary jobrequest-overlay-block-content">
   <div class="panel-heading">
     <h3 class="panel-title">Information about the Job</h3>
   </div>
@@ -74,23 +71,25 @@
   </div>
 </div>
 
-<div class="panel panel-info comments">
+<div class="panel panel-info comments jobrequest-overlay-block-content">
   <div class="panel-heading">
     <h3 class="panel-title">Comments</h3>
   </div>
   <div class="panel-body ">
     {%if comments %}
         {% for comment in comments %}
-            <span class="pull-left"> 
+            <span class="pull-left comment-header">
                 {% if comment.creator.userprofile.purdueuser %}
-                    <b>{{comment.creator}}</b> from <b><a href="{% url 'organization_detail' comment.jobrequest.organization.id %}">{{comment.jobrequest.organization}}</a></b> at {{comment.created}}: 
+                    <b>{{comment.creator}}</b> from <b><a href="{% url 'organization_detail' comment.jobrequest.organization.id %}">{{comment.jobrequest.organization}}</a></b>
                 {% else %}
-                    <b>{{comment.creator}}</b> at {{comment.created}}
+                    <b>{{comment.creator}}</b>
                 {% endif %}
             </span>
             <br>
             <div class="well well-lg comment-body">
-            {{comment.text_comment}}
+                {{comment.text_comment}}
+                <br>
+                <div class="pull-right">{{comment.created}}</div>>
             </div>
         {% endfor %}
     {%else%}
@@ -102,22 +101,9 @@
 </div>
 
 <!-- form action to submit a comment -->
-<form class="form-horizontal" method=POST name="comment" action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
+<form class="form-horizontal jobrequest-overlay-block-content" method=POST name="comment" action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id %}">
     {% csrf_token %}
-<center>
-    <div class="form-group">
-        <label for="textArea" class="col-lg-2 control-label">Leave Your Comment</label>
-        <div class="col-lg-10">
-            <textarea class="form-control" rows="3"  name="text_comment"></textarea>
-        </div>
-    </div>
-</center>
-    <div class="form-group">
-      <div class="col-lg-10 col-lg-offset-2">
-        <button type="submit" class="btn btn-primary" name="action" value="comment">Submit</button>
-      </div>
-    </div>
+    <textarea class="form-control"  name="text_comment" placeholder="Leave your comments here!"></textarea>
+    <button type="submit" class="btn btn-primary pull-right" name="action" value="comment" style="margin-top: 10px; margin-bottom: 10px;">Submit</button>
 </form>
 
-<!--this message appears for new user only -->
-{% endblock content %}

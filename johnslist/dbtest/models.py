@@ -40,7 +40,7 @@ class Organization(models.Model):
     available = models.BooleanField(default=True,choices=((True, "Accepting Jobs"),(False, "Not accepting Jobs")))
 
     class Meta:
-		permissions = (
+        permissions = (
             ( 'view_organization','Can view Organization' ),
             ( 'edit_organization','Can edit Organization' ),
             ( 'is_admin', 'Is an Administrator')
@@ -64,7 +64,7 @@ class Organization(models.Model):
 
     #get admins of this org
     def get_admins(self):
-		return [user for user in self.group.user_set.all() if user.has_perm('is_admin',self)]
+        return [user for user in self.group.user_set.all() if user.has_perm('is_admin',self)]
 
 
 @receiver(post_save, sender=Organization)
