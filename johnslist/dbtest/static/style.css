@@ -346,11 +346,9 @@ background:#e1d8d8;
 }
 
 .exit-overlay {
-    cursor: pointer;
     color: darkgray;
-    max-width: 5%;
-    font-size: x-large;
-    transform: translateX(10px);
+    transform: translateX(-10px);
+	float: right;
 }
 
 .jobrequest-overlay-block-content {
