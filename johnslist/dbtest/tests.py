@@ -233,36 +233,36 @@ class JobTestCase(TestCase):
         login_as(self,self.u_pu.username,'asdf')
         #test that a user cannot accept a jobrequest after it has been accepted/rejected
         jr.accept()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"accept"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"apply"}, follow=True)
         self.assertTrue('error' in list(response.context['messages'])[0].tags)
         jr.decline()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"accept"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"apply"}, follow=True)
         self.assertTrue('error' in list(response.context['messages'])[0].tags)
 
         #test that a user cannot reject a jobrequest after it has been accepted/rejected
         jr.accept()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"decline"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"notInterested"}, follow=True)
         self.assertTrue('error' in list(response.context['messages'])[0].tags)
         jr.decline()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"decline"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"notInterested"}, follow=True)
         self.assertTrue('error' in list(response.context['messages'])[0].tags)
 
         #test that a user can accept/reject a jobrequest when it is still pending
         jr.pend()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"accept"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"apply"}, follow=True)
         self.assertTrue(response.status_code==200)
         jr.pend()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"decline"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"notInterested"}, follow=True)
         self.assertTrue(response.status_code==200)
         logout(self)
 
         #test community user cannot accept/decline a jobrequest
         login_as(self,self.u_cp.username,'asdf')
         jr.pend()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"decline"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"notInterested"}, follow=True)
         self.assertTrue('error' in list(response.context['messages'])[0].tags)
         jr.pend()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"accept"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"apply"}, follow=True)
         self.assertTrue('error' in list(response.context['messages'])[0].tags)
         logout(self)
     def test_jobrequest_confirm(self):

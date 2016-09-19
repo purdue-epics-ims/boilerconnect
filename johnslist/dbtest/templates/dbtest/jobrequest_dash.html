@@ -31,8 +31,8 @@
        <form action="{% url 'jobrequest_dash' jobrequest.organization.id jobrequest.job.id%}" method ="post">
            {%csrf_token%}
            <input type="hidden" name="jobrequest" value="{{jobrequest}}">
-           <button class="btn btn-success" type="submit" name="action" value="accept">Accept Request</button>
-           <button class="btn btn-danger" type="submit" name="action" value="decline">Decline Request</button>
+           <button class="btn btn-success" type="submit" name="action" value="apply">Apply</button>
+           <button class="btn btn-danger" type="submit" name="action" value="notInterested">Not Interested</button>
        </form>
    {%else%}
        {%if jobrequest.accepted and not jobrequest.confirmed and not perm_to_edit_jobrequest_state%}
