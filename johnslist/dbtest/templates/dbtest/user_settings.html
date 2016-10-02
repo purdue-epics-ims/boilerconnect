@@ -8,13 +8,13 @@
     <h3>{{ user.username }} <small>Settings</small></h3>
   </center>
 
-  <a href="{% url 'user_dash' %}" class="pull-right"><button class="btn btn-info">User Dashboard</button></a>
 
 </div>
 
   {% if username %}
   <b>Welcome {{ username }}.  Please check your email for a confirmation message.</b>
   {% else %}
+  <a href="{% url 'user_dash' %}"><button class="btn btn-info">Back</button></a>
   <form action="{% url 'user_settings' %}" method="post">
 
     {% csrf_token %}
