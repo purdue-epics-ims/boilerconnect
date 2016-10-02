@@ -134,7 +134,7 @@ def add_perms_job(sender,**kwargs):
     else:
         #notify users of changed JobRequest
         if job.closed:
-            jobrequests = job.jobrequests_accepted();
+            jobrequests = job.jobrequests_accepted()
         else:
             jobrequests = job.jobrequests_accepted() | job.jobrequests_pending()
         for jobrequest in jobrequests:
@@ -142,8 +142,10 @@ def add_perms_job(sender,**kwargs):
                         verb="modified",
                         action_object=jobrequest,
                         recipient=jobrequest.organization.group,
-                        url=reverse('jobrequest_dash',
-                                    kwargs={'organization_id':jobrequest.organization.id,'job_id':job.id}) )
+                        url=reverse('organization_dash',
+                                    kwargs = {'organization_id':jobrequest.organization.id})+
+                                    "?jobrequestID="+str(jobrequest.id)
+                        )
 
 
 class JobRequest(models.Model):
@@ -173,20 +175,17 @@ class JobRequest(models.Model):
                     verb="accepted",
                     action_object=self.job,
                     recipient=self.job.creator,
-                    url=reverse('jobrequest_dash',
-                                kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
+                    url=reverse('job_dash',
+                                kwargs={'job_id': self.job.id}) +
+                                "?jobrequestID=" + str(self.id)
+                    )
 
     # set a JobRequest as pending
     def pend(self):
         self.accepted = False
         self.declined = False
         self.save()
-        notify.send(self.organization,
-                    verb="accepted",
-                    action_object=self.job,
-                    recipient=self.job.creator,
-                    url=reverse('jobrequest_dash',
-                                kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
+        # shouldn't send a notification to either side of the users. Only superuser should be able to do this.
 
     # set a JobRequest as declined
     def decline(self):
@@ -197,8 +196,10 @@ class JobRequest(models.Model):
                     verb="declined",
                     action_object=self.job,
                     recipient=self.job.creator,
-                    url=reverse('jobrequest_dash',
-                                kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
+                    url=reverse('job_dash',
+                                kwargs={'job_id': self.job.id}) +
+                                "?jobrequestID=" + str(self.id)
+                    )
 
     #set a JobRequest as confirmed
     def confirm(self):
@@ -210,8 +211,10 @@ class JobRequest(models.Model):
                     verb="confirmed",
                     action_object=self.job,
                     recipient=self.organization.group,
-                    url=reverse('jobrequest_dash',
-                                kwargs={'organization_id':self.organization.id,'job_id':self.job.id}) )
+                    url=reverse('organization_dash',
+                                kwargs={'organization_id': self.organization.id}) +
+                                "?jobrequestID=" + str(self.id)
+                    )
         # iterate through all jobrequests in this job and remove permission for other jobrequests 
         job = self.job
         job.closed = True
@@ -224,8 +227,11 @@ class JobRequest(models.Model):
                         verb="has closed the job: ",
                             action_object=self.job,
                             recipient=jr.organization.group,
-                            url=reverse('jobrequest_dash',
-                                        kwargs={'organization_id':jr.organization.id,'job_id':jr.job.id}) )
+                            # questionable use of url since user will not have permission to view anymore
+                            # url=reverse('organization_dash',
+                            #            kwargs={'organization_id': jr.organization.id}) +
+                            #            "?jobrequestID=" + str(jr.id)
+                            )
 
    #check if a jobrequest is pending 
     def is_pending(self):
@@ -256,8 +262,10 @@ def jobrequest_save(sender,**kwargs):
                     verb="submitted",
                     action_object=jobrequest,
                     recipient=jobrequest.organization.group,
-                    url=reverse('jobrequest_dash',
-                                kwargs={'organization_id':jobrequest.organization.id,'job_id':job.id}) )
+                    url=reverse('organization_dash',
+                                kwargs={'organization_id': jobrequest.organization.id}) +
+                                "?jobrequestID=" + str(jobrequest.id)
+                    )
 
 #add default jobrequest permissions
 @receiver(pre_delete, sender=JobRequest)
