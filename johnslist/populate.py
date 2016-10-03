@@ -45,7 +45,8 @@ def populate():
     emails = cycle(['evan@evanw.org','malesevic.milos2@gmail.com'])
     types = cycle([True,False])
     for num in range(0,10):
-        newuser = User.objects.create(username='user{0}'.format(num))
+        username='user{0}'.format(num)
+        newuser = User.objects.create(username=username)
         newuser.set_password('asdf')
         newuser.save()
         UserProfile.objects.create(user = newuser, purdueuser = types.next(),email = emails.next())
