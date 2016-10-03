@@ -420,9 +420,10 @@ def job_creation(request):
     else:
         selected_orgs = []
         deselected_orgs = Organization.objects.all()
+        category_groups = CategoryGroup.objects.all()
         form = JobCreateForm()
 
-    return render(request, 'dbtest/job_creation.html', {'form':form,'selected_orgs':selected_orgs,'deselected_orgs':deselected_orgs})
+    return render(request, 'dbtest/job_creation.html', {'form':form,'selected_orgs':selected_orgs,'deselected_orgs':deselected_orgs,'category_groups':category_groups})
 
 def about(request):
     return render(request, 'dbtest/about.html')
