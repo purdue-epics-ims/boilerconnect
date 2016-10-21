@@ -28,7 +28,7 @@ class JobForm(ModelForm):
                 verb = "submitted"
                 organization = Organization.objects.get(id = org.pk)
                 jr = JobRequest.objects.create(organization=organization, job = job)
-                link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org.pk}))
+                link = request.build_absolute_uri(reverse('organization_dash', kwargs = {'organization_id': org.pk})+"?jobrequestID="+str(jr.id))
                 for user in organization.group.user_set.all():
                     send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [user.userprofile.email], fail_silently=False)
 

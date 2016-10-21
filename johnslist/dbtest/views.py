@@ -122,7 +122,8 @@ def organization_dash(request,organization_id):
 
     org = Organization.objects.get(id=organization_id)
     members = org.group.user_set.all()
-    jobrequests = [jr for jr in org.jobrequest_set.all() if jr.confirmed or jr.job.closed == False]
+    # TODO: fix the bug where job.closed attribute is set to None for jr's created through job creation process
+    jobrequests = [jr for jr in org.jobrequest_set.all() if jr.confirmed or jr.job.closed == False or jr.job.closed == None]
     return render(request, 'dbtest/organization_dash.html',
                   {'organization':org,
                    'members':members,
