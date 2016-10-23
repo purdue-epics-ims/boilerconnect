@@ -92,7 +92,7 @@ class Job(models.Model):
     creator = models.ForeignKey(User,related_name = 'jobs')  # User -o= Job
     organization = models.ManyToManyField(Organization, through = 'JobRequest')
     contact_information = models.CharField('Contact Information', max_length = 256, blank = True)
-    closed = models.BooleanField(initial = False)  # Job is closed after a jr is confirmed
+    closed = models.BooleanField(default = False)  # Job is closed after a jr is confirmed
 
     class Meta:
         permissions = (
