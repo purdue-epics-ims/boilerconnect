@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import forms
 from .models import*
 from django.core.mail import send_mail
+from .widgets import *
 
 class OrganizationCreateForm(ModelForm):
     class Meta:
@@ -44,11 +45,13 @@ class JobCreateForm(JobForm):
     class Meta:
         model = Job
         exclude = ('creator',)
+        widgets = { 'organization': OrgSelect() }
 
 class JobEditForm(JobForm):
     class Meta:
         model = Job
         exclude = ('creator',)
+        widgets = { 'organization': OrgSelect() }
 
 class CommentCreateForm(ModelForm):
     class Meta:

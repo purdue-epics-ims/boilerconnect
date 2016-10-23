@@ -23,75 +23,63 @@
 <div class="container">
     <div class="form-group">
         <form action="{% url 'job_creation' %}" method="post">{% csrf_token %}
-            <ul class="pagination pagination-lg page-tabs">
-                <li><a class="page-tab prev_tab btn btn-primary">Previous</a></li>
-                <li class="active"><a class="page-tab" href="#tutorial" data-toggle="tab">1</a></li>
-                <li><a class="page-tab" href="#info" data-toggle="tab">2</a></li>
-                <li><a class="page-tab" href="#specs" data-toggle="tab">3</a></li>
-                <li><a class="page-tab" href="#orgs" data-toggle="tab">4</a></li>
-                <li><a class="active next_tab btn btn-primary">Next</a></li>
-            </ul>
 
+            <div class="row">
 
-            <div class="row tab-content">
+                <!----------------- Explanation Tab ------------- -->
 
-                <!-- ############## Explanation Tab ############# -->
-
-                <div class="tab-pane fade active in" id="tutorial">
-                    <h1>Explanation of the process</h1>
-                    <div class="row">
-                        <div class="col-sm-4">
-                          Pick a few organizations that you think would be a good match for your job.
-                        </div>
-                        <div class="col-sm-4">
-                          Wait for a few organizations to respond.
-                        </div>
-                        <div class="col-sm-4">
-                          Finally, you will choose which one is going to do the job for you.
-                        </div>
+                <h1>How it Works</h1>
+                <div class="row">
+                    <div class="col-sm-4">
+                        Pick a few organizations that you think would be a good match for your job.
                     </div>
-                    <div class="row">
-                        <div class="col-sm-4">
+                    <div class="col-sm-4">
+                        Wait for a few organizations to respond.
+                    </div>
+                    <div class="col-sm-4">
+                        Finally, you will choose which one is going to do the job for you.
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
                         <img class="explanation" src="static/Part1.png"><br>
-                        </div>
-                        <div class="col-sm-4">
+                    </div>
+                    <div class="col-sm-4">
                         <img class="explanation" src="static/Part2.png"><br>
-                        </div>
-                        <div class="col-sm-4">
+                    </div>
+                    <div class="col-sm-4">
                         <img class="explanation" src="static/Part3.png"><br>
-                        </div>
                     </div>
                 </div>
 
                 <!--########## Basic information Tab ##########-->
 
-                <div class="tab-pane fade" id="info">
-                  <h1>Basic information</h1>
-                  <div class="form-group">
-                      <div class="input-group">
-                          <span class="input-group-addon">
-                          <i class="fa fa-bullhorn"></i>
-                          </span>
-                          Name of the job.
-                          {% render_field form.name class+="form-control" placeholder="eg. Irrigation System" %}
-                      </div>
-                  </div>
+                <h1>Basic information</h1>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-bullhorn"></i>
+                        </span>
+                        Name of the job.
+                        {% render_field form.name class+="form-control" placeholder="eg. Irrigation System" %}
+                    </div>
+                </div>
 
-
-                  <div class="form-group">
-                      <div class="input-group">
-                          <span class="input-group-addon">
-                          <i class="fa fa-coffee"></i>
-                          </span>
-                          What organization or group are you representing?
-                          {% render_field form.client_organization class+="form-control" placeholder="eg. Lafayette City Farms" %}
-                      </div>
-                  </div>
 
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
-                        <i class="fa fa-coffee"></i>
+                            <i class="fa fa-coffee"></i>
+                        </span>
+                        What organization or group are you representing?
+                        {% render_field form.client_organization class+="form-control" placeholder="eg. Lafayette City Farms" %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-coffee"></i>
                         </span>
                         Contact Information
                         {% render_field form.contact_information class+="form-control" placeholder="eg. emails, phone number" %}
@@ -101,104 +89,90 @@
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
-                        <i class="fa fa-coffee"></i>
+                            <i class="fa fa-coffee"></i>
                         </span>
                         Briefly describe the product or service that you expect as a result of this project.
                         {% render_field form.deliverable class+="form-control" placeholder="eg. An pump system to handle Spring flooding." %}
                     </div>
                 </div>
 
-                      <div class="input-group">
-                          <span class="input-group-addon">
-                          <i class="fa fa-coffee"></i>
-                          </span>
-                          Give a short description of the job. Later, you will be able to provide more detailed description, keep this one brief.
-                          {% render_field form.description class+="form-control" %}
-                      </div>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-coffee"></i>
+                    </span>
+                    Give a short description of the job. Later, you will be able to provide more detailed description, keep this one brief.
+                    {% render_field form.description class+="form-control" %}
                 </div>
 
                 <!------------ Technical specifications Tab ------------>
 
-                <div class="tab-pane fade" id="specs">
 
-                  <h1>Technical specifications</h1>
-                  <div class="form-group">
+                <h1>Technical specifications</h1>
+                <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
-                        <i class="fa fa-calendar"></i>
+                            <i class="fa fa-calendar"></i>
                         </span>
                         Specify the date when this project is due. If you are not sure of the exact date, give a close approximation.
                         {% render_field form.duedate class+="form-control" placeholder="yyyy-mm-dd" %}
                     </div>
-                  </div>
+                </div>
 
-                  <div class="form-group">
+                <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
-                        <i class="fa fa-coffee"></i>
+                            <i class="fa fa-coffee"></i>
                         </span>
                         List any individuals or groups who might be affected by this work.  Give a description if necessary.
                         {% render_field form.stakeholders class+="form-control" placeholder="eg. Lafayette City Farms, Lafayette farmers" %}
                     </div>
-                  </div>
+                </div>
 
-                  <div class="form-group">
+                <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
-                        <i class="fa fa-cogs"></i>
+                            <i class="fa fa-cogs"></i>
                         </span>
                         If available, provide any additional information about project. In this section, you should be as precise as you can. 
                         {% render_field form.additional_information class+="form-control" %}
                     </div>
-                  </div>
+                </div>
 
 
-                  <div class="form-group">
+                <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
-                        <i class="fa fa-money"></i>
+                            <i class="fa fa-money"></i>
                         </span>
                         What is the budget that team can use for the project? You can provide the explanation along with the budget, or the estimation if you do not have precise data at the moment.
-                      {% render_field form.budget class+="form-control" %}
+                        {% render_field form.budget class+="form-control" %}
                     </div>
-                  </div>
+                </div>
 
-                  <div class="form-group">
+                <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
-                        <i class="fa fa-file"></i>
+                            <i class="fa fa-file"></i>
                         </span>
                         If there are any files that you want to add in your job submission, do it here. 
                         {% render_field form.attachments %}
                     </div>
-                  </div>
-
                 </div>
 
                 <!------------ Add Organizations Tab ---------------->
-                <div class="tab-pane fade" id="orgs">
-                    Filter the organizations to find the ones that you want to send the job request.
-                    If an organization suits your needs, click <b> Add </b>.
-                    You can add as many organizations as you want.
-                    Once you are done, click <b> Submit Job </b>.
 
-                    {% widget "widgets:org_search" %}
+                <h1>Job Categories</h1>
+                Select some words that pertain to your job and we will try to find a group that fits your needs.
+
+                <div class="panel-group">
+
+                    {% render_field form.organization %}
 
                     <div class="button_group">
-                        <input type="submit" class="btn btn-primary" value="Submit Job" onclick="submitFunction()">
+                        <!-- <input type="submit" class="btn btn-primary" value="Submit Job" onclick="submitFunction()"> -->
+                        <input type="submit" class="btn btn-primary" value="Submit Job">
                     </div>
                 </div>
-            </div>
-
-            <!-- <ul class="pagination pagination-lg page-tabs"> -->
-            <!-- <li><a class="page-tab prev_tab btn btn-primary">Previous</a></li> -->
-            <!-- <li class="active"><a class="page-tab" href="#tutorial" data-toggle="tab">1</a></li> -->
-            <!-- <li><a class="page-tab" href="#info" data-toggle="tab">2</a></li> -->
-            <!-- <li><a class="page-tab" href="#specs" data-toggle="tab">3</a></li> -->
-            <!-- <li><a class="page-tab" href="#orgs" data-toggle="tab">4</a></li> -->
-            <!-- <li><a class="active next_tab btn btn-primary">Next</a></li> -->
-            <!-- </ul> -->
-
             </div>
         </form>
     </div>
@@ -206,39 +180,5 @@
 
 
 <script>
-//------------------ tab navigation ---------------------
-
-function update_visibility(active_tab){
-    if (active_tab.attr('href') == '#tutorial'){
-        $('.prev_tab').removeClass("active");
-        $('.next_tab').addClass("active");
-    }
-    else if (active_tab.attr('href') == '#orgs'){
-        $('.prev_tab').addClass("active");
-        $('.next_tab').removeClass("active");
-    }
-    else {
-        $('.next_tab').addClass("active");
-        $('.prev_tab').addClass("active");
-    }
-}
-
-$('.page-tab').click(function(event){
-    active_tab = $(event.target);
-    update_visibility(active_tab);
-});
-
-$('.next_tab').click(function(){
-    active_tab = $('.page-tabs > .active').next('li').find('a');
-    active_tab.trigger('click');
-    update_visibility(active_tab);
-});
-
-$('.prev_tab').click(function(){
-    active_tab = $('.page-tabs > .active').prev('li').find('a');
-    active_tab.trigger('click');
-    update_visibility(active_tab);
-});
-</script>
 
 {% endblock content %}

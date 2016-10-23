@@ -45,7 +45,8 @@ def populate():
     emails = cycle(['evan@evanw.org','malesevic.milos2@gmail.com'])
     types = cycle([True,False])
     for num in range(0,10):
-        newuser = User.objects.create(username='user{0}'.format(num))
+        username='user{0}'.format(num)
+        newuser = User.objects.create(username=username)
         newuser.set_password('asdf')
         newuser.save()
         UserProfile.objects.create(user = newuser, purdueuser = types.next(),email = emails.next())
@@ -59,17 +60,26 @@ def populate():
             amet.group.user_set.add(user)
 
     #--------------- Categories --------------------
-    print '  creating Categories'
+
+    #create category groups
+    print '  creating CategoryGroups'
+    category_groups = ['art','apps','engineering']
+    for category_group in category_groups:
+        print '    '+category_group
+        CategoryGroup.objects.create( name=category_group,description='' )
 
     #create categories
-    categories=['engineering','computer science','construction','music','art','painting','linux','web development','iOS','Android']
+    print '  creating Categories'
+    categories=[('video','art'),('computer science','engineering'),('construction','engineering'),('music','art'),('iOS','apps'),('android','apps'),('painting','art'),('linux','engineering'),('web development','art')]
     for category in categories:
-       Category.objects.create( name=category,description='' ) 
+        print '    '+category[0]
+        Category.objects.create(name=category[0], group=CategoryGroup.objects.get(name=category[1]))
 
-    #tag Organizations with Cate
+    #tag Organizations with Categories
     plug.categories.add(Category.objects.get(name="computer science"), Category.objects.get(name="linux"))
-    epics.categories.add(Category.objects.get(name = 'engineering'))
-    amet.categories.add(Category.objects.get(name= 'engineering'))
+    epics.categories.add(Category.objects.get(name = 'construction'))
+    epics.categories.add(Category.objects.get(name = 'web development'))
+    amet.categories.add(Category.objects.get(name= 'construction'))
 
     #--------------- Jobs --------------------
     print '  creating Jobs'

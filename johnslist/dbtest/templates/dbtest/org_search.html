@@ -1,30 +1,15 @@
 {% load staticfiles %}
-<!-- ---------------------------- Select Categories ----------------------------->
-{% block select_categories %}
-{% for category_group in category_groups %}
-<div class="panel panel-primary">
-    <div class="panel-heading">
-        <h4 class="panel-title">
-            <a data-toggle="collapse" href="#collapse{{forloop.counter}}">{{category_group}}</a>
-        </h4>
-    </div>
-    <div id="collapse{{forloop.counter}}" class="panel-collapse collapse">
-    {% for category in category_group.categories.all  %}
-        <div class="checkbox">
-            <label><input type="checkbox" value="{{category.name}}">{{category.name}}</label>
-        </div>
-    {% endfor %}
-    </div>
-</div>
-{% endfor %}
-{% endblock %}
-
 <!-- ---------------------------- Organization Search ----------------------------->
 
-{% block org_search %}
-
 <div style="display: none;">
-{{form.organization}}
+    <select multiple="multiple" id="id_organization" name="organization">
+        {% for organization in selected_orgs %}
+        <option value="{{organization.id}}" selected="selected">{{organization.name}}</option>
+        {% endfor %}
+        {% for organization in deselected_orgs %}
+        <option value="{{organization.id}}">{{organization.name}}</option>
+        {% endfor %}
+    </select>
 </div>
 
 <div class="row org_search">
@@ -76,6 +61,3 @@
 </div>
 
 <script src="{% static 'org_search.js' %}"></script>
-
-{% endblock %}
-

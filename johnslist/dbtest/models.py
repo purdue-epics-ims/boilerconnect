@@ -19,13 +19,20 @@ class UserProfile(models.Model):
     visited_views = models.CharField(max_length=64,default="")
     email = models.EmailField(default="")
 
+class CategoryGroup(models.Model):
+    def __unicode__(self):
+        return self.name
+
+    name = models.CharField('Service Category Group Name',max_length=64)
+    description = models.TextField('Service Category Group Description')
 
 class Category(models.Model):
     def __unicode__(self):
         return self.name
 
     name = models.CharField('Service Category Name',max_length=64)
-    description = models.TextField('Service Category Description')
+    description = models.TextField('Service Category Description',null=True)
+    group = models.ForeignKey(CategoryGroup,related_name = 'categories')  # Category -= CategoryGroup
 
 class Organization(models.Model):
     def __unicode__(self):
@@ -40,7 +47,7 @@ class Organization(models.Model):
     available = models.BooleanField(default=True,choices=((True, "Accepting Jobs"),(False, "Not accepting Jobs")))
 
     class Meta:
-		permissions = (
+        permissions = (
             ( 'view_organization','Can view Organization' ),
             ( 'edit_organization','Can edit Organization' ),
             ( 'is_admin', 'Is an Administrator')
@@ -64,7 +71,7 @@ class Organization(models.Model):
 
     #get admins of this org
     def get_admins(self):
-		return [user for user in self.group.user_set.all() if user.has_perm('is_admin',self)]
+        return [user for user in self.group.user_set.all() if user.has_perm('is_admin',self)]
 
 
 @receiver(post_save, sender=Organization)
@@ -93,6 +100,7 @@ class Job(models.Model):
     organization = models.ManyToManyField(Organization, through = 'JobRequest')
     contact_information = models.CharField('Contact Information', max_length = 256, blank = True)
     closed = models.NullBooleanField(default = False)  # Job is closed after a jr is confirmed
+    # categories = models.ManyToManyField(Category) #some tags to determine what organizations to submit job to
 
     class Meta:
         permissions = (

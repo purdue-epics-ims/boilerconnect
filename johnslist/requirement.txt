@@ -10,3 +10,4 @@ django-model-utils
 pillow
 django-widget-tweaks
 django-sniplates
+coverage
