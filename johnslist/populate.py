@@ -70,10 +70,10 @@ def populate():
 
     #create categories
     print '  creating Categories'
-    categories=[('video','art')('computer science','engineering'),('construction','engineering'),('music','art'),('iOS','apps'),('android','apps'),('painting','art'),('linux','engineering'),('web development','art')]
+    categories=[('video','art'),('computer science','engineering'),('construction','engineering'),('music','art'),('iOS','apps'),('android','apps'),('painting','art'),('linux','engineering'),('web development','art')]
     for category in categories:
         print '    '+category[0]
-        Category.objects.create(name=category[0], group=CategoryGroup.objects.get(name=category[1])) 
+        Category.objects.create(name=category[0], group=CategoryGroup.objects.get(name=category[1]))
 
     #tag Organizations with Categories
     plug.categories.add(Category.objects.get(name="computer science"), Category.objects.get(name="linux"))

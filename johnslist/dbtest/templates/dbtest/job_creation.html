@@ -28,58 +28,58 @@
 
                 <!-- ############## Explanation Tab ############# -->
 
-                    <h1>How it Works</h1>
-                    <div class="row">
-                        <div class="col-sm-4">
-                          Pick a few organizations that you think would be a good match for your job.
-                        </div>
-                        <div class="col-sm-4">
-                          Wait for a few organizations to respond.
-                        </div>
-                        <div class="col-sm-4">
-                          Finally, you will choose which one is going to do the job for you.
-                        </div>
+                <h1>How it Works</h1>
+                <div class="row">
+                    <div class="col-sm-4">
+                        Pick a few organizations that you think would be a good match for your job.
                     </div>
-                    <div class="row">
-                        <div class="col-sm-4">
+                    <div class="col-sm-4">
+                        Wait for a few organizations to respond.
+                    </div>
+                    <div class="col-sm-4">
+                        Finally, you will choose which one is going to do the job for you.
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
                         <img class="explanation" src="static/Part1.png"><br>
-                        </div>
-                        <div class="col-sm-4">
-                        <img class="explanation" src="static/Part2.png"><br>
-                        </div>
-                        <div class="col-sm-4">
-                        <img class="explanation" src="static/Part3.png"><br>
-                        </div>
                     </div>
+                    <div class="col-sm-4">
+                        <img class="explanation" src="static/Part2.png"><br>
+                    </div>
+                    <div class="col-sm-4">
+                        <img class="explanation" src="static/Part3.png"><br>
+                    </div>
+                </div>
 
                 <!--########## Basic information Tab ##########-->
 
-                  <h1>Basic information</h1>
-                  <div class="form-group">
-                      <div class="input-group">
-                          <span class="input-group-addon">
-                          <i class="fa fa-bullhorn"></i>
-                          </span>
-                          Name of the job.
-                          {% render_field form.name class+="form-control" placeholder="eg. Irrigation System" %}
-                      </div>
-                  </div>
+                <h1>Basic information</h1>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-bullhorn"></i>
+                        </span>
+                        Name of the job.
+                        {% render_field form.name class+="form-control" placeholder="eg. Irrigation System" %}
+                    </div>
+                </div>
 
-
-                  <div class="form-group">
-                      <div class="input-group">
-                          <span class="input-group-addon">
-                          <i class="fa fa-coffee"></i>
-                          </span>
-                          What organization or group are you representing?
-                          {% render_field form.client_organization class+="form-control" placeholder="eg. Lafayette City Farms" %}
-                      </div>
-                  </div>
 
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
-                        <i class="fa fa-coffee"></i>
+                            <i class="fa fa-coffee"></i>
+                        </span>
+                        What organization or group are you representing?
+                        {% render_field form.client_organization class+="form-control" placeholder="eg. Lafayette City Farms" %}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">
+                            <i class="fa fa-coffee"></i>
                         </span>
                         Contact Information
                         {% render_field form.contact_information class+="form-control" placeholder="eg. emails, phone number" %}
@@ -89,110 +89,92 @@
                 <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
-                        <i class="fa fa-coffee"></i>
+                            <i class="fa fa-coffee"></i>
                         </span>
                         Briefly describe the product or service that you expect as a result of this project.
                         {% render_field form.deliverable class+="form-control" placeholder="eg. An pump system to handle Spring flooding." %}
                     </div>
                 </div>
 
-                      <div class="input-group">
-                          <span class="input-group-addon">
-                          <i class="fa fa-coffee"></i>
-                          </span>
-                          Give a short description of the job. Later, you will be able to provide more detailed description, keep this one brief.
-                          {% render_field form.description class+="form-control" %}
-                      </div>
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <i class="fa fa-coffee"></i>
+                    </span>
+                    Give a short description of the job. Later, you will be able to provide more detailed description, keep this one brief.
+                    {% render_field form.description class+="form-control" %}
+                </div>
 
                 <!------------ Technical specifications Tab ------------>
 
 
-                  <h1>Technical specifications</h1>
-                  <div class="form-group">
+                <h1>Technical specifications</h1>
+                <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
-                        <i class="fa fa-calendar"></i>
+                            <i class="fa fa-calendar"></i>
                         </span>
                         Specify the date when this project is due. If you are not sure of the exact date, give a close approximation.
                         {% render_field form.duedate class+="form-control" placeholder="yyyy-mm-dd" %}
                     </div>
-                  </div>
+                </div>
 
-                  <div class="form-group">
+                <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
-                        <i class="fa fa-coffee"></i>
+                            <i class="fa fa-coffee"></i>
                         </span>
                         List any individuals or groups who might be affected by this work.  Give a description if necessary.
                         {% render_field form.stakeholders class+="form-control" placeholder="eg. Lafayette City Farms, Lafayette farmers" %}
                     </div>
-                  </div>
+                </div>
 
-                  <div class="form-group">
+                <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
-                        <i class="fa fa-cogs"></i>
+                            <i class="fa fa-cogs"></i>
                         </span>
                         If available, provide any additional information about project. In this section, you should be as precise as you can. 
                         {% render_field form.additional_information class+="form-control" %}
                     </div>
-                  </div>
+                </div>
 
 
-                  <div class="form-group">
+                <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
-                        <i class="fa fa-money"></i>
+                            <i class="fa fa-money"></i>
                         </span>
                         What is the budget that team can use for the project? You can provide the explanation along with the budget, or the estimation if you do not have precise data at the moment.
-                      {% render_field form.budget class+="form-control" %}
+                        {% render_field form.budget class+="form-control" %}
                     </div>
-                  </div>
+                </div>
 
-                  <div class="form-group">
+                <div class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
-                        <i class="fa fa-file"></i>
+                            <i class="fa fa-file"></i>
                         </span>
                         If there are any files that you want to add in your job submission, do it here. 
                         {% render_field form.attachments %}
                     </div>
-                  </div>
+                </div>
 
 
 
                 <!------------ Add Organizations Tab ---------------->
-                <!------------ Select Categories ---------------->
 
-                  <h1>Job Categories</h1>
-                    Select some words that pertain to your job and we will try to find a group that fits your needs.
+                <h1>Job Categories</h1>
+                Select some words that pertain to your job and we will try to find a group that fits your needs.
 
-                    <div class="panel-group">
-                        {% for category_group in category_groups %}
-                        <div class="panel panel-primary">
-                            <div class="panel-heading">
-                                <h4 class="panel-title">
-                                    <a data-toggle="collapse" href="#collapse{{forloop.counter}}">{{category_group}}</a>
-                                </h4>
-                            </div>
-                            <div id="collapse{{forloop.counter}}" class="panel-collapse collapse">
-                            {% for category in category_group.categories.all  %}
-                                <div class="checkbox">
-                                    <label><input type="checkbox" value="{{category.name}}">{{category.name}}</label>
-                                </div>
-                            {% endfor %}
-                            </div>
-                        </div>
-                        {% endfor %}
-
+                <div class="panel-group">
+                    {% widget "widgets:select_categories" %}
 
                     {% widget "widgets:org_search" %}
 
                     <div class="button_group">
                         <input type="submit" class="btn btn-primary" value="Submit Job" onclick="submitFunction()">
                     </div>
-                    </div>
-            </div>
+                </div>
             </div>
         </form>
     </div>
