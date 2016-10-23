@@ -14,7 +14,7 @@
   {% if username %}
   <b>Welcome {{ username }}.  Please check your email for a confirmation message.</b>
   {% else %}
-  <a href="{% url 'user_dash' %}"><button class="btn btn-info">Back</button></a>
+  <div class="form-group"><a href="{% url 'user_dash' %}"><button class="btn btn-info">Back</button></a></div>
   <form action="{% url 'user_settings' %}" method="post">
 
     {% csrf_token %}
