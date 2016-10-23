@@ -234,36 +234,36 @@ class JobTestCase(TestCase):
         login_as(self,self.u_pu.username,'asdf')
         #test that a user cannot accept a jobrequest after it has been accepted/rejected
         jr.accept()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"accept"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"apply"}, follow=True)
         self.assertTrue('error' in list(response.context['messages'])[0].tags)
         jr.decline()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"accept"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"apply"}, follow=True)
         self.assertTrue('error' in list(response.context['messages'])[0].tags)
 
         #test that a user cannot reject a jobrequest after it has been accepted/rejected
         jr.accept()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"decline"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"notInterested"}, follow=True)
         self.assertTrue('error' in list(response.context['messages'])[0].tags)
         jr.decline()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"decline"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"notInterested"}, follow=True)
         self.assertTrue('error' in list(response.context['messages'])[0].tags)
 
         #test that a user can accept/reject a jobrequest when it is still pending
         jr.pend()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"accept"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"apply"}, follow=True)
         self.assertTrue(response.status_code==200)
         jr.pend()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"decline"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"notInterested"}, follow=True)
         self.assertTrue(response.status_code==200)
         logout(self)
 
         #test community user cannot accept/decline a jobrequest
         login_as(self,self.u_cp.username,'asdf')
         jr.pend()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"decline"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"notInterested"}, follow=True)
         self.assertTrue('error' in list(response.context['messages'])[0].tags)
         jr.pend()
-        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"accept"}, follow=True)
+        response = self.client.post(reverse('jobrequest_dash', kwargs = {'job_id':self.j2.id,'organization_id': self.o.id}), {'action':"apply"}, follow=True)
         self.assertTrue('error' in list(response.context['messages'])[0].tags)
         logout(self)
     def test_jobrequest_confirm(self):
@@ -348,7 +348,6 @@ class OrganizationTestCase(TestCase):
         self.o.group.user_set.add(self.u_pu)
         assign_perm('is_admin',self.u_pu,self.o)
         self.assertTrue(self.u_pu in self.o.get_admins())
-        
 
     ### Interface Tests ###
 
@@ -371,7 +370,7 @@ class OrganizationTestCase(TestCase):
         #when user is not logged in
         response = self.client.post(reverse('organization_create'))
         self.assertEqual(response.status_code, 302)
-       
+
         #after login
         login_as(self, self.u2.username, 'asdf')
         category = self.cat.pk
@@ -403,5 +402,3 @@ class OrganizationTestCase(TestCase):
                                      }
                                     )
         self.assertEqual(response.status_code, 200)
-
-

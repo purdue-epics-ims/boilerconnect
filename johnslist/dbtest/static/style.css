@@ -388,3 +388,7 @@ background:#e1d8d8;
 .information-body {
     word-wrap: break-word;
 }
+
+.headerbar-welcome-user {
+	font-size: 15px;
+}

@@ -151,28 +151,28 @@ def jobrequest_dash(request,job_id,organization_id):
     if request.method == 'POST':
 
         # handle accept button click
-        if request.POST.get("action","")=="accept":
+        if request.POST.get("action","")=="apply": # change from accept to apply
             if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.accept()
-                message = "You have accepted this job."
+                message = "You have applied to this job."
                 link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jobrequest.job.id, 'organization_id': organization_id}))
-                #send_mail('BoilerConnect - Job Request Accepted', '{0} has accepted your Job Request!. Click on the link to see the request. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
+                send_mail('BoilerConnect - Job Request Accepted', '{0} has applied for your Job Request!. Click on the link to see the request. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
                 messages.add_message(request, messages.INFO, message)
 
             else:
-                message = "You have already accepted this job."
+                message = "You have applied for this job."
                 messages.add_message(request, messages.ERROR, message)
 
         # handle decline button click
-        if request.POST.get("action","")=="decline":
+        if request.POST.get("action","")=="notInterested": # change from decline to not interested
             if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
                 jobrequest.decline()
-                message = "You have declined this job."
+                message = "You are not interested in this job."
                 messages.add_message(request, messages.INFO, message)
                 link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jobrequest.job.id, 'organization_id': organization_id}))
-                #send_mail('BoilerConnect - Job Request Accepted', '{0} has declined your Job Request!. Click on the link to see the request. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
+                send_mail('BoilerConnect - Job Request Accepted', '{0} is not interested in your Job Request!. Click on the link to see the request. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
             else:
-                message = "You have already declined this job."
+                message = "You have already indicated you are not interested."
                 messages.add_message(request, messages.ERROR, message)
 
         # handle confirm button click
@@ -203,10 +203,12 @@ def jobrequest_dash(request,job_id,organization_id):
                 if request.user.userprofile.purdueuser:
                     recipient = job.creator
                     link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jobrequest.job.id, 'organization_id': organization_id}))
-                    #send_mail('BoilerConnect - Job Request Accepted', '{0} has commented on your Job Request!. Click on the link to see the comment. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
+                    send_mail('BoilerConnect - Job Request Accepted', '{0} has commented on your Job Request!. Click on the link to see the comment. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.userprofile.email], fail_silently=False)
+                    url = reverse('job_dash', kwargs={'job_id': job.id})
                 else:
                     recipient = jobrequest.organization.group
-                url = reverse('jobrequest_dash',kwargs={'organization_id':organization.id,'job_id':job.id})
+                    url = reverse('organization_dash', kwargs={'organization_id': organization.id})
+                url = url + "?jobrequestID="+str(jobrequest.id)
                 notify.send(request.user,
                             verb=verb,
                             action_object=action_object,
@@ -216,9 +218,9 @@ def jobrequest_dash(request,job_id,organization_id):
                 message = "The comment cannot be empty."
                 messages.add_message(request, messages.ERROR, message)
         if request.user.userprofile.purdueuser:
-            return HttpResponseRedirect(reverse('organization_dash', kwargs = {'organization_id':organization.id}));
+            return HttpResponseRedirect(reverse('organization_dash', kwargs = {'organization_id':organization.id})+ "?jobrequestID="+str(jobrequest.id))
         else:
-            return HttpResponseRedirect(reverse('job_dash', kwargs={'job_id': job.id}));
+            return HttpResponseRedirect(reverse('job_dash', kwargs={'job_id': job.id})+ "?jobrequestID="+str(jobrequest.id))
     # if request is GET
     return render(request, 'dbtest/jobrequest_dash.html',
                   {'jobrequest':jobrequest,
