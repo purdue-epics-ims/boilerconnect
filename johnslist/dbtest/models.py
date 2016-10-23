@@ -100,7 +100,7 @@ class Job(models.Model):
     organization = models.ManyToManyField(Organization, through = 'JobRequest')
     contact_information = models.CharField('Contact Information', max_length = 256, blank = True)
     closed = models.NullBooleanField(default = False)  # Job is closed after a jr is confirmed
-    categories = models.ManyToManyField(Category) #some tags to determine what organizations to submit job to
+    # categories = models.ManyToManyField(Category) #some tags to determine what organizations to submit job to
 
     class Meta:
         permissions = (

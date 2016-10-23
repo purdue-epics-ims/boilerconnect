@@ -1,4 +1,10 @@
 //------------------ organization searching ----------------
+
+// update <select> element with #org_selected items
+function update_select() {
+    $('#id_organization').val($("#org_selected").children().map(function(){ return $(this).attr('org_pk') }))
+}
+
  //select an org
 function select_org(button){
     $(button).removeClass("btn-success")
@@ -8,6 +14,7 @@ function select_org(button){
 
     elem = $(button).closest('.org_item')
     $(elem).appendTo("#org_selected")
+    update_select()
 }
 
 function deselect_org(button){
@@ -18,6 +25,7 @@ function deselect_org(button){
 
     elem = $(button).closest('.org_item')
     $(elem).appendTo("#org_results")
+    update_select()
 }
 
 
@@ -69,7 +77,3 @@ $('#search').keyup(function() {
     filter()
 });
 
-//------------------ submit button function ----------------
-function submitFunction() {
-    $('#id_organization').val($("#org_selected").children().map(function(){ return $(this).attr('org_pk') }))
-}

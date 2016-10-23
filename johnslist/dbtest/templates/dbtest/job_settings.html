@@ -73,14 +73,6 @@
         {% render_field form.stakeholders class+="form-control" %}
       </div>
 
-      Technical Specifications
-      <div class="input-group">
-        <span class="input-group-addon">
-          <i class="fa fa-cogs"></i>
-        </span>
-        {% render_field form.tech_specs class+="form-control" %}
-      </div>
-
       Budget
       <div class="input-group">
         <span class="input-group-addon">
@@ -97,13 +89,17 @@
         {% render_field form.attachments class+="form-control" %}
       </div>
 
+      <div class="panel-group">
+
+          {% render_field form.organization %}
+
+      </div>
+
     </div>
 
   </div>
 
   <hr>
-
-  {% widget "widgets:org_search" %}
 
   <div class="row">
     <div class="col-sm-12 col-sm-offset-5">

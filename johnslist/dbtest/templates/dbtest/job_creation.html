@@ -167,12 +167,12 @@
                 Select some words that pertain to your job and we will try to find a group that fits your needs.
 
                 <div class="panel-group">
-                    {% widget "widgets:select_categories" %}
 
-                    {% widget "widgets:org_search" %}
+                    {% render_field form.organization %}
 
                     <div class="button_group">
-                        <input type="submit" class="btn btn-primary" value="Submit Job" onclick="submitFunction()">
+                        <!-- <input type="submit" class="btn btn-primary" value="Submit Job" onclick="submitFunction()"> -->
+                        <input type="submit" class="btn btn-primary" value="Submit Job">
                     </div>
                 </div>
             </div>

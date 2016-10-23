@@ -402,8 +402,9 @@ def job_creation(request):
     #if request was POST
 
     if request.method == 'POST':
+        print "requested thing:",request.POST
         form = JobCreateForm(request.POST)
-        selected_orgs = Organization.objects.filter(pk__in = form.data['organization'])
+        # selected_orgs = Organization.objects.filter(pk__in = form.data['organization'])
 
         #check form validity
         if form.is_valid():
@@ -412,18 +413,14 @@ def job_creation(request):
             message = "Job {0} created".format( job.name )
             messages.add_message(request, messages.INFO, message)
             return redirect('job_dash',job_id=job.id)
-        else:
-            deselected_orgs = Organization.objects.exclude(pk__in = request.POST.getlist('organization'))
 
     #if the request was a GET
 
     else:
-        selected_orgs = []
-        deselected_orgs = Organization.objects.all()
         category_groups = CategoryGroup.objects.all()
         form = JobCreateForm()
 
-    return render(request, 'dbtest/job_creation.html', {'form':form,'selected_orgs':selected_orgs,'deselected_orgs':deselected_orgs,'category_groups':category_groups})
+    return render(request, 'dbtest/job_creation.html', {'form':form})
 
 def about(request):
     return render(request, 'dbtest/about.html')
@@ -436,8 +433,6 @@ def job_settings(request,job_id):
     #if the request was a GET
     if request.method == 'GET':
         form = JobEditForm(instance=job)
-        selected_orgs = job.organization.all()
-        deselected_orgs = Organization.objects.exclude(pk__in = [org.pk for org in selected_orgs])
 
     elif request.method == 'POST':
         form = JobEditForm(request.POST, instance=job)
@@ -451,11 +446,5 @@ def job_settings(request,job_id):
 
             message = "Job {0} has been modified.".format(job.name)
             messages.add_message(request, messages.INFO, message)
-            selected_orgs = job.organization.all()
-            deselected_orgs = Organization.objects.exclude(pk__in = [org.pk for org in selected_orgs])
 
-        else:
-            selected_orgs = Organization.objects.filter(pk__in = request.POST.getlist('organization'))
-            deselected_orgs = Organization.objects.exclude(pk__in = request.POST.getlist('organization'))
-
-    return render(request, 'dbtest/job_settings.html', {'form':form,'job' : job, 'selected_orgs':selected_orgs, 'deselected_orgs':deselected_orgs})
+    return render(request, 'dbtest/job_settings.html', {'form':form,'job' : job})
