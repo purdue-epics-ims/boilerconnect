@@ -13,6 +13,8 @@ class Command(BaseCommand):
         from notifications.signals import notify
         from notifications.models import Notification
         from django.core.urlresolvers import reverse
+        from guardian.shortcuts import get_objects_for_user,assign_perm,remove_perm,get_perms
+        from guardian.core import ObjectPermissionChecker
 
         pu = User.objects.get(id=1)
         cp = User.objects.get(id=2)
@@ -24,6 +26,6 @@ class Command(BaseCommand):
         jr = JobRequest.objects.get(id=1)
         c = Category.objects.get(id=2)
         g = Group.objects.get(id=1)
-        n = Notification.objects.get(id=1)
+        # n = Notification.objects.get(id=1)
         code.interact(local=locals())
 

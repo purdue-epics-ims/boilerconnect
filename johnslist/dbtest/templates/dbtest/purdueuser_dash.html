@@ -2,13 +2,20 @@
 {% load template_tags %}
 
 {% block content %}
+{% if show_dialog %}
+<div class="confirm alert alert-dismissible alert-info">
+    <i type="button" class="close fa fa-close" data-dismiss="alert"></i>
+    <h4> This page shows all notifications for organizations that you a part of.  You need to create an organization before you can begin receiving job requests.  Click the red 'Create Organization' button below to create an organization.</h4>
+</div>
+{% endif %}
 
 <div class="jumbotron">
 
   <center>
-    <h3>{{ request.user }} </h3>
+    <h3>{{ request.user }} <small>Dashboard</small></h3>
   </center>
-  <span class="pull-right"><button class="btn btn-info">User settings</button></span>
+
+  <a href="{% url 'user_settings' %}" class="pull-right"><button class="btn btn-info">User Settings</button></a>
 
 </div>
 
@@ -27,12 +34,13 @@
         <ul class="list-group">
         {% for org in organizations %}
         <a class="list-group-item" href="{% url 'organization_dash' org.id %}">
-          <span class="badge">14</span>
-          <img src="{{ org.icon.url }}" height="70px"></img>
+          <img class="icon" src="{{ org.icon.url }}"></img>
           {{ org.name }}
         </a>
         {% endfor %}
         </ul>
+
+        <a href = "{% url 'organization_create' %}" class="btn btn-danger"> <i class="fa fa-certificate"></i> Create an Organization</a>
       </div>
     </div>
 

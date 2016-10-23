@@ -40,14 +40,14 @@
     </div>
     <br>
 
-    <input type="hidden" name="next" value="{{request.META.HTTP_REFERER}}">
+    <input type="hidden" name="next" value="{{request.GET.next}}">
 
     <div>
       <button type="submit" value="Login" class="btn btn-info">Login</button>
       <span class="pull-right">
         
         <p>Not a user? 
-          <a href="{% url 'user_create' %}">Create an Account</a>
+          <a href="{% url 'user_create' "community" %}">Create an Account</a>
         </p>
     </div>
     </span>

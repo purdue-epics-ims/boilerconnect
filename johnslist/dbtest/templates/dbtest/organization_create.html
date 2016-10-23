@@ -1,63 +1,63 @@
 {% extends "dbtest/base.html" %}
+{% load widget_tweaks %}
 {% block content %}
+{% if show_dialog %}
+<div class="confirm alert alert-dismissible alert-info">
+    <i type="button" class="close fa fa-close" data-dismiss="alert"></i>
+    <h4>Create your organization here.  Community members will be able to search for your organization by name or categories you select.</h4>
+</div>
+{% endif %}
+
 <div class="panel-heading">
   <div class="">
     Create an organization
   </div>
 </div>
 <div class = "jumbotron">
-    <form action="{% url 'organization_create' %}" method="POST" enctype="multipart/form-data">
+  <form class="form-horizontal"  action="{% url 'organization_create' %}" method="POST" enctype="multipart/form-data">
       {% csrf_token %}
 
+    <fieldset>
       <div class="form-group">
         <div class="input-group">
-          <span class="input-group-addon" id="addon1">
-            <i class="fa fa-institution"></i>
-          </span>
-
-          <input type="text" class="form-control" autofocus="true" placeholder="Organization Name" name="name"></input>
+        <span class="input-group-addon" id="addon1">
+            <i class="fa fa-at"></i>
+        </span>
+        {% render_field form.name class+="form-control" placeholder="Organization Name" %}
         </div>
       </div>
 
       <div class="form-group">
         <div class="input-group">
-          <span class="input-group-addon" id="addon1">
-            <i class="fa fa-institution"></i>
-          </span>
-
-          <input type="text" class="form-control" placeholder="Organization Email" name="email"></input>
+        <span class="input-group-addon" id="addon1">
+            <i class="fa fa-quote-right"></i>
+        </span>
+        {% render_field form.description class+="form-control" placeholder="Organization Description" %}
         </div>
       </div>
 
       <div class="form-group">
         <div class="input-group">
-          <span class="input-group-addon" id="addon1">
-            <i class="fa fa-coffee"></i>
-          </span>
-          <textarea class="form-control" placeholder="What is your organization all about?" name="description"></textarea>
+        <span class="input-group-addon" id="addon1">
+          <i class="fa fa-list"></i>
+        </span>
+        {% render_field form.categories class+="form-control" placeholder="Organization Categories" %}
         </div>
       </div>
 
       <div class="form-group">
         <div class="input-group">
-          <span class="input-group-addon">
-            <i class="fa fa-check-circle-o"></i>
-          </span>
-          {{form.categories}}
+        <span class="input-group-addon" id="addon1">
+          <i class="fa fa-image"></i>
+        </span>
+        {% render_field form.icon %}
         </div>
       </div>
-
       <div class="form-group">
-        <div class="input-group">
-          <span class="input-group-addon">
-            <i class="fa fa-camera-retro"></i>
-          </span>
-          {{ form.icon }}
-        </div>
+        <input class="btn btn-primary" type="submit" value="Create Organization">
       </div>
-
-      <input class="btn btn-primary" type="submit" value="Create Organization">
-
-    </form>
+    </fieldset>
+  </form>
 </div>
+
 {% endblock %}

@@ -1,13 +1,17 @@
 {% load staticfiles %}
 {% load guardian_tags %}
 {%load notifications_tags%}
+{% load sniplates %}
+{% load_widgets widgets="dbtest/widgets.html" %}
 <html>
     <head>
         <link rel='stylesheet' type='text/css' href="{% static 'bootstrap.min.css' %}"/>-->
 
         <link rel="icon" type="image/png" href='{% static 'favicon.png' %}'/>
-        <script src="{% static 'jquery.min.js' %}"></script>
+        <script type='text/javascript' src="{% static 'jquery.min.js' %}"></script>
+        <script type='text/javascript' src="{{ STATIC_URL }}js/Utilities.js"></script>
         <script type='text/javascript' src="{% static 'bootstrap.min.js' %}"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
         <link rel='stylesheet' type='text/css' href='{% static 'style.css' %}'/>
 
@@ -21,7 +25,7 @@
         <div class="navbar navbar-default navbar-fixed-top">
             <div class="container">
 
-                <!------------ NAVBAR -------------->
+                <!------------ NAVBAR ----->
                 <div class="navbar-header">
                     <a  class="navbar-brand" rel="home" href="/" title="BoilerConnect">
                     <img draggable="false" style="max-width:27px;margin-top:-3px;margin-right:-7px;"
@@ -39,76 +43,12 @@
                     <ul class="nav navbar-nav navbar-left">
                     <li><a href="{%url 'about'%}">About</a></li>
                     </ul>
-
-                    <form class="navbar-form navbar-left">
-                        {% if not user.userprofile.purdueuser %}
-                        <a href = '/job_creation' class="btn btn-danger"> <i class="fa fa-certificate"></i> Create a Job</a>
-                        {% endif %}
-                    </form>
-
-                    <!-- Logged in user navbar -->
+                    <!--------- Logged in user navbar ------------>
 
                     {% if user.is_authenticated %}
                     <ul class="nav navbar-nav navbar-right">
-                        <li>
-                        <a href="{%url 'notifications'%}">
-                        <span class="glyphicon glyphicon-inbox"></span>
-                        <span class="badge">
-                        {%notifications_unread as unread_count%}
-                        {{unread_count}}
-                        </span>
-                        </a>
-                        </li>
-
-                        <!---------  Navbar Jobs Pulldown ------------>
-                        {% if not user.userprofile.purdueuser %}
-                        <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-toggle="dropdown" haspopup="true" onmouseover="hoverhard()"><i class="fa fa-briefcase"></i>  Jobs<span class="caret"></span></a>
-                        <ul class="dropdown-menu" role="menu" arialabeledby="user">
-
-                            <li class="dropdown-header">New Requests</li>
-                            {% for job in user.jobs.all %}
-                            <li>
-                                <a href="{% url 'job_dash' job.id %}">{{ job.name }}
-                                </a>
-                            </li>
-                            <li class="divider"></li>
-                            {% endfor %}
-
-                            <li><a href="{%url 'job_creation'%}"><strong><i class="fa fa-wrench"></i> Create Job</strong></a></li>
-
-                        </ul>
-                        </li>
-                        {% endif %}
-
-                        <!--------- Navbar Groups Pulldown --------->
-
-                        {% if user.userprofile.purdueuser %}
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" data-toggle="dropdown" haspopup="true" onmouseover="hoverhard()">
-                            <i class="fa fa-institution"></i>
-                            Orgs
-                            <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu" role="menu" arialabeledby="user">
-                                <li class="dropdown-header">Member of</li>
-                                {% for group in user.groups.all %}
-                                <li>
-                                {% get_obj_perms request.user for group.organization as "user_organization_perms" %}
-                                {%if 'is_admin' in user_organization_perms %}
-                                <span class="label label-default pull-right">Admin</span>
-                                {%endif%}
-                                    <a href="{% url 'organization_dash' group.organization.id %}">{{ group.organization.name }} </a>
-                                </li>
-                                <li class="divider"></li>
-                                {% endfor %}
-
-                                <li><a href="{%url 'organization_create'%}"><strong><i class="fa fa-users"></i> Create Organiztion</strong></a></li>
-                            </ul>
-                        </li>
-                        {% endif %}
-
-                        <li><a href="{% url 'user_dash' %}"><i class="fa fa-dashboard"></i><strong> {{user.username}}</strong></a></li>
+                        <li><a>Welcome {{user.username}}!</a></li>
+                        <li><a href="{% url 'user_dash' %}"><i class="fa fa-dashboard"></i> Home</a></li>
                         <li><a href="{%url 'logout'%}"><i class="fa fa-sign-out"></i> Logout</a></li>
                     </ul>
 
@@ -125,7 +65,7 @@
                     </li>
                     <li>
                         <p class="navbar-btn">
-                        <a href="{% url 'user_create' %}" class="btn btn-primary">Join</a>
+                        <a href="{% url 'user_create' "community" %}" class="btn btn-primary">Join</a>
                         </p>
                     </li>
 
@@ -140,43 +80,39 @@
         <br><br><br>
         <div class="container container-fluid">
 
-        <!--------------- Generic Error Message ------------------->
+        <!--------------- Form Messages ------------------->
 
-        {% if error %}
+        {% if form.errors %}
         <div id="error">
             <div class="alert alert-danger">
 
             <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            {{ error }}
-            {% if form.errors %}
-                <ol>
-                {% for field in form %}
-                    {% if field.errors %}
-                        <li><strong> {{field.name}} </strong> -
-                        {% for error in field.errors %}
-                            {{ error|escape }}
-                        {% endfor %}
-                        </li>
-                    {% endif %}
-                {% endfor %}
-                </ol>
-            {% endif %}
+            There are incorrect fields.
+            {{ form.errors }}
             </div>
         </div>
         {% endif %}
 
-        <!--------------- Generic Success Message --------------->
-        {% if confirm %}
-        <div id='confirm'>
-            <div class="alert alert-dismissible alert-success">
-            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-            <span class="sr-only">confirm:</span>
-            {{ confirm }}
-            </div>
+        <!--------------- Generic Message --------------->
+        {% if messages %}
+        <div>
+            {% for message in messages %}
+                {% if message.tags == 'info' %}
+                <div class="confirm alert alert-dismissible alert-success">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    {{ message }}
+                </div>
+                {% elif message.tags == 'error' %}
+                <div class="error alert alert-dismissible alert-danger">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    {{ message }}
+                </div>
+                {% endif %}
+            {% endfor %}
         </div>
         {% endif %}
 
-        <!-------------- Main Page Content -------------------->
+        <!-------------- Main Page Content ------------------>
 
         {% block content %}
         {% endblock %}

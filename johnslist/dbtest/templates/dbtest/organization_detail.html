@@ -1,12 +1,9 @@
 {% extends "dbtest/base.html" %}
 {% block content %}
-
-
-
 <div class="jumbotron">
     <center>
 
-      <img src="{{organization.icon.url}}" name="aboutme" width="140" height="140">
+      <img src="{{organization.icon.url}}" name="aboutme" height="140">
       <h3>
         {%if organization.available %}
         <span class="badge success"><i class="fa fa-check"></i> Available</span>
@@ -18,7 +15,7 @@
       </h3>
 
       {% for category in organization.categories.all %}
-      <a href="{% url 'search' %}?search={{ category.name }}&search_model=organization&search_by=category" class="label label-primary">{{category.name}}</a>
+      <a href="{% url 'search' %}?search={{ category.name }}&search_model=organization&search_by=category" class="btn btn-default">{{category.name}}</a>
       {%endfor%}
 
     </center>

@@ -37,6 +37,8 @@ INSTALLED_APPS = (
     'easy_thumbnails',
     'guardian',
     'notifications',
+    'widget_tweaks',
+    'sniplates',
 )
 
 try:
@@ -64,34 +66,25 @@ ROOT_URLCONF = 'johnslist.urls'
 
 WSGI_APPLICATION = 'johnslist.wsgi.application'
 
-TEMPLATES = [
-{
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-                # insert your TEMPLATE_DIRS here
-
-                        ],
-        'APP_DIRS': True,
-        'OPTIONS': {
-                'context_processors': [
-                        # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
-                        # list if you haven't customized them:
-                        'django.contrib.auth.context_processors.auth',
-                        'django.template.context_processors.debug',
-                        'django.template.context_processors.i18n',
-                        'django.template.context_processors.media',
-                        'django.template.context_processors.static',
-                        'django.template.context_processors.tz',
-                        'django.contrib.messages.context_processors.messages',
-                        'django.core.context_processors.request',
-
-                                        ],
-
-                        },
-
-        },
-
-]
+TEMPLATES = [{
+    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+    'DIRS': [],
+    'APP_DIRS': True,
+    'OPTIONS': {
+        'context_processors': [
+            # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
+            # list if you haven't customized them:
+            'django.contrib.auth.context_processors.auth',
+            'django.template.context_processors.debug',
+            'django.template.context_processors.i18n',
+            'django.template.context_processors.media',
+            'django.template.context_processors.static',
+            'django.template.context_processors.tz',
+            'django.contrib.messages.context_processors.messages',
+            'django.template.context_processors.request',
+        ],
+    },
+},]
 
 
 # Database
@@ -144,3 +137,10 @@ REDIRECT_URL = '/'
 
 #django guardian config
 ANONYMOUS_USER_ID = -1
+
+#email configuration
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'boilerconnect1@gmail.com'
+EMAIL_HOST_PASSWORD = 'imsteam1'
+EMAIL_PORT = 587

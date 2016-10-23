@@ -1,12 +1,17 @@
 {% extends "dbtest/base.html" %}
+{% load widget_tweaks %}
 
 {% block content %}
 
-<center>
-<img src="{{organization.icon.url}}" width="140" height="140" class="img-circle">
-<h3>{{organization.name}} <small> Settings </small>
-  </h3>
-</center>
+<div class="jumbotron">
+  <center>
+    <h3>{{ organization.name }} <small>Settings</small></h3>
+  </center>
+</div>
+
+<div class="form-group">
+  <a href="{% url 'organization_dash' organization.id %}"><button class="btn btn-info">Back</button></a>
+</div>
 
 <form action="{% url 'organization_settings' organization.id %}" method="post">
 
@@ -22,18 +27,7 @@
             <i class="fa fa-institution"></i>
           </span>
 
-          <input type="text" class="form-control" autofocus="true" placeholder="Edit Name" name="name" value="{{organization.name}}"></input>
-      </div>
-    </div>
-
-    Email 
-    <div class="form-group">
-      <div class="input-group">
-          <span class="input-group-addon" id="addon1">
-            <i class="fa fa-institution"></i>
-          </span>
-
-          <input type="text" class="form-control" placeholder="Edit Email" name="email" value="{{organization.email}}"></input>
+          {% render_field modelform.name class+="form-control" %}
       </div>
     </div>
 
@@ -41,11 +35,9 @@
     <div class="form-group">
       <div class="input-group">
         <span class="input-group-addon" id="addon1">
-          <i class="fa fa-coffee"></i>
+          <i class="fa fa-quote-right"></i>
         </span>
-        <textarea class="form-control" placeholder="Edit Description" name="description">
-    {{organization.description}}
-  </textarea>
+        {% render_field modelform.description %}
       </div>
     </div>
 
@@ -53,55 +45,40 @@
     <div class="form-group">
       <div class="input-group">
         <span class="input-group-addon">
-          <i class="fa fa-check-circle-o"></i>
+          <i class="fa fa-list"></i>
         </span>
-          {{modelform.categories}}
+        {% render_field modelform.categories class+="form-control" %}
       </div>
     </div>
-
-    <div class="form-group">
-      Photo
-      <div class="input-group">
-        <span class="input-group-addon">
-          <i class="fa fa-camera-retro"></i>
-        </span>
-
-        {{modelform.icon}}
-
-      </div>
-    </div>
-
     </div>
 
     <div class="col-sm-6">
       Availability
-      <div class="radio">
-        <label>
-            <input name="available" id="available" value=1
-                   {% if organization.available %} checked="" {% endif %}
-                   type="radio">
-          Accepting Jobs
-        </label>
+      <div class="form-group">
+        <div class="input-group">
+          <span class="input-group-addon">
+            <i class="fa fa-check"></i>
+          </span>
+          {% render_field modelform.available class+="form-control" %}
+        </div>
       </div>
-      <div class="radio">
-        <label>
-          <input name="available" id="available" value=0
-                  {% if organization.available == False %} checked="" {% endif %}
-                  type="radio">
-          Not accepting Jobs
-        </label>
+
+      Photo
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-image"></i>
+        </span>
+
+        {% render_field modelform.icon class+="form-control" %}
+
       </div>
     </div>
-
-
   </div>
 
-  <div class="row">
-    <div class="col-sm-12 col-sm-offset-5">
-    <input class="btn btn-primary" type="submit" value="Modify Organization">
-    </div>
-  </div>
+    <input class="btn btn-primary" type="submit" value="Save Organization Changes">
 </form>
-
+<script>
+  $('#id_categories').val({{ categories_id }});
+</script>
 
 {% endblock content %}

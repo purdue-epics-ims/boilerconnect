@@ -1,6 +1,9 @@
 {% extends "dbtest/base.html" %}
 {% load staticfiles %}
 {% load guardian_tags %}
+{% load widget_tweaks %}
+{% load sniplates %}
+{% load_widgets widgets="dbtest/widgets.html" %}
 
 {% block navbar %}
 <div class="navbar navbar-inverse navbar-fixed-top">
@@ -20,95 +23,94 @@
 <div class="container">
     <div class="form-group">
         <form action="{% url 'job_creation' %}" method="post">{% csrf_token %}
-            <ul class="nav nav-tabs">
-                <li class="active"><a href="#tutorial" data-toggle="tab" aria-expanded="true">Explanation of the process</a></li>
-                <li class=""><a href="#info" data-toggle="tab" aria-expanded="true">Basic information</a></li>
-                <li class=""><a href="#specs" data-toggle="tab" aria-expanded="true">Job Specifications</a></li>
-                <li class=""><a href="#orgs" data-toggle="tab" aria-expanded="true">Organizations selection</a></li>
-            </ul>
 
-            <div id="myTabContent" class="tab-content">
+            <div class="row">
 
-                <!------------ Explanation Tab --------------->
+                <!----------------- Explanation Tab ---------------->
 
-                <div class="tab-pane fade active in" id="tutorial">
-                    </br>
-                    In the first stage of the Job Creation Process, we are going to explain you how to create a job that is going to be submitted to the Purdue Organizations. If you are already familiar with the entire process, you may consider skipping to the "Basic Information" tab.
-                    </br></br>
-                    Firstly, you need to provide <b> Basic information </b> about the job. In this part, you will be asked to provide name of the job, short description and deliverable that you expect as a result of the job. Please be as descriptive as possible as those are the first information that every organization is going to see after they get your Job Request. After you are done with this step, click on the <b> Job Specifications </b> tab.
-                    </br></br>
-                    In the <b> Job Specifications </b> tab, you are supposed to provide more in-depth information regarding the job. In this step, you are supposed to give as detailed information as possible. Also, you will be allowed to submit files as attachments to your job submission. After you are done with this step, click on the <b> Organizations selection </b> tab.
-                    </br></br>
-                    <b> Organization selection </b> is the last stage of the process. Here, you are able to search organizations by name or by category. As you search, organizations will be filtered, and you can add the ones that suit your needs by clicking on the Add button. Once you are satisfied with the information that you entered, click on the <b> Submit your job </b> button.
-                    </br></br>
-                    After your job is submitted, the copy of each submission is sent to all organizations that you selected. Those organizations will be able to review it, and they have an option to leave a comment on your job. If they do comment, you will be notified about this. 
-                    <img src="static/Part1.png">
-                    </br></br>
-                    After that, organizations will decide if they have capabilities to perform the job. Based on that, they will either accept the job or decline it, and you will be notified on this website, as well as in email about their decision.<br>
-                    <img src="static/Part2.png">
-                    </br></br>
-                    Finally, once you are satisfied with the responses from the organizations, you will be able to pick the organization that is going to do the job. We will exchange the contact information for you, and the rest of the communication is to be done on your behalf.
-                    <img src="static/Part3.png"><br>
-                    Now when you understand the process, click on the <b> Basic information </b> tab to start the process.
+                <h1>How it Works</h1>
+                <div class="row">
+                    <div class="col-sm-4">
+                        Pick a few organizations that you think would be a good match for your job.
+                    </div>
+                    <div class="col-sm-4">
+                        Wait for a few organizations to respond.
+                    </div>
+                    <div class="col-sm-4">
+                        Finally, you will choose which one is going to do the job for you.
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-4">
+                        <img class="explanation" src="static/Part1.png"><br>
+                    </div>
+                    <div class="col-sm-4">
+                        <img class="explanation" src="static/Part2.png"><br>
+                    </div>
+                    <div class="col-sm-4">
+                        <img class="explanation" src="static/Part3.png"><br>
+                    </div>
                 </div>
 
-                <!------------ Basic information Tab ------------>
+                <div class="row row-centered">
+                    <div class="col-sm-8 col-centered">
+                        <!--########## Basic information Tab ##########-->
 
-                <div class="tab-pane fade" id="info">
-                </br>
-                <div class="input-group">
-                    <span class="input-group-addon">
-                    <i class="fa fa-bullhorn"></i>
-                    </span>
-                    Name of the job.
-                    <input class="form-control" type="text" name="name" placeholder="Example"></input>
-                </div>
-                <br/>
+                        <h1>Basic information</h1>
+                        <div class="form-group">
+                            Name of the job.
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-bullhorn"></i>
+                                </span>
+                                {% render_field form.name class+="form-control" placeholder="eg. Irrigation System" %}
+                            </div>
+                        </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon">
-                    <i class="fa fa-coffee"></i>
-                    </span>
-                    What organization or group are you representing?
-                    <textarea class="form-control" type="text" name="client_organization" placeholder="eg. Jimbob's Hotdog Joint"></textarea>
-                </div>
-                <br/>
 
-                <div class="input-group">
-                    <span class="input-group-addon">
-                    <i class="fa fa-coffee"></i>
-                    </span>
-                    Give a description of the service or product you expect to come from this project..
-                    <textarea class="form-control" type="text" name="deliverable" placeholder="Irrigation system"></textarea>
-                </div>
-                <br/>
+                        <div class="form-group">
+                            What organization or group are you representing?
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-coffee"></i>
+                                </span>
+                                {% render_field form.client_organization class+="form-control" placeholder="eg. Lafayette City Farms" %}
+                            </div>
+                        </div>
 
-                <div class="input-group">
-                    <span class="input-group-addon">
-                    <i class="fa fa-coffee"></i>
-                    </span>
-                    Give a short description of the job. Later, you will be able to provide more detailed description, keep this one brief.
-                    <textarea class="form-control" type="text" name="description" placeholder="Example"></textarea>
-                </div>
-                <br/>
-                Once you filled in the basic information, proceed to the <b> Job Specifications </b>section. 
+                        <div class="form-group">
+                            Contact Information
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-coffee"></i>
+                                </span>
+                                {% render_field form.contact_information class+="form-control" placeholder="eg. emails, phone number" %}
+                            </div>
+                        </div>
 
-                <br/>
-                </div>
+                        <div class="form-group">
+                            Briefly describe the product or service that you expect as a result of this project.
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-coffee"></i>
+                                </span>
+                                {% render_field form.deliverable class+="form-control" placeholder="eg. An pump system to handle Spring flooding." %}
+                            </div>
+                        </div>
 
-                <!------------ Technical specifications Tab ------------>
+                        <div class="form-group">
+                            Give a short description of the job. Later, you will be able to provide more detailed description, keep this one brief.
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-coffee"></i>
+                                </span>
+                            {% render_field form.description class+="form-control" %}
+                            </div>
+                        </div>
 
-                <div class="tab-pane fade" id="specs">
+                        <!------------ Technical specifications Tab ------------>
 
-                <br/>
-                <div class="input-group">
-                    <span class="input-group-addon">
-                    <i class="fa fa-calendar"></i>
-                    </span>
-                    Specify the date when this project is due. If you are not sure of the exact date, give a close approximation.
-                    <input type="text" class="form-control" placeholder="mm/dd/yyyy Due date" name="duedate"></input>
-                </div>
-
+<<<<<<< HEAD
                 <br/>
                 <div class="input-group">
                     <span class="input-group-addon">
@@ -136,182 +138,83 @@
                     <input class="form-control" type="text" name="budget" placeholder="Example"></textarea>
                 </div>
                 <br/>
+=======
 
-                <div class="input-group">
-                    If there are any files that you want to add in your job submission, do it here. 
-                    <input class="form-control" type="file" name="attachment" placeholder="Example"></textarea>
-                </div>
-                <br/>
-                Once you are satisfied with the information that you provided in this section, go to the <b> Organization selection </b> tab.
-
-                </div>
-
-                <!------------ Add Organizations Tab ---------------->
-                <div style="display: none;">
-                {{form.organization}}
-                </div>
-
-                <div class="tab-pane fade" id="orgs">
-                    Filter the organizations to find the ones that you want to send the job request.
-                    If an organization suits your needs, click <b> Add </b>.
-                    You can add as many organizations as you want.
-                    Once you are done, click <b> Submit Job </b>.
-                    <h2>Search Organizations</h2>
-                    <div class="form-group">
-                    <label class="control-label" for="search">Filter Purdue Groups by name or tag</label>
-                    <input id="search" class="form-control input-lg" type="text" >
-                    </div>
-                    <div class="org_list list-group" id="org_results">
-                        {% for org in orgs %}
-                        <div class="org_item list-group-item" org_pk="{{org.id}}">
-                            <h4 class="org_name list-group-item-heading">
-                            <a href="{% url 'organization_detail' org.id %}">
-                            {{org.name}}
-                            </a>
-                            <a class="org_button btn btn-success pull-right">Add</a>
-                            </h4>
-                            <p>
-                            {% for cat in org.categories.all %}
-                            <span class="category label label-default">{{ cat }}</span>
-                            {% endfor %}
-                            </p>
+                        <h1>Technical specifications</h1>
+                        <div class="form-group">
+                            Specify the date when this project is due. If you are not sure of the exact date, give a close approximation.
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </span>
+                                {% render_field form.duedate class+="form-control" placeholder="yyyy-mm-dd" %}
+                            </div>
                         </div>
-                        {% endfor %}
-                    </div>
 
-                    <hr>
-
-                    <h2>Selected Organizations</h2>
-                    <div class="org_list list-group" id="org_selected">
-                        {% for org in orgs %}
-                        <div class="org_item list-group-item hidden" org_pk="{{org.id}}">
-                            <h4 class="org_name list-group-item-heading">
-                            <a href="{% url 'organization_detail' org.id %}">
-                            {{org.name}}
-                            </a>
-                            <a class="org_button btn btn-danger pull-right">Remove</a>
-                            </h4>
-                            <p>
-                            {% for cat in org.categories.all %}
-                            <span class="category label label-default">{{ cat }}</span>
-                            {% endfor %}
-                            </p>
+                        <div class="form-group">
+                            List any individuals or groups who might be affected by this work.  Give a description if necessary.
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-coffee"></i>
+                                </span>
+                                {% render_field form.stakeholders class+="form-control" placeholder="eg. Lafayette City Farms, Lafayette farmers" %}
+                            </div>
                         </div>
-                        {% endfor %}
+>>>>>>> develop
+
+                        <div class="form-group">
+                            If available, provide any additional information about project. In this section, you should be as precise as you can. 
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-cogs"></i>
+                                </span>
+                                {% render_field form.additional_information class+="form-control" %}
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            What is the budget that team can use for the project? You can provide the explanation along with the budget, or the estimation if you do not have precise data at the moment.
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-money"></i>
+                                </span>
+                                {% render_field form.budget class+="form-control" %}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            If there are any files that you want to add in your job submission, do it here. 
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-file"></i>
+                                </span>
+                                {% render_field form.attachments %}
+                            </div>
+                        </div>
+
+                        <!------------ Add Organizations Tab ---------------->
+
+                        <h1>Job Categories</h1>
+                        Select some words that pertain to your job and we will try to find a group that fits your needs.
+
+                        <div class="panel-group">
+
+                            {% render_field form.organization %}
+
+                            <div class="button_group">
+                                <!-- <input type="submit" class="btn btn-primary" value="Submit Job" onclick="submitFunction()"> -->
+                                <input type="submit" class="btn btn-primary" value="Submit Job">
+                            </div>
+                        </div>
                     </div>
-
-                    <input type="submit" class="btn btn-primary" value="Submit Job" onclick="submitFunction()">
                 </div>
-
             </div>
-
-
-            <a id="prev_tab" style="display:none;" class="btn btn-primary" ">Previous</a>
-            <a id="next_tab" class="btn btn-primary" ">Next</a>
         </form>
     </div>
 </div>
 
+
 <script>
 
-<!------------------ tab navigation --------------------->
-
- function update_visibility(active_tab){
-     console.log('active2:',active_tab.attr('href'));
-     if (active_tab.attr('href') == '#tutorial'){
-         $('#prev_tab').hide()
-     }
-     else if (active_tab.attr('href') == '#orgs'){
-         $('#next_tab').hide()
-     }
-     else {
-         $('#next_tab').show()
-         $('#prev_tab').show()
-     }
- }
-$('#next_tab').click(function(){
-     active_tab = $('.nav-tabs > .active').next('li').find('a');
-     active_tab.trigger('click');
-     console.log('activea:',active_tab.attr('href'));
-     update_visibility(active_tab);
-     }
-);
-
-$('#prev_tab').click(function(){
-     active_tab = $('.nav-tabs > .active').prev('li').find('a');
-     active_tab.trigger('click');
-     console.log('activeb:',active_tab.attr('href'));
-     update_visibility(active_tab);
-     }
-);
-
-<!------------------ organization searching ---------------->
-//select an org
-    $('#org_results').find('.org_item').find('.org_button').click(function(){
-    var org_pk = $(this).closest('.org_item').attr("org_pk")
-    $('#org_results').find('[org_pk="'+org_pk+'"]').addClass("hidden")
-    $('#org_selected').find('[org_pk="'+org_pk+'"]').removeClass("hidden")
-    })
-
-//deslect an org
-$('#org_selected').find('.org_item').find('.org_button').click(function(){
-    var org_pk = $(this).closest('.org_item').attr("org_pk")
-    $('#org_results').find('[org_pk="'+org_pk+'"]').removeClass("hidden")
-    $('#org_selected').find('[org_pk="'+org_pk+'"]').addClass("hidden")
-})
-
-//handle tag click action
-$('#org_results').find('.category').click(function(){
-    $('#search').val($(this).text())
-    filter()
-})
-
-//filter org_results list by name and category
-function filter(){
-    console.log('keypress')
-    var search_text = $('#search').val().toLowerCase();
-
-    $('#org_results').find('.org_item').each(function(i,org_item){
-        var show = 0;
-        //check for match in each category, highlight match
-        console.log($(org_item).find('.organization'))
-        $(org_item).find('.category').each(function(i,cat_item){
-            if (search_text && $(cat_item).text().search(search_text) >=0) {
-                show = 1;
-                $(cat_item).removeClass('label-default')
-                $(cat_item).addClass('label-warning')
-            }
-            else {
-                $(cat_item).removeClass('label-warning')
-                $(cat_item).addClass('label-default')
-            }
-        })
-
-        //check for match in name
-        var name_str = $(org_item).children('.org_name').text().toLowerCase();
-        if (name_str.search(search_text) >= 0){
-            show = 1
-        }
-
-        //hide or show
-        if (show) {
-            $(org_item).show()
-        }
-        else {
-            $(org_item).hide()
-        }
-    })
-}
-
-//filter for every keypress
-$('#search').keyup(function() {
-    filter()
-});
-
-<!------------------ submit button function ---------------->
-function submitFunction() {
-    $('#id_organization').val($("#org_selected").children(':not(.hidden)').map(function(){ return $(this).attr('org_pk') }))
-}
-
-</script>
 {% endblock content %}

@@ -2,13 +2,21 @@
 {% load template_tags %}
 
 {% block content %}
+{% if show_dialog %}
+<div class="confirm alert alert-dismissible alert-info">
+    <i type="button" class="close fa fa-close" data-dismiss="alert"></i>
+    <h4> This page shows all notifications for jobs you have created.  Click the red 'Create Job' button below to begin creating a job.</h4>
+</div>
+{% endif %}
+
 <div class="jumbotron">
   <center>
-    <h3>{{ request.user }}</h3>
+    <h3>{{ request.user }} <small>Dashboard</small></h3>
   </center>
 
-  <span class="pull-right"><button class="btn btn-info">User settings</button></span>
+  <a href="{% url 'user_settings' %}" class="pull-right"><button class="btn btn-info">User Settings</button></a>
 </div>
+
 
 <div class="row">
   <div class="col-sm-6">
@@ -24,10 +32,11 @@
         <ul class="list-group">
           {% for job in jobs %}
           <a class="list-group-item" href="{% url 'job_dash' job.id %}">
-            <span class="badge">14</span>
             {{ job.name }}
           </a>
           {% endfor %}
+          <br>
+          <a href = '/job_creation' class="btn btn-danger"> <i class="fa fa-plus-square-o"></i> Create Job</a>
         </ul>
       </div>
 
