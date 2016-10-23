@@ -2,7 +2,7 @@
 ############ Dependencies for BoilerConnect Project ###############
 #
 ########### Requirements without version specifiers ###############
-django==1.9.5
+django==1.10.2
 easy-thumbnails
 django-guardian
 django-notifications-hq
