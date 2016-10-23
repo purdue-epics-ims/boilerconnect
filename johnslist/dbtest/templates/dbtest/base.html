@@ -46,8 +46,13 @@
                     <!--------- Logged in user navbar ------------>
 
                     {% if user.is_authenticated %}
+
                     <ul class="nav navbar-nav navbar-right">
                         <li><a>Welcome {{user.username}}!</a></li>
+                        <a  class="navbar-brand" rel="home" href="{% url 'notifications' %}" title="Notifications">
+                        <img draggable="false" style="max-width:22px;margin-top:-1px;margin-right:-7px;"
+                                src='{% static 'notification.png' %}'>
+                        </a>
                         <li><a href="{% url 'user_dash' %}"><i class="fa fa-dashboard"></i> Home</a></li>
                         <li><a href="{%url 'logout'%}"><i class="fa fa-sign-out"></i> Logout</a></li>
                     </ul>

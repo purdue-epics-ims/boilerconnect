@@ -1,0 +1,8 @@
+{% extends "dbtest/base.html" %}
+{% load template_tags %}
+
+{% block content %}
+<div class="col-sm-6">
+{% dash_notifications "Notifications" unread_notifications read_notifications %}
+</div>
+{% endblock content %}

@@ -53,9 +53,6 @@ def login(request):
 @login_required
 def user_dash(request):
     user = request.user
-    read_notifications = list(request.user.notifications.read())
-    unread_notifications = list(request.user.notifications.unread())
-    request.user.notifications.mark_all_as_read()
 
     #If this is the first time the user has visited this page, show a dialog
     show_dialog = first_visit(user,'user_dash')
@@ -66,8 +63,6 @@ def user_dash(request):
                       'dbtest/purdueuser_dash.html',
                       {'user_dash': user,
                        'organizations':orgs,
-                       'unread_notifications':unread_notifications,
-                       'read_notifications':read_notifications,
                        'show_dialog':show_dialog
                        })
     else:
@@ -75,8 +70,6 @@ def user_dash(request):
         return render(request, 'dbtest/communitypartner_dash.html',
                      {'user_dash': user,
                        'jobs':jobs,
-                       'unread_notifications':unread_notifications,
-                       'read_notifications':read_notifications,
                        'show_dialog':show_dialog
                      })
 
@@ -460,3 +453,14 @@ def job_settings(request,job_id):
             deselected_orgs = Organization.objects.exclude(pk__in = request.POST.getlist('organization'))
 
     return render(request, 'dbtest/job_settings.html', {'form':form,'job' : job, 'selected_orgs':selected_orgs, 'deselected_orgs':deselected_orgs})
+
+@login_required
+def notifications_page(request):
+    read_notifications = list(request.user.notifications.read())
+    unread_notifications = list(request.user.notifications.unread())
+    request.user.notifications.mark_all_as_read()
+    return render(request, 'dbtest/notifications_page.html',
+                       {'unread_notifications':unread_notifications,
+                       'read_notifications':read_notifications
+                       })
+
