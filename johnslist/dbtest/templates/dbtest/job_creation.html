@@ -26,7 +26,7 @@
 
             <div class="row">
 
-                <!-- ############## Explanation Tab ############# -->
+                <!----------------- Explanation Tab ------------- -->
 
                 <h1>How it Works</h1>
                 <div class="row">
@@ -159,8 +159,6 @@
                     </div>
                 </div>
 
-
-
                 <!------------ Add Organizations Tab ---------------->
 
                 <h1>Job Categories</h1>
@@ -182,39 +180,5 @@
 
 
 <script>
-//------------------ tab navigation ---------------------
-
-function update_visibility(active_tab){
-    if (active_tab.attr('href') == '#tutorial'){
-        $('.prev_tab').removeClass("active");
-        $('.next_tab').addClass("active");
-    }
-    else if (active_tab.attr('href') == '#orgs'){
-        $('.prev_tab').addClass("active");
-        $('.next_tab').removeClass("active");
-    }
-    else {
-        $('.next_tab').addClass("active");
-        $('.prev_tab').addClass("active");
-    }
-}
-
-$('.page-tab').click(function(event){
-    active_tab = $(event.target);
-    update_visibility(active_tab);
-});
-
-$('.next_tab').click(function(){
-    active_tab = $('.page-tabs > .active').next('li').find('a');
-    active_tab.trigger('click');
-    update_visibility(active_tab);
-});
-
-$('.prev_tab').click(function(){
-    active_tab = $('.page-tabs > .active').prev('li').find('a');
-    active_tab.trigger('click');
-    update_visibility(active_tab);
-});
-</script>
 
 {% endblock content %}
