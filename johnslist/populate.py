@@ -1,3 +1,5 @@
+#!/usr/bin/env python2
+
 import os
 from django.core.management import call_command
 from itertools import cycle
