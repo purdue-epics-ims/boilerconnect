@@ -402,7 +402,6 @@ def job_creation(request):
     #if request was POST
 
     if request.method == 'POST':
-        print "requested thing:",request.POST
         form = JobCreateForm(request.POST)
         # selected_orgs = Organization.objects.filter(pk__in = form.data['organization'])
 

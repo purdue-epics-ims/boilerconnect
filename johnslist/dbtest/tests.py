@@ -73,7 +73,8 @@ def set_up(self):
         self.o = Organization.objects.create(name = self.g.name, group = self.g, description="test description",phone_number="123-456-7890")
         self.o.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
         #create category owned by foobar_purdueuser
-        self.cat = Category.objects.create(name='foobar_category',description="test description")
+        self.cat_g = CategoryGroup.objects.create(name='foobar_category_group',description="test_description group")
+        self.cat = Category.objects.create(name='foobar_category',description="test description",group = self.cat_g)
         self.j = Job.objects.create(name='foobar_job',description="test description",duedate='2015-01-01',creator=self.u_cp)
 
 class UserTestCase(TestCase):
