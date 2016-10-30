@@ -1,5 +1,5 @@
 from django.db import models
-from django.forms import ModelForm,PasswordInput,Textarea, RadioSelect
+from django.forms import ModelForm, CheckboxSelectMultiple
 from django.contrib.auth.models import User
 from django.contrib.auth import forms
 from .models import*
@@ -19,23 +19,28 @@ class OrganizationEditForm(ModelForm):
 
 class JobForm(ModelForm):
     def save(self, request, commit = True):
-        job = super(JobForm, self).save(commit = False) 
+        job = super(JobForm, self).save(commit = False)
         job.creator = request.user
         job.save()
 
-        #make a request to all the new organizations
-        for org in self.cleaned_data['organization']:
-            if org not in job.organization.all():
+        # normally you would have save_m2m(), but the fact that `organizations` is a relation
+        # through a model prevents this
+
+        # need to save category relations here
+
+        # make a request to all the new organizations
+        for org in self.cleaned_data['organizations']:
+            if org not in job.organizations.all():
                 verb = "submitted"
                 organization = Organization.objects.get(id = org.pk)
                 jr = JobRequest.objects.create(organization=organization, job = job)
-                link = request.build_absolute_uri(reverse('organization_dash', kwargs = {'organization_id': org.pk})+"?jobrequestID="+str(jr.id))
+                link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jr.job.id, 'organization_id': org.pk}))
                 for user in organization.group.user_set.all():
                     send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [user.userprofile.email], fail_silently=False)
 
-        #delete request for all organizations removed
-        for org in job.organization.all():
-            if org not in self.cleaned_data['organization']:
+        # delete request for all organizations removed
+        for org in job.organizations.all():
+            if org not in self.cleaned_data['organizations']:
                 organization = Organization.objects.get(id = org.pk)
                 jr =  JobRequest.objects.get(organization=organization, job = job).delete()
 
@@ -45,13 +50,15 @@ class JobCreateForm(JobForm):
     class Meta:
         model = Job
         exclude = ('creator',)
-        widgets = { 'organization': OrgSelect() }
+        widgets = { 'organizations': OrgSelect(),
+                    'categories': CategorySelect()}
 
 class JobEditForm(JobForm):
     class Meta:
         model = Job
         exclude = ('creator',)
-        widgets = { 'organization': OrgSelect() }
+        widgets = { 'organizations': OrgSelect(),
+                    'categories': CategorySelect()}
 
 class CommentCreateForm(ModelForm):
     class Meta:
