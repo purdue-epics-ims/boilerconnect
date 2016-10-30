@@ -9,9 +9,9 @@
   <center>
     <h3>{{ job.name }} <small>Settings</small></h3>
   </center>
-
-  <a href="{% url 'job_dash' job.id %}" class="pull-right"><button class="btn btn-info">Job Dashboard</button></a>
 </div>
+
+<div class="form-group"><a href="{% url 'job_dash' job.id %}"><button class="btn btn-primary">Back</button></a></div>
 
 <form action="{% url 'job_settings' job.id %}" method="post">
 
@@ -99,12 +99,8 @@
 
   </div>
 
-  <hr>
-
-  <div class="row">
-    <div class="col-sm-12 col-sm-offset-5">
+  <div class="form-group">
     <input class="btn btn-primary" type="submit" value="Save Changes" onclick="submitFunction()">
-    </div>
   </div>
 </form>
 <script>

@@ -23,7 +23,9 @@ def quicksearch(request):
 
 #determine if this is the first time a user has visited a page
 def first_visit(user,view):
-    if view not in user.userprofile.visited_views:
+    # making visited_views into a list and check if this view is in the list
+    if view not in user.userprofile.visited_views.split(","):
+        # appending a "," because the list is splited by ","
         user.userprofile.visited_views += "{0},".format(view)
         user.userprofile.save()
         return True
@@ -404,6 +406,7 @@ def job_creation(request):
     #if request was POST
 
     if request.method == 'POST':
+        print "-----------post------------:",request.POST
         form = JobCreateForm(request.POST)
         # selected_orgs = Organization.objects.filter(pk__in = form.data['organization'])
 
@@ -413,6 +416,10 @@ def job_creation(request):
 
             message = "Job {0} created".format( job.name )
             messages.add_message(request, messages.INFO, message)
+            print "form data:"
+            print form.cleaned_data.get('categories')
+            print "job data:"
+            print job.categories.all()
             return redirect('job_dash',job_id=job.id)
 
     #if the request was a GET

@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
@@ -22,7 +21,6 @@ SECRET_KEY = 'r+u_vbo1hz#jk77zhno-0#6!sg84__xc!3ce363u299)oeac1$'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -39,15 +37,17 @@ INSTALLED_APPS = (
     'notifications',
     'widget_tweaks',
     'sniplates',
+    'debug_toolbar'
 )
 
 try:
-	import django_extensions
-	INSTALLED_APPS+=('django_extensions',)
+    import django_extensions
+    INSTALLED_APPS += ('django_extensions',)
 except ImportError:
-	pass
+    pass
 
 MIDDLEWARE_CLASSES = (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -58,7 +58,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend', # default
+    'django.contrib.auth.backends.ModelBackend',  # default
     'guardian.backends.ObjectPermissionBackend',
 )
 
@@ -84,7 +84,7 @@ TEMPLATES = [{
             'django.template.context_processors.request',
         ],
     },
-},]
+}]
 
 
 # Database
@@ -110,10 +110,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-MEDIA_ROOT='../media'
-MEDIA_URL='/media/'
+MEDIA_ROOT = '../media'
+MEDIA_URL = '/media/'
 
-PIC_POPULATE_DIR='../population_pics/'
+PIC_POPULATE_DIR = '../population_pics/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
@@ -127,18 +127,18 @@ LOGIN_URL = '/login'
 # where to redirect after login if there was no last page ('next' variable)
 LOGIN_REDIRECT_URL = '/'
 
-#custom defined settings
+# custom defined settings
 
-#notifications extra fields
+# notifications extra fields
 NOTIFICATIONS_USE_JSONFIELD = True
 
 # generic redirect url
 REDIRECT_URL = '/'
 
-#django guardian config
+# django guardian config
 ANONYMOUS_USER_ID = -1
 
-#email configuration
+# email configuration
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'boilerconnect1@gmail.com'
