@@ -29,6 +29,7 @@ from django.test import Client
             [x] - jobrequests_declined (use request_organization)
         Interface:
             [x] - job_creation (check job exists, check default perms, check requested orgs)
+            [ ] - job_creation (check job submitted to groups in categories)
             [x] - jobrequest_dash (check response.context['job'] is the same that was created)
 
     Organization:
