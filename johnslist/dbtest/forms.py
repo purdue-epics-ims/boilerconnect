@@ -19,17 +19,21 @@ class OrganizationEditForm(ModelForm):
 
 class JobForm(ModelForm):
     def save(self, request, commit = True):
+        # make the user from the request the creator of the job
         job = super(JobForm, self).save(commit = False)
         job.creator = request.user
         job.save()
 
-        # normally you would have save_m2m(), but the fact that `organizations` is a relation
-        # through a model prevents this
-
-        # need to save category relations here
+        # save categories
+        # normally you would use save_m2m() to save the categories,
+        # but the fact that `organizations` is a relation through a model prevents this
+        for cat in self.cleaned_data['categories']:
+            job.categories.add(cat)
 
         # make a request to all the new organizations
-        for org in self.cleaned_data['organizations']:
+        # get the organizations we should request from the categories
+        category_orgs = Organization.objects.filter(categories__in = job.categories.all())
+        for org in self.cleaned_data['organizations'] | category_orgs:
             if org not in job.organizations.all():
                 verb = "submitted"
                 organization = Organization.objects.get(id = org.pk)
