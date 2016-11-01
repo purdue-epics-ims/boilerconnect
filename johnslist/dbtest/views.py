@@ -295,7 +295,6 @@ def user_create(request, profile):
                 login_auth(request, login_user)
                 return redirect('user_dash')
         else:
-                print "or here"
                 return render(request, 'dbtest/user_create.html', {'form':form, 'profile_form':profile_form,'error':"Profile type error."})
 
 #if the request was a GET
