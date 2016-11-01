@@ -38,11 +38,17 @@ class JobForm(ModelForm):
                 for user in organization.group.user_set.all():
                     send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [user.userprofile.email], fail_silently=False)
 
-        # delete request for all organizations removed
-        for org in job.organizations.all():
-            if org not in self.cleaned_data['organizations']:
-                organization = Organization.objects.get(id = org.pk)
-                jr =  JobRequest.objects.get(organization=organization, job = job).delete()
+        # do we want the user to be able to delete requests or categories?
+        # # remove deleted categories
+        # for cat in job.categories.all():
+        #     if cat not in self.cleaned_data['categories']:
+        #         job.categories.remove(cat)
+
+        # # delete request for all organizations removed
+        # for org in job.organizations.all():
+        #     if org not in self.cleaned_data['organizations']:
+        #         organization = Organization.objects.get(id = org.pk)
+        #         jr =  JobRequest.objects.get(organization=organization, job = job).delete()
 
         return job
 
