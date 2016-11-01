@@ -33,6 +33,6 @@ class CategorySelect(CheckboxSelectMultiple):
 
         context = {
             'category_groups':CategoryGroup.objects.all(),
-            'selected_categories':value
+            'selected_categories':Category.objects.filter(id__in = value)
             }
         return mark_safe(render_to_string('widgets/category_select.html', context))

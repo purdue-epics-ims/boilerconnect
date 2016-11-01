@@ -17,14 +17,13 @@
                     {% for category in category_group.categories.all %}
                     <div class="checkbox">
                         <label>
-                            <option type="checkbox" value="{{category.name}}" checked="{% if category in selected_categories %}checked{% endif %}">{{category.name}}
                         </label>
-                        <li>
-                            <label for="id_categories_{{category.id}}">
-                                <input id="id_categories_{{category.id}}" name="categories" type="checkbox" value="{{category.id}}">
-                                {{category.name}}
-                            </label>
-                        </li>
+                        <!-- <li> -->
+                        <label for="id_categories_{{category.id}}">
+                            <input id="id_categories_{{category.id}}" name="categories" type="checkbox" value="{{category.id}}" {% if category in selected_categories %}checked{% endif %}>
+                            {{category.name}}
+                        </label>
+                            <!-- </li> -->
                     </div>
                     {% endfor %}
             </div>
