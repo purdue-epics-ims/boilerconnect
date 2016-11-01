@@ -202,7 +202,7 @@ class JobTestCase(TestCase):
                                  'tech_specs':'foo',
                                  'budget':'foo',
                                  'creator':self.u_cp.pk,
-                                 'organization':self.o.pk,
+                                 'organizations':self.o.pk,
                                  'categories':self.cat.pk
                              }
                              ,follow=True)
