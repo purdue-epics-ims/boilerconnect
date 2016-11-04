@@ -13,7 +13,9 @@
                     <a data-toggle="collapse" href="#collapse{{forloop.counter}}">{{category_group.name}}</a>
                 </h4>
             </div>
-            <div id="collapse{{forloop.counter}}" class="panel-collapse collapse">
+            {% comment %}collapsing disabled for now {% endcomment %}
+            {% comment %}<div id="collapse{{forloop.counter}}" class="panel-collapse collapse">{% endcomment %}
+            <div id="collapse{{forloop.counter}}" class="panel-collapse ">
                     {% for category in category_group.categories.all %}
                     <div class="checkbox">
                         <label>
