@@ -29,6 +29,7 @@ from django.test import Client
             [x] - jobrequests_declined (use request_organization)
         Interface:
             [x] - job_creation (check job exists, check default perms, check requested orgs)
+            [ ] - job_creation (check job submitted to groups in categories)
             [x] - jobrequest_dash (check response.context['job'] is the same that was created)
 
     Organization:
@@ -67,15 +68,21 @@ def set_up(self):
         self.u_cp.set_password('asdf')
         self.u_cp.save()
         UserProfile.objects.create(user = self.u_cp, purdueuser = False)
+        #create category owned by foobar_purdueuser
+        self.cat_g = CategoryGroup.objects.create(name='foobar_category_group',description="test_description group")
+        self.cat = Category.objects.create(name='foobar_category',description="test description",group = self.cat_g)
+        self.j = Job.objects.create(name='foobar_job',description="test description",duedate='2015-01-01',creator=self.u_cp)
         #create group/org
         self.g=Group.objects.create(name="foobar_group")
         self.g.user_set.add(self.u_pu)
         self.o = Organization.objects.create(name = self.g.name, group = self.g, description="test description",phone_number="123-456-7890")
         self.o.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
-        #create category owned by foobar_purdueuser
-        self.cat_g = CategoryGroup.objects.create(name='foobar_category_group',description="test_description group")
-        self.cat = Category.objects.create(name='foobar_category',description="test description",group = self.cat_g)
-        self.j = Job.objects.create(name='foobar_job',description="test description",duedate='2015-01-01',creator=self.u_cp)
+        # create another group & org that has the `self.cat` category
+        self.g2=Group.objects.create(name="foobar2_group")
+        self.g2.user_set.add(self.u_pu)
+        self.o2 = Organization.objects.create(name = self.g2.name, group = self.g2, description="test description",phone_number="123-456-7890")
+        self.o2.categories.add(self.cat)
+        self.o2.icon.save('plug.png', File(open(PIC_POPULATE_DIR+'plug.png')), 'r')
 
 class UserTestCase(TestCase):
     #django calls this initialization function automatically
@@ -195,7 +202,7 @@ class JobTestCase(TestCase):
                                  'tech_specs':'foo',
                                  'budget':'foo',
                                  'creator':self.u_cp.pk,
-                                 'organization':self.o.pk,
+                                 'organizations':self.o.pk,
                                  'categories':self.cat.pk
                              }
                              ,follow=True)
@@ -203,6 +210,14 @@ class JobTestCase(TestCase):
 
         #check if job exists
         self.assertTrue(Job.objects.filter(name='interfacejob').first())
+
+        j = Job.objects.filter(name='interfacejob').first()
+
+        # verify job was submitted to organization in `organization` field
+        self.assertTrue(self.o in j.organizations.all())
+
+        # verify job was submitted to organizations in `categories` field
+        self.assertTrue(self.o2 in j.organizations.all())
 
     #verify job_dash view
     def test_job_dash(self):

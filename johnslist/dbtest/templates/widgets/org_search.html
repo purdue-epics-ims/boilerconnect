@@ -2,7 +2,7 @@
 <!-- ---------------------------- Organization Search ----------------------------->
 
 <div style="display: none;">
-    <select multiple="multiple" id="id_organization" name="organization">
+    <select multiple="multiple" id="id_organizations" name="organizations">
         {% for organization in selected_orgs %}
         <option value="{{organization.id}}" selected="selected">{{organization.name}}</option>
         {% endfor %}

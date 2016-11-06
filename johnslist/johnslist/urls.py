@@ -12,7 +12,10 @@ urlpatterns = [
 ]
 if settings.DEBUG:
     # static files (images, css, javascript, etc.)
+    import debug_toolbar
     urlpatterns.append(
-        url(r'^media/(?P<path>.*)$', serve, {
-        'document_root': settings.MEDIA_ROOT})
+        url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
+    )
+    urlpatterns.append(
+        url(r'^__debug__/', include(debug_toolbar.urls))
     )
