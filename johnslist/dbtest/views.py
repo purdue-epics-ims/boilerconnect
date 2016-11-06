@@ -23,7 +23,9 @@ def quicksearch(request):
 
 #determine if this is the first time a user has visited a page
 def first_visit(user,view):
-    if view not in user.userprofile.visited_views:
+    # making visited_views into a list and check if this view is in the list
+    if view not in user.userprofile.visited_views.split(","):
+        # appending a "," because the list is splited by ","
         user.userprofile.visited_views += "{0},".format(view)
         user.userprofile.save()
         return True

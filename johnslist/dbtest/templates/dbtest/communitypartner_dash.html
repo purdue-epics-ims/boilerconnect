@@ -13,10 +13,9 @@
   <center>
     <h3>{{ request.user }} <small>Dashboard</small></h3>
   </center>
-
-  <a href="{% url 'user_settings' %}" class="pull-right"><button class="btn btn-info">User Settings</button></a>
 </div>
 
+<div class="form-group"><a href="{% url 'user_settings' %}"><button class="btn btn-info">User Settings</button></a></div>
 
 <div class="row">
   <div class="col-sm-6">
