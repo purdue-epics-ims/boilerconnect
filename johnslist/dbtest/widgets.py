@@ -31,8 +31,13 @@ class CategorySelect(CheckboxSelectMultiple):
 
     def render(self, name, value, attrs=None):
 
+        if value:
+            selected_categories = Category.objects.filter(id__in = value)
+        else:
+            selected_categories = []
+
         context = {
             'category_groups':CategoryGroup.objects.all(),
-            'selected_categories':value
+            'selected_categories':selected_categories
             }
         return mark_safe(render_to_string('widgets/category_select.html', context))

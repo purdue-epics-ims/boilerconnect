@@ -41,7 +41,7 @@ class Organization(models.Model):
 
     name = models.CharField('Organization Name',max_length=64)
     description = models.TextField('Organization Description')
-    categories = models.ManyToManyField(Category)  # Category =-= Organization
+    categories = models.ManyToManyField(Category, related_name = 'organizations')  # Category =-= Organization
     group = models.OneToOneField(Group) # Organization - Group
     phone_number = models.CharField('Organization phone number',max_length=64)
     icon = models.ImageField(upload_to='organization', null=True)
@@ -111,7 +111,7 @@ class Job(models.Model):
     #  Job is closed after a jr is confirmed
     closed = models.NullBooleanField(default = False)
     # some tags to determine what organizations to submit job to
-    categories = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category, related_name = 'jobs')
 
     class Meta:
         permissions = (

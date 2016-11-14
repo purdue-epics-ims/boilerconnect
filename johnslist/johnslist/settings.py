@@ -14,6 +14,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
+PROJECT_NAME="John's List"
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'r+u_vbo1hz#jk77zhno-0#6!sg84__xc!3ce363u299)oeac1$'
 
@@ -80,6 +82,7 @@ TEMPLATES = [{
             'django.template.context_processors.tz',
             'django.contrib.messages.context_processors.messages',
             'django.template.context_processors.request',
+            'dbtest.context_processors.global_settings',
         ],
     },
 }]

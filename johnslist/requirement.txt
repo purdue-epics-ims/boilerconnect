@@ -1,7 +1,4 @@
-#
-############ Dependencies for BoilerConnect Project ###############
-#
-########### Requirements without version specifiers ###############
+# Dependencies for the project
 django==1.10.2
 easy-thumbnails
 django-guardian
