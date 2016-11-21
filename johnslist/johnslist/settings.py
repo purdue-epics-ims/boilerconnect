@@ -113,6 +113,14 @@ if DEBUG:
             'debug_toolbar.panels.logging.LoggingPanel',
             'debug_toolbar.panels.redirects.RedirectsPanel',
         ]
+
+        ## enable graphing via
+        ## python manage.py graph_models -a > proj.dot
+        ## python manage.py graph_models -a -g -o models.png
+        GRAPH_MODELS = {
+            'all_applications': True,
+            'group_models': True,
+        }
     except ImportError:
         pass
 
