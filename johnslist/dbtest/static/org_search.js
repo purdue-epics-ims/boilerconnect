@@ -2,7 +2,7 @@
 
 // update <select> element with #org_selected items
 function update_select() {
-    $('#id_organization').val($("#org_selected").children().map(function(){ return $(this).attr('org_pk') }))
+    $('#id_organizations').val($("#org_selected").children().map(function(){ return $(this).attr('org_pk') }))
 }
 
  //select an org

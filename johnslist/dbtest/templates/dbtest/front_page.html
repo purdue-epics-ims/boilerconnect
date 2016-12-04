@@ -5,20 +5,20 @@
 
 <!----------- Search ---------->
 
-<!-- Search Box -->
 
 <div class = "jumbotron">
-  <h1>Welcome to BoilerConnect</h1>
+    <h1>Welcome to {{ SETTINGS.PROJECT_NAME }}</h1>
+  <p>_____________________________________________________________________________________</p>
+  <p>Connecting community needs with skilled campus groups</p>
   <br>
-  <p>Connecting the talents of community and campus</p>
-  <div class = "search-form box">
+  <!--<div class = "search-form box">
     <form action="{% url 'search' %}" method="get">
       <input class="input-box" type="text" name="search" placeholder="Find a group">
       <input class="search-btn" type="submit" value="Search">
       <input type="hidden" name="search_model" value="organization">
       <input type="hidden" name="search_by" value="name">
     </form>
-  </div>
+  </div>-->
 </div>
 
 
@@ -27,11 +27,24 @@
 
 </script>
 
-
+  <center><p style="font-size: 18px">Find a Group That Meets Your Needs</p></center>
   {% if not user.is_authenticated %}
-  <div class="btn-group btn-group-justified" style="height: 300px; border-spacing: 10px;">
-    <a href="{% url 'user_create' "purdue" %}" class="user_create_button btn btn-default">I am part of a Purdue organization</a>
-    <a href="{% url 'user_create' "community" %}" class="user_create_button btn btn-default">I have a job to submit for a <br> Purdue organization</a>
+  <div class="btn-group btn-group-justified" style="height: 100px; border-spacing: 10px; text-align: center; padding-top: 15px; padding-bottom: 40px">
+    <!--<a href="{% url 'user_create' "purdue" %}" class="user_create_button btn btn-default">I am part of a Purdue organization</a>-->
+    <a href="{% url 'user_create' "community" %}" class="user_create_button btn-default btn-lg">Get Started! </a>
+  </div>
+
+<!-- Search Box -->
+
+
+  <center><p style="font-size: 18px">Or Search For a Specific Group</p></center>
+  <div class="search-form box" style="text-align: center; padding-top: 10px; padding-bottom: 40px">
+    <form action="{% url 'search' %}" method="get">
+      <input class="input-box" type="text" name="search" placeholder="Find a group">
+      <input class="search-btn" type="submit" value="Search">
+      <input type="hidden" name="search_model" value="organization">
+      <input type="hidden" name="search_by" value="name">
+    </form>
   </div>
   {% else %}
   <!----------- Gallery ---------->

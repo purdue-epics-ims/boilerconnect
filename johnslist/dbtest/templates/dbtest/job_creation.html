@@ -9,7 +9,7 @@
 <div class="navbar navbar-inverse navbar-fixed-top">
     <div class="container">
         <div class="navbar-header">
-            <a  class="navbar-brand" rel="home" href="/" title="BoilerConnect">
+            <a  class="navbar-brand" rel="home" href="/" title="{{ SETTINGS.PROJECT_NAME }}">
             <img draggable="false" style="max-width:27px;margin-top:-3px;margin-right:-7px;"
                     src='{% static 'brand.png' %}'>
             </a>
@@ -167,13 +167,13 @@
 
                         <h1>Job Categories</h1>
                         Select some words that pertain to your job and we will try to find a group that fits your needs.
+                        {% render_field form.categories %}
 
                         <div class="panel-group">
 
-                            {% render_field form.organization %}
+                            {% render_field form.organizations %}
 
                             <div class="button_group">
-                                <!-- <input type="submit" class="btn btn-primary" value="Submit Job" onclick="submitFunction()"> -->
                                 <input type="submit" class="btn btn-primary" value="Submit Job">
                             </div>
                         </div>

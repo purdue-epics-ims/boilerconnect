@@ -11,9 +11,10 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
+
+PROJECT_NAME="John's List"
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'r+u_vbo1hz#jk77zhno-0#6!sg84__xc!3ce363u299)oeac1$'
@@ -22,7 +23,6 @@ SECRET_KEY = 'r+u_vbo1hz#jk77zhno-0#6!sg84__xc!3ce363u299)oeac1$'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -42,10 +42,10 @@ INSTALLED_APPS = (
 )
 
 try:
-	import django_extensions
-	INSTALLED_APPS+=('django_extensions',)
+    import django_extensions
+    INSTALLED_APPS += ('django_extensions',)
 except ImportError:
-	pass
+    pass
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -58,7 +58,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend', # default
+    'django.contrib.auth.backends.ModelBackend',  # default
     'guardian.backends.ObjectPermissionBackend',
 )
 
@@ -82,10 +82,39 @@ TEMPLATES = [{
             'django.template.context_processors.tz',
             'django.contrib.messages.context_processors.messages',
             'django.template.context_processors.request',
+            'dbtest.context_processors.global_settings',
         ],
     },
-},]
+}]
 
+if DEBUG:
+    try:
+        import debug_toolbar
+        INTERNAL_IPS = ('127.0.0.1',)
+        MIDDLEWARE_CLASSES += (
+            'debug_toolbar.middleware.DebugToolbarMiddleware',
+        )
+
+        INSTALLED_APPS += (
+            'debug_toolbar',
+        )
+
+        DEBUG_TOOLBAR_PANELS = [
+            'debug_toolbar.panels.versions.VersionsPanel',
+            'debug_toolbar.panels.timer.TimerPanel',
+            'debug_toolbar.panels.settings.SettingsPanel',
+            'debug_toolbar.panels.headers.HeadersPanel',
+            'debug_toolbar.panels.request.RequestPanel',
+            'debug_toolbar.panels.sql.SQLPanel',
+            'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+            'debug_toolbar.panels.templates.TemplatesPanel',
+            'debug_toolbar.panels.cache.CachePanel',
+            'debug_toolbar.panels.signals.SignalsPanel',
+            'debug_toolbar.panels.logging.LoggingPanel',
+            'debug_toolbar.panels.redirects.RedirectsPanel',
+        ]
+    except ImportError:
+        pass
 
 # Database
 # https://docs.djangoproject.com/en/1.7/ref/settings/#databases
@@ -110,10 +139,10 @@ USE_L10N = True
 
 USE_TZ = True
 
-MEDIA_ROOT='../media'
-MEDIA_URL='/media/'
+MEDIA_ROOT = '../media'
+MEDIA_URL = '/media/'
 
-PIC_POPULATE_DIR='../population_pics/'
+PIC_POPULATE_DIR = '../population_pics/'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
@@ -127,18 +156,18 @@ LOGIN_URL = '/login'
 # where to redirect after login if there was no last page ('next' variable)
 LOGIN_REDIRECT_URL = '/'
 
-#custom defined settings
+# custom defined settings
 
-#notifications extra fields
+# notifications extra fields
 NOTIFICATIONS_USE_JSONFIELD = True
 
 # generic redirect url
 REDIRECT_URL = '/'
 
-#django guardian config
+# django guardian config
 ANONYMOUS_USER_ID = -1
 
-#email configuration
+# email configuration
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'boilerconnect1@gmail.com'
