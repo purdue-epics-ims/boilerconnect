@@ -87,10 +87,10 @@ def populate():
     print '  creating Jobs'
 
     #create Jobs
-    jobs = ['Installing linux','Configuring vim','Make a website', 'Make a car', 'Finish circuit board', 'Finish software']
+    jobs = ['Planning student success series','Advertising for employment training', 'Install irrigation system', 'Story Collection', 'Finish software']
 
     community_partners = cycle([user_profile.user for user_profile in UserProfile.objects.filter(purdueuser=False)])
-    client_orgs = cycle(["United Way","Lafayette Crisis Center","Jimbob's Hamburger Stand"])
+    client_orgs = cycle(["Beacon Academy","Lafayette Adult Resources","Lafayette City Farms", "Bauer Family resources"])
     orgs = cycle(Organization.objects.all())
 
     #create JobRequests
