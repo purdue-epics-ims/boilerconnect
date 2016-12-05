@@ -1,5 +1,5 @@
 # Dependencies for the project
-django==1.10.2
+django==1.9.5
 easy-thumbnails
 django-guardian
 django-notifications-hq
@@ -8,3 +8,10 @@ pillow
 django-widget-tweaks
 django-sniplates
 coverage
+python-dateutil
+django-admin-tools
+django-cache-utils
+django-jsonfield
+django-nvd3
+python-memcached
+django-admin-tools

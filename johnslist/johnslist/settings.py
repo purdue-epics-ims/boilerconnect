@@ -27,6 +27,11 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = (
+    'admin_tools',
+    'admin_tools_stats',
+    'admin_tools.theming',
+    'admin_tools.menu',
+    'admin_tools.dashboard',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +44,7 @@ INSTALLED_APPS = (
     'notifications',
     'widget_tweaks',
     'sniplates',
+    'django_nvd3',
 )
 
 try:
@@ -69,7 +75,6 @@ WSGI_APPLICATION = 'johnslist.wsgi.application'
 TEMPLATES = [{
     'BACKEND': 'django.template.backends.django.DjangoTemplates',
     'DIRS': [],
-    'APP_DIRS': True,
     'OPTIONS': {
         'context_processors': [
             # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
@@ -83,6 +88,13 @@ TEMPLATES = [{
             'django.contrib.messages.context_processors.messages',
             'django.template.context_processors.request',
             'dbtest.context_processors.global_settings',
+        ],
+        'loaders': [
+            'admin_tools.template_loaders.Loader',
+            ('django.template.loaders.cached.Loader', [
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            ]),
         ],
     },
 }]
@@ -181,3 +193,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'boilerconnect1@gmail.com'
 EMAIL_HOST_PASSWORD = 'imsteam1'
 EMAIL_PORT = 587
+
+# admin tool
+ADMIN_TOOLS_INDEX_DASHBOARD = 'johnslist.dashboard.CustomIndexDashboard'
+ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'johnslist.dashboard.CustomAppIndexDashboard'

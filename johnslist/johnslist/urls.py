@@ -8,6 +8,7 @@ from django.views.static import serve
 
 urlpatterns = [
 	url(r'^admin/', include(admin.site.urls),name='admin'),
+    url(r'^admin_tools/', include('admin_tools.urls')),
 	url(r'^', include(urls),name='base'),
 ]
 if settings.DEBUG:
