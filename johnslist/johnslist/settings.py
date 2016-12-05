@@ -39,6 +39,7 @@ INSTALLED_APPS = (
     'notifications',
     'widget_tweaks',
     'sniplates',
+    'rangefilter',
 )
 
 try:

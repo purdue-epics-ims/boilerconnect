@@ -52,6 +52,13 @@ def populate():
         newuser.set_password('asdf')
         newuser.save()
         UserProfile.objects.create(user = newuser, purdueuser = types.next(),email = emails.next())
+    # create superuser
+    superuser = User(username='admin')
+    superuser.set_password('asdf')
+    superuser.is_superuser = True
+    superuser.is_staff = True
+    superuser.save()
+    UserProfile.objects.create(user=superuser, purdueuser= False,email = emails.next())
 
     #add Users to Organizations
     users = User.objects.all().exclude(username="AnonymousUser")
@@ -127,4 +134,5 @@ if __name__ == '__main__':
     from dbtest.models import *
     from johnslist.settings import PIC_POPULATE_DIR
     from time import sleep
+
     populate()

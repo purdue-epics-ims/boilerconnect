@@ -89,6 +89,8 @@ class Job(models.Model):
     def __unicode__(self):
         return self.name
     name = models.CharField('Job Name',max_length=128)
+    # when the job was created
+    date_created = models.DateTimeField('Date Created', auto_now=True)
     # what entity/organization needs this job?
     client_organization = models.CharField('What organization do you represent?', max_length=64)
     # short description

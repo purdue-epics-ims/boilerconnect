@@ -1,15 +1,19 @@
 from django.contrib import admin
 from .models import *
+from rangefilter.filter import DateRangeFilter
+
 
 # Register your models here.
 
 class JobAdmin(admin.ModelAdmin):
     model = Job
-    list_filter = ('organizations__name',
+    list_filter = (('date_created', DateRangeFilter),
                    'closed',
+                   'organizations__name',
                    'categories',
                    'duedate',
     )
+
     list_display = ('name',
                     'closed',
                     'duedate',
