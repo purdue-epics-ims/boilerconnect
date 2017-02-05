@@ -51,14 +51,14 @@ def populate():
         newuser = User.objects.create(username=username)
         newuser.set_password('asdf')
         newuser.save()
-        UserProfile.objects.create(user = newuser, purdueuser = types.next(),email = emails.next())
+        UserProfile.objects.create(user=newuser, purdueuser=types.next(), email=emails.next())
     # create superuser
     superuser = User(username='admin')
     superuser.set_password('asdf')
     superuser.is_superuser = True
     superuser.is_staff = True
     superuser.save()
-    UserProfile.objects.create(user=superuser, purdueuser= False,email = emails.next())
+    UserProfile.objects.create(user=superuser, purdueuser=False, email=emails.next())
 
     #add Users to Organizations
     users = User.objects.all().exclude(username="AnonymousUser")
@@ -75,7 +75,7 @@ def populate():
     category_groups = ['art','apps','engineering']
     for category_group in category_groups:
         print '    '+category_group
-        CategoryGroup.objects.create( name=category_group,description='' )
+        CategoryGroup.objects.create(name=category_group,description='')
 
     #create categories
     print '  creating Categories'
@@ -86,9 +86,9 @@ def populate():
 
     #tag Organizations with Categories
     plug.categories.add(Category.objects.get(name="computer science"), Category.objects.get(name="linux"))
-    epics.categories.add(Category.objects.get(name = 'construction'))
-    epics.categories.add(Category.objects.get(name = 'web development'))
-    amet.categories.add(Category.objects.get(name= 'construction'))
+    epics.categories.add(Category.objects.get(name='construction'))
+    epics.categories.add(Category.objects.get(name='web development'))
+    amet.categories.add(Category.objects.get(name='construction'))
 
     #--------------- Jobs --------------------
     print '  creating Jobs'
@@ -104,15 +104,15 @@ def populate():
     for job_name in jobs:
         print '    '+job_name
         job = Job.objects.create(name=job_name,
-                                description = 'Description of the job',                
-                                deliverable = 'deliverable',
-                                stakeholders = 'stakeholders',
-                                additional_information = 'additional_information',
-                                budget = 'budget',
-                                contact_information = 'contact_information@gmail.com',
-                                duedate = timezone.now(),
-                                creator = community_partners.next(),
-                                client_organization = client_orgs.next())
+                                description='Description of the job',                
+                                deliverable='deliverable',
+                                stakeholders='stakeholders',
+                                additional_information='additional_information',
+                                budget='budget',
+                                contact_information='contact_information@gmail.com',
+                                duedate=timezone.now(),
+                                creator=community_partners.next(),
+                                client_organization=client_orgs.next())
         #Make some jobrequests "randomly"
         if job.id % 2 == 0:
             jr = job.request_organization(orgs.next())
