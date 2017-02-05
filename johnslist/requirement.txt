@@ -1,11 +1,12 @@
 # Dependencies for the project
 django==1.10.2
-easy-thumbnails
-django-guardian
-django-notifications-hq
-django-model-utils
-pillow
-django-widget-tweaks
-django-sniplates
 coverage
 django-admin-rangefilter
+django-guardian
+django-import-export
+django-model-utils
+django-notifications-hq
+django-sniplates
+django-widget-tweaks
+easy-thumbnails
+pillow
