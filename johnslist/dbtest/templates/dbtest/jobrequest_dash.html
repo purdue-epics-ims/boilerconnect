@@ -1,3 +1,6 @@
+{% extends "dbtest/base.html" %}
+
+{% block content %}
 {% if show_dialog %}
     {% if user.userprofile.purdueuser %}
         <div class="confirm alert alert-dismissible alert-info">
@@ -11,7 +14,6 @@
         </div>
     {% endif %}
 {% endif %}
-<div class="exit-overlay">X</div>
 <div class="jumbotron jobrequest-overlay-block-content">
   <center>
     <h3>{{ jobrequest.job.name }}</h3>
@@ -106,4 +108,4 @@
     <textarea class="form-control"  name="text_comment" placeholder="Leave your comments here!"></textarea>
     <button type="submit" class="btn btn-primary pull-right" name="action" value="comment" style="margin-top: 10px; margin-bottom: 10px;">Submit</button>
 </form>
-
+{% endblock content %}
