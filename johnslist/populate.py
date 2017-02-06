@@ -99,6 +99,7 @@ def populate():
     community_partners = cycle([user_profile.user for user_profile in UserProfile.objects.filter(purdueuser=False)])
     client_orgs = cycle(["United Way","Lafayette Crisis Center","Jimbob's Hamburger Stand"])
     orgs = cycle(Organization.objects.all())
+    categories = cycle(Category.objects.all())
 
     #create JobRequests
     for job_name in jobs:
@@ -120,6 +121,9 @@ def populate():
         jr = job.request_organization(orgs.next())
         # jr.accept()
         jr = job.request_organization(orgs.next())
+
+        job.categories.add(categories.next())
+
 
 if __name__ == '__main__':
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'johnslist.settings')
