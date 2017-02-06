@@ -16,8 +16,6 @@
 
 <div class="form-group"><a href="{% url 'job_settings' job.id %}"><button class="btn btn-info">Job Settings</button></a></div>
 
-<div class="jobrequest-overlay-contain"></div>
-
 <div class="row">
   <div class="col-sm-7">
     <div class="panel panel-primary">
@@ -28,7 +26,7 @@
       <div class="panel-body">
         <ul class="list-group dash-list">
             {% for jobrequest in jobrequests %}
-            <a class="list-group-item jobrequest-overlay-trigger" jobrequestID={{jobrequest.id}}>
+            <a href='/organization/{{jobrequest.organization.id}}/job/{{jobrequest.job.id}}' class="list-group-item">
                 {% if jobrequest.confirmed %}
                 <span class="label label-success">Confirmed</span>
                 {% elif jobrequest.accepted %}
@@ -40,17 +38,6 @@
                 {% endif %}
                 <img class="icon" src="{{ jobrequest.organization.icon.url }}"></img>
                 {{ jobrequest.organization }}
-                <script>
-                    var overlayID = {{jobrequest.id}};
-                    var orgID = "{{jobrequest.organization.id}}";
-                    var jobID = "{{jobrequest.job.id}}";
-                    var jobrequestOverlay = $('<div></div>').addClass('jobrequest-overlay');
-                    jobrequestOverlay.attr('overlayID', overlayID);
-                    $(".jobrequest-overlay-contain").append(jobrequestOverlay);
-
-                    // send a GET request to jobrequest_dash in view.py and display the content in overlay
-                    jobrequestOverlay.load(window.location.origin+"/organization/"+orgID+"/job/"+jobID);
-                </script>
             </a>
           {% endfor %}
         </ul>
