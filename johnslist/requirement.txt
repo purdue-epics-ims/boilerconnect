@@ -4,6 +4,7 @@ easy-thumbnails
 django-guardian
 django-notifications-hq
 django-model-utils
+django-admin-tools-stats
 pillow
 django-widget-tweaks
 django-sniplates
