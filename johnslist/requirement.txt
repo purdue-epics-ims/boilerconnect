@@ -16,3 +16,4 @@ django-jsonfield
 django-nvd3
 python-memcached
 django-admin-tools
+feedparser
