@@ -60,15 +60,13 @@ class JobCreateForm(JobForm):
     class Meta:
         model = Job
         exclude = ('creator',)
-        widgets = { 'organizations': OrgSelect(),
-                    'categories': CategorySelect()}
+        widgets = {'categories': CategorySelect()}
 
 class JobEditForm(JobForm):
     class Meta:
         model = Job
         exclude = ('creator',)
-        widgets = { 'organizations': OrgSelect(),
-                    'categories': CategorySelect()}
+        widgets = {'categories': CategorySelect()}
 
 class CommentCreateForm(ModelForm):
     class Meta:
