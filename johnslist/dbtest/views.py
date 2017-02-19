@@ -405,7 +405,6 @@ def job_creation(request):
     #if request was POST
 
     if request.method == 'POST':
-        print "-----------post------------:",request.POST
         form = JobCreateForm(request.POST)
         # selected_orgs = Organization.objects.filter(pk__in = form.data['organization'])
 
@@ -415,10 +414,6 @@ def job_creation(request):
 
             message = "Job {0} created".format( job.name )
             messages.add_message(request, messages.INFO, message)
-            print "form data:"
-            print form.cleaned_data.get('categories')
-            print "job data:"
-            print job.categories.all()
             return redirect('job_dash',job_id=job.id)
 
     #if the request was a GET

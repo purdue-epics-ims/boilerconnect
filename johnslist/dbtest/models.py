@@ -89,6 +89,8 @@ class Job(models.Model):
     def __unicode__(self):
         return self.name
     name = models.CharField('Job Name',max_length=128)
+    # when the job was created
+    date_created = models.DateTimeField('Date Created', auto_now=True)
     # what entity/organization needs this job?
     client_organization = models.CharField('What organization do you represent?', max_length=64)
     # short description
@@ -106,7 +108,7 @@ class Job(models.Model):
     # file attachments
     attachments = models.FileField(upload_to='job', blank = True)
     creator = models.ForeignKey(User,related_name = 'jobs')
-    organizations = models.ManyToManyField(Organization, through = 'JobRequest')
+    organizations = models.ManyToManyField(Organization, through = 'JobRequest', blank=True)
     contact_information = models.CharField('Contact Information', max_length = 256, blank = True)
     #  Job is closed after a jr is confirmed
     closed = models.BooleanField(default = False)
