@@ -18,9 +18,6 @@
   <a href="{% url 'organization_settings' organization.id %}"><button class="btn btn-info">Organization Settings</button></a>
   <a href="{% url 'organization_detail' organization.id %}"><button class="btn btn-info">View Public Profile</button></a>
 </div>
-<div class="jobrequest-overlay-contain"></div>
-
-<div class="jobrequest-overlay-contain"></div>
 
 <div class="row">
   <div class="col-sm-7">
@@ -32,7 +29,7 @@
       <div class="panel-body">
         <ul class="dash-list list-group">
           {% for jobrequest in jobrequests %}
-          <a class="list-group-item jobrequest-overlay-trigger" jobrequestID={{jobrequest.id}}>
+          <a href='/organization/{{jobrequest.organization.id}}/job/{{jobrequest.job.id}}' class="list-group-item">
             {% if jobrequest.accepted %}
             <span class="label label-lg label-success">Accepted</span>
             {% elif jobrequest.declined %}
@@ -41,16 +38,6 @@
             <span class="label label-lg label-warning">Pending</span>
             {% endif %}
             {{ jobrequest.job.name }} by {{jobrequest.job.client_organization}}
-            <script>
-              var overlayID = {{jobrequest.id}};
-              var orgID = "{{jobrequest.organization.id}}";
-              var jobID = "{{jobrequest.job.id}}";
-              var jobrequestOverlay = $('<div></div>').addClass('jobrequest-overlay');
-              jobrequestOverlay.attr('overlayID', overlayID);
-              jobrequestOverlay.append($('<a class="exit-overlay">X</a>'));
-              $(".jobrequest-overlay-contain").append(jobrequestOverlay);
-              jobrequestOverlay.load(window.location.origin+"/organization/"+orgID+"/job/"+jobID);
-            </script>
           </a>
           {% endfor %}
         </ul>
