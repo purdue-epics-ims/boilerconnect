@@ -108,7 +108,7 @@ class Job(models.Model):
     # file attachments
     attachments = models.FileField(upload_to='job', blank = True)
     creator = models.ForeignKey(User,related_name = 'jobs')
-    organizations = models.ManyToManyField(Organization, through = 'JobRequest')
+    organizations = models.ManyToManyField(Organization, through = 'JobRequest', blank=True)
     contact_information = models.CharField('Contact Information', max_length = 256, blank = True)
     #  Job is closed after a jr is confirmed
     closed = models.BooleanField(default = False)
