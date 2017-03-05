@@ -91,14 +91,26 @@ def job_dash(request,job_id):
     show_dialog = first_visit(request.user,'job_dash')
 
     job = Job.objects.get(id=job_id)
-    if job.closed:
-        jobrequests = job.jobrequests.order_by('organization').filter(confirmed = True)
-    else:
-        jobrequests = job.jobrequests.order_by('organization')
+
+    accepted_jobrequests = job.jobrequests.order_by('organization').filter(accepted = True)
+
+    # if request is a POST
+    if request.method == 'POST':
+
+        # handle confirm button click
+        jobrequest_id = request.POST.get("jobrequest_id","")
+        jobrequest = JobRequest.objects.get(id=jobrequest_id)
+        if not jobrequest.confirmed and not jobrequest.job.closed:
+            jobrequest.confirm()
+            message = "You have confirmed this job."
+            messages.add_message(request, messages.INFO, message)
+        else:
+            message = "You have already confirmed this job, or this job is now closed."
+            messages.add_message(request, messages.ERROR, message)
 
     return render(request, 'dbtest/job_dash.html',
                   {'job': job,
-                   'jobrequests': jobrequests,
+                   'accepted_jobrequests': accepted_jobrequests,
                    'show_dialog': show_dialog
                    })
 
