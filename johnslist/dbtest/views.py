@@ -90,10 +90,6 @@ def job_dash(request,job_id):
     #If this is the first time the user has visited this page, show a dialog
     show_dialog = first_visit(request.user,'job_dash')
 
-    job = Job.objects.get(id=job_id)
-
-    accepted_jobrequests = job.jobrequests.order_by('organization').filter(accepted = True)
-
     # if request is a POST
     if request.method == 'POST':
 
@@ -107,6 +103,9 @@ def job_dash(request,job_id):
         else:
             message = "You have already confirmed this job, or this job is now closed."
             messages.add_message(request, messages.ERROR, message)
+
+    job = Job.objects.get(id=job_id)
+    accepted_jobrequests = job.jobrequests.order_by('organization').filter(accepted = True)
 
     return render(request, 'dbtest/job_dash.html',
                   {'job': job,
