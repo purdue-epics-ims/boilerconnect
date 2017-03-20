@@ -11,7 +11,7 @@
 <div class="jumbotron">
   <center>
     <h3>{{ job.name }} <small>Dashboard</small></h3>
-    <small>Created by</small> {{jobrequest.job.client_organization}}
+    <small>Created by</small> {{job.client_organization}}
     {%if not request.user.userprofile.purdueuser%}
     <br>
     {%endif%}
