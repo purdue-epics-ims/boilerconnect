@@ -40,7 +40,8 @@ INSTALLED_APPS = (
     'widget_tweaks',
     'sniplates',
     'rangefilter',
-    'import_export'
+    'import_export',
+    'password_reset'
 )
 
 try:
