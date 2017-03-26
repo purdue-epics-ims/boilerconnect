@@ -40,7 +40,7 @@ class JobForm(ModelForm):
                 jr = JobRequest.objects.create(organization=organization, job = job)
                 link = request.build_absolute_uri(reverse('organization_dash', kwargs={'organization_id': org.pk}) + "?jobrequestID=" + str(jr.id))
                 for user in organization.group.user_set.all():
-                    send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [user.userprofile.email], fail_silently=False)
+                    send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [user.email], fail_silently=False)
 
         # do we want the user to be able to delete requests or categories?
         # # remove deleted categories

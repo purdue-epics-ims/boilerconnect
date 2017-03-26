@@ -18,7 +18,6 @@ class UserProfile(models.Model):
     purdueuser = models.BooleanField(default=True, choices=((True, 'Purdue User'),(False, 'Community User')))
     # save which pages the user has visited before for the purposes of showing helpful dialogs
     visited_views = models.CharField(max_length=64,default="")
-    email = models.EmailField(default="")
 
 class CategoryGroup(models.Model):
     def __unicode__(self):
