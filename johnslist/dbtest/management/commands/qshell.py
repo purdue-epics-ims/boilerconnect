@@ -16,10 +16,8 @@ class Command(BaseCommand):
         from guardian.shortcuts import get_objects_for_user,assign_perm,remove_perm,get_perms
         from guardian.core import ObjectPermissionChecker
 
-        pu = User.objects.get(id=1)
-        cp = User.objects.get(id=2)
-        u0 = pu
-        u1 = cp
+        pu = UserProfile.objects.filter(purdueuser=True)[0].user
+        cp = UserProfile.objects.filter(purdueuser=False)[0].user
         client = Client()
         o = Organization.objects.get(id=1)
         j = Job.objects.get(id=1)

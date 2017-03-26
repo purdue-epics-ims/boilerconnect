@@ -7,6 +7,7 @@ from django.views.static import serve
 # url('^inbox/notifications/', include(notifications.urls)),
 
 urlpatterns = [
+    url(r'^password_reset/', include('password_reset.urls')),
 	url(r'^admin/', include(admin.site.urls),name='admin'),
 	url(r'^', include(urls),name='base'),
 ]
