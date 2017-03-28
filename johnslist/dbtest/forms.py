@@ -1,7 +1,7 @@
 from django.db import models
 from django.forms import ModelForm, CheckboxSelectMultiple
 from django.contrib.auth.models import User
-from django.contrib.auth import forms
+from django.contrib.auth.forms import UserCreationForm
 from .models import*
 from django.core.mail import send_mail
 from .widgets import *
@@ -40,7 +40,7 @@ class JobForm(ModelForm):
                 jr = JobRequest.objects.create(organization=organization, job = job)
                 link = request.build_absolute_uri(reverse('organization_dash', kwargs={'organization_id': org.pk}) + "?jobrequestID=" + str(jr.id))
                 for user in organization.group.user_set.all():
-                    send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [user.userprofile.email], fail_silently=False)
+                    send_mail('BoilerConnect - New Job submitted', 'There is a job created for your organization. Click on the link to see the request. {0}'.format(link),'boilerconnect1@gmail.com', [user.email], fail_silently=False)
 
         # do we want the user to be able to delete requests or categories?
         # # remove deleted categories
@@ -72,6 +72,11 @@ class CommentCreateForm(ModelForm):
     class Meta:
         model = Comment
         exclude = ('jobrequest',)
+
+class UserCreationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ("username", "email", "password1", "password2")
 
 class ProfileCreationForm(ModelForm):
     class Meta:

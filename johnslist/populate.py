@@ -45,20 +45,20 @@ def populate():
 
     #create users
     emails = cycle(['evan@evanw.org','malesevic.milos2@gmail.com'])
-    types = cycle([True,False])
-    for num in range(0,10):
-        username='user{0}'.format(num)
-        newuser = User.objects.create(username=username)
-        newuser.set_password('asdf')
-        newuser.save()
-        UserProfile.objects.create(user=newuser, purdueuser=types.next(), email=emails.next())
+    for username_prefix, is_purdueuser in zip(("pu", "cp"), (True, False)):
+        for num in range(0,5):
+            username = username_prefix + str(num)
+            newuser = User.objects.create(username=username, email=emails.next())
+            newuser.set_password('asdf')
+            newuser.save()
+            UserProfile.objects.create(user=newuser, purdueuser=is_purdueuser)
     # create superuser
-    superuser = User(username='admin')
+    superuser = User(username='admin', email='evan@evanw.org')
     superuser.set_password('asdf')
     superuser.is_superuser = True
     superuser.is_staff = True
     superuser.save()
-    UserProfile.objects.create(user=superuser, purdueuser=False, email=emails.next())
+    UserProfile.objects.create(user=superuser, purdueuser=False)
 
     #add Users to Organizations
     users = User.objects.all().exclude(username="AnonymousUser")
