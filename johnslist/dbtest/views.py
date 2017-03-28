@@ -4,7 +4,6 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.views import login as auth_login
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as login_auth
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 import random
 from django.forms.models import inlineformset_factory

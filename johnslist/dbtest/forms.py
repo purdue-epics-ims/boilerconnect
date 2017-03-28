@@ -1,7 +1,7 @@
 from django.db import models
 from django.forms import ModelForm, CheckboxSelectMultiple
 from django.contrib.auth.models import User
-from django.contrib.auth import forms
+from django.contrib.auth.forms import UserCreationForm
 from .models import*
 from django.core.mail import send_mail
 from .widgets import *
@@ -72,6 +72,11 @@ class CommentCreateForm(ModelForm):
     class Meta:
         model = Comment
         exclude = ('jobrequest',)
+
+class UserCreationForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ("username", "email", "password1", "password2")
 
 class ProfileCreationForm(ModelForm):
     class Meta:
