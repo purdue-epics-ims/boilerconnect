@@ -17,7 +17,12 @@
 
 </div>
 
-<div class="form-group"><a href="{% url 'user_settings' %}"><button class="btn btn-info">User Settings</button></a></div>
+<div class="form-group">
+
+    <a href="{% url 'user_settings' %}"><button class="btn btn-info"> <i class="fa fa-cog"></i> User Settings</button></a>
+    <a href = "{% url 'organization_create' %}" class="btn btn-danger"> <i class="fa fa-plus"></i> Create an Organization</a>
+
+</div>
 
 <div class="row">
   <div class="col-sm-8">
@@ -46,7 +51,6 @@
       </div>
     </div>
     {% endfor %}
-
   </div>
 </div>
 
