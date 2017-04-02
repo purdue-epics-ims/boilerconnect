@@ -7,3 +7,4 @@ media/*
 venv/*
 .coverage
 **/migrations/*
+secret_settings.py

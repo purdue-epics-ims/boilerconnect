@@ -11,13 +11,17 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+# import secret key and email password settings
+from secret_settings import *
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 PROJECT_NAME="BoilerConnect"
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'r+u_vbo1hz#jk77zhno-0#6!sg84__xc!3ce363u299)oeac1$'
+# NOTE: set variable in secret_settings.py
+# SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -182,5 +186,6 @@ ANONYMOUS_USER_ID = -1
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'boilerconnect1@gmail.com'
-EMAIL_HOST_PASSWORD = 'imsteam1'
+# NOTE: set variable in secret_settings.py
+# EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
