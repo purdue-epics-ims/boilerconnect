@@ -12,7 +12,11 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 # import secret key and email password settings
-from secret_settings import *
+try:
+    from secret_settings import *
+except:
+    print ' => ERROR: copy secret_settings.py.template to secret_settings.py and set the variables inside'
+    exit(1)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
