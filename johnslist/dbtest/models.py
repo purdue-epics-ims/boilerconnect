@@ -42,6 +42,7 @@ class Organization(models.Model):
     description = models.TextField('Organization Description')
     categories = models.ManyToManyField(Category, related_name = 'organizations')  # Category =-= Organization
     group = models.OneToOneField(Group) # Organization - Group
+    url = models.URLField('Website', default="http://", blank=True)
     phone_number = models.CharField('Organization phone number',max_length=64)
     icon = models.ImageField(upload_to='organization', null=True)
     available = models.BooleanField(default=True,choices=((True, "Accepting Jobs"),(False, "Not accepting Jobs")))
