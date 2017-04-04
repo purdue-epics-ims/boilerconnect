@@ -4,7 +4,7 @@
 *orig
 db.sqlite3
 media/*
-venv/*
+venv*/*
 .coverage
 **/migrations/*
 secret_settings.py
