@@ -264,7 +264,7 @@ def search(request):
     if search_model.lower() == 'organization':
         if search_by.lower() == 'category':
             category = Category.objects.get(name=search)
-            search_result = category.organization_set.all()
+            search_result = category.organizations.all()
         if search_by.lower() == 'name':
             search_result = Organization.objects.filter(name__icontains=search)
     return render(request,'dbtest/search.html',{'search_result': search_result})
