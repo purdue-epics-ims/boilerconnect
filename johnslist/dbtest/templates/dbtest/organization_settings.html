@@ -31,6 +31,16 @@
       </div>
     </div>
 
+    Website (optional, leave blank if none)
+    <div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon" id="addon1">
+                <i class="fa fa-globe"></i>
+            </span>
+            {% render_field modelform.url class+="form-control" %}
+        </div>
+    </div>
+
     Description
     <div class="form-group">
       <div class="input-group">

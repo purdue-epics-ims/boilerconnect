@@ -23,6 +23,14 @@
 <div class="row">
   <div class="col-sm-3">
 
+    {% if organization.url %}
+    <div class="panel"><a href="{{ organization.url }}" target="_blank">
+            <button class="btn btn-primary btn-block">
+                <i class="fa fa-external-link"></i> Organization's Website
+            </button>
+    </a></div>
+    {% endif %}
+
     <div class="panel panel-default">
       <div class="panel-heading">Stats</div>
       <ul class="list-group">
