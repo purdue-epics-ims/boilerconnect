@@ -41,7 +41,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'dbtest',
+    'main',
     'easy_thumbnails',
     'guardian',
     'notifications',
@@ -93,7 +93,7 @@ TEMPLATES = [{
             'django.template.context_processors.tz',
             'django.contrib.messages.context_processors.messages',
             'django.template.context_processors.request',
-            'dbtest.context_processors.global_settings',
+            'main.context_processors.global_settings',
         ],
     },
 }]

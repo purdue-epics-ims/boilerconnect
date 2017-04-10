@@ -1,0 +1,86 @@
+{% extends "main/base.html" %}
+
+{% block content %}
+{% if show_dialog %}
+<div class="confirm alert alert-dismissible alert-info">
+    <i type="button" class="close fa fa-close" data-dismiss="alert"></i>
+    <h4> This page shows the organizations you submitted this job request to, and whether they have accepted or declined it.  Click on the organization's name to make changes to the request sent to that particular organization.</h4>
+</div>
+{% endif %}
+
+<div class="jumbotron">
+  <center>
+    <h3>{{ job.name }} <small>Dashboard</small></h3>
+    <small>Created by</small> {{job.client_organization}}
+    {%if not request.user.userprofile.purdueuser%}
+    <br>
+    {%endif%}
+    <br><br>
+    <i class="fa fa-calendar"></i> Due on  <span class="badge "> {{job.duedate}}</span>
+  </center>
+</div>
+
+<div class="form-group"><a href="{% url 'job_settings' job.id %}"><button class="btn btn-info">Job Settings</button></a></div>
+
+<div class="row">
+  <div class="col-sm-5">
+    <div class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Information about the Job</h3>
+    </div>
+    <div class="panel-body">
+        <div class="well well-sm information-body">
+            <b>Description</b>: {{job.description}}
+        </div>
+        <div class="well well-sm information-body">
+            <b>Contact Information</b>: {{job.contact_information}}
+        </div>
+        <div class="well well-sm information-body">
+            <b>Deliverable</b>: {{job.deliverable}}
+        </div>
+        <div class="well well-sm information-body">
+            <b>Stakeholders</b>: {{job.stakeholders}}
+        </div>
+        <div class="well well-sm information-body">
+            <b>Additional Information</b>: {{job.additional_information}}
+        </div>
+        <div class="well well-sm information-body">
+            <b>Budget</b>: {{job.budget}}
+        </div>
+    </div>
+    </div>
+  </div>
+
+  <div class="col-sm-7">
+    <div class="panel panel-primary">
+
+      <div class="panel-heading">
+          Interested Organizations
+      </div>
+      <div class="panel-body">
+        <ul class="list-group dash-list">
+            <form action="{% url 'job_dash' job.id%}" method ="post">
+            {% for jobrequest in accepted_jobrequests %}
+            <li class="list-group-item">
+                <img class="icon" src="{{ jobrequest.organization.icon.url }}"></img>
+                <a href="{% url 'organization_detail' jobrequest.organization.id %}">{{jobrequest.organization.name}}</a>
+                {%csrf_token%}
+                {% if not jobrequest.confirmed and not job.closed %}
+                <button class="btn btn-success pull-right" type="submit" name="jobrequest_id" value="{{jobrequest.id}}">Confirm</button>
+                {% elif jobrequest.confirmed %}
+                <span class="label label-success pull-right">Confirmed</span>
+                {% endif %}
+
+            </li>
+          {% endfor %}
+            </form>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--this message appears for new user only -->
+<script type='text/javascript' src="{{ STATIC_URL }}js/JobRequestOverlay.js"></script>
+{% endblock content %}
+
