@@ -1,7 +1,7 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 from johnslist import settings
-from dbtest import urls
+from main import urls
 from django.views.static import serve
 # import notifications
 # url('^inbox/notifications/', include(notifications.urls)),
