@@ -41,6 +41,8 @@
           <span class="label label-lg label-success">Accepted</span>
           {% elif jr.declined %}
           <span class="label label-lg label-danger">Declined</span>
+          {% elif jr.applied %}
+          <span class="label label-lg label-success">Applied</span>
           {% else %}
           <span class="label label-lg label-warning">Pending</span>
           {% endif %}

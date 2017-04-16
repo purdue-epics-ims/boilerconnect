@@ -104,11 +104,11 @@ def job_dash(request,job_id):
             messages.add_message(request, messages.ERROR, message)
 
     job = Job.objects.get(id=job_id)
-    accepted_jobrequests = job.jobrequests.order_by('organization').filter(accepted = True)
+    applied_jobrequests = job.jobrequests.order_by('organization').filter(applied = True)
 
     return render(request, 'dbtest/job_dash.html',
                   {'job': job,
-                   'accepted_jobrequests': accepted_jobrequests,
+                   'applied_jobrequests': applied_jobrequests,
                    'show_dialog': show_dialog
                    })
 
@@ -162,10 +162,10 @@ def jobrequest_dash(request,job_id,organization_id):
     # if request is a POST
     if request.method == 'POST':
 
-        # handle accept button click
+        # handle apply button click
         if request.POST.get("action","")=="apply": # change from accept to apply
             if jobrequest.is_pending() and perm_to_edit_jobrequest_state:
-                jobrequest.accept()
+                jobrequest.apply()
                 message = "You have applied to this job."
                 link = request.build_absolute_uri(reverse('jobrequest_dash', kwargs = {'job_id': jobrequest.job.id, 'organization_id': organization_id}))
                 send_mail('BoilerConnect - Job Request Accepted', '{0} has applied for your Job Request!. Click on the link to see the request. {1}'.format(organization.name, link),'boilerconnect1@gmail.com', [jobrequest.job.creator.email], fail_silently=False)

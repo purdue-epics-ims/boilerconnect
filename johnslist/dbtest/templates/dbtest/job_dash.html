@@ -60,7 +60,7 @@
       <div class="panel-body">
         <ul class="list-group dash-list">
             <form action="{% url 'job_dash' job.id%}" method ="post">
-            {% for jobrequest in accepted_jobrequests %}
+            {% for jobrequest in applied_jobrequests %}
             <li class="list-group-item">
                 <img class="icon" src="{{ jobrequest.organization.icon.url }}"></img>
                 <a href="{% url 'organization_detail' jobrequest.organization.id %}">{{jobrequest.organization.name}}</a>

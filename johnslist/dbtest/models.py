@@ -58,6 +58,10 @@ class Organization(models.Model):
     def jobrequests_accepted(self):
         return JobRequest.objects.filter(organization = self,accepted = True,completed = False)
 
+    # get list of jobs applied to by Org
+    def jobrequests_applied(self):
+        return JobRequest.objects.filter(organization = self,accepted = False, applied = True)
+
     # get list of jobs pending for Org
     def jobrequests_pending(self):
         return JobRequest.objects.filter(organization = self,accepted = False,declined = False)
@@ -126,6 +130,10 @@ class Job(models.Model):
     def jobrequests_accepted(self):
         accepted = JobRequest.objects.filter(job = self, accepted = True)
         return accepted
+    # returns JobRequests that have been applied to
+    def jobrequests_applied(self):
+        applied = JobRequest.objects.filter(job = self, accepted = False, applied = True)
+        return applied
     # returns JobRequests that are pending
     def jobrequests_pending(self):
         pending = JobRequest.objects.filter(job = self, accepted = False, declined = False, completed = False)
@@ -175,6 +183,7 @@ class JobRequest(models.Model):
 
     job = models.ForeignKey(Job,related_name = 'jobrequests') # Job -= JobRequest
     organization = models.ForeignKey(Organization)
+    applied = models.NullBooleanField(default = False)
     accepted = models.NullBooleanField(default = False)	
     declined = models.NullBooleanField(default = False)
     confirmed = models.NullBooleanField(default = False)
@@ -186,7 +195,20 @@ class JobRequest(models.Model):
                 ( 'edit_jobrequest','Can edit JobRequest'),
                 ( 'edit_jobrequest_state','Can edit JobRequest state'),
                 )
-
+    # set a JobRequest as applied
+    def apply(self):
+        self.accepted = False
+        self.applied = True
+        self.declined = False
+        self.save()
+        notify.send(self.organization,
+                    verb="applied",
+                    action_object=self.job,
+                    recipient=self.job.creator,
+                    url=reverse('job_dash',
+                                kwargs={'job_id': self.job.id}) +
+                                "?jobrequestID=" + str(self.id)
+                    )
     # set a JobRequest as accepted
     def accept(self):
         self.accepted = True
