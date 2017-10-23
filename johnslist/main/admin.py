@@ -33,6 +33,7 @@ class JobAdmin(ImportExportModelAdmin):
     list_display = ('name',
                     'closed',
                     'duedate',
+                    'status',
     )
 
     resource_class = JobResource
