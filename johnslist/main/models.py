@@ -118,7 +118,7 @@ class Job(models.Model):
     closed = models.BooleanField(default = False)
     # some tags to determine what organizations to submit job to
     categories = models.ManyToManyField(Category, related_name = 'jobs')
-    status = models.Integerfield(default = 0, choices = ((0, 'Pending'), (1, 'Approved'), (2, 'Disapproved'), (3, 'Closed')))
+    status = models.IntegerField(default = 0, choices = ((0, 'Pending'), (1, 'Approved'), (2, 'Disapproved'), (3, 'Closed')))
     class Meta:
         permissions = (
             ( 'view_job','Can view Job' ),
