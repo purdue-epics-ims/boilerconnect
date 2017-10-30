@@ -59,7 +59,7 @@ class JobForm(ModelForm):
 class JobCreateForm(JobForm):
     class Meta:
         model = Job
-        exclude = ('creator',)
+        exclude = ('creator', 'status')
         widgets = {'categories': CategorySelect()}
 
 class JobEditForm(JobForm):
