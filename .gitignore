@@ -8,3 +8,10 @@ venv*/*
 .coverage
 **/migrations/*
 secret_settings.py
+.vs/
+env/
+*.pyproj
+*.user
+obj/
+bin/
+media/
