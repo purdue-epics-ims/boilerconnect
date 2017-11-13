@@ -104,11 +104,11 @@ class Job(models.Model):
     # when Job is due for completion
     duedate = models.DateTimeField('Date Due')
     # all persons who may be affected by project
-    stakeholders = models.TextField('Stakeholders')
+    #stakeholders = models.TextField('Stakeholders')
     # important technical requirements
-    additional_information = models.TextField('Additional Information', blank = True)
+    #additional_information = models.TextField('Additional Information', blank = True)
     # budget estimate
-    budget = models.CharField('Budget', max_length=64)
+    #budget = models.CharField('Budget', max_length=64)
     # file attachments
     attachments = models.FileField(upload_to='job', blank = True)
     creator = models.ForeignKey(User,related_name = 'jobs')
