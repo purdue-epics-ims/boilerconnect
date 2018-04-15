@@ -1,4 +1,5 @@
 from django.shortcuts import render,get_object_or_404,redirect
+from django.shortcuts import render,get_object_or_404,redirect
 from .models import *
 from django.http import HttpResponseRedirect
 from django.contrib.auth.views import login as auth_login
@@ -460,3 +461,4 @@ def job_settings(request,job_id):
             messages.add_message(request, messages.INFO, message)
 
     return render(request, 'main/job_settings.html', {'form':form,'job' : job})
+
