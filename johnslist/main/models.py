@@ -18,6 +18,12 @@ class UserProfile(models.Model):
     purdueuser = models.BooleanField(default=True, choices=((True, 'Purdue Professor'),(False, 'Community Agency')))
     # save which pages the user has visited before for the purposes of showing helpful dialogs
     visited_views = models.CharField(max_length=64,default="")
+    first = models.CharField('firstname', max_length=128, null=True)
+    last = models.CharField('lastname',max_length=128, null=True)
+    organization = models.CharField('organization', max_length=128, null=True)
+    title = models.CharField('title', max_length=128, null=True)
+    phone = models.CharField('phone', max_length=128, null=True)
+
 
 class CategoryGroup(models.Model):
     def __unicode__(self):
@@ -110,14 +116,18 @@ class Job(models.Model):
     # budget estimate
     #budget = models.CharField('Budget', max_length=64)
     # file attachments
-    attachments = models.FileField(upload_to='job', blank = True)
+    #attachments = models.FileField(upload_to='job', blank = True)
     creator = models.ForeignKey(User,related_name = 'jobs')
-    organizations = models.ManyToManyField(Organization, through = 'JobRequest', blank=True)
-    contact_information = models.CharField('Contact Information', max_length = 256, blank = True)
+    organizations = models.ManyToManyField(Organization, through = 'JobRequest', blank=False, null=True)
+    #organizations = models.CharField(default="nothing",null=True,max_length = 256)
+    contact_information = models.CharField('Contact Information', max_length = 256, blank = False, null=True)
+    skill_required = models.CharField('Volunteer skills required', max_length=256, blank = False, null=True)
+    hours_day = models.CharField('Number of hours per day', max_length=256, blank = False, null=True)
     #  Job is closed after a jr is confirmed
     closed = models.BooleanField(default = False)
     # some tags to determine what organizations to submit job to
     categories = models.ManyToManyField(Category, related_name = 'jobs')
+    #categories = models.CharField(default="nothing",null=True, max_length = 256)
     status = models.IntegerField(default = 0, choices = ((0, 'Pending'), (1, 'Approved'), (2, 'Disapproved'), (3, 'Closed')))
     class Meta:
         permissions = (
@@ -330,3 +340,4 @@ class Comment(models.Model):
     creator = models.ForeignKey(User, blank = True, null = True)
     # when comment was made
     created = models.DateTimeField('Created',auto_now_add=True,null=True)
+
