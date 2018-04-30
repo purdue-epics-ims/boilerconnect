@@ -21,7 +21,7 @@
 
     <div class="col-sm-6">
 
-      Name
+      Project Title:
       <div class="input-group">
         <span class="input-group-addon">
           <i class="fa fa-bullhorn"></i>
@@ -29,7 +29,7 @@
         {% render_field form.name class+="form-control" %}
       </div>
 
-      Client Organization
+      Community Partner & Project Coordinator:
       <div class="input-group">
         <span class="input-group-addon">
           <i class="fa fa-coffee"></i>
@@ -37,7 +37,17 @@
         {% render_field form.client_organization class+="form-control" %}
       </div>
 
-      Deliverable
+       
+						
+      Contact Information: 
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-coffee"></i>
+        </span>
+      {% render_field form.contact_information class+="form-control" %}
+       </div>
+                        
+      Briefly describe the product or service that you expect as a result of this project:
       <div class="input-group">
         <span class="input-group-addon">
           <i class="fa fa-check"></i>
@@ -45,7 +55,32 @@
         {% render_field form.deliverable class+="form-control" %}
       </div>
 
-      Description
+      Specify the volunteer skill sets required: 
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-coffee"></i>
+        </span>
+        {% render_field form.skill_required class+="form-control" %}
+      </div>
+
+
+      Specify the date when this project is due. If you are not sure of the exact date, give a close approximation:
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-calendar"></i>
+        </span>
+        {% render_field form.duedate class+="form-control" %}
+      </div>
+      
+      Specify the number of hours the volunteer needs to work per day/week: <br>
+      <div class="input-group">
+        <span class="input-group-addon">
+          <i class="fa fa-coffee"></i>
+        </span>
+        {% render_field form.hours_day class+="form-control" %}
+      </div>
+       
+      Give a short description of the job of a volunteer:
       <div class="input-group">
         <span class="input-group-addon">
           <i class="fa fa-coffee"></i>
@@ -53,15 +88,7 @@
         {% render_field form.description class+="form-control" %}
       </div>
 
-      Due Date
-      <div class="input-group">
-        <span class="input-group-addon">
-          <i class="fa fa-calendar"></i>
-        </span>
-        {% render_field form.duedate class+="form-control" %}
-      </div>
-
-      Stakeholders
+      <!--Stakeholders
       <div class="input-group">
         <span class="input-group-addon">
           <i class="fa fa-coffee"></i>
@@ -94,14 +121,14 @@
           {% render_field form.categories class+="form-control" %}
     </div>
 
-  </div>
+  </div>-->
 
   <div class="form-group pull-right">
     <input class="btn btn-primary" type="submit" value="Save Changes" onclick="submitFunction()">
   </div>
 </form>
-<script>
+<!--script>
   $('#id_categories').val({{ categories_id }});
-</script>
+</script-->   
 
 {% endblock content %}
