@@ -129,6 +129,8 @@ class Job(models.Model):
     categories = models.ManyToManyField(Category, related_name = 'jobs')
     #categories = models.CharField(default="nothing",null=True, max_length = 256)
     status = models.IntegerField(default = 0, choices = ((0, 'Pending'), (1, 'Approved'), (2, 'Disapproved'), (3, 'Closed')))
+    active = models.BooleanField(default = True)
+    approve = models.BooleanField(default = True) # add to admin side, already showing on community agency side
     class Meta:
         permissions = (
             ( 'view_job','Can view Job' ),
@@ -340,4 +342,3 @@ class Comment(models.Model):
     creator = models.ForeignKey(User, blank = True, null = True)
     # when comment was made
     created = models.DateTimeField('Created',auto_now_add=True,null=True)
-

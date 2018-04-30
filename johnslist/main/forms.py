@@ -54,10 +54,11 @@ class JobForm(ModelForm):
         #     if org not in self.cleaned_data['organizations']:
         #         organization = Organization.objects.get(id = org.pk)
         #         jr =  JobRequest.objects.get(organization=organization, job = job).delete()
-        msg = "Project Title:" + str(job.name) + "\n" + "Community Partner & Project Coordinator:" + str(job.client_organization) + "\n" + "Contact Information:" + str(job.contact_information) + "\n" + "Briefly describe the product or service that you expect as a result of this project:" + str(job.deliverable) + "\n" + "Specify the volunteer skill sets required:" + str(job.skill_required) + "\n" + "Specify the date when this project is due. If you are not sure of the exact date, give a close approximation:" + str(job.duedate) + "\n" + "Specify the number of hours the volunteer needs to work per day/week:" + str(job.hours_day) + "\n" + "Give a short description of the job of a volunteer:" + str(job.description) + "\n"
+        #msg = "Project Title:" + str(job.name) + "/n" + "Community Partner & Project Coordinator:" + str(job.client_organization) + "/n" + "Contact Information:" + str(job.contact_information) + "/n" + "Briefly describe the product or service that you expect as a result of this project:" + str(job.deliverable) + "/n" + "Specify the volunteer skill sets required:" + str(job.skill_required) + "/n" + "Specify the date when this project is due. If you are not sure of the exact date, give a close approximation:" + str(job.duedate) + "/n" + "Specify the number of hours the volunteer needs to work per day/week:" + str(job.hours_day) + "/n" + "Give a short description of the job of a volunteer:" + str(job.form.description) + "/n"
 
-        send_mail('Boilerlist - New Job Request Submitted', msg, 'boilerconnect1@gmail.com', ['niveditanighojkar@gmail.com', 'paynel@purdue.edu'], fail_silently = False,)
-        
+        #send_mail('Boilerlist - New Job Request Submitted', msg, 'nnighojk@purdue.edu', 'niveditanighojkar@gmail.com', fail_silently = False)
+        msg = "Project Title:" + str(job.name) + "\n" + "Community Partner & Project Coordinator:" + str(job.client_organization) + "\n" + "Contact Information:" + str(job.contact_information) + "\n" + "Briefly describe the product or service that you expect as a result of this project:" + str(job.deliverable) + "\n" + "Specify the volunteer skill sets required:" + str(job.skill_required) + "\n" + "Specify the date when this project is due. If you are not sure of the exact date, give a close approximation:" + str(job.duedate) + "\n" + "Specify the number of hours the volunteer needs to work per day/week:" + str(job.hours_day) + "\n" + "Give a short description of the job of a volunteer:" + str(job.description) + "\n"
+        send_mail('Boilerlist - New Job Request Submitted', msg, 'boilerconnect1@gmail.com', ['paynel@purdue.edu'], fail_silently = False,)
         return job
 
 class JobCreateForm(JobForm):
