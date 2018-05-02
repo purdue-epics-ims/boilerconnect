@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{95e411fc-aec3-42cc-bdd3-122aa26b601a}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>manage.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{5F0BE9CA-D677-4A4D-8806-6076C0FAAD37};{349c5851-65df-11da-9384-00065b846f21};{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Django launcher</LaunchProvider>
+    <InterpreterId />
+    <WebBrowserUrl>http://localhost</WebBrowserUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="main\static\bootstrap.min.css" />
+    <Content Include="main\static\bootstrap.min.js" />
+    <Content Include="main\static\brand.png" />
+    <Content Include="main\static\favicon.png" />
+    <Content Include="main\static\glyphicons-halflings-regular.svg" />
+    <Content Include="main\static\jquery.min.js" />
+    <Content Include="main\static\js\JobRequestOverlay.js" />
+    <Content Include="main\static\js\Utilities.js" />
+    <Content Include="main\static\org_search.js" />
+    <Content Include="main\static\Part1%282%29.png" />
+    <Content Include="main\static\Part1.png" />
+    <Content Include="main\static\Part2%282%29.png" />
+    <Content Include="main\static\Part2.png" />
+    <Content Include="main\static\Part3%283%29.png" />
+    <Content Include="main\static\Part3.png" />
+    <Content Include="main\static\purdue_background.jpg" />
+    <Content Include="main\static\style.css" />
+    <Content Include="main\templates\main\403.html" />
+    <Content Include="main\templates\main\about.html" />
+    <Content Include="main\templates\main\base.html" />
+    <Content Include="main\templates\main\communitypartner_dash.html" />
+    <Content Include="main\templates\main\confirm.html" />
+    <Content Include="main\templates\main\front_page.html" />
+    <Content Include="main\templates\main\jobrequest_dash.html" />
+    <Content Include="main\templates\main\job_create.html" />
+    <Content Include="main\templates\main\job_creation.html" />
+    <Content Include="main\templates\main\job_dash.html" />
+    <Content Include="main\templates\main\job_settings.html" />
+    <Content Include="main\templates\main\login.html" />
+    <Content Include="main\templates\main\logout.html" />
+    <Content Include="main\templates\main\organization_create.html" />
+    <Content Include="main\templates\main\organization_dash.html" />
+    <Content Include="main\templates\main\organization_detail.html" />
+    <Content Include="main\templates\main\organization_settings.html" />
+    <Content Include="main\templates\main\purdueuser_dash.html" />
+    <Content Include="main\templates\main\quicksearch.html" />
+    <Content Include="main\templates\main\search.html" />
+    <Content Include="main\templates\main\user_create.html" />
+    <Content Include="main\templates\main\user_job_index.html" />
+    <Content Include="main\templates\main\user_membership.html" />
+    <Content Include="main\templates\main\user_settings.html" />
+    <Content Include="main\templates\main\widgets.html" />
+    <Content Include="main\templates\password_reset\base.html" />
+    <Content Include="main\templates\tags\notifications.html" />
+    <Content Include="main\templates\widgets\category_select.html" />
+    <Content Include="main\templates\widgets\org_search.html" />
+    <Content Include="models.png" />
+    <Content Include="my_project.png" />
+    <Content Include="requirements.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="johnslist\settings.py" />
+    <Compile Include="johnslist\urls.py" />
+    <Compile Include="johnslist\wsgi.py" />
+    <Compile Include="johnslist\__init__.py" />
+    <Compile Include="main\admin.py" />
+    <Compile Include="main\context_processors.py" />
+    <Compile Include="main\decorators.py" />
+    <Compile Include="main\forms.py" />
+    <Compile Include="main\management\commands\qshell.py" />
+    <Compile Include="main\management\commands\__init__.py" />
+    <Compile Include="main\management\__init__.py" />
+    <Compile Include="main\models.py" />
+    <Compile Include="main\templatetags\template_tags.py" />
+    <Compile Include="main\templatetags\__init__.py" />
+    <Compile Include="main\tests.py" />
+    <Compile Include="main\urls.py" />
+    <Compile Include="main\views.py" />
+    <Compile Include="main\widgets.py" />
+    <Compile Include="main\__init__.py" />
+    <Compile Include="manage.py" />
+    <Compile Include="populate.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="johnslist" />
+    <Folder Include="main" />
+    <Folder Include="main\management" />
+    <Folder Include="main\management\commands" />
+    <Folder Include="main\static" />
+    <Folder Include="main\static\js" />
+    <Folder Include="main\templates\main" />
+    <Folder Include="main\templates\password_reset" />
+    <Folder Include="main\templates\tags" />
+    <Folder Include="main\templates\widgets" />
+    <Folder Include="main\templatetags" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.Django.targets" />
+</Project>

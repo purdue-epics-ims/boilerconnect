@@ -1,0 +1,104 @@
+{% extends "main/base.html" %}
+{% load staticfiles %}
+
+{% block content %}
+
+<!----------- Search ---------->
+
+
+<div class = "jumbotron">
+  <h1>Welcome to {{ SETTINGS.PROJECT_NAME }}</h1>
+  <p>_____________________________________________________________________________________</p>
+  <p>Connecting community needs with skilled campus groups</p>
+  <br>
+  <!--<div class = "search-form box">
+    <form action="{% url 'search' %}" method="get">
+      <input class="input-box" type="text" name="search" placeholder="Find a group">
+      <input class="search-btn" type="submit" value="Search">
+      <input type="hidden" name="search_model" value="organization">
+      <input type="hidden" name="search_by" value="name">
+    </form>
+  </div>-->
+</div>
+
+
+<script>
+  document.body.style.background = white;
+
+</script>
+
+  <center><p style="font-size: 18px">Find a Group That Meets Your Needs</p></center>
+  {% if not user.is_authenticated %}
+  <div class="btn-group btn-group-justified" style="height: 100px; border-spacing: 10px; text-align: center; padding-top: 15px; padding-bottom: 40px">
+    <!--<a href="{% url 'user_create' "purdue" %}" class="user_create_button btn btn-default">I am part of a Purdue organization</a>-->
+    <a href="{% url 'user_create' "community" %}" style= "text-decoration: none" class="user_create_button btn-default btn-lg">Get Started!</a>
+  </div>
+
+<!-- Search Box -->
+
+
+  <center><p style="font-size: 18px">Or Search For a Specific Group</p></center>
+  <div class="search-form box" style="text-align: center; padding-top: 10px; padding-bottom: 40px">
+    <form action="{% url 'search' %}" method="get">
+      <input class="input-box" type="text" name="search" placeholder="Find a group" style="width: 350px; height: 35px">
+      <input class="search-btn" type="submit" value="Search" style="height: 35px ">
+      <input type="hidden" name="search_model" value="organization">
+      <input type="hidden" name="search_by" value="name">
+    </form>
+  </div>
+  {% else %}
+  <!----------- Gallery ---------->
+
+  <div id="carousel" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#carousel" data-slide-to="0" class="active"></li>
+      <li data-target="#carousel" data-slide-to="1"></li>
+      <li data-target="#carousel" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner">
+      {% if active_organization %}
+      <div class="item active">
+        <div class="container">
+          <div>
+            <img src="{{ active_organization.icon.url }}" alt="{{ active_organization.name }} icon">
+          </div>
+          <div class="carousel-caption">
+            <h1>{{ active_organization.name }}</h1>
+            <p><a class="search-btn btn btn-lg btn-primary" href="{% url 'organization_detail' active_organization.id %}" role="button">Click here to view this organization</a></p>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+      {% for organization in organizations %}
+      <div class="item">
+        <div class="container">
+          <div>
+            <img src="{{ organization.icon.url }}" alt="{{ organization.name }} icon">
+          </div>
+          <div class="carousel-caption">
+            <h1>{{ organization.name }}</h1>
+            <p><a class="btn btn-lg btn-primary" href="{% url 'organization_detail' organization.id %}" role="button">Click here to view this organization</a></p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <a class="left carousel-control" href="#carousel" role="button" data-slide="prev">
+      <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#carousel" role="button" data-slide="next">
+      <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+  {% endif %}
+
+<script>
+  $(document).ready(function(){
+  $('.carousel').carousel();
+  });
+
+</script>
+
+{% endblock content %}
