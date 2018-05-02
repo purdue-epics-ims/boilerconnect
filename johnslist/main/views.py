@@ -1,7 +1,5 @@
 from django.shortcuts import render,get_object_or_404,redirect
-from django.shortcuts import render,get_object_or_404,redirect
 from .models import *
-from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.contrib.auth.views import login as auth_login
 from django.contrib.auth import authenticate
@@ -16,9 +14,6 @@ from notifications import notify
 from django.core.mail import send_mail
 from itertools import chain
 from django.contrib import messages
-from django.http import JsonResponse
-from django.http import HttpResponseRedirect
-from django.shortcuts import redirect
 
 def quicksearch(request):
     orgs = Organization.objects.all()
@@ -465,49 +460,3 @@ def job_settings(request,job_id):
             messages.add_message(request, messages.INFO, message)
 
     return render(request, 'main/job_settings.html', {'form':form,'job' : job})
-
-@login_required
-def job_status_update(request):
-    status = request.GET['status']
-    job_id = request.GET['Jobid'] 
-    if status == 'Active':
-        flag = True
-    else:
-        flag = False
-    job = Job.objects.get(pk=job_id)
-    try:
-        job.active = flag
-        job.save()
-        return HttpResponse(status)
-    except Exception as e:
-        return JsonResponse(status)
-    #return render(request, 'main/job_dash.html', {'form':form,'job' : job})
-
-# for aprroval of project on admin side when it is made
-@login_required
-def job_approve_update(request):
-    status = request.GET['approve']
-    job_id = request.GET['Jobid'] 
-    if approve == 'Yes':
-        flag = True
-    else:
-        flag = False
-    job = Job.objects.get(pk=job_id)
-    try:
-        job.approve = flag
-        job.save()
-        return HttpResponse(status)
-    except Exception as e:
-        return JsonResponse(status)
-   
-
-@login_required
-def delete_job(request):
-     job_id = request.GET['Jobid']
-     job = Job.objects.get(pk=job_id)
-     try:
-         job.delete()
-         return JsonResponse({'url':'/user'}) 
-     except Exception as e:
-         return HttpResponse("deletion not successful")
-
