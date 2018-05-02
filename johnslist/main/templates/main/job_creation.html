@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="row row-centered">
-                    <div-- class="col-sm-8 col-centered">
+                    <div class="col-sm-8 col-centered">
                         <!--########## Basic information Tab ##########-->
 
                         <h1>Basic information</h1>
@@ -95,7 +95,7 @@
                         </div>
 
                         <div class="form-group">
-                            Briefly describe the product or service that you expect as a result of this project: <br>
+                            Briefly describe the product or service that you expect as a result of this project. <br>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="fa fa-coffee"></i>
@@ -104,26 +104,23 @@
                             </div>
                         </div>
 
-                    
-                            
-
-                        <!------------ Technical specifications Tab ------------>
-
-                       
-                        <h1>Volunteer requirements information</h1>
-
-                         <div class="form-group">
-                            Specify the volunteer skill sets required: <br>
+                        <div class="form-group">
+                            Give a short description of the job. <br>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="fa fa-coffee"></i>
                                 </span>
-                                {% render_field form.skill_required class+="form-control" placeholder="eg. Java, Python, Leadership" %}
+                            {% render_field form.description class+="form-control" %}
                             </div>
                         </div>
+                            
 
+                        <!------------ Technical specifications Tab ------------>
+
+
+                        <h1>Technical specifications</h1>
                         <div class="form-group">
-                            Specify the date when this project is due. If you are not sure of the exact date, give a close approximation: <br>
+                            Specify the date when this project is due. If you are not sure of the exact date, give a close approximation. <br>
                             <div class="input-group">
                                 <span class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
@@ -131,27 +128,6 @@
                                 {% render_field form.duedate class+="form-control" placeholder="yyyy-mm-dd" %}
                             </div>
                         </div>
-
-                         <div class="form-group">
-                            Specify the number of hours the volunteer needs to work per day/week: <br>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="fa fa-coffee"></i>
-                                </span>
-                                {% render_field form.hours_day class+="form-control" placeholder="eg. 10 hours a week" %}
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            Give a short description of the job of a volunteer: <br>
-                            <div class="input-group">
-                                <span class="input-group-addon">
-                                    <i class="fa fa-coffee"></i>
-                                </span>
-                            {% render_field form.description class+="form-control" placeholder="eg. needs to build a django website from scratch"%}
-                            </div>
-                        </div>
-
 
 						<!--This section may be unneeded -->
                         <!-- <div class="form-group">
@@ -184,7 +160,7 @@
                         </div> -->
 
 					<!--Edit Made-->
-                        <!--div class="form-group">
+                        <div class="form-group">
                             Please upload a formal proposal document. 
 							Below is a reference doucment.
                             <br>							
@@ -196,17 +172,17 @@
                                     <i class="fa fa-file"></i>
                                 </span>
                                <!-- Not sure why this adds two upload file buttons? with this commented out one button still appears
-                                   <input name="myFile" type="file">
+                                   <input name="myFile" type="file">-->
                                 {% render_field form.attachments %}
                                <a href="static/rough_draft.pdf" download> Download a reference document here.</a>
                             </div>
-                        </div-->
+                        </div>
 
                         <!------------ Add Organizations Tab ---------------->
 
-                        <!--h1>Job Categories</!--h1-->
-                        <!--Select some words that pertain to your job and we will try to find a group that fits your needs.
-                        {% render_field form.categories %}-->
+                        <h1>Job Categories</h1>
+                        Select some words that pertain to your job and we will try to find a group that fits your needs.
+                        {% render_field form.categories %}
 
                         <div class="panel-group">
 
