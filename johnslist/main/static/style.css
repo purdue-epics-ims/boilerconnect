@@ -324,3 +324,7 @@ background:#e1d8d8;
     width: 300px;
     display: block;
 }
+
+div.hide { 
+    display: none;
+}
