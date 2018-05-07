@@ -56,8 +56,52 @@ class JobForm(ModelForm):
         #         jr =  JobRequest.objects.get(organization=organization, job = job).delete()
         #msg = "Project Title:" + str(job.name) + "/n" + "Community Partner & Project Coordinator:" + str(job.client_organization) + "/n" + "Contact Information:" + str(job.contact_information) + "/n" + "Briefly describe the product or service that you expect as a result of this project:" + str(job.deliverable) + "/n" + "Specify the volunteer skill sets required:" + str(job.skill_required) + "/n" + "Specify the date when this project is due. If you are not sure of the exact date, give a close approximation:" + str(job.duedate) + "/n" + "Specify the number of hours the volunteer needs to work per day/week:" + str(job.hours_day) + "/n" + "Give a short description of the job of a volunteer:" + str(job.form.description) + "/n"
 
-        #send_mail('Boilerlist - New Job Request Submitted', msg, 'nnighojk@purdue.edu', 'niveditanighojkar@gmail.com', fail_silently = False)
-        msg = "Project Title:" + str(job.name) + "\n" + "Community Partner & Project Coordinator:" + str(job.client_organization) + "\n" + "Contact Information:" + str(job.contact_information) + "\n" + "Briefly describe the product or service that you expect as a result of this project:" + str(job.deliverable) + "\n" + "Specify the volunteer skill sets required:" + str(job.skill_required) + "\n" + "Specify the date when this project is due. If you are not sure of the exact date, give a close approximation:" + str(job.duedate) + "\n" + "Specify the number of hours the volunteer needs to work per day/week:" + str(job.hours_day) + "\n" + "Give a short description of the job of a volunteer:" + str(job.description) + "\n"
+        cat = ""
+        if job.activism:
+            cat = cat + str(job.activism) + ","
+        if job.arts:
+            cat = cat + str(job.arts) + ","
+        if job.civil:
+            cat = cat + str(job.civil) + ","
+        if job.school:
+            cat = cat + str(job.school) + ","
+        if job.crisis:
+            cat = cat + str(job.crisis) + ","
+        if job.criminal:
+            cat = cat + str(job.criminal) + ","
+        if job.disaster:
+            cat = cat + str(job.disaster) + ","
+        if job.economic:
+            cat = cat + str(job.economic) + ","
+        if job.entrepreneurship:
+            cat = cat + str(job.entrepreneurship) + ","
+        if job.environment:
+            cat = cat + str(job.environment) + ","
+        if job.food:
+            cat = cat + str(job.food) + ","
+        if job.housing:
+            cat = cat + str(job.housing) + ","
+        if job.immigrants:
+            cat = cat + str(job.immigrants) + ","
+        if job.individual:
+            cat = cat + str(job.individual) + ","
+        if job.mental:
+            cat = cat + str(job.mental) + ","
+        if job.poverty:
+            cat = cat + str(job.poverty) + ","
+        if job.substance:
+            cat = cat + str(job.substance) + ","
+        if job.STEM:
+            cat = cat + str(job.STEM) + ","
+        if job.transportation:
+            cat = cat + str(job.transportation) + ","
+        if job.veterans:
+            cat = cat + str(job.veterans) + ","
+        if job.voting:
+            cat = cat + str(job.voting) + ","
+        if job.other:
+            cat = cat + str(job.other) + ","    
+        msg = "Project Title:" + str(job.name) + "\n" + "Community Partner & Project Coordinator:" + str(job.client_organization) + "\n" + "Contact Information:" + str(job.contact_information) + "\n" + "Briefly describe the product or service that you expect as a result of this project:" + str(job.deliverable) + "\n" + "Specify the volunteer skill sets required:" + str(job.skill_required) + "\n" + "Specify the date when this project is due. If you are not sure of the exact date, give a close approximation:" + str(job.duedate) + "\n" + "Specify the number of hours the volunteer needs to work per day/week:" + str(job.hours_day) + "\n" + "Give a short description of the job of a volunteer:" + str(job.description) + "\n" + "Categories" + cat
         send_mail('Boilerlist - New Job Request Submitted', msg, 'boilerconnect1@gmail.com', ['paynel@purdue.edu'], fail_silently = False,)
         return job
 
